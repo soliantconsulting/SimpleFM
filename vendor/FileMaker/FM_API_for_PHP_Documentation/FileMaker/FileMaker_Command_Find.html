@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FileMaker_Command_Find</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class FileMaker_Command_Find</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-descendents">Descendents</a>
+			|													<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Command class that finds records using the specified criteria.</p>
+<p class="description"><p>Create this command with <a href="../FileMaker/FileMaker.html#methodnewFindCommand">FileMaker::newFindCommand()</a>.</p></p>
+		<p class="notes">
+			Located in <a class="field" href="_FileMaker---Command---Find.php.html">/FileMaker/Command/Find.php</a> (line <span class="field">29</span>)
+		</p>
+		
+				
+		<pre><a href="../FileMaker/FileMaker_Command.html">FileMaker_Command</a>
+   |
+   --FileMaker_Command_Find</pre>
+	
+			</div>
+</div>
+
+	<a name="sec-descendents"></a>
+	<div class="info-box">
+		<div class="info-box-title">Direct descendents</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Descendents</span>
+			|															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../FileMaker/FileMaker_Command_FindAll.html">FileMaker_Command_FindAll</a></td>
+					<td>
+											Command class that finds all records from a layout.
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../FileMaker/FileMaker_Command_FindAny.html">FileMaker_Command_FindAny</a></td>
+					<td>
+											Command class that finds one random record.
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																												
+												<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addFindCriterion" title="details" class="method-name">addFindCriterion</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldname</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$testvalue</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addSortRule" title="details" class="method-name">addSortRule</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldname</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$precedence</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#clearFindCriteria" title="details" class="method-name">clearFindCriteria</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#clearSortRules" title="details" class="method-name">clearSortRules</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getRange" title="details" class="method-name">getRange</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getRelatedSetsFilters" title="details" class="method-name">getRelatedSetsFilters</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setLogicalOperator" title="details" class="method-name">setLogicalOperator</a>
+											(<span class="var-type">integer</span>&nbsp;<span class="var-name">$operator</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRange" title="details" class="method-name">setRange</a>
+											([<span class="var-type">integer</span>&nbsp;<span class="var-name">$skip</span> = <span class="var-default">0</span>], [<span class="var-type">integer</span>&nbsp;<span class="var-name">$max</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setRelatedSetsFilters" title="details" class="method-name">setRelatedSetsFilters</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedsetsfilter</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedsetsmax</span> = <span class="var-default">null</span>])
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-descendents">Descendents</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodaddFindCriterion" id="addFindCriterion"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addFindCriterion</span> (line <span class="line-number">58</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a criterion to this Find command.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addFindCriterion
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldname</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$testvalue</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$fieldname</span><span class="var-description">: Name of the field being tested.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$testvalue</span><span class="var-description">: Value of field to test against.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddSortRule" id="addSortRule"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addSortRule</span> (line <span class="line-number">84</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a sorting rule to this Find command.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addSortRule
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldname</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$precedence</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$order</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$fieldname</span><span class="var-description">: Name of the field to sort by.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$precedence</span><span class="var-description">: Integer from 1 to 9, inclusive. A value         of 1 sorts records based on this sorting rule first, a value of         2 sorts records based on this sorting rule only when two or more         records have the same value after the first sorting rule is         applied, and so on.</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$order</span><span class="var-description">: Direction of the sort. Specify the         FILEMAKER_SORT_ASCEND constant, the FILEMAKER_SORT_DESCEND         constant, or the name of a value list specified as a string.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodclearFindCriteria" id="clearFindCriteria"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">clearFindCriteria</span> (line <span class="line-number">66</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Clears all existing criteria from this Find command.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			clearFindCriteria
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodclearSortRules" id="clearSortRules"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">clearSortRules</span> (line <span class="line-number">92</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Clears all existing sorting rules from this Find command.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			clearSortRules
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRange" id="getRange"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRange</span> (line <span class="line-number">131</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the current range settings.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Associative array with two keys: 'skip' for  the current skip setting, and 'max' for the current maximum  number of records. If either key does not have a value, the  returned value for that key is NULL.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getRange
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRelatedSetsFilters" id="getRelatedSetsFilters"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRelatedSetsFilters</span> (line <span class="line-number">177</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the current settings for the related records filter and  the maximum number of related records to return.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Associative array with two keys: 'relatedsetsfilter' for  the portal filter setting, and 'relatedsetsmax' for the maximum  number of records. If either key does not have a value, the returned  for that key is NULL.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getRelatedSetsFilters
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetLogicalOperator" id="setLogicalOperator"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setLogicalOperator</span> (line <span class="line-number">106</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Specifies how the find criteria in this Find command are combined  as either a logical AND or OR search.</p>
+<p class="description"><p>If not specified, the default is a logical AND.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setLogicalOperator
+		</span>
+					(<span class="var-type">integer</span>&nbsp;<span class="var-name">$operator</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$operator</span><span class="var-description">: Specify the FILEMAKER_FIND_AND or         FILEMAKER_FIND_OR constant.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRange" id="setRange"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRange</span> (line <span class="line-number">118</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets a range to request only part of the result set.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRange
+		</span>
+					([<span class="var-type">integer</span>&nbsp;<span class="var-name">$skip</span> = <span class="var-default">0</span>], [<span class="var-type">integer</span>&nbsp;<span class="var-name">$max</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$skip</span><span class="var-description">: Number of records to skip past. Default is 0.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$max</span><span class="var-description">: Maximum number of records to return.         Default is all.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetRelatedSetsFilters" id="setRelatedSetsFilters"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setRelatedSetsFilters</span> (line <span class="line-number">163</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets a filter to restrict the number of related records to return from  a portal.</p>
+<p class="description"><p>The filter limits the number of related records returned by respecting  the settings specified in the FileMaker Pro Portal Setup dialog box.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setRelatedSetsFilters
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedsetsfilter</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedsetsmax</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relatedsetsfilter</span><span class="var-description">: Specify one of these values to         control filtering: <ul><li>'layout': Apply the settings specified in the FileMaker Pro
+                    Portal Setup dialog box. The records are sorted based
+                    on the sort  defined in the Portal Setup dialog box,
+                    with the record set filtered to start with the
+                    specified &quot;Initial row.&quot;</li><li>'none': Return all related records in the portal without
+                  filtering or presorting them.</li></ul></span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relatedsetsmax</span><span class="var-description">: If the &quot;Show vertical scroll bar&quot; setting         is enabled in the Portal Setup dialog box, specify one of these         values: <ul><li>an integer value: Return this maximum number of related records
+                            after the initial record.</li><li>'all': Return all of the related records in the portal.
+                 If &quot;Show vertical scroll bar&quot; is disabled, the Portal
+                 Setup dialog box's &quot;Number of rows&quot; setting determines
+                 the maximum number of related records to return.</li></ul></span>			</li>
+				</ul>
+		
+			
+	</div>
+							<h4>Inherited Methods</h4>
+				<a name='inherited_methods'><!-- --></a>	
+									<!-- =========== Summary =========== -->
+					<p>Inherited From <span class="classname"><a href="../FileMaker/FileMaker_Command.html">FileMaker_Command</a></span></p>
+					<blockquote>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodexecute">FileMaker_Command::execute()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodsetPreCommandScript">FileMaker_Command::setPreCommandScript()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodsetPreSortScript">FileMaker_Command::setPreSortScript()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodsetRecordClass">FileMaker_Command::setRecordClass()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodsetRecordId">FileMaker_Command::setRecordId()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodsetResultLayout">FileMaker_Command::setResultLayout()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodsetScript">FileMaker_Command::setScript()</a></span><br>
+													<span class="method-name"><a href="../FileMaker/FileMaker_Command.html#methodvalidate">FileMaker_Command::validate()</a></span><br>
+											</blockquote>
+										
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Wed, 29 Jun 2011 12:31:22 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

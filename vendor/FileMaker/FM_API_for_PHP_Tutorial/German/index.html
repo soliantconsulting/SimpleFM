@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>FileMaker API for PHP-Lehrgang</title>
+        <meta name="generator" content="BBEdit 8.2" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+    </head>
+
+    <body>
+        <div class="sectionWrapper">
+
+            <h1 align="center"><img src="header.gif" width="700" height="150"></h1>
+
+            <h1 align="center">FileMaker<span style="font-size:14px;">&reg;</span> API for PHP-Lehrgang</h1>
+        </div>
+
+        <div class="sectionWrapper">
+
+            <h2>Inhalt</h2>
+
+            <a href="#introduction">Einführung</a><br/>
+            <a href="#lesson1" title="Das API einrichten">Lektion 1</a><br/>
+            <a href="#lesson2" title="Medienbilder anzeigen">Lektion 2</a><br/>
+            <a href="#lesson3" title="Neue Datensätze hinzufügen">Lektion 3</a><br/>
+            <a href="#lesson4">Lektion 4</a><br/>
+            <a href="#lesson5">Lektion 5</a><br/>
+            <a href="#lesson6">Lektion 6</a><br/>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="introduction"></a>
+
+            <h2>Einführung</h2>
+
+            <h3>	Willkommen beim FileMaker API for PHP-Lehrgang! </h3>
+            <p>Dieser Lehrgang zeigt Ihnen die wichtigsten Funktionen des FileMaker API for PHP. Der Lehrgang besteht aus 6 Lektionen, die Ihnen zeigen, wie Sie das API in eine FileMaker Pro-Datenbank mit einer PHP-Web-Anwendung integrieren. Jede Lektion stellt eine spezielle Fähigkeit des API vor und erläutert die Programmierung und die Funktionsweise.
+            <p>Die Datenbank für den Lehrgang ist ein FileMaker-Fragebogensystem (questionnaire.fp7<em>). </em>Jeder Fragebogendatensatz kann mehrere Fragen enthalten. Jede Frage kann mehrere Antworten enthalten. Nur ein Fragebogen wird jeweils als der <em>aktive </em>Fragebogen ausgewählt. Der aktive Fragebogen ist der Fragebogen, zu dem Benutzer eingeladen werden, wenn die PHP-Web-Anwendung verwendet wird. 
+            Wenn ein Benutzer einen Online-Fragebogen ausfüllt, fügt das System einen <em>Respondent</em>-Datensatz für den Benutzer hinzu und speichert die Antworten des Benutzers in Bezugsdatensätzen.
+
+            <p>Der Lehrgang baut eine PHP-Web-Anwendung schrittweise auf, wobei jede Lektion auf den vorhergehenden wie folgt beruht:
+            <ul>
+              <li>            Lektion 1
+                <ul>
+                  <li>Einrichten des <em>FileMaker</em>-Datenbankobjekts
+                    <ul>
+                      <li class="comment"><em>Was muss ich beachten, um das FileMaker-Datenbankobjekt für die Verwendung in meinen eigenen Web-Anwendungen vorzubereiten?</em></li>
+                    </ul>
+                  </li>
+                  <li>Alle suchen ausführen
+                    <ul>
+                      <li class="comment"><em>Wir kann ich alle Datensätze in einer Datenbank aufrufen und im Web anzeigen? </em></li>
+                    </ul>
+                  </li>
+                  <li>Suchen ausführen
+                    <ul>
+                      <li class="comment"><em>Wir kann ich einen bestimmten Datensatz in der Datenbank suchen und im Web anzeigen? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 2
+                <ul>
+                  <li>Medienbilder anzeigen
+                    <ul>
+                      <li class="comment"><em>Wie kann ich Web-kompatible Bilder in Medienfeldern auf meiner Website anzeigen? </em></li>
+                    </ul>
+                  </li>
+                  <li>ContainerBridge.php verwenden
+                    <ul>
+                      <li class="comment"><em>Was ist die Datei </em>ContainerBridge.php<em> und wie funktioniert sie? </em> </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 3
+                <ul>
+                  <li>FileMaker-Wertelisten anzeigen
+                    <ul>
+                      <li class="comment"><em>Wie kann ich angepasste FileMaker-Wertelisten im Web anzeigen? </em></li>
+                    </ul>
+                  </li>
+                  <li>Datensätze hinzufügen
+                    <ul>
+                      <li class="comment"><em>Wie füge ich einer FileMaker-Datenbank aus einem abgesendeten Web-Formular heraus Datensätze hinzu? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 4
+                <ul>
+                  <li>Datensatz nach ID abrufen
+                    <ul>
+                      <li class="comment"><em>Wie kann ich einen FileMaker-Datensatz durch seine interne ID abrufen, ohne eine weitere Suche durchzuführen? </em></li>
+                    </ul>
+                  </li>
+                  <li>Bezugsmenge abrufen (Ausschnitt)
+                    <ul>
+                      <li class="comment"><em>Wie kann ich Datensätze aus einem FileMaker-Ausschnitt auf meiner Website anzeigen? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 5
+                <ul>
+                  <li>Bezugsdatensätze hinzufügen
+                    <ul>
+                      <li class="comment"><em>Wie kann ich einem Ausschnitt Datensätze von meiner Website hinzufügen? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 6
+                <ul>
+                  <li>Besprechung von Bezugsmenge abrufen (Ausschnitt)
+                    <ul>
+
+                      <li class="comment"><em>Wie kann ich Datensätze aus einem FileMaker-Ausschnitt auf meiner Website anzeigen? </em></li>
+                    </ul>
+                  </li>
+                  <li>Formate anpassen mit Cascading Style Sheets 
+                    (CSS)
+                    <ul>
+                      <li class="comment"><em>Wie kann ich das Erscheinungsbild meiner HTML-Ausgabe mit Cascading Style Sheets anpassen? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+            <p>Der Lehrgang deckt nicht alle Bereiche des API ab. Nachdem Sie diese Lektionen durchgearbeitet haben, verfügen Sie jedoch über eine gute Grundlage. Weitere Informationen zu dem API finden Sie in der FileMaker API for PHP-Dokumentation.
+            <p>Um die FileMaker API for PHP-Dokumentation anzuzeigen, wechseln Sie auf die Startseite der FileMaker Server Admin-Konsole und klicken auf &quot;PHP-Site-Assistent und XSLT-Site-Assistent&quot;. Klicken Sie auf der Seite "Web Publishing-Tools" auf &quot;FileMaker API for PHP-Dokumentation&quot;. Verwenden Sie die Dokumentation als Referenz, während Sie diesen Lehrgang durcharbeiten. Diese Referenz hilft Ihnen, die weiteren Funktionen des FileMaker API for PHP zu entdecken.
+            <p>Sie sollten sich auch mit der Datenbank questionnaire.fp7 vertraut machen. Sehen Sie sich an, wie sie funktioniert und wie Fragebögen durch die Anlage von Fragen mit mehreren Antworten aufgebaut werden. Ihre Erkenntnisse zur Gestaltung der Datei questionnaire.fp7 stellen einen wesentlichen Bestandteil dar, um zu verstehen, wie die PHP-Anwendung im Lehrgang das API nutzt.
+            <h3>Erste Schritte </h3>
+
+            <h4>Einrichtung und Installation</h4>
+            <p class="h4_text">FileMaker Server 9 muss installiert sein und die Datenbank questionnaire.fp7 muss bereitgestellt sein. Der Lehrgangsordner muss auf dem Web-Server-Rechner, der Teil Ihres FileMaker Server-Einsatzes ist, bereitgestellt werden. </p>
+            <p class="h4_text">Weitere Informationen zu Installation und Einsatz von FileMaker Server 9 finden Sie im Handbuch <em>FileMaker Server Einführung</em>. Weitere Informationen über das FileMaker API for PHP finden Sie in <em>FileMaker Server Custom Web Publishing mit PHP. </em></p>
+
+            <h4>Empfohlene Kenntnisse        </h4>
+            <p class="h4_text">Sie sollten mit der Programmierung mit HTML vertraut sein. Hierzu gehören HTML-Deklarationen, Header und Elementmarken. Weitere Informationen zur Programmierung von Web-Seiten mit HTML finden Sie unter <a href="http://www.w3schools.com/xhtml/xhtml_dtd.asp">XHTML Tutorial der W3Schools</a>.</p>
+            <p class="h4_text">Sie sollten mit der Programmierung von PHP vertraut sein. Hierzu zählen Standardausgabe, Variablen, Arrays, bedingte Schleifen, Objekte, Methoden und Funktionen. Weitere Informationen zur Programmierung mit PHP finden Sie unter <a href="http://www.w3schools.com/php/default.asp">PHP Tutorial der W3Schools</a>.</p>
+            <p class="h4_text">Sie sollten über Erfahrung im Umgang mit einem Texteditor für HTML und PHP verfügen. Dieser Lehrgang erfordert die Verwendung eines Texteditors für die Darstellung und Bearbeitung von HTML- und PHP-Code.</p>
+            <p class="h4_text">Sie sollten über Grundkenntnisse in der Datenbankgestaltung mit FileMaker verfügen. Hierzu zählen Felder, Beziehungen, Layouts, Ausschnitte und Medienfelder. Weitere Informationen über die Gestaltung von Datenbanken mit FileMaker Pro finden Sie in der FileMaker Pro-Dokumentation. </p>
+
+            <h4>Empfohlene Vorgehensweisen  </h4>
+            <p class="h4_text"> Wenn Sie Datensätze in FileMaker Pro bearbeiten, denken Sie daran, den Datensatz zu <em>verlassen</em> bzw. zu <em>bestätigen</em>, um die Änderungen durchzuführen. Web-Seiten stellen in die Datenbank eingegebene Änderungen erst dar, wenn der Datensatz verlassen wird.</p>
+            <p class="h4_text">Um die PHP-Seiten für die einzelnen Lektionen in Ihrem Webbrowser anzuzeigen, müssen Sie den vollständig qualifizierten URL angeben, damit der PHP-Code ausgeführt wird. Wenn die Dateien zum Beispiel auf einem lokalen Rechner bereitgestellt werden, verweisen Sie Ihren Browser auf einen URL, der mit &quot;http://localhost/...&quot; beginnt. Verwenden Sie nicht den lokalen Dateipfad, der mit &quot;file:///Volumes/...&quot; beginnen könnte. Wenn Sie einen URL mit &quot;file://&quot; verwenden, erreichen Sie die <strong>Darstellung</strong> des PHP-Codes, nicht seine <strong>Ausführung</strong>. Stellen Sie stets sicher, dass der URL mit &quot;http&quot; oder &quot;https&quot; beginnt, falls Sie SSL auf Ihrem Web-Server eingerichtet haben.</p>
+            <p />
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson1"></a>
+
+            <h2>Lektion 1</h2>
+
+            <h3>Ziel</h3>
+            <p>Lektion 1 beschreibt die Grundlagen für die Verwendung des FileMaker API for PHP in zwei PHP-Dateien: <span class="page">home.php</span> und <span class="page">dbaccess.php</span>. Die Datei <span class="page">home.php</span> dient als Webbrowser-Startpunkt, die Datei <span class="page">dbaccess.php</span> richtet ein <em>FileMaker</em>-Objekt ein, das die Datenbank darstellt. Diese Seiten erläutern die grundlegenden Schritte für die Instanziierung des <em>FileMaker</em>-Datenbankobjekts, die Festlegung der wichtigen Eigenschaften und die Durchführung einer Suche in der Datenbank <span class="database">questionnaire.fp7</span>.</p>
+
+            <h3>Start</h3>
+            <p>Um das Lehrgangsbeispiel anzuzeigen, verweisen Sie Ihren Webbrowser auf  <a href="Lesson1/home.php">home.php</a> im Ordner "Lesson1". Diese Seite zeigt den Willkommensbildschirm für das FileMaker-Fragebogensystem. Wenn die Seite lädt, erfolgt eine versteckte Verbindung zwischen PHP und der Web Publishing Engine, die in einem gefundenen Datensatz aus der Datenbank <span class="database">questionnaire.p7</span> resultiert. </p>
+            <p>Öffnen Sie die Datei <span class="page">home.php</span> im Ordner "Lesson1" mit Ihrem Texteditor. Suchen Sie den folgenden Code direkt nach der body-Marke.</p>
+            <p class="code">&lt;?php include (&quot;dbaccess.php&quot;); ?&gt;</p>
+            <p>Diese PHP-Anweisung schließt die Datei <span class="page">dbaccess.php</span> ein bzw. <em>lädt</em> sie. Die Datei <span class="page">dbaccess.php</span> enthält Funktionen, die das <em>FileMaker</em>-Datenbankobjekt einrichtet und für die Datenbankvorgänge vorbereitet. Daher funktionieren API-Methoden in <span class="page">home.php</span> nicht ohne sie. Zwar hätten die Methoden in <span class="page">dbaccess.php</span> auch in der Datei <span class="page">home.php</span> programmiert werden können, sie wurden jedoch für ein vereinfachtes Debugging und vereinfachte Wartung getrennt.  </p>
+
+            <h3>Das <em>FileMaker</em>-Datenbankobjekt einrichten </h3>
+            <p>Die Datei <span class="page">dbaccess.php</span> enthält Programmcode für die Einrichtung des <em>FileMaker</em>-Datenbankobjekts. Sie spielt eine fundamentale Rolle beim Aufbau der Fragebogenanwendung. Folgen Sie diesen Schritten, um das <em>FileMaker</em>-Objekt einzurichten:  </p>
+
+            <ol>
+                <li>Laden Sie das FileMaker API for PHP.</li>
+                <li>Weisen Sie eine Instanz der <em>FileMaker</em>-Datenbankklasse einer Variable zu.</li>
+                <li>Legen Sie die Schlüsseleigenschaften für die neue <em>FileMaker</em>-Instanz fest. </li>
+            </ol>
+
+            <p>Öffnen Sie die Datei <span class="page">dbaccess.php</span> im Ordner "Lesson1" mit Ihrem Texteditor und folgen Sie den einzelnen Schritten unten. </p>
+
+            <h4 class="h4_text">1. Laden Sie das FileMaker API for PHP.</h4>
+            <p class="h4_text">Um das FileMaker API zu verwenden, muss es zuerst in den PHP-Speicher geladen werden.  Dies geht über die require-Anweisung.</p>
+            <p class="code">require_once ('FileMaker.php');</p>
+            <p class="h4_text">Nachdem es geladen ist, können Sie Instanzen der <em>FileMaker</em>-Datenbankklasse erstellen und für die Datenbankverbindungen in Ihrer Web-Anwendung verwenden. Ein Versuch, das API zu verwenden, ohne es zuerst zu laden, erzeugt einen Fehler.</p>
+
+            <h4 class="h4_text">2. Weisen Sie eine Instanz der <em>FileMaker</em>-Datenbankklasse einer Variable zu.</h4>
+            <p class="h4_text">Eine Instanz der <em>FileMaker</em>-Datenbankklasse muss erstellt werden, bevor sie verwendet werden kann. Sie muss zudem einer Variablen zugewiesen werden, um sie im Code zu referenzieren.</p>
+            <p class="code">$fm = new FileMaker();</p>
+            <p class="h4_text">Der obige Code erstellt eine Instanz des <em>FileMaker</em>-Datenbankobjekts. Es wird als Variable <em>$fm</em> referenziert.</p>
+
+            <h4 class="h4_text">3. Legen Sie die Schlüsseleigenschaften für die neue <em>FileMaker</em>-Instanz fest.</h4>
+            <p class="h4_text">Das <em>FileMaker</em>-Datenbankobjekt verfügt über ein Set an Eigenschaften, die jederzeit festgelegt werden können. Einige Eigenschaften müssen jedoch festgelegt werden, bevor Datenbankvorgänge erfolgen. Hier ist der Code, der die für diesen Lehrgang erforderlichen Eigenschaften festlegt.</p>
+            <p class="code">$fm-&gt;setProperty('database', 'questionnaire');
+                <br />
+                $fm-&gt;setProperty('username', 'web');
+          <br />
+          $fm-&gt;setProperty('password', 'web');        </p>
+            <p class="h4_text"><strong>Hinweis - </strong> Der Datenbankname <em>questionnaire</em> benötigt die Erweiterung <em>fp7</em> nicht im Parameter.</p>
+            <p class="h4_text"><strong>Hinweis - </strong>In der FileMaker API for PHP-Dokumentation finden Sie eine Liste der <em>FileMaker</em>-Datenbankklasse-Eigenschaften und ihrer Beschreibungen. </p>
+            <p>Die Datei <span class="page">dbaccess.php</span> enthält nur sehr wenig Programmcode, bereitet das <em>FileMaker</em>-Objekt jedoch für die Verwendung effektiv vor. Nachdem die Datei geladen ist, kann das <em>FileMaker</em>-Objekt als Variable $fm verwendet werden und die Schlüsseleigenschaften sind auf die erforderlichen Werte festgelegt. Die Datei <span class="page">dbaccess.php</span> versetzt die Datei <span class="page">home.php</span> in die Lage, mit der Datenbank <span class="database">questionnaire.fp7</span> zu kommunizieren. </p>
+
+            <h3>Suchen, Alle suchen </h3>
+            <p>Die Datei <span class="page">home.php</span> führt zwei Datenbankvorgänge durch: <em>Alle suchen</em> (Alle Datensätze anzeigen) und <em>Suchen</em>. Um den Code für diese Vorgänge anzuzeigen, öffnen Sie die Datei <span class="page">home.php</span> in Ihrem Texteditor. Um die Datenbank für diese Vorgänge anzuzeigen, öffnen Sie die Datei <span class="database">questionnaire.fp7</span>, die auf FileMaker Server bereitgestellt wird.</p>
+
+            <h4 class="h4_text">1. Alle suchen (Alle Datensätze anzeigen) </h4>
+            <p class="h4_text">Die Datenbank <span class="database">questionnaire.fp7</span> enthält ein Layout <em>Active Questionnaire</em>. Dieses Layout dient als Schnittstelle. Es enthält nur einen Datensatz in der Tabelle. Auf diesem Layout wählen die Benutzer, welcher Fragebogen der <em>aktive</em> Fragebogen ist. Die Web-Anwendung muss die ID dieses <em>aktiven</em> Fragebogens abrufen.</p>
+            <p class="h4_text">Die Aktive-Fragebogen-ID wird durch Ausführung von "Alle suchen (Alle Datensätze anzeigen)" im Layout <em>Active Questionnaire abgerufen. </em>Dieser Vorgang verwendet das Befehlsobjekt <em>FileMaker_Command_FindAll</em>.</p>
+            <p class="h4_text"><strong>Hinweis - </strong>In der FileMaker API for PHP-Dokumentation finden Sie eine Liste der Befehlsobjekte und ihrer Methoden. </p>
+            <p class="h4_text"> Eine Instanz des Objekts FileMaker_Command_FindAll wird erstellt, indem $fm (<em>FileMaker</em>-Datenbankinstanz) seine Methode <em>newFindAllCommand()</em> ausführt und (in Klammern) den Namen des Layouts <em>Active Questionnaire angibt. </em>Das Layout legt fest, welches Tabellenauftreten verwendet wird (Kontext) und welche Felder zurückgegeben werden (Ergebnisse).</p>
+            <p class="h4_text">Die Instanz <em>FileMaker_Command_FindAl</em><em>l </em>muss einer Variablen wie in folgendem Beispiel zugewiesen werden. </p>
+            <p class="code">$findCommand = $fm-&gt;newFindAllCommand('Active Questionnaire');</p>
+            <p class="h4_text">Der obige Code weist ein neues Objekt FileMaker_Command_FindAll der Variable <em>$findCommand</em> zu. Der Befehl "Alle suchen" wird mit der Methode <em>execute() </em>ausgeführt. Die Suchergebnisse müssen einer Variablen zugewiesen werden.</p>
+            <p class="code">$result = $findCommand-&gt;execute();</p>
+            <p class="h4_text">Nach der Ausführung eines Befehls kann eventuell ein Fehler auftreten. Wenn ein Fehler auftritt (oder keine passenden Datensätze gefunden werden), wird die Variable $result einem <em>FileMaker_Error-Objekt</em> zugewiesen. Verwenden Sie den folgenden Code, um auf das FileMaker_Error-Objekt zu prüfen. Die Fehlermeldung wird mit der Methode <em>getMessage()</em> angezeigt.</p>
+            <p class="code"> if (FileMaker::isError($result)) {
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;echo &quot;&lt;p&gt;Fehler: &quot; . $result-&gt;getMessage() . &quot;&lt;/p&gt;&quot;;
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;exit;
+                <br />
+                }</p>
+            <p class="h4_text">Wenn kein Fehler auftritt, enthält die Variable <em>$result</em> ein Array der Objekte FileMaker_Record, eines für jeden Datenstz in der Ergebnismenge. Verwenden Sie die Variable $result, um den ersten Datensatz im Alle-suchen-Ergebnis abzurufen. Da PHP-Arrays standardmäßig numerisch indiziert werden, können Sie den ersten Datensatz über den folgenden Code abrufen.</p>
+            <p class="code">$record = $records[0];    </p>
+            <p class="h4_text">Diese Code weist ein FileMaker_Record-Objekt, das den ersten Datensatz in der Ergebnismenge enthält, der Variablen <em>$record</em> zu. Sie können den Inhalt der questionnaire_id aus diesem Datensatz mit der Methode <em>getField()</em> abrufen. Die Ergebnisse der Methode <em>getField()</em> müssen einer Variablen zugewiesen werden.
+
+            <p class="code">$active_questionnaire_id =  $record-&gt;getField('questionnaire_id');    </p>
+            <p class="h4_text">Diese Variable enthält jetzt die ID des aktiven Fragebogens. Der nächste Schritt verwendet diese Variable als Parameter in der nächsten Suche. </p>
+            <p class="h4_text"><strong>Hinweis -</strong> In der FileMaker API for PHP-Dokumentation finden Sie eine Liste der Objekte und ihrer Methoden.</p>
+
+            <h4 class="h4_text">2. Suchen </h4>
+            <p class="h4_text">Da Sie jetzt die ID des aktiven Fragebogens kennen, können Sie sie verwenden, um den Fragebogendatensatz zu <em>suchen</em>. Der Code für die Durchführung dieses Vorgangs befindet sich relativ weit unten in der Datei <span class="page">home.php</span>. Dieser Vorgang verwendet das Befehlsobjekt <em>FileMaker_Command_Find</em>.</p>
+            <p class="h4_text">Eine Instanz des Objekts FileMaker_Command_Find wird erstellt, indem $fm (<em>FileMaker</em>-Datenbankinstanz) seine Methode <em>newFindCommand()</em> ausführt und (in Klammern) den Namen des Layouts <em>Active Questionnaire angibt. </em>Das Layout legt fest, welches Tabellenauftreten in der Suche verwendet wird und welche Felder zurückgegeben werden.</p>
+            <p class="h4_text">Die Instanz <em>FileMaker_Command_Find</em><em> </em>muss einer Variablen wie in folgendem Beispiel zugewiesen werden. </p>
+            <p class="code">$findCommand =&amp; $fm-&gt;newFindCommand('questionnaire');</p>
+            <p class="h4_text">Um der Suche Kriterien hinzuzufügen, verwenden Sie die Methode <em>addFindCriterion()</em>. Die Methode <em>addFindCriterion()</em> akzeptiert zwei Parameter: <em>fieldName </em>und <em>searchParameter</em>. Übergeben Sie den Feldnamen &quot;Questionnaire ID&quot; (wie in FileMaker Pro definiert) und die Variable <em>$active_questionnaire_id</em> als Parameter.</p>
+            <p class="code">$findCommand-&gt;addFindCriterion('Questionnaire ID', $active_questionnaire_id);</p>
+            <p class="h4_text"><strong>Hinweis - </strong>Die Methode <em>addFindCriterion()</em> kann mehrfach aufgerufen werden und das logische UND simulieren, das auftritt, wenn mehrere Suchkriterien in eine einzige Suchabfrage in FileMaker Pro eingegeben werden.</p>
+            <p class="h4_text">Nachdem die Suchkriterien hinzugefügt wurden, wird die Methode <em>execute()</em> verwendet, um die Suche durchzuführen. Die Ergebnisse der Methode <em>execute()</em> müssen einer Variablen zugewiesen werden.</p>
+            <p class="code">$result = $findCommand-&gt;execute(); </p>
+            <p class="h4_text">Die Variable $result enthält jetzt ein Array von FileMaker_Record-Objekten. Da die Suche für das Layout <em>questionnaire</em> durchgeführt wurde, enthält jeder Datensatz in <em>$result</em> die Werte für jedes Feld im Layout <em>questionnaire</em>.</p>
+            <p class="h4_text">Der letze Code auf dieser Seite verwendet PHP-Echo-Anweisungen und die Methode <em>getField()</em>, um die Felder <em>Questionnaire Name</em> und <em>Description</em> auf der Seite <span class="page">home.php</span> auszugeben.</p>
+            <p />
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson2"></a>
+
+            <h2>Lektion 2</h2>
+
+            <h3>Ziel</h3>
+            <p>Lektion 2 behandelt den für die Anzeige von FileMaker Pro-Medienbildern im Web erforderlichen Code.  Wenn Sie Web-kompatible Bilder in einer FileMaker Pro-Datenbank speichern, können Sie das FileMaker API for PHP verwenden, um diese Bilder abzurufen und auf Ihrer Website anzuzeigen.</p>
+
+            <h3>Start</h3>
+            <p>Öffnen Sie die FileMaker API-Lehrgangsdatenbank <span class="database">questionnaire.fp7 und s</span>tellen Sie sicher, dass der aktive Fragebogen ein Web-kompatibles Bild im Medienfeld besitzt.  Zeigen Sie als Nächstes das PHP-Lehrgangsbeispiel an, indem Sie die Lesson2-Datei <a href="Lesson2/home.php">home.php</a> in Ihrem Webbrowser anzeigen. Beachten Sie, dass die Seite das Bild des aktiven Fragebogens anzeigt. Versuchen Sie, das Medienbild in der FileMaker-Datenbank zu ändern. Stellen Sie sicher, dass Sie den Datensatz verlassen, wenn Sie fertig sind. Aktualisieren Sie Ihren Browser und beachten Sie, wie die Website das neue Bild aktualisiert.</p>
+
+            <h3>Medienbild anzeigen </h3>
+            <p>Um zu sehen, wie das API für diesen Vorgang verwendet wird, öffnen Sie die Datei <span class="page">home.php</span> im Ordner "Lesson2". Sehen Sie sich die letzten PHP-Anweisungen in der Datei an und achten Sie besonders auf die Marke &lt;img&gt; (Bild) und ihre <em>src</em>- (Quelle) Attribute.</p>
+            <p>Bitte beachten Sie die folgenden Punkte zu dieser Technik.</p>
+            <ol>
+              <li>Das Medienfeld <em>Graphic</em> befindet sich im Layout <em>questionnaire</em> (das Layout der vorherigen Suche). Denken Sie daran, dass nur Werte von Feldern auf dem <strong>Layout, das für die Suche verwendet wird</strong>, an das API zurückgegeben werden.</li>
+              <li>Der zurückgegebene Wert des Felds <em>Graphic</em> ist <strong>kein Bild</strong>, sondern ein spezieller URL, der das Bild von der Web Publishing Engine anfordert.</li>
+            </ol>
+            <p class="code">echo '&lt;img src=&quot;ContainerBridge.php?path=' . urlencode($record-&gt;getField('Graphic')) . '&quot;&gt;';</p>
+            <p>Da eine HTML-Marke &lt;img&gt; (Bild) einen <em>Dateipfad</em> als sein <em>src</em>- (Quelle) Attribut benötigt, verwendet diese Lektion eine eigene Datei, um das Bild tatsächlich abzurufen. Die Datei, die das Medienbild abruft, heißt <span class="page">ContainerBridge.php</span>. Ihr Dateiname erscheint im <em>src</em>- (Quelle) Attribut der Marke &lt;img&gt; (Bild).</p>
+            <p>Die Datei <span class="page">ContainerBridge.php</span> weiß nicht, welches Bild Sie anzeigen wollen. Um das Bild anzugeben, müssen Sie den Feldwert <em>Graphic</em> an das Ende des <em>src</em>- (Quelle) URL anhängen. In HTML wird das als GET-Methode bezeichnet.</p>
+            <p>Verwenden Sie das Paar <em>name/value</em>, beginnen Sie mit einem Fragezeichen und hängen Sie die gewünschte Zeichenfolge an. Der <em>Name</em> wird auf &quot;path&quot; und <em>Wert</em> auf das Methodenergebnis <em>getField()</em> gesetzt. Der Name des Medienfelds <em>(Graphic)</em> wird in Klammern übergeben.</p>
+            <p><strong>Hinweis - </strong>Das Ergebnis <em>getField()</em> wird an die PHP-Funktion urlencode() übergeben, um sicherzustellen, dass Sonderzeichen für einen URL richtig kodiert werden. </p>
+
+            <h3>ContainerBridge.php verwenden </h3>
+            <p>Öffnen Sie die Datei <span class="page">ContainerBridge.php</span> im Ordner "Lesson2" mit Ihrem Texteditor. Dieses einfache Script verwendet die FileMaker_Record -Methode <em>getContainerData()</em>, um das tatsächliche Bild abzurufen.</p>
+            <p>Damit <em>getContainerData()</em> funktioniert, müssen Sie die Feldergebnisse von <em>getField()</em> (eines Medienfelds) an die Methode <em>getContainerData()</em> in Klammern übergeben. In <span class="page">home.php</span> wird das Ergebnis von getField() für das Feld <em>Graphic</em> über den URL übergeben. In <span class="page">ContainerBridge.php</span> wird das Ergebnis von dem URL über das Element <em>path</em> des $_GET-Arrays angerufen und an die Methode <em>getContainerData()</em> übergeben. </p>
+            <p class="code">echo $fm-&gt;getContainerData($_GET['path']);</p>
+            <p>Die Datei <span class="page">ContainerBridge.php</span> ruft einfach den Pfad des angegebenen Bilds von der FileMaker Pro-Datenbank ab, so dass die Datei <span class="page">home.php</span> die Marke &lt;img&gt; verwenden kann, um das Bild im Webbrowser anzuzeigen. </p>
+            <p><strong>Hinweis - </strong>In der FileMaker API for PHP-Dokumentation finden Sie eine Liste der FileMaker_Record-Objektmethoden.</p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson3"></a>
+            <h2>Lektion 3</h2>
+
+
+            <h3>Ziel</h3>
+            <p>Lektion 3 behandelt den Code für die Erstellung eines dynamischen Web-Formulars mithilfe von FileMaker-Layoutobjekten. Zudem wird der Code besprochen, der für das Hinzufügen eines neuen FileMaker-Datensatzes von einem Web-Formular aus erforderlich ist. Diese Lektion verwendet zwei zusätzliche PHP-Dateien: <span class="page">Respondent.php</span> und <span class="page">handle_form.php</span>. Die Datei <span class="page">Repondent.php</span> dient dazu, ein Web-Formular dynamisch zu generieren, während die Datei <span class="page">handle_form.php</span> verwendet wird, um Formulareinträge zu validieren und in die Datenbank <span class="database">questionnaire.fp7</span> als neuen Datensatz einzugeben.</p>
+
+            <h3>Start</h3>
+            <p>Öffnen Sie die Fragebogen-Website, indem Sie die Datei <a href="Lesson3/home.php">home.php</a> im Ordner "Lesson3" in Ihrem Webbrowser anzeigen. Diese Version der Seite zeigt eine Schaltfläche <em>Continue</em> an, damit Sie die Fragebogen-Anwendung starten können. Wenn Sie auf die Schaltfläche "Continue" klicken, werden Sie auf die Datei <span class="page">Respondent.php</span> umgeleitet. Geben Sie Ihre Daten in das Web-Formular ein und klicken Sie auf <em>Submit</em>. Versuchen Sie es ggf. erneut, falls Sie nicht ausreichend Daten eingegeben haben. Wenn Ihr Formular erfolgreich validiert wird, sehen Sie die Meldung "Thank you" und die von Ihnen eingegebenen Daten werden der Datenbank <span class="database">questionnaire.fp7</span> als neuer Datensatz hinzugefügt. </p>
+
+            <h3>Wertelisteneinträge abrufen </h3>
+            <p>Um zu sehen, wie diese Anwendung funktioniert, öffnen Sie die Seite <span class="page">Respondent.php</span> in Ihrem Texteditor. Beachten Sie, dass die Datei<span class="sectionWrapper"> </span><span class="page">dbaccess.php</span> nahe des Beginns enthalten ist. Wie in Lektion 1 besprochen stellt diese Include-Anweisung sicher, dass Sie eine Instanz der <em>FileMaker</em>-Datenbankklasse besitzen und dass die Instanz als Variable <em>$fm</em> verwendet werden kann.</p>
+            <p>Achten Sie auf das Optionsfelder-Formularelement <span class="page">Respondent.php</span> mit dem Namen &quot;prefix&quot;. Dieses Element leitet seinen Wert aus der FileMaker Pro-Datenbank questionnaire.fp7 ab, indem es die Werteliste gleichen Namens verwendet. Diese Technik ermöglicht Ihnen, ein dynamisches Formularelement basierend auf einer Werteliste, die in der FileMaker-Datenbank definiert ist, aufzubauen. So müssen Sie den PHP-Code nicht jedes Mal aktualisieren, wenn sich die Werteliste in der Datenbank ändert. Diese Technik ist in den folgenden Schritten implementiert: </p>
+            <ol>
+              <li>Rufen Sie ein Layoutobjekt über die Methode <em>getLayout()</em> ab. (Übergeben Sie den Layoutnamen in Klammern.) </li>
+              <ul>
+                <li>Die Methode <em>getLayout()</em> gibt ein FileMaker_Layout-Objekt zurück.</li>
+              </ul>
+              <li>Rufen Sie die Werteliste über die Methode <em>getValueList()</em> ab.          </li>
+              <ul>
+                <li><em>getValueList()</em> ist eine Methode des FileMaker_Layout-Objekts.  </li>
+              </ul>
+              <li>Gehen Sie mit einer Schleife durch das Array von Werten und geben Sie jeden als Optionsfeld aus. </li>
+            </ol>
+            Wenn Sie diese Technik verwenden, denken Sie daran, dass das angegebene Layout ein Feld enthalten muss, das durch die angegebene Werteliste <em>formatiert ist</em>. Wenn eine Werteliste mit der Methode <em>getValueList()</em> angefordert wird und die Werteliste nicht für ein Feld auf dem Layout formatiert wurde, das mit <em>getLayout()</em> angegeben wurde, wird ein Fehler erzeugt. Hier ist der Code, der verwendet wird, um die dynamischen Optionsfelder anzuzeigen.
+            <p class="code">$layout =&amp; $fm-&gt;getLayout('Respondent');<br />
+            $values = $layout-&gt;getValueList('prefixes');<br />
+            foreach($values as $value){
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      echo '&lt;input type= &quot;radio&quot; name= &quot;prefix&quot; value= &quot;'. $value .'&quot;&gt;' . $value . ' ';<br />
+            }</p>
+            <p><strong>Hinweis - </strong>In der FileMaker API for PHP-Dokumentation finden Sie eine Liste der FileMaker_Layout-Objektmethoden.</p>
+            <p><strong>Hinweis -</strong> Das Formular in <span class="page">Respondent.php</span> enthält auch einige versteckte Formularelemente. Eines mit dem Namen &quot;active_questionnaire_id&quot; enthält die Fragebogen-ID aus <span class="page">home.php</span>. Dieses Formular übergibt die ID in <span class="page">handle_form.php</span>. Hier wird es in Lektion 4 verwendet. </p>
+
+            <h3>Neuen Datensatz hinzufügen </h3>
+            <p>Wenn das Formular <span class="page">Respondent.php</span> die Daten gesendet hat, werden die Werte an die Aktionsseite <span class="page">handle_form.php</span> über die POST-Methode übergeben. Öffnen Sie die Datei <span class="page">handle_form.php</span> im Ordner "Lesson3" mit Ihrem Texteditor.</p>
+            <p>Beachten Sie, dass die vom Benutzer abgeschickten Daten in ein Array zusammengefasst und der Variablen <em>$respondent_data</em> zugewiesen werden. In diesem assoziativen Array ist der <em>Schlüssel</em> für jedes Element der exakte Name des FileMaker-Felds, in dem die Daten gepostet werden. Der <em>Wert</em> jedes Elements entspricht den Werten, die vom HTML-Formularelement innerhalb des $_POST-Arrays gesendet wurden. Das Array $respondent_data wird durch das <em>FileMaker</em>-Objekt verwendet, wenn der Datenbankdatensatz erstellt wird. </p>
+            <p>Nach Assemblierung des Daten-Array führt der PHP-Code einige einfache Validierungsprüfungen durch. Diese Validierungsmethoden verwenden explizit PHP-Code. Während dieses Vorgangs wird keine Validierung durch FileMaker Server durchgeführt.</p>
+            <p>Nachdem die Benutzerdaten die Validierung bestanden haben, wird in zwei einfachen Schritten ein neuer Datensatz erstellt:</p>
+            <ol>
+              <li>Erstellen Sie ein neues FileMaker_Command_Add-Objekt und übergeben Sie zwei Parameter:
+                <ul>
+                  <li>Layoutname (Das Layout muss über die erforderlichen Felder verfügen.)</li>
+                  <li>Daten-Array <em>($respondent_data)</em> </li>
+                </ul>
+              </li>
+              <li>Fügen Sie den Datensatz mit der Methode <em>execute()</em> hinzu.</li>
+            </ol>
+            <p class="code"> $newRequest =&amp; $fm-&gt;newAddCommand('Respondent', $respondent_data);<br />
+            $result = $newRequest-&gt;execute(); </p>
+            <p>Denken Sie daran, dass Sie bei der Erstellung eines neuen FileMaker_Command_Add-Objekts den Namen des Layouts angeben. Der Layoutname legt fest, welches Tabellenauftreten verwendet wird (Kontext) und welche Felder zurückgegeben werden (Ergebnisse). Die Felder für die Eingabe der Daten müssen sich auf dem Layout befinden.</p>
+            <p>In Lektion 4 wird die Seite <span class="page">handle_form.php</span> erweitert, um den hinzugefügten Datensatz zu verwenden und die erste Frage anzuzeigen. </p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson4"></a>
+            <h2>Lektion 4</h2>
+
+            <h3>Ziel</h3>
+            <p>Lektion 4 behandelt den erforderlichen Code, um einen FileMaker-Datensatz über seine ID und seine Bezugsdatensätze aus einem Ausschnitt abzurufen. Ausschnitte sind leistungsstarke Steuerelemente, die in FileMaker Pro-Lösungen eingesetzt werden. Das FileMaker API for PHP besitzt spezielle Methoden für die Arbeit mit Ausschnittdaten. Diese Lektion stellt einige dieser Funktionen vor.</p>
+
+            <h3>Start</h3>
+            <p>Öffnen Sie die FileMaker Pro-Datenbank <span class="database">questionnaire.fp7</span>, die von FileMaker Server bereitgestellt wird. Klicken Sie auf die Schaltfläche <em>Fragebogen bearbeiten</em> und stellen Sie sicher, dass der aktive Fragebogen über mindetens einen Datensatz im Ausschnitt <em>Frage</em> verfügt. </span>  Öffnen Sie dann die Lektion4-Datei <a href="Lesson4/home.php">home.php</a> in Ihrem Webbrowser. Wählen Sie die Schaltfläche <em>Continue</em> und geben Sie die Informationen zum Antwortenden ein.</p>
+            <p>Als Nächstes werden Sie aufgefordert, mit der ersten Frage des aktiven Fragebogens zu beginnen. Öffnen Sie die FileMaker Pro-Datenbank <span class="database">questionnaire.fp7</span> erneut. Suchen Sie die erste Frage des aktiven Fragebogens. Versuchen Sie, den ersten Fragetyp zu ändern. Klicken Sie auf die Schaltfläche <em>Antworten bearbeiten</em> und fügen Sie mögliche Antworten hinzu. Aktualisieren Sie Ihren Webbrowser, um die aktualisierte Frage anzuzeigen.</p>
+            <p>Diese Lektion stellt zwei neue Aufgaben vor, die Sie durchführen können: Rufen Sie einen Datensatz durch seine ID auf und rufen Sie eine Menge von Bezugsdatensätzen aus einem Ausschnitt ab.</p>
+
+            <h3>Datensatz nach ID suchen </h3>
+            <p>Öffnen Sie die Datei <span class="page">handle_form.php</span> im Ordner "Lesson4" mit Ihrem Texteditor. Blättern Sie ein Drittel in der Datei nach unten bis zu der Stelle, an der die Datei <span class="page">handle_form.php</span> in Lektion 3 endete. Beachten Sie, dass die Lektion Code hinzufügt, der das Datensatzobjekt des neuen Antwortendendatensatzes abfragt. Diese Anfrage ist notwendig, da das Feld <em>Respondent ID</em> mit der Option <em>Autom. fortlaufende Nummer</em> in FileMaker Pro definiert ist. Und Sie müssen die Zahl <em>Autom. Eingabe</em> abrufen. </p>
+            <p>Wie mit den <em>Suchen</em>-Funktionen in Lektion 1, kann ein neuer Datensatz abgerufen werden, indem Sie die Methoden <em>getRecord()</em> und <em>getField()</em> verwenden.</p>
+            <p class="code"> $records = $result-&gt;getRecords();<br />
+            $record = $records[0];<br />
+            $respondent_recid = $record-&gt;getField('Respondent ID');</p>
+            <p>Die nächste Aufgabe besteht im Abruf des aktiven Fragebogennamens. Verwenden Sie hierzu die Methode <em>getRecordById()</em> der FileMaker-Instanz <em>($fm)</em>.</p>
+            <p>Wenn Sie <em>getRecordById()</em> verwenden, übergeben Sie die interne FileMaker-Datensatz-ID und den Namen des Layouts. Das Layout legt fest, welches Tabellenauftreten verwendet wird (Kontext) und welche Felder zurückgegeben werden (Ergebnisse). Der Code auf dieser Seite übergibt <em>active_questionnaire_id</em> des $_POST-Array, das an diese Datei aus dem Antwortendenformular von <span class="page">Respondent.php</span> gesendet wurde.</p>
+            <p class="code">  $active_questionnaire_id = $_POST['active_questionnaire_id'];
+              <br />
+            $active_questionnaire = $fm-&gt;getRecordById('questionnaire',$active_questionnaire_id);<br />
+            $questionnaire_name = $active_questionnaire-&gt;getField('Questionnaire Name');</p>
+            <p><strong>Hinweis - </strong>Jedes Datensatzobjekt aus einem API-Vorgang enthält die interne FileMaker-Datensatz-ID, die über die Methode <em>getRecordId()</em> abgerufen werden kann. </p>
+            <p>Die nächste Aufgabe besteht im Abruf der Fragebogendatensätze und zeigt die erste Frage an. Suchen Sie nach allen Fragen, die der aktive_fragebogen_id entsprechen. Diese Suche wird über das Layout "Questions" durchgeführt.</p>
+            <p class="code"> $findCommand =&amp; $fm-&gt;newFindCommand('Questions');<br />
+            $findCommand-&gt;addFindCriterion('Questionnaire ID', $active_questionnaire_id);<br />
+            $result = $findCommand-&gt;execute();<br />
+            $records = $result-&gt;getRecords();<br />
+            $question = $records[0];</p>
+
+            <h3>Bezugsmenge abrufen </h3>
+            <p>Die Fragebogendatenbank wurde so konzipiert, dass jede Frage einen bestimmten Fragetyp darstellt <em>(zum Beispiel text, radio und checkbox)</em>. Wenn es sich bei dem Typ um eine Multiple-Choice-Antwort handelt, können für jede Frage mehrere Antworten ausgewählt werden. Das Layout <em>Questions</em> enthält einen Ausschnitt, der mögliche Antworten anzeigt. Wenn eine Frage eine oder mehrere Antworten besitzt, zeigt der folgende Code die Antwortmöglichkeiten über den angegebenen &quot;Typ&quot; an. </p>
+            <p>Nehmen Sie für dieses Beispiel an, dass die Frage den Typ <em>radio</em> hat. Scrollen Sie im Dokument <span class="page">handle_form.php</span> nach unten. Sie sehen die Bedingung <em>else if</em>, die auf die Fragetypen <em>radio oder ranking</em> prüft. </p>
+            <p class="code">else if ($question_type ==&quot;radio&quot; || $question_type ==&quot;ranking&quot;)</p>
+            <p>Wenn die Bedingung wahr ist, ruft der folgende Code die zugehörigen Antwortmöglichkeiten ab und zeigt sie als Optionsfelder-Elemente an. Antwortdatensätze aus dem Ausschnitt können über die Methode <em>getRelatedSet()</em> des FileMaker_Record-Objekts abgerufen werden.</p>
+            <p>Beim Aufruf der Methode <em>getRelatedSet()</em> muss der <strong>Name der Bezugstabelle</strong> in Klammern übergeben werden und der <strong>definierte Ausschnitt</strong> mit dieser Beziehung muss sich auf dem beim Abruf des Datensatzes <em>$question</em> verwendeten Layout befinden. </p>
+            <p class="code">$relatedSet = $question-&gt;getRelatedSet('question_answers');</p>
+            <p>Die Variable <em>$relatedSet</em> enthält jetzt ein Array von Datensatzobjekten aus dem Bezugsausschnitt. Gehen Sie mit einer Schleife durch das Array und geben Sie die Feldwerte für jeden gefundenen Datensatz aus. </p>
+            <p class="code">foreach ($relatedSet as $relatedRow)<br />
+              {<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;$possible_answer = $relatedRow-&gt;getField('question_answers::answer');<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;input type= &quot;radio&quot; name= &quot;radio_answer&quot; value= &quot;'. $possible_answer .'&quot;&gt;' . $possible_answer . '&lt;br/&gt;'; <br />
+            }</p>
+            <p>Sie hätten die Bezugsdatensätze auch über eine Suche abrufen können, die Verwendung von <em>getRelatedSet()</em> mit einem Ausschnitt, der bereits die Bezugsmenge enthielt, ist jedoch wesentlich einfacher.</p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson5"></a>
+
+            <h2>Lektion 5</h2>
+
+            <h3>Ziel</h3>
+            <p>Lektion 5 bespricht den erforderlichen Code, um Bezugsdatensätze hinzuzufügen. Wenn Sie auf einem Layout einen Ausschnitt definiert haben, der die Erstellung von Bezugsdatensätzen erlaubt, können Sie das FileMaker API for PHP verwenden, um Bezugsdatensätze aus dem Web hinzuzufügen.</p>
+
+            <h3>Start</h3>
+            <p>Öffnen Sie Ihren Webbrowser für die Seite <a href="Lesson5/home.php">home.php</a>, die im Verzeichnis "Lesson5" bereitgestellt wird. Klicken Sie auf die Schaltfläche <em>Continue</em> und beantworten Sie die Online-Umfrage. Öffnen Sie die FileMaker-Datenbank questionnaire.fp7, die von FileMaker Server bereitgestellt wird. Wählen Sie aus dem aktiven Fragebogen die Schaltfläche <em>Review Responses</em> und gehen Sie zum letzten Datensatz in der Tabelle. Dieser Datensatz enthält die Antwortendeninformationen, die Sie eingegeben haben. J</span>ede Antwort wird als Datensatz im Ausschnitt <em>Responses</em> gespeichert. </p>
+
+            <h3>Bezugsdatensatz hinzufügen (Ausschnittzeilen) </h3>
+            <p>Das Hinzufügen von Ausschnittzeilen mit dem FileMaker API for PHP kann in vier Schritten erfolgen:</p>
+            <ol>
+              <li>Beginnen Sie mit einem gültigen Datensatzobjekt.</li>
+              <li>Erstellen Sie einen neuen, leeren Datensatz.</li>
+              <li>Fügen Sie den Feldern des neuen Datensatzes Daten hinzu <em>(optional)</em>.</li>
+              <li>Bestätigen Sie den neuen Datensatz. </li>
+            </ol>
+
+            <h4>Mit einem gültigen Datensatzobjekt beginnen</h4>
+            <p class="h4_text">Öffnen Sie die Datei <span class="page">handle_form.php</span> im Ordner "Lesson5" mit Ihrem Texteditor. Scrollen Sie nach unten und suchen Sie den Code, der den Antwortendendatensatz abruft:</p>
+            <p class="code">$respondent_rec = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p class="h4_text">Dieser Code verwendet eine Funktion, die der Datei <span class="page">dbaccess.php</span> hinzugefügt wurde. Wenn Sie <span class="page">dbaccess.php</span> in Ihrem Texteditor öffnen, sehen Sie die Definition dieser Funktion gegen Ende. Beachten Sie, dass die Methode <em>newFindCommand()</em> in der Funktionsdefinition das Layout <em>Respondent</em> für ihren Kontext verwendet<em>.</em></p>
+            <p class="code">$find = $fm-&gt;newFindCommand('Respondent');</p>
+            <p class="h4_text">Diese Funktion weist dem Antwortendendatensatz-Objekt der Variablen <em>$respondent_rec</em> zu. Die Variable wird mit dem Layout <em>Respondent</em> referenziert, da das Layout der Kontext des Suchbefehls war<em>. </em>Daher starten alle Methoden, die von der Variablen <em>$respondent_rec</em> verwendet werden, vom Kontext des Layouts <em>Respondent</em>.</p>
+
+            <h4>Einen neuen, leeren Datensatz erstellen</h4>
+            <p class="h4_text">Zurück in der Datei <span class="page">handle_form.php</span> beginnt die nächste Codezeile, den neuen Bezugsdatensatz zu erstellen.</p>
+            <p class="code">$new_response = $respondent_rec-&gt;newRelatedRecord('Responses');</p>
+            <p class="h4_text">Wenn diese Zeile ausgeführt wird, wird der Variablen <em>$new_response</em> ein <strong>leeres</strong> Datensatzobjekt zugewiesen (in der FileMaker-Datenbank wurde noch kein neuer Datensatz erstellt).</p>
+            <p class="h4_text">Der Kontext dieses Vorgangs ist besonders wichtig. Dieser Code beginnt von dem Layout des aufrufenden Datensatzobjekts (<em>Responses</em>) und gab die Beziehung eines Ausschnitts auf diesem Layout an. Dann hat der Code den Bezugstabellennamen an die Methode <em>newRelatedRecord()</em> übergeben. </p>
+
+            <h4>Daten den Feldern des leeren Datensatzes Felder hinzufügen <em>(optional)</em></h4>
+            <p class="h4_text">Nachdem Sie einen neuen leeren Datensatz haben und wissen, zu welchem Ausschnittkontext der Datensatz gehört, können Sie beginnen, mit der Methode <em>setField()</em> einzugeben. Diese Methode akzeptiert zwei Parameter: <em>field</em> <em>name</em> und <em>field value</em>. Da es sich um einen Bezugsdatensatz handelt, muss der Feldname mit dem Beziehungsnamen ausgedrückt werden <strong>und</strong> der Feldname durch zwei Doppelpunkte getrennt werden. </p>
+            <p class="code">$new_response-&gt;setField('Responses::Question ID', $cur_question);<br />
+            $new_response-&gt;setField('Responses::Response', $translatedAnswer);</p>
+            <p class="h4_text">Nachdem Sie den neuen Bezugsdatensatz erstellt und Daten in die entsprechenden Felder eingegeben haben, können Sie den Eintrag jetzt bestätigen.</p>
+            <p class="h4_text"><strong>Hinweis - </strong>Es ist nicht nötig, die Felddaten zu setzen, bevor Sie einen neuen leeren Datensatz bestätigen.</p>
+
+            <h4>Den neuen Datensatz bestätigen</h4>
+            <p class="h4_text">Neue Datensatzobjekte werden erst in der FileMaker-Datenbank erstellt, wenn sie bestätigt wurden. Die Methode <em>commit()</em> fügt das Objekt <em>FileMaker_Record</em> in die FileMaker-Datenbank questionnaire.fp7 ein.</p>
+            <p class="code">$result = $new_response-&gt;commit();</p>
+            <p class="h4_text"> Die Variable <em>$result</em> wird jetzt dem FileMaker_Record-Objekt des neuen Datensatzes zugewiesen und der neue Datensatz wurde in der FileMaker-Datenbank erstellt. Falls ein Fehler auftritt, enthält die Variable <em>$result</em> ein FileMaker_Error-Objekt. Es empfiehlt sich, nach der Ausführung der Methode <em>commit()</em> auf Fehler zu prüfen. </p>
+        </div>
+        <div class="sectionWrapper">
+            <a name="lesson6"></a>
+
+            <h2>Lektion 6</h2>
+
+            <h3>Ziel</h3>
+            <p>Lektion 6 bespricht den erforderlichen Code für die Anzeige von Bezugsfeldern in einem Ausschnitt.  Ferner erhalten Sie grundlegende Hinweise zur Verwendung von Cascading Style Sheets (CSS), um das Erscheinungsbild Ihrer Web-Anwendung anzupassen.</p>
+
+            <h3>Start</h3>
+            <p>Öffnen Sie Ihren Webbrowser für die Seite <a href="Lesson6/home.php">home.php</a>, die im Verzeichnis "Lesson6" bereitgestellt wird. Beachten Sie das neue <em>Erscheinungsbild</em> der Site. Diese Formatierung stammt von einer eigenen CSS-Seite.</span> CSS-Stile können verwendet werden, um HTML-Code in Ihrer Web-Anwendung zu formatieren und werden am Ende dieser Lektion besprochen.</p>
+            <p>Klicken Sie auf die Schaltfläche <em>Continue</em> und beantworten Sie die Online-Umfrage. Beachten Sie, dass die Seite <span class="page">thankyou.php</span> eine Zusammenfassung der von Ihnen beantworteten Fragen anzeigt. Diese Fragen und Antworten stammen aus einem Ausschnitt im Layout <em>Respondent</em> in der Datenbank <span class="database">questionnaire.fp7</span>. Wenn ein FileMaker-Layout Ausschnittdaten enthält, können sie im Web mithilfe des FileMaker API for PHP dargestellt werden.</p>
+            <h3>Bezugsmengen abrufen </h3>
+            <p>Öffnen Sie die Datei <span class="page">thankyou.php</span><span class="sectionWrapper"> im</span> Ordner "Lesson6" mit Ihrem Texteditor. Scrollen Sie an das Ende der Datei und suchen Sie die letzte HTML-Tabelle.</p>
+            <p>Beachten Sie den Code über der Tabelle, der den Antwortendendatensatz abruft.</p>
+            <p class="code">$respondent_record = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p> Die Funktion <em>getRespondentRecordFromRespondentID()</em> wird auf der Seite <span class="page">dbaccess.php</span> definiert. Ihr Kontext ist das Layout <em>Respondent</em> in der Datenbank <span class="database">questionnaire.fp7</span>.</p>
+            <p>Achten Sie in der HTML-Tabelle darauf, dass die Variable <em>$respondent_record</em> verwendet wird, um die Menge an Bezugsdatensätzen abzurufen. Dies wird über die Methode <em>getRelatedSet()</em> erreicht. Um die Methode <em>getRelatedSet()</em> zu verwenden, müssen Sie den Bezugstabellennamen des gewünschten Ausschnitts angeben und der gewünschte Ausschnitt muss sich auf dem Layout <em>Respondent</em> befinden.</p>
+            <p class="code">$response_related_set = $respondent_record-&gt;getRelatedSet('Responses'); </p>
+            <p>Der obige Code weist ein Array, das die Datensätze aus dem Ausschnitt <em>Responses</em> enthält, der Variablen <em>$response_related_set</em> zu. Jede Antwort ist ein FileMaker_Record-Objekt. Dieser Code verwendet die Methode <em>getField()</em> des FileMaker_Record-Objekts, um die Ausschnittzeilen in einer HTML-Tabelle auszugeben. Denken Sie daran, den vollständigen Namen der Bezugstabelle zu verwenden <strong>und</strong> den Feldnamen durch zwei Doppelpunkte zu trennen, wenn Sie Bezugsfelder ausgeben. </p>
+            <p>Hier ist die Schleife, die die Bezugsmenge in HTML anzeigt.</p>
+            <p class="code">foreach ($response_related_set as $response_related_row)<br />
+              <br />
+              {<br />
+              <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$question = $response_related_row-&gt;getField('Questions 2::question');<br />
+            <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$answer = $response_related_row-&gt;getField('Responses::Response');<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//konvertiert Zeilenumbrüche in der Antwort zu Kommata<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$answer = str_replace(&quot;\n&quot;,&quot;, &quot;,$answer);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;tr&gt;&lt;td&gt;' . $question . '&lt;/td&gt;';<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;td&gt;' . $answer . '&lt;/td&gt;&lt;/tr&gt;';<br />
+            <br />
+            }</p>
+
+            <h3>Mit CSS formatieren</h3>
+            <p>Sie können Ihre Web-Anwendungen mit Cascading Style Sheets (CSS) formatieren. Öffnen Sie die Datei <span class="page">style.css</span>, die sich im Ordner "Lesson6" befindet, mit Ihrem Texteditor und sehen Sie sich die Stile an, die für verschiedene HTML-Marken definiert sind. CSS-Stile können auf beliebige HTML-Marken angewendet werden, so dass Sie mehrere Objekte auf mehreren Seiten von einer einzelnen Definition aus formatieren können.</p>
+            <p>Um einer speziellen HTML-Marke eine Formatierung zuzuweisen, müssen Sie den Markennamen definieren. Nach dem Markennamen müssen Sie die Stilattribute in geschweiften Klammern angeben. Wie in PHP muss jede Anweisung mit einem Semikolon abgeschlossen werden. </p>
+            <p class="code">body {<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;background-color: #333333;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;padding: 20px;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;color: #ffffff;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;font-family:Verdana, Arial, Helvetica, sans-serif;<br />
+            }</p>
+            <p>Nachdem Sie eine CSS-Datei erstellt haben, können Sie sie auf jedes HTML- oder PHP-Dokument anwenden. Um externe Stile anzuwenden, müssen Sie das Stylesheet in Ihr Dokument aufnehmen oder es <em>verknüpfen</em>: Verwenden Sie die Marke &lt;link&gt; (Link) im Header Ihrer HTML-Ausgabe.</p>
+            <p>Öffnen Sie die Datei <span class="page">thankyou.php</span> im Ordner "Lesson6" mit Ihrem Texteditor.  Beachten Sie in den Header-Marken die Marke <em> &lt;</em>link&gt; (link), die den Webbrowser anweist, die Formatierung <span class="page">style.css</span> anzuwenden. Stellen Sie bei Verwendung der Marke &lt;link&gt; sicher, dass Sie den richtigen Pfad bzw. <em>href</em> auf Ihrer CSS-Seite angeben.</p>
+            <p class="code">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;style.css&quot; /&gt;</p>
+            <p>Stylesheets können in mehreren Anwendungen verwendet werden. Jede Anwendung kann mehrere Stylesheets verwenden. Weitere Informationen zu CSS-Stilen und ihren Attributen finden Sie unter <a href="http://www.w3schools.com/css/css_reference.asp">CSS2 Reference der W3Schools</a>.</p>
+        </div>
+    </body>
+</html>

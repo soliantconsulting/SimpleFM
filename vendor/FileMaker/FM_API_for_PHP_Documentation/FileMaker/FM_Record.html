@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FileMaker_Record</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class FileMaker_Record</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Default Record class that represents each record of a result set.</p>
+<p class="description"><p>From a Record object, you can get field data, edit and delete the record,  get its parent record, get its related record set, and create related  records.</p><p>Instead of this class, you can specify a different class to use for Record  objects. To specify the record class to use, open the  FileMaker/conf/filemaker-api.php configuration file where the API is  installed. Then set $__FM_CONFIG['recordClass'] to the name of the record  class to use. The class you specify should be a subclass of the  FileMaker_Record base class or encapsulate its functionality. In PHP 5,  this class would implement an interface that alternate classes would be  required to implement as well.</p></p>
+		<p class="notes">
+			Located in <a class="field" href="FM_Record.php.html">/FileMaker/Record.php</a> (line <span class="field">40</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">FileMaker_Record</span>
+										<a href="#FileMaker_Record" title="details" class="method-name">FileMaker_Record</a>
+											(<span class="var-type"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a>|<a href="../FileMaker/FM_RelatedSet.html">FileMaker_RelatedSet</a></span>&nbsp;<span class="var-name">&$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean|<a href="../FileMaker/FME.html">FileMaker_Error</a></span>
+										<a href="#commit" title="details" class="method-name">commit</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_Result.html">FileMaker_Result</a></span>
+										<a href="#delete" title="details" class="method-name">delete</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getField" title="details" class="method-name">getField</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">integer</span>
+										<a href="#getFieldAsTimestamp" title="details" class="method-name">getFieldAsTimestamp</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getFields" title="details" class="method-name">getFields</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getFieldUnencoded" title="details" class="method-name">getFieldUnencoded</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>
+										<a href="#getLayout" title="details" class="method-name">&amp;getLayout</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">integer</span>
+										<a href="#getModificationId" title="details" class="method-name">getModificationId</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_Record.html">FileMaker_Record</a></span>
+										<a href="#getParent" title="details" class="method-name">&amp;getParent</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getRecordId" title="details" class="method-name">getRecordId</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getRelatedSet" title="details" class="method-name">&amp;getRelatedSet</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedSet</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_Record.html">FileMaker_Record</a></span>
+										<a href="#newRelatedRecord" title="details" class="method-name">&amp;newRelatedRecord</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedSet</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setField" title="details" class="method-name">setField</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setFieldFromTimestamp" title="details" class="method-name">setFieldFromTimestamp</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$timestamp</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean|<a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>
+										<a href="#validate" title="details" class="method-name">validate</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldName</span> = <span class="var-default">null</span>])
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodFileMaker_Record" id="FileMaker_Record"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor FileMaker_Record</span> (line <span class="line-number">57</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Record object constructor.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">FileMaker_Record</span>
+		<span class="method-name">
+			FileMaker_Record
+		</span>
+					(<span class="var-type"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a>|<a href="../FileMaker/FM_RelatedSet.html">FileMaker_RelatedSet</a></span>&nbsp;<span class="var-name">&$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a>|<a href="../FileMaker/FM_RelatedSet.html">FileMaker_RelatedSet</a></span>
+				<span class="var-name">&$layout</span><span class="var-description">: Specify either the Layout         object associated with this record or the Related Set object         that this record is a member of.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcommit" id="commit"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">commit</span> (line <span class="line-number">269</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Saves any changes to this record in the database on the Database Server.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> TRUE, if successful. Otherwise, an Error          object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean|<a href="../FileMaker/FME.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			commit
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methoddelete" id="delete"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">delete</span> (line <span class="line-number">279</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Deletes this record from the database on the Database Server.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Response object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_Result.html">FileMaker_Result</a></span>
+		<span class="method-name">
+			delete
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetField" id="getField"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getField</span> (line <span class="line-number">99</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the HTML-encoded value of the specified field.</p>
+<p class="description"><p>This method converts some special characters in the field value to  HTML entities. For example, '&amp;', '&quot;', '&lt;', and '&gt;' are converted to  '&amp;amp;', '&amp;quot;', '&amp;lt;', and '&amp;gt;', respectively.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Encoded field value.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getField
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$field</span><span class="var-description">: Name of field.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$repetition</span><span class="var-description">: Field repetition number to get.         Defaults to the first repetition.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFieldAsTimestamp" id="getFieldAsTimestamp"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getFieldAsTimestamp</span> (line <span class="line-number">139</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the value of the specified field as a UNIX  timestamp.</p>
+<p class="description"><p>If the field is a date field, the timestamp is  for the field date at midnight. It the field is a time field,  the timestamp is for that time on January 1, 1970. Timestamp  (date and time) fields map directly to the UNIX timestamp. If the  specified field is not a date or time field, or if the timestamp  generated would be out of range, then this method returns a  FileMaker_Error object instead.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Timestamp value.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">integer</span>
+		<span class="method-name">
+			getFieldAsTimestamp
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$field</span><span class="var-description">: Name of the field.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$repetition</span><span class="var-description">: Field repetition number to get.         Defaults to the first repetition.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFields" id="getFields"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getFields</span> (line <span class="line-number">81</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a list of the names of all fields in the record.</p>
+<p class="description"><p>Only the field names are returned. If you need additional  information, examine the Layout object provided by the  parent object's <a href="../FileMaker/FM_Result.html#methodgetLayout">FileMaker_Result::getLayout()</a> method.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of field names as strings.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getFields
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetFieldUnencoded" id="getFieldUnencoded"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getFieldUnencoded</span> (line <span class="line-number">116</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the unencoded value of the specified field.</p>
+<p class="description"><p>This method does not convert special characters in the field value to  HTML entities.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Unencoded field value.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getFieldUnencoded
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$field</span><span class="var-description">: Name of field.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$repetition</span><span class="var-description">: Field repetition number to get.         Defaults to the first repetition.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLayout" id="getLayout"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLayout</span> (line <span class="line-number">67</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the layout this record is associated with.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> This record's layout.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>
+		<span class="method-name">
+			&amp;getLayout
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetModificationId" id="getModificationId"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getModificationId</span> (line <span class="line-number">197</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the modification ID of this record.</p>
+<p class="description"><p>The modification ID is an incremental counter that specifies the current  version of a record. See the <a href="../FileMaker/FMC_Edit.html#methodsetModificationId">FileMaker_Command_Edit::setModificationId()</a>  method.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Modification ID.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">integer</span>
+		<span class="method-name">
+			getModificationId
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetParent" id="getParent"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getParent</span> (line <span class="line-number">231</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the parent record, if this record is a child record in a portal.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Parent record.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_Record.html">FileMaker_Record</a></span>
+		<span class="method-name">
+			&amp;getParent
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRecordId" id="getRecordId"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRecordId</span> (line <span class="line-number">183</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the record ID of this object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Record ID.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getRecordId
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRelatedSet" id="getRelatedSet"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRelatedSet</span> (line <span class="line-number">209</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns any Record objects in the specified portal.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of FileMaker_Record objects from $relatedSet.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			&amp;getRelatedSet
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedSet</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relatedSet</span><span class="var-description">: Name of the portal to return records from.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewRelatedRecord" id="newRelatedRecord"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">newRelatedRecord</span> (line <span class="line-number">221</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new record in the specified portal.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A new, blank record.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_Record.html">FileMaker_Record</a></span>
+		<span class="method-name">
+			&amp;newRelatedRecord
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedSet</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relatedSet</span><span class="var-description">: Name of the portal to create a new record in.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetField" id="setField"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setField</span> (line <span class="line-number">152</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the value of $field.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setField
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$field</span><span class="var-description">: Name of the field.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span><span class="var-description">: New value of the field.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$repetition</span><span class="var-description">: Field repetition number to set.         Defaults to the first repetition.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetFieldFromTimestamp" id="setFieldFromTimestamp"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setFieldFromTimestamp</span> (line <span class="line-number">173</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the new value for a date, time, or timestamp field from a  UNIX timestamp value.</p>
+<p class="description"><p>If the field is not a date or time field, then returns an error.  Otherwise, returns TRUE.</p><p>If layout data for the target of this command has not already  been loaded, calling this method loads layout data so that  the type of the field can be checked.</p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setFieldFromTimestamp
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$field</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$timestamp</span>, [<span class="var-type">integer</span>&nbsp;<span class="var-name">$repetition</span> = <span class="var-default">0</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$field</span><span class="var-description">: Name of the field to set.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$timestamp</span><span class="var-description">: Timestamp value.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$repetition</span><span class="var-description">: Field repetition number to set.         Defaults to the first repetition.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodvalidate" id="validate"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">validate</span> (line <span class="line-number">258</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Pre-validates either a single field or the entire record.</p>
+<p class="description"><p>This method uses the pre-validation rules that are enforceable by the  PHP engine -- for example, type rules, ranges, and four-digit dates.  Rules such as &quot;unique&quot; or &quot;existing,&quot; or validation by calculation  field, cannot be pre-validated.</p><p>If you pass the optional $fieldName argument, only that field is  pre-validated. Otherwise, the record is pre-validated as if commit()  were called with &quot;Enable record data pre-validation&quot; selected in  FileMaker Server Admin Console. If pre-validation passes, validate()  returns TRUE. If pre-validation fails, then validate() returns a  FileMaker_Error_Validation object containing details about what failed  to pre-validate.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> TRUE, if pre-validation          passes for $value. Otherwise, an Error Validation object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean|<a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>
+		<span class="method-name">
+			validate
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldName</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$fieldName</span><span class="var-description">: Name of field to pre-validate. If empty,         pre-validates the entire record.</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 28 Jul 2008 14:47:45 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FileMaker_Layout</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class FileMaker_Layout</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Layout description class. Contains all the information about a  specific layout. Can be requested directly or returned as part of  a result set.</p>
+		<p class="notes">
+			Located in <a class="field" href="FM_Layout.php.html">/FileMaker/Layout.php</a> (line <span class="field">30</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">FileMaker_Layout</span>
+										<a href="#FileMaker_Layout" title="details" class="method-name">FileMaker_Layout</a>
+											(<span class="var-type">FileMaker_Implementation</span>&nbsp;<span class="var-name">&$fm</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getDatabase" title="details" class="method-name">getDatabase</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_Field.html">FileMaker_Field</a>|<a href="../FileMaker/FME.html">FileMaker_Error</a></span>
+										<a href="#getField" title="details" class="method-name">&amp;getField</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldName</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getFields" title="details" class="method-name">&amp;getFields</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getName" title="details" class="method-name">getName</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_RelatedSet.html">FileMaker_RelatedSet</a>|<a href="../FileMaker/FME.html">FileMaker_Error</a></span>
+										<a href="#getRelatedSet" title="details" class="method-name">&amp;getRelatedSet</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedSet</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getRelatedSets" title="details" class="method-name">&amp;getRelatedSets</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getValueList" title="details" class="method-name">getValueList</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$valueList</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getValueLists" title="details" class="method-name">getValueLists</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getValueListsTwoFields" title="details" class="method-name">getValueListsTwoFields</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getValueListTwoFields" title="details" class="method-name">getValueListTwoFields</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$valueList</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listFields" title="details" class="method-name">listFields</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listRelatedSets" title="details" class="method-name">listRelatedSets</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#listValueLists" title="details" class="method-name">listValueLists</a>
+										()
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodFileMaker_Layout" id="FileMaker_Layout"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor FileMaker_Layout</span> (line <span class="line-number">47</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Layout object constructor.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">FileMaker_Layout</span>
+		<span class="method-name">
+			FileMaker_Layout
+		</span>
+					(<span class="var-type">FileMaker_Implementation</span>&nbsp;<span class="var-name">&$fm</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">FileMaker_Implementation</span>
+				<span class="var-name">&$fm</span><span class="var-description">: FileMaker_Implementation object         that this layout was created through.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetDatabase" id="getDatabase"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getDatabase</span> (line <span class="line-number">67</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the name of the database that this layout is in.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Database name.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getDatabase
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetField" id="getField"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getField</span> (line <span class="line-number">90</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a FileMaker_Field object that describes the specified field.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Field object, if successful.          Otherwise, an Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_Field.html">FileMaker_Field</a>|<a href="../FileMaker/FME.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			&amp;getField
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$fieldName</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$fieldName</span><span class="var-description">: Name of field.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetFields" id="getFields"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getFields</span> (line <span class="line-number">101</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an associative array with the names of all fields as  keys and FileMaker_Field objects as the array values.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of <a href="../FileMaker/FM_Field.html">FileMaker_Field</a> objects.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			&amp;getFields
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetName" id="getName"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getName</span> (line <span class="line-number">57</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the name of this layout.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Layout name.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getName
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRelatedSet" id="getRelatedSet"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRelatedSet</span> (line <span class="line-number">126</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a FileMaker_RelatedSet object that describes the specified  portal.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> RelatedSet object, if          successful. Otherwise, an Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_RelatedSet.html">FileMaker_RelatedSet</a>|<a href="../FileMaker/FME.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			&amp;getRelatedSet
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$relatedSet</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$relatedSet</span><span class="var-description">: Name of the related table for a portal.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRelatedSets" id="getRelatedSets"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRelatedSets</span> (line <span class="line-number">137</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an associative array with the related table names of all  portals as keys and FileMaker_RelatedSet objects as the array values.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of <a href="../FileMaker/FM_RelatedSet.html">FileMaker_RelatedSet</a> objects.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			&amp;getRelatedSets
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetValueList" id="getValueList"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValueList</span> (line <span class="line-number">164</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the list of defined values in the specified value list.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of defined values.</li>
+				<li><span class="field">see:</span> <a href="../FileMaker/FM_Layout.html#methodgetValueListTwoFields">FileMaker_Layout::getValueListTwoFields()</a></li>
+				<li><span class="field">deprecated:</span> Use getValueListTwoFields instead.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getValueList
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$valueList</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$valueList</span><span class="var-description">: Name of value list.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recid</span><span class="var-description">: Record from which the value list should be         displayed.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetValueLists" id="getValueLists"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValueLists</span> (line <span class="line-number">198</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a multi-level associative array of value lists.</p>
+<p class="description"><p>The top-level array has names of value lists as keys and arrays as  values. The second level arrays are the lists of defined values from  each value list.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of value-list arrays.</li>
+				<li><span class="field">see:</span> <a href="../FileMaker/FM_Layout.html#methodgetValueListsTwoFields">FileMaker_Layout::getValueListsTwoFields()</a></li>
+				<li><span class="field">deprecated:</span> Use getValueListTwoFields instead.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getValueLists
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recid</span><span class="var-description">: Record from which the value list should be         displayed.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetValueListsTwoFields" id="getValueListsTwoFields"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValueListsTwoFields</span> (line <span class="line-number">214</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a multi-level associative array of value lists.</p>
+<p class="description"><p>The top-level array has names of value lists as keys and associative arrays as  values. The second level associative arrays are lists of display name and its corresponding  value from the value list.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Array of value-list associative arrays.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getValueListsTwoFields
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recid</span><span class="var-description">: Record from which the value list should be         displayed.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetValueListTwoFields" id="getValueListTwoFields"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValueListTwoFields</span> (line <span class="line-number">180</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the list of defined values in the specified value list.</p>
+<p class="description"><p>This method supports single, 2nd only, and both fields value lists.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> of display names and its corresponding  value from the value list.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getValueListTwoFields
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$valueList</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$valueList</span><span class="var-description">: Name of value list.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recid</span><span class="var-description">: Record from which the value list should be         displayed.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistFields" id="listFields"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listFields</span> (line <span class="line-number">77</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array with the names of all fields in this layout.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of field names as strings.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listFields
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistRelatedSets" id="listRelatedSets"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listRelatedSets</span> (line <span class="line-number">112</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of related table names for all portals on  this layout.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of related table names as strings.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listRelatedSets
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistValueLists" id="listValueLists"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listValueLists</span> (line <span class="line-number">148</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the names of any value lists associated with this  layout.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of value list names as strings.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			listValueLists
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 28 Jul 2008 14:47:45 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

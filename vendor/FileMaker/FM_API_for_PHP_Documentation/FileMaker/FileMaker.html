@@ -1,0 +1,965 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FileMaker</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class FileMaker</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Base FileMaker class. Defines database properties, connects to a database,  and gets information about the API.</p>
+		<p class="notes">
+			Located in <a class="field" href="_FileMaker.php.html">/FileMaker.php</a> (line <span class="field">87</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																												<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#getAPIVersion" title="details" class="method-name">getAPIVersion</a>
+										()
+									</div>
+																																								<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#getMinServerVersion" title="details" class="method-name">getMinServerVersion</a>
+										()
+									</div>
+																																								<div class="method-definition">
+					static 						<span class="method-result">boolean</span>
+										<a href="#isError" title="details" class="method-name">isError</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$variable</span>)
+									</div>
+																																																																																																																																
+												<div class="method-definition">
+											<span class="method-result">FileMaker</span>
+										<a href="#FileMaker" title="details" class="method-name">FileMaker</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$database</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$hostspec</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$username</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$password</span> = <span class="var-default">NULL</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Record.html">FileMaker_Record</a></span>
+										<a href="#createRecord" title="details" class="method-name">&amp;createRecord</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$fieldValues</span> = <span class="var-default">array()</span>])
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getContainerData" title="details" class="method-name">getContainerData</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getContainerDataURL" title="details" class="method-name">getContainerDataURL</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Layout.html">FileMaker_Layout</a>|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+										<a href="#getLayout" title="details" class="method-name">&amp;getLayout</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getProperties" title="details" class="method-name">getProperties</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getProperty" title="details" class="method-name">getProperty</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$prop</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Record.html">FileMaker_Record</a>|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+										<a href="#getRecordById" title="details" class="method-name">&amp;getRecordById</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>)
+									</div>
+																								<div class="method-definition">
+											<span class="method-result">array|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+										<a href="#listDatabases" title="details" class="method-name">listDatabases</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+										<a href="#listLayouts" title="details" class="method-name">listLayouts</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+										<a href="#listScripts" title="details" class="method-name">listScripts</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_Add.html">FileMaker_Command_Add</a></span>
+										<a href="#newAddCommand" title="details" class="method-name">&amp;newAddCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$values</span> = <span class="var-default">array()</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_CompoundFind.html">FileMaker_Command_CompoundFind</a></span>
+										<a href="#newCompoundFindCommand" title="details" class="method-name">&amp;newCompoundFindCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_Delete.html">FileMaker_Command_Delete</a></span>
+										<a href="#newDeleteCommand" title="details" class="method-name">&amp;newDeleteCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_Duplicate.html">FileMaker_Command_Duplicate</a></span>
+										<a href="#newDuplicateCommand" title="details" class="method-name">&amp;newDuplicateCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_Edit.html">FileMaker_Command_Edit</a></span>
+										<a href="#newEditCommand" title="details" class="method-name">&amp;newEditCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$updatedValues</span> = <span class="var-default">array()</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_FindAll.html">FileMaker_Command_FindAll</a></span>
+										<a href="#newFindAllCommand" title="details" class="method-name">&amp;newFindAllCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_FindAny.html">FileMaker_Command_FindAny</a></span>
+										<a href="#newFindAnyCommand" title="details" class="method-name">&amp;newFindAnyCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_Find.html">FileMaker_Command_Find</a></span>
+										<a href="#newFindCommand" title="details" class="method-name">&amp;newFindCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_FindRequest.html">FileMaker_Command_FindRequest</a></span>
+										<a href="#newFindRequest" title="details" class="method-name">&amp;newFindRequest</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FileMaker_Command_PerformScript.html">FileMaker_Command_PerformScript</a></span>
+										<a href="#newPerformScriptCommand" title="details" class="method-name">&amp;newPerformScriptCommand</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$scriptName</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$scriptParameters</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setLogger" title="details" class="method-name">setLogger</a>
+											(<span class="var-type">Log</span>&nbsp;<span class="var-name">&$logger</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setProperty" title="details" class="method-name">setProperty</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$prop</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodgetAPIVersion" id="getAPIVersion"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method getAPIVersion</span> (line <span class="line-number">116</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the version of the FileMaker API for PHP.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> API version.</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getAPIVersion
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetMinServerVersion" id="getMinServerVersion"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method getMinServerVersion</span> (line <span class="line-number">127</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the minimum version of FileMaker Server that this API works with.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Minimum FileMaker Server version.</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getMinServerVersion
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisError" id="isError"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static method isError</span> (line <span class="line-number">105</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Tests whether a variable is a FileMaker API Error.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> TRUE, if the variable is a <a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a> object.</li>
+			</ul>
+	
+	<div class="method-signature">
+	    static
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isError
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$variable</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$variable</span><span class="var-description">: Variable to test.</span>			</li>
+				</ul>
+		
+			
+	</div>
+
+<a name="methodFileMaker" id="FileMaker"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor FileMaker</span> (line <span class="line-number">150</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">FileMaker object constructor.</p>
+<p class="description"><p>If you want to use the constructor without specifying all the   parameters, pass in NULL for the parameters you want to omit.  For example, to specify only the database name, username, and  password, but omit the hostspec, call the constructor as follows:</p><p><samp>new FileMaker('DatabaseName', NULL, 'username', 'password');</samp></p></p>
+	
+	<div class="method-signature">
+		<span class="method-result">FileMaker</span>
+		<span class="method-name">
+			FileMaker
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$database</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$hostspec</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$username</span> = <span class="var-default">NULL</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$password</span> = <span class="var-default">NULL</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$database</span><span class="var-description">: Name of the database to connect to.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$hostspec</span><span class="var-description">: Hostspec of web server in FileMaker Server         deployment. Defaults to http://localhost, if set to NULL.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$username</span><span class="var-description">: Account name to log into database.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$password</span><span class="var-description">: Password for account.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcreateRecord" id="createRecord"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">createRecord</span> (line <span class="line-number">357</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Record object.</p>
+<p class="description"><p>This method does not save the new record to the database.  The record is not created on the Database Server until you call  this record's commit() method. You must specify a layout name,  and you can optionally specify an array of field values.  Individual field values can also be set in the new record object.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Record object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Record.html">FileMaker_Record</a></span>
+		<span class="method-name">
+			&amp;createRecord
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$fieldValues</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to create a new record for.</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$fieldValues</span><span class="var-description">: Initial values for the new record's fields.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetContainerData" id="getContainerData"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getContainerData</span> (line <span class="line-number">447</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the data for the specified container field.</p>
+<p class="description"><p>Pass in a URL string that represents the file path for the container  field contents. For example, get the image data from a container field  named 'Cover Image'. For a FileMaker_Record object named $record,  URL-encode the path returned by the getField() method.  For example:</p><p><samp>&lt;IMG src=&quot;img.php?-url=&lt;?php echo urlencode($record-&gt;getField('Cover Image')); ?&gt;&quot;&gt;</samp></p><p>Then as shown below in a line from img.php, pass the URL into  getContainerData() for the FileMaker object named $fm:</p><p><samp>echo $fm-&gt;getContainerData($_GET['-url']);</samp></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Raw field data|FileMaker_Error if remote container field.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getContainerData
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$url</span><span class="var-description">: URL of the container field contents to get.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetContainerDataURL" id="getContainerDataURL"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getContainerDataURL</span> (line <span class="line-number">466</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the fully qualified URL for the specified container field.</p>
+<p class="description"><p>Pass in a URL string that represents the file path for the container  field contents. For example, get the URL for a container field  named 'Cover Image'.  For example:</p><p><samp>&lt;IMG src=&quot;&lt;?php echo $fm-&gt;getContainerDataURL($record-&gt;getField('Cover Image')); ?&gt;&quot;&gt;</samp></p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Fully qualified URL to container field contents</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getContainerDataURL
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$url</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$url</span><span class="var-description">: URL of the container field contents to get.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLayout" id="getLayout"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLayout</span> (line <span class="line-number">384</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a Layout object that describes the specified layout.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Layout or Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Layout.html">FileMaker_Layout</a>|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			&amp;getLayout
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Name of the layout to describe.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetProperties" id="getProperties"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getProperties</span> (line <span class="line-number">186</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an associative array of property name =&gt; property value for  all current properties and their current values.</p>
+<p class="description"><p>This array enables PHP object introspection and debugging when necessary.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> All current properties.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getProperties
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetProperty" id="getProperty"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getProperty</span> (line <span class="line-number">173</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the current value of a property.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Property's current value.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getProperty
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$prop</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$prop</span><span class="var-description">: Name of the property.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetRecordById" id="getRecordById"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRecordById</span> (line <span class="line-number">372</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns a single FileMaker_Record object matching the given  layout and record ID, or a FileMaker_Error object, if this operation  fails.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Record or Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Record.html">FileMaker_Record</a>|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			&amp;getRecordById
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout that $recordId is in.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recordId</span><span class="var-description">: ID of the record to get.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodlistDatabases" id="listDatabases"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listDatabases</span> (line <span class="line-number">396</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of databases that are available with the current  server settings and the current user name and password  credentials.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of database names or an Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			listDatabases
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistLayouts" id="listLayouts"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">listLayouts</span> (line <span class="line-number">420</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of layouts from the current database that are  available with the current server settings and the current  user name and password credentials.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of layout names or an Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			listLayouts
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodlistScripts" id="listScripts"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">listScripts</span> (line <span class="line-number">408</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of ScriptMaker scripts from the current database that  are available with the current server settings and the current user  name and password credentials.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> List of script names or an Error object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array|<a href="../FileMaker/FileMaker_Error.html">FileMaker_Error</a></span>
+		<span class="method-name">
+			listScripts
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodnewAddCommand" id="newAddCommand"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">newAddCommand</span> (line <span class="line-number">213</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_Add object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Add command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_Add.html">FileMaker_Command_Add</a></span>
+		<span class="method-name">
+			&amp;newAddCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$values</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to add a record to.</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$values</span><span class="var-description">: Associative array of field name =&gt; value pairs.         To set field repetitions, use a numerically indexed array for         the value of a field, with the numeric keys corresponding to the         repetition number to set.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewCompoundFindCommand" id="newCompoundFindCommand"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">newCompoundFindCommand</span> (line <span class="line-number">283</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_CompoundFind object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Compound Find Set command          object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_CompoundFind.html">FileMaker_Command_CompoundFind</a></span>
+		<span class="method-name">
+			&amp;newCompoundFindCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to find records in.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewDeleteCommand" id="newDeleteCommand"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">newDeleteCommand</span> (line <span class="line-number">244</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_Delete object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Delete command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_Delete.html">FileMaker_Command_Delete</a></span>
+		<span class="method-name">
+			&amp;newDeleteCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to delete record from.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recordId</span><span class="var-description">: ID of the record to delete.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewDuplicateCommand" id="newDuplicateCommand"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">newDuplicateCommand</span> (line <span class="line-number">257</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_Duplicate object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Duplicate command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_Duplicate.html">FileMaker_Command_Duplicate</a></span>
+		<span class="method-name">
+			&amp;newDuplicateCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout that the record to duplicate is in.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recordId</span><span class="var-description">: ID of the record to duplicate.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewEditCommand" id="newEditCommand"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">newEditCommand</span> (line <span class="line-number">231</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_Edit object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Edit command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_Edit.html">FileMaker_Command_Edit</a></span>
+		<span class="method-name">
+			&amp;newEditCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$recordId</span>, [<span class="var-type">array</span>&nbsp;<span class="var-name">$updatedValues</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout that the record is part of.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recordId</span><span class="var-description">: ID of the record to edit.</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$updatedValues</span><span class="var-description">: Associative array of field name =&gt; value         pairs that contain the updated field values. To set field         repetitions, use a numerically indexed array for the value of a         field, with the numeric keys corresponding to the repetition         number to set.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewFindAllCommand" id="newFindAllCommand"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">newFindAllCommand</span> (line <span class="line-number">322</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_FindAll object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Find All command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_FindAll.html">FileMaker_Command_FindAll</a></span>
+		<span class="method-name">
+			&amp;newFindAllCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to find all records in.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewFindAnyCommand" id="newFindAnyCommand"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">newFindAnyCommand</span> (line <span class="line-number">310</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_FindAny object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Find Any command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_FindAny.html">FileMaker_Command_FindAny</a></span>
+		<span class="method-name">
+			&amp;newFindAnyCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to find one random record from.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewFindCommand" id="newFindCommand"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">newFindCommand</span> (line <span class="line-number">269</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_Find object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Find command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_Find.html">FileMaker_Command_Find</a></span>
+		<span class="method-name">
+			&amp;newFindCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to find records in.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewFindRequest" id="newFindRequest"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">newFindRequest</span> (line <span class="line-number">298</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_FindRequest object. Add one or more  Find Request objects to a <a href="../FileMaker/FileMaker_Command_CompoundFind.html">FileMaker_Command_CompoundFind</a> object,  then execute the Compound Find command.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Find Request command object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_FindRequest.html">FileMaker_Command_FindRequest</a></span>
+		<span class="method-name">
+			&amp;newFindRequest
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to find records in.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodnewPerformScriptCommand" id="newPerformScriptCommand"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">newPerformScriptCommand</span> (line <span class="line-number">337</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Creates a new FileMaker_Command_PerformScript object.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> New Perform Script command          object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FileMaker_Command_PerformScript.html">FileMaker_Command_PerformScript</a></span>
+		<span class="method-name">
+			&amp;newPerformScriptCommand
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$layout</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$scriptName</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$scriptParameters</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$layout</span><span class="var-description">: Layout to use for script context.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$scriptName</span><span class="var-description">: Name of the ScriptMaker script to run.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$scriptParameters</span><span class="var-description">: Any parameters to pass to the script.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetLogger" id="setLogger"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setLogger</span> (line <span class="line-number">197</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Associates a PEAR Log object with the API for logging requests  and responses.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setLogger
+		</span>
+					(<span class="var-type">Log</span>&nbsp;<span class="var-name">&$logger</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Log</span>
+				<span class="var-name">&$logger</span><span class="var-description">: PEAR Log object.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetProperty" id="setProperty"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setProperty</span> (line <span class="line-number">161</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets a property to a new value for all API calls.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setProperty
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$prop</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$prop</span><span class="var-description">: Name of the property to set.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span><span class="var-description">: Property's new value.</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Wed, 29 Jun 2011 12:31:22 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

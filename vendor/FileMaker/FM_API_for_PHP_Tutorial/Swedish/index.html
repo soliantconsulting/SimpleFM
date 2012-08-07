@@ -1,0 +1,418 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>FileMaker API for PHP - självstudier</title>
+        <meta name="generator" content="BBEdit 8.2" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+    </head>
+
+    <body>
+        <div class="sectionWrapper">
+
+            <h1 align="center"><img src="header.gif" width="700" height="150"></h1>
+
+            <h1 align="center">FileMaker<span style="font-size:14px;">®</span> API for PHP - självstudier</h1>
+        </div>
+
+        <div class="sectionWrapper">
+
+            <h2>Innehåll</h2>
+
+            <a href="#introduction">Introduktion</a><br/> <a href="#lesson1" title="Konfigurera API">Lektion 1</a><br/> <a href="#lesson2" title="Visa containerbilder">Lektion 2</a><br/> <a href="#lesson3" title="Lägga till nya poster">Lektion 3</a><br/> <a href="#lesson4">Lektion 4</a><br/> <a href="#lesson5">Lektion 5</a><br/> <a href="#lesson6">Lektion 6</a><br/>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="introduction"></a>
+
+            <h2>Introduktion</h2>
+
+            <h3>	Välkommen till FileMaker® API för PHP - självstudier</h3>
+            <p>I dessa självstudier lär du känna nyckelfunktionerna i FileMaker API for PHP. Självstudierna består av 6 lektioner som har utformats för att visa dig hur du kan använda programmeringsgränssnittet (API) för att integrera en FileMaker Pro-databas med ett PHP-webbprogram. I varje lektion introduceras en viss funktion i programmeringsgränssnittet, med en förklaring av hur koden är skriven och hur den fungerar.
+            <p>Självstudiedatabasen består av ett FileMaker-frågeformulärssystem (questionnaire.fp7<em>). </em>Varje post i ett frågeformulär kan ha flera relaterade frågor. Varje fråga kan ha flera relaterade svar. Endast ett frågeformulär kan väljas att vara <em>aktivt</em> frågeformulär. När användarna använder PHP-webbprogrammet erbjuds de att använda det aktiva frågeformuläret. När en användare fyller i ett frågeformulär online läggs en post för<em> respondent</em> till för användaren, och dennes svar läggs till som relaterade poster.
+
+            <p>I självstudierna får du gradvis bygga upp ett PHP-webbprogram. Varje lektion bygger på den föregående enligt följande:
+            <ul>
+              <li>            Lektion 1
+                <ul>
+                  <li>Konfigurera <em>FileMaker</em>-databasobjektet
+                    <ul>
+                      <li class="comment"><em>Hur måste jag förbereda FileMaker-databasobjektet för att kunna använda det i mina egna webbprogram?</em></li>
+                    </ul>
+                  </li>
+                  <li>Visa alla
+                    <ul>
+                      <li class="comment"><em>Hur hittar jag alla poster i en databas och visar dem på webben? </em></li>
+                    </ul>
+                  </li>
+                  <li>Utför sökning
+                    <ul>
+                      <li class="comment"><em>Hur hittar jag en viss post i en databas och visar den på webben? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 2
+                <ul>
+                  <li>Visa containerbilder
+                    <ul>
+                      <li class="comment"><em>Hur kan jag visa webbkompatibla bilder i containerfält på min webbplats? </em></li>
+                    </ul>
+                  </li>
+                  <li>Använd ContainerBridge.php
+                    <ul>
+                      <li class="comment"><em>Vad är filen </em>ContainerBridge.php<em> och hur fungerar den? </em> </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 3
+                <ul>
+                  <li>Visa FileMaker-värdelistor
+                    <ul>
+                      <li class="comment"><em>Hur kan jag visa egna FileMaker-värdelistor på webben? </em></li>
+                    </ul>
+                  </li>
+                  <li>Lägg till poster
+                    <ul>
+                      <li class="comment"><em>Hur lägger jag till filer till en FileMaker-databas från ett skickat webbformulär? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 4
+                <ul>
+                  <li>Hämta poster efter ID
+                    <ul>
+                      <li class="comment"><em>Hur kan jag hämta en FileMaker-post efter dess interna ID utan att genomföra ytterligare en sökning? </em></li>
+                    </ul>
+                  </li>
+                  <li>Hämta relaterad uppsättning (portal)
+                    <ul>
+                      <li class="comment"><em>Hur kan jag visa poster från en FileMaker-portal på min webbplats? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 5
+                <ul>
+                  <li>Lägg till relaterade poster
+                    <ul>
+                      <li class="comment"><em>Hur kan jag lägga till poster till en portal från min webbplats? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lektion 6
+                <ul>
+                  <li>Granskning av hämtad relaterad uppsättning (portal)
+                    <ul>
+
+                      <li class="comment"><em>Hur kan jag visa poster från en FileMaker-portal på min webbplats? </em></li>
+                    </ul>
+                  </li>
+                  <li>Anpassa format med CSS-formatmallar (cascading style sheets)
+                    <ul>
+                      <li class="comment"><em>Hur kan jag ändra utseendet på mina HTML-sidor med CSS-formatmallar? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+            <p>Den här självstudien täcker inte in alla funktionerna i programmeringsgränssnittet. När du är klar med de här lektionerna, kommer du dock att ha en god grund att stå på. Om du vill veta mer om API:et kan du gå till FileMaker API for PHP-dokumentationen.
+            <p>Du tar fram FileMaker API for PHP-dokumentationen genom att gå till startsidan för FileMaker Server Admin Console och klicka på "PHP Site Assistant and XSLT Site Assistant Tools." På sidan för webbpubliceringsverktyg klickar du på "FileMaker API for PHP-dokumentation". Använd dokumentationen som referens medan du går igenom självstudien. Den hjälper dig att upptäcka hur du kan utnyttja alla egenskaper hos FileMaker API for PHP.
+            <p>Du bör också bekanta dig med questionnaire.fp7-databasen. Upptäck hur den fungerar och hur man bygger upp frågeformulär genom att skapa frågor med flera svarsalternativ. Dina kunskaper om utformningen av questionnaire.fp7 är en viktig del av din förståelse av hur PHP-självstudieprogrammet använder programmeringsgränssnittet.
+            <h3>Börja här</h3>
+
+            <h4>Installation och inställningar</h4>
+            <p class="h4_text">Du måste ha installerat FileMaker Server 9, som måste vara värd för databasen questionnaire.fp7. Den webbserver som ingår i FileMaker Server-distributionen måste vara värd för självstudiemappen. </p>
+            <p class="h4_text">Mer information om installation och distribution av FileMaker Server 9 finns i <em>FileMaker Server startbok.</em> Mer information om FileMaker API for PHP finns i <em>FileMaker Server, anpassad webbpublicering med PHP. </em></p>
+
+            <h4>Viktiga kunskaper och färdigheter      </h4>
+            <p class="h4_text">Du bör ha viss kännedom om HTML-programmering. Detta gäller HTML-uttryck, huvuden och elementmarkörer. Om du vill ha mer information om hur man programmerar webbsidor med HTML, kan du gå till <a href="http://www.w3schools.com/xhtml/xhtml_dtd.asp">XHTML Tutorial på W3Schools</a>.</p>
+            <p class="h4_text">Du bör ha viss kännedom om PHP-programmering. Detta gäller standardutdata, variabler, samlingar, villkorliga loopar, objekt,  metoder och funktioner. Om du vill ha mer information om hur man programmerar med PHP, kan du gå till <a href="http://www.w3schools.com/php/default.asp">PHP Tutorial på W3Schools</a>.</p>
+            <p class="h4_text">Du bör kunna använda ett textredigeringsprogram med HTML och PHP. I den här självstudien förväntas du använda ett textredigeringsprogram för att visa och redigera HTML- och PHP-kod.</p>
+            <p class="h4_text">Du bör ha aktiva kunskaper om FileMaker Pro-databasdesign. Detta omfattar fält, relationer, layouter, portaler och containerfält. Mer information om hur du utformar databaser med FileMaker Pro finns i dokumentationen till FileMaker Pro. </p>
+
+            <h4>Bästa praxis</h4>
+            <p class="h4_text"> När du redigerar poster i FileMaker Pro bör du komma ihåg att <em>lämna</em> eller <em>aktivera</em> posten för att ändringarna ska träda i kraft. Webbsidor visar inte ändringar som har gjorts i databasen förrän posterna har stängts.</p>
+            <p class="h4_text">För att du ska kunna visa PHP-sidorna för respektive lektion i din webbläsare måste du ange fullständig sökväg för att PHP-koden ska exekveras. Om filerna t.ex. ligger på din lokala dator riktar du webbläsaren mot en URL som börjar med  "http://localhost/...". Använd inte den lokala filsökvägen som kanske börjar med "file:///Volumes/...". Om du använder en sökväg som börjar med "file://" resulterar detta i att PHP-koden <strong>visas</strong>, inte att den <strong>exekveras</strong>. Kontrollera alltid att URL:en börjar med "http", eller "https" om du har ställt in SSL på din webbserver.</p>
+            <p />
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson1"></a>
+
+            <h2>Lektion 1</h2>
+
+            <h3>Mål</h3>
+            <p>Lektion 1 ger grunderna för hur du använder FileMaker API for PHP i två PHP-filer: <span class="page">home.php</span> och <span class="page">dbaccess.php</span>. Filen <span class="page">home.php</span> fungerar som startpunkt för webbläsaren, och filen <span class="page">dbaccess.php</span>  tillhandahåller ett <em>FileMaker</em>-objekt som representerar databasen. Dessa sidor ger de grundläggande stegen för hur du instantierar <em>FileMaker</em>-databasobjekt, anger nyckelegenskaper och genomför en sökning i  <span class="database">questionnaire.fp7</span>-databasen.</p>
+
+            <h3>Starta</h3>
+            <p>Du visar självstudiexemplet genom att rikta webbläsaren mot  <a href="Lesson1/home.php">home.php</a> i Lesson1-mappen. Den här sidan visar välkomstskärmen för FileMaker-frågeformulärsystemet. När sidan laddas skapas en anslutning mellan PHP och Web Publishing Engine, vilket resulterar i en funnen post i <span class="database">questionnaire.p7</span>-databasen. </p>
+            <p>Öppna filen <span class="page">home.php</span> i Lektion 1-mappen i ett textredigeringsverktyg. Sök efter följande kod precis efter huvudmarkören.</p>
+            <p class="code">&lt;?php include ("dbaccess.php"); ?&gt;</p>
+            <p>Detta PHP-uttryck inkluderar, eller <em>laddar</em>, filen <span class="page">dbaccess.php</span>. Filen <span class="page">dbaccess.php</span> innehåller funktioner som konfigurerar <em>FileMaker</em>-databasobjektet och förbereder det för databasoperationer. Följaktligen fungerar inte API-metoderna i <span class="page">home.php</span> utan den. Även om metoderna i <span class="page">dbaccess.php</span> kunde ha skrivits i filen <span class="page">home.php</span> har de separerats för att underlätta felsökning och underhåll.  </p>
+
+            <h3>Konfigurera <em>FileMaker</em>-databasobjektet </h3>
+            <p>Filen <span class="page">dbaccess.php</span> innehåller kod för att konfigurera <em>FileMaker</em>-databasobjektet. Den spelar en avgörande roll i skapandet av frågeformulärprogrammet. Följ följande steg när du konfigurerar <em>FileMaker</em>-objektet:  </p>
+
+            <ol>
+                <li>Ladda FileMaker API for PHP</li>
+                <li>Tilldela en instans av <em>FileMaker</em>-databasklassen till en variabel</li>
+                <li>Ange nyckelegenskaper för den nya <em>FileMaker</em>-instansen </li>
+            </ol>
+
+            <p>Öppna filen <span class="page">dbaccess.php</span> i Lesson1-mappen i ett textredigeringsverktyg, och följ beskrivningen av respektive steg nedan. </p>
+
+            <h4 class="h4_text">1. Ladda FileMaker API for PHP</h4>
+            <p class="h4_text">FileMaker API:et måste först ha lästs in i PHP-minnet för att kunna användas.  Detta gör du med ett require-uttryck.</p>
+            <p class="code">require_once ('FileMaker.php');</p>
+            <p class="h4_text">När du väl har laddat den kan du skapa instanser av <em>FileMaker</em>-databasklassen, och använda dem för databasanslutningar i ditt webbprogram.  Ett försök att använda API:et utan att först ladda den resulterar i ett fel.</p>
+
+            <h4 class="h4_text">2. Tilldela en instans av <em>FileMaker</em>-databasklassen till en variabel</h4>
+            <p class="h4_text">Du måste skapa en instans av <em>FileMaker</em>-databasklassen innan den kan användas. Den måste även tilldelas till en variabel som refererar till den i koden.</p>
+            <p class="code">$fm = new FileMaker();</p>
+            <p class="h4_text">Koden ovan genereras som en instans av  <em>FileMaker</em>-databasobjektet. Den refereras till som variabeln <em>$fm</em>.</p>
+
+            <h4 class="h4_text">3. Ange nyckelegenskaper för den nya <em>FileMaker</em>-instansen</h4>
+            <p class="h4_text"><em>FileMaker</em>-databasobjektet har en uppsättning egenskaper som du kan konfigurera när som helst. Vissa egenskaper måste dock konfigureras innan några databasoperationer kan göras. Här är koden som konfigurerar de egenskaper som behövs för denna självstudie.</p>
+            <p class="code">$fm->setProperty('database', 'questionnaire'); <br /> $fm->setProperty('username', 'web'); <br /> $fm->setProperty('password', 'web');        </p>
+            <p class="h4_text"><strong>Obs! - </strong> Databasnamnet <em>questionnaire</em> behöver inte tillägget <em>fp7 </em>i parametern.</p>
+            <p class="h4_text"><strong>Obs! - </strong>I FileMaker API for PHP-dokumentationen finns en lista med <em>FileMaker</em>-databasklassegenskaper och beskrivningar av dem. </p>
+            <p>Filen <span class="page">dbaccess.php</span> innehåller väldigt lite kod, men den förbereder effektivt <em>FileMaker</em>-objektetet för användning. Efter det att filen har laddats kan <em>FileMaker</em>-objektet användas som variabeln $fm och nyckelegenskaperna ges sina nödvändiga värden. Filen <span class="page">dbaccess.php</span> gör det möjligt för filen <span class="page">home.php</span> att kommunicera med databasen <span class="database">questionnaire.fp7</span>. </p>
+
+            <h3>Utför sökning, Visa alla</h3>
+            <p>Filen  <span class="page">home.php</span>  utför två databasoperationer: <em>Visa alla</em> (Visa alla poster) och <em>Sök</em>. Du visar koden för dessa operationer genom att öppna filen <span class="page">home.php</span> i ditt textredigeringsverktyg. Du visar databasen för dessa operationer genom att öppna filen <span class="database">questionnaire.fp7</span> på FileMaker Server.</p>
+
+            <h4 class="h4_text">1. Visa alla (Visa alla poster)</h4>
+            <p class="h4_text">Databasen <span class="database">questionnaire.fp7</span> innehåller en layout som kallas <em>Active Questionnaire</em>. Denna layout fungerar som ett gränssnitt. Den innehåller bara en post i tabellen. I denna layout väljer användarna vilket frågeformulär som ska vara <em>aktivt</em>. Webbprogrammet måste hämta ID:t för detta <em>aktiva</em> frågeformulär.</p>
+            <p class="h4_text">Det aktiva frågeformulärets ID hämtas genom att en sökning (Visa alla poster) genomförs i layouten <em>Active Questionnaire. </em>Den  här åtgärden använder kommandoobjektet <em>FileMaker_Command_FindAll</em>.</p>
+            <p class="h4_text"><strong>Obs! - </strong>I FileMaker API for PHP-dokumentationen finns en lista med kommandoobjekt och deras metoder. </p>
+            <p class="h4_text"> En instans av objektet FileMaker_Command_FindAll skapas genom att $fm (<em>FileMaker</em>-databasinstansen) exekverar <em>newFindAllCommand()</em>-metoden, och (inom parentes) specificerar layoutens namn <em>Active Questionnaire. </em>Layouten fastställer vilken tabellförekomst (kontext) som används och vilka fält som ska returneras (resultat).</p>
+            <p class="h4_text">Instansen <em>FileMaker_Command_FindAl</em><em>l </em> måste tilldelas till en variabel så som följande exempel visar. </p>
+            <p class="code">$findCommand = $fm->newFindAllCommand('Active Questionnaire');</p>
+            <p class="h4_text">Koden ovan tilldelar ett nytt FileMaker_Command_FindAll-objekt till variabeln <em>$findCommand</em>. Kommandot Visa alla genomförs med metoden <em>execute()</em>. Sökresultatet måste vara en variabel.</p>
+            <p class="code">$result = $findCommand->execute();</p>
+            <p class="h4_text">Det är möjligt att ett fel uppstår när kommandot körs Om det uppstår ett fel (eller inga matchande poster hittas), tilldelas variabeln $result ett <em>FileMaker_Error-objekt</em>. Kontrollera FileMaker_Error-objektet med följande kod. Du visar felmeddelandet med metoden <em>getMessage()</em>.</p>
+            <p class="code"> if (FileMaker::isError($result)) { <br />     echo "&lt;p&gt;Error: " . $result->getMessage() . "&lt;/p&gt;"; <br />     exit; <br /> }</p>
+            <p class="h4_text">Om inget fel har inträffat innehåller variabeln <em>$result</em> en samling av FileMaker_Record-objekt, ett för varje post som har påträffats i uppsättningen. Använd variabeln $result för att hämta den första posten i Visa alla-resultetet. Eftersom PHP-samlingarna indexeras numeriskt som standard, kan du hämta en första posten genom att använda följande kod.</p>
+            <p class="code">$record = $records[0];    </p>
+            <p class="h4_text">Den här koden tilldelar ett FileMaker_Record-objekt som innehåller den första posten i uppsättningen till variabeln <em>$record</em>. Du kan hämta innehållet i questionnaire_id från den här posten genom att använda metoden <em>getField()</em>. Resultatet till metoden<em> getField()</em> måste tilldelas till en variabel.
+
+            <p class="code">$active_questionnaire_id =  $record->getField('questionnaire_id');    </p>
+            <p class="h4_text">Den här variabeln innehåller nu ID:t för det aktiva frågeformuläret. I nästa steg används den här variabeln som parameter i nästa sökning. </p>
+            <p class="h4_text"><strong>Obs! - </strong>I FileMaker API for PHP-dokumentationen finns en lista med objekt och deras metoder.</p>
+
+            <h4 class="h4_text">2. Sök</h4>
+            <p class="h4_text">Nu när du har ID för det aktiva frågeformuläret kan du använda det för att <em>söka</em> efter frågeformulärsposten. Koden för denna operation finns mot slutet av filen <span class="page">home.php</span>. Den  här åtgärden använder kommandoobjektet <em>FileMaker_Command_Find</em>.</p>
+            <p class="h4_text">En instans av objektet FileMaker_Command_Find skapas genom att $fm (<em>FileMaker</em>-databasinstansen) exekverar <em>newFindCommand()</em>-metoden, och (inom parentes) specificerar layoutens namn <em>Active Questionnaire. </em>Layouten fastställer vilken tabellförekomst i sökningen som används och vilka fält som ska returneras i resultatet.</p>
+            <p class="h4_text">Instansen <em>FileMaker_Command_Find</em><em></em> måste tilldelas till en variabel så som följande exempel visar. </p>
+            <p class="code">$findCommand =& $fm->newFindCommand('questionnaire');</p>
+            <p class="h4_text">Du lägger till villkor genom att använda metoden <em> addFindCriterion()</em>. Metoden <em>addFindCriterion()</em> använder två parametrar: <em>fieldName </em>och <em>searchParameter</em>. Sänd fältnamnet "Questionnaire ID" (enligt definitionen i FileMaker Pro) och variabeln <em>$active_questionnaire_id</em> som parametrar.</p>
+            <p class="code">$findCommand->addFindCriterion('Questionnaire ID', $active_questionnaire_id);</p>
+            <p class="h4_text"><strong>Obs! - </strong>Metoden <em>addFindCriterion()</em> kan anropas flera gånger och simulera det logiska AND som inträffar när man anger flera sökvillkor i samma begäran i FileMaker Pro.</p>
+            <p class="h4_text">När sökvillkoren har lagts till används metoden <em>execute()</em> för att genomföra sökningen. Resultatet till metoden <em>execute()</em> måste tilldelas till en variabel.</p>
+            <p class="code">$result = $findCommand->execute();</p>
+            <p class="h4_text">Variabeln $result innehåller nu en samling FileMaker_Record-objekt. Eftersom sökningen gjordes i layouten <em>questionnaire</em>, innehåller varje post i <em>$result</em> värdena för varje fält i layouten <em>questionnaire</em>.</p>
+            <p class="h4_text">Den slutliga koden på den här sidan använder PHP echo-uttryckt och metoden <em>getField()</em> för att ta fram fälten <em>Questionnaire Name</em> och <em>Description</em> på sidan <span class="page">home.php</span>.</p>
+            <p />
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson2"></a>
+
+            <h2>Lektion 2</h2>
+
+            <h3>Mål</h3>
+            <p>Lektion 2 tar upp den kod som krävs för att visa FileMaker Pro containterbilder på webben.  Om du lagrar webbkompatibla bilder i en FileMaker Pro-databas kan du använda FileMaker API for PHP för att hämta dessa bilder och visa dem på din webbplats.</p>
+
+            <h3>Starta</h3>
+            <p>Öppna självsstudiedatabasen <span class="database">questionnaire.fp7 för FileMaker API och </span>se till att det aktiva formuläret har en webbkompatibel bild i containerfältet.  Visa sedan PHP-självstudieexemplet genom att öppna Lesson2 <a href="Lesson2/home.php">home.php</a>-filen i din webbläsare. Sidan visar bilden för det aktiva frågeformuläret. Försök att ändra containerbild i FileMaker-databasen. Lämna posten när du är klar. Uppdatera webbläsaren och se hur webbplatsen uppdateras med den nya bilden.</p>
+
+            <h3>Visa containerbild</h3>
+            <p>Du ser hur API:et används för denna åtgärd genom att öppna filen <span class="page">home.php</span> i Lesson2-mappen. Titta på det sista PHP-uttrycket i filen, och var särskilt uppmärksam på &lt;img&gt;-markören (bild) och dess <em>src</em>-attribut (källa).</p>
+            <p>Var uppmärksam på följande.</p>
+            <ol>
+              <li>Containerfältet <em>Graphic</em> finns på layouten <em>questionnaire</em> (vilket är layouten i föregående sökning). Tänk på att bara värden från fält i den <strong>layout som används för sökningen</strong> returneras till API:et.</li>
+              <li>Det värde för fältet <em>Graphic</em> som returneras är <strong>inte en bild</strong>, utan en special-URL som begär bilden från Web Publishing Engine.</li>
+            </ol>
+            <p class="code">echo '&lt;img src="ContainerBridge.php?path=' . urlencode($record->getField('Graphic')) . '"&gt;';</p>
+            <p>Eftersom en HTML &lt;img&gt;-markör (bild) måste ha en <em>filsökväg</em> som sitt <em>src</em>-attribut (källa), använder den här lektionen en separat fil för att hämta bilden. Filen som hämtar containterbilden heter <span class="page">ContainerBridge.php</span>, och dess filnamn visas inuti<em>src</em>-attibutet för bildmarkören &lt;img&gt; (image).</p>
+            <p>Filen <span class="page">ContainerBridge.php</span> vet inte vilken bild som du vill visa. För att specificera bilden måste du lägga till fältvärdet <em>Graphic</em> i slutet av käll-URL:en <em>src</em>. I HTML kallas detta GET-metoden.</p>
+            <p>Använd ett <em>name/value</em>-par och börja med ett frågetecken och sammanlänka den önskade strängen. <em>name</em> sätts till "sökväg" och <em>value</em> sätts till metodresultatet <em>getField()</em> och sänder containerfältets namn <em>(Graphic)</em> inom parentes.</p>
+            <p><strong>Obs! - </strong>Resultatet <em>getField() </em>sänds till PHP-funktionen urlencode() för att kontrollera att specialtecknen kodas korrekt för URL:en. </p>
+
+            <h3>Använda ContainerBridge.php </h3>
+            <p>Öppna filen <span class="page">ContainerBridge.php</span> i Lesson2-mappen i ditt textredigeringsverktyg. Detta enkla manus använder FileMaker_Record-metoden <em>getContainerData()</em> för att hämta den faktiska bilden.</p>
+            <p>För att <em>getContainerData()</em> ska fungera måste du sända fältresultatet från <em>getField()</em> (för ett containerfält) till metoden <em>getContainerData()</em> inom parentes. I <span class="page">home.php</span> sänds resultatet från getField() för fältet <em>Graphic</em> via URL:en. I <span class="page">ContainerBridge.php</span> hämtas resultatet från URL:en via <em>path</em>-element för samlingen $_GET och sänds till metoden <em>getContainerData()</em>. </p>
+            <p class="code">echo $fm->getContainerData($_GET['path']);</p>
+            <p>Filen <span class="page">ContainerBridge.php</span> hämtar helt enkelt sökvägen för den specificerade bilden från FileMaker Pro-databasen, så att filen <span class="page">home.php</span> kan använda den i markören &lt;img&gt; för att visa bilden i webbläsaren. </p>
+            <p><strong>Obs! - </strong>I FileMaker API for PHP-dokumentationen finns en lista med FileMaker_Record-objektmetoder.</p>
+        </div>
+
+
+        <div class="sectionWrapper">
+            <a name="lesson3"></a>
+            <h2>Lektion 3</h2>
+
+
+            <h3>Mål</h3>
+            <p>Lektion 3 tar upp den kod som krävs för att skapa dynamiska webbformulär i FileMaker-layoutobjekt. Den tar även upp den kod som krävs för att lägga till nya FileMaker-poster från ett webbformulär. I den här lektionen används två ytterligare PHP-filer: <span class="page">Respondent.php</span> och <span class="page">handle_form.php</span>. Filen <span class="page">Respondent.php</span> används för att dynamiskt skapa ett webbformulär, medan filen <span class="page">handle_form.php</span> används för att verifiera formulärposter och lägga in dem i databasen <span class="database">questionnaire.fp7</span> som nya poster.</p>
+
+            <h3>Starta</h3>
+            <p>Öppna frågeformulärswebbplatsen genom rikta webbläsaren till <a href="Lesson3/home.php">home.php</a>-filen i Lesson3-mappen. I den här versionen av sidan visas knappen <em>Continue</em> som du använder för att starta frågeformulärsprogrammet. När du klickar på Continue omdirigeras du till filen <span class="page">Respondent.php</span>. Fyll i informationen i webbformuläret och klicka på <em>Submit</em>. Gör om det om du inte angav tillräckligt med information. När ditt formulär verifieras visas ett Thank You och den information som du har angett läggs till i databasen <span class="database">questionnaire.fp7</span> som en ny post. </p>
+
+            <h3>Hämta värdelistposter</h3>
+            <p>Du kan se hur det här programmet fungerar genom att öppna filen <span class="page">Respondent.php</span> i ditt textredigeringsverktyg. Observera att filen<span class="sectionWrapper"> </span><span class="page">dbaccess.php</span> visas högt upp. Som redan nämnts i lektion 1, garanterar include-uttrycket att du har en instans av <em>FileMaker</em>-databasklassen, och att den instansen kan användas som variabeln <em>$fm</em>.</p>
+            <p>Observera alternativknappsformulärelementet <span class="page">Respondent.php</span> som kallas "prefix". Det här elementet hämtar sina värden från FileMaker Pro-databasen questionnaire.fp7 FileMaker Pro genom att använda dess värdelista med samma namn. Den här tekniken gör det möjligt att skapa ett dynamiskt formulärelement som baseras på en värdelista som har definierats i FileMaker-databasen. På det här viset behöver du inte uppdatera din PHP-kod varje gång som värdelistan ändras i databasen. Denna teknik implementeras i följande steg: </p>
+            <ol>
+              <li>Hämta ett layoutobjekt med metoden <em>getLayout() </em> (med layoutnamnet inom parentes) </li>
+              <ul>
+                <li>Metoden <em>getLayout()</em> returnerar ett FileMaker_Layout-objekt</li>
+              </ul>
+              <li>Hämta värdelistan via metoden <em>getValueList()</em>          </li>
+              <ul>
+                <li><em>getValueList() </em> är en metod hos FileMaker_Layout-objeketet  </li>
+              </ul>
+              <li>Loopa genom samlingen med värden och gör vart och ett till en alternativknapp</li>
+            </ol>
+            När du använder den här tekniken måste du tänka på att den specificerade layouten måste innehålla ett fält <em>som har formaterats</em> efter den specificerade värdelistan. Om värdelistan begärs med metoden <em>getValueList()</em>, och värdelistan inte har formaterats efter något fält i layouten som specificerats med <em>getLayout()</em>, returneras ett fel. Här är den kod som används för att visa de dynamiska alternativknapparna.
+            <p class="code">$layout =& $fm->getLayout('Respondent');<br /> $values = $layout->getValueList('prefixes');<br /> foreach($values as $value){ <br />           echo '&lt;input type= "radio" name= "prefix" value= "'. $value .'"&gt;' . $value . ' ';<br /> }</p>
+            <p><strong>Obs! - </strong>I FileMaker API for PHP-dokumentationen finns en lista med FileMaker_Layout-objektmetoder.</p>
+            <p><strong>Obs! -</strong> Formuläret i <span class="page">Respondent.php</span> innehåller även flera dolda formulärelement. Ett, med namnet "active_questionnaire_id",  innehåller frågeformulärs-ID:t från <span class="page">home.php</span>. Det här formuläret sänder ID:t till <span class="page">handle_form.php</span> där det används i lektion 4. </p>
+
+            <h3>Lägg till ny post</h3>
+            <p>När formuläret <span class="page">Respondent.php</span> har skickat data, sänds värdena till åtgärdssidan <span class="page">handle_form.php</span> via POST-metoden. Öppna filen <span class="page">handle_form.php</span> i Lesson3-mappen med ditt textredigeringsverktyg.</p>
+            <p>Observera att data som skickats av användaren läggs i en samling som tilldelas variabeln <em>$respondent_data</em>. I denna samling motsvaras <em>Key</em> för varje element av namnet på det FileMaker-fält som informationen ska skickas till. <em>Value</em> för varje element motsvaras av de värden som har skickats från HTML-formulärelementet i $_POST-samlingen. Denna $respondent_data-samling används av <em>FileMaker</em>-objektet när databasposten skapas. </p>
+            <p>Efter det att datasamlingen har skapats genomför PHP-koden vissa enkla kontroller. Dessa verifieringsmetoder använder PHP-kod explicit. FileMaker Server genomför ingen verifiering under denna åtgärd.</p>
+            <p>När användarinformationen har verifierats kan en ny post skapas i två enkla steg:</p>
+            <ol>
+              <li>Skapa ett nytt FileMaker_Command_Add-objekt, som sänder två parametrar:
+                <ul>
+                  <li>layoutnamn (layouten måste ha nödvändiga fält)</li>
+                  <li>datasamling <em>($respondent_data)</em> </li>
+                </ul>
+              </li>
+              <li>Lägg till posten med metoden <em>execute()</em>.</li>
+            </ol>
+            <p class="code"> $newRequest =& $fm->newAddCommand('Respondent', $respondent_data);<br /> $result = $newRequest->execute(); </p>
+            <p>Tänk på att när du skapar ett nytt FileMaker_Command_Add-objekt måste du specificera layoutens namn. Layoutnamnet fastställer vilken tabellförekomst (kontext) som används och vilka fält som ska returneras (resultat). De fält som du använder för att ange data måste finnas i layouten.</p>
+            <p>I lektion 4 kommer sidan <span class="page">handle_form.php</span> att utökas så att den nya posten används och den första frågan visas. </p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson4"></a>
+            <h2>Lektion 4</h2>
+
+            <h3>Mål</h3>
+            <p>Lektion 4 tar upp den kod som krävs för att hämta en FileMaker-post via dess ID och hämta relaterade poster från en portal. Portaler är kraftfulla kontroller som används i FileMaker Pro-lösningar. FileMaker API for PHP har speciella metoder för att arbeta med portaldata. I den här lektionen kommer vissa av dessa funktioner att tas upp.</p>
+
+            <h3>Starta</h3>
+            <p>Öppna FileMaker Pro-databasen <span class="database">questionnaire.fp7</span> som ligger på FileMaker Server. Klicka på knappen <em>Edit Questionnaire</em> och kontrollera att det aktiva formuläret har minst en post i portalen <em>Question</em>. </span>  Öppna Lektion 4 <a href="Lesson4/home.php">home.php</a>-filen i din webbläsare. Klicka på <em>Continue</em> och ange svarandeinformationen.</p>
+            <p>Efter det får du den första frågan i det aktiva formuläret. Öppna FileMaker Pro-databasen <span class="database">questionnaire.fp7</span> igen. Leta reda på den första frågan i det aktiva frågeformuläret. Försök att ändra den första frågetypen. Klicka på knappen<em> Edit Answers</em> och lägg till tänkbara svar. Uppdatera din webbläsare så att den uppdaterade frågan visas.</p>
+            <p>I den här lektionen får du stifta bekantskap med två nya uppgifter: hämta en post via dess ID och hämta en uppsättning relaterade poster från en portal.</p>
+
+            <h3>Söka efter poster via ID </h3>
+            <p>Öppna filen <span class="page">handle_form.php</span> i Lesson4-mappen med ditt textredigeringsverktyg. Bläddra ned en tredjedel i filen <span class="page">handle_form.php</span> till den punkt där lektion 3 avslutades. Observera att i den här lektionen läggs kod till som frågar efter postobjektet för en ny svarandepost. Denna begäran är nödvändig eftersom fältet <em>Respondent ID </em>har definierats med alternativet <em>automatisk inmatning av löpnummer </em> i FileMaker Pro och du måste hämta ett nummer för<em> automatisk inmatning</em>. </p>
+            <p>Liksom med <em>sök</em>-funktionerna i lektion 1, kan du hämta en ny post genom att använda metoderna<em> getRecord() </em>och <em>getField()</em>.</p>
+            <p class="code"> $records = $result->getRecords();<br /> $record = $records[0];<br /> $respondent_recid = $record->getField('Respondent ID');</p>
+            <p>Nästa uppgift blir att hämta det aktiva formulärets namn. Detta gör du genom att använda metoden <em>getRecordById()</em> för FileMaker-instansen <em>($fm)</em>.</p>
+            <p>När du använder  <em>getRecordById()</em> sände det interna FileMaker-post-ID:t och namnet för layouten. Layouten fastställer vilken tabellförekomst (kontext) som används och vilka fältvärden som ska returneras (resultat). Koden på den här sidan skickar <em>active_questionnaire_id</em> för $_POST-samlingen till filen för svarandeformuläret <span class="page">Respondent.php</span>.</p>
+            <p class="code">  $active_questionnaire_id = $_POST['active_questionnaire_id']; <br /> $active_questionnaire = $fm->getRecordById('questionnaire',$active_questionnaire_id);<br /> $questionnaire_name = $active_questionnaire->getField('Questionnaire Name');</p>
+            <p><strong>Obs! - </strong>Varje postobjekt som returneras från en API-åtgärd innehåller ett internt FileMaker-post-ID som kan hämtas med metoden <em>getRecordId()</em>. </p>
+            <p>Nästa uppgift blir att hämta frågeformulärsposterna och visa den första frågan. Sök efter alla frågor som matchar det aktiva formulärets ID. Denna sökning genomförs mot Questions layout.</p>
+            <p class="code"> $findCommand =& $fm->newFindCommand('Questions');<br /> $findCommand->addFindCriterion('Questionnaire ID', $active_questionnaire_id);<br /> $result = $findCommand->execute();<br /> $records = $result->getRecords();<br /> $question = $records[0];</p>
+
+            <h3>Hämta relaterad uppsättning</h3>
+            <p>Frågeformulärsdatabasen har utformats så att varje fråga har en specifik typ (<em>t.ex. text, radio eller textbox)</em>. Om typen gäller flervalsalternativ kan varje fråga har flera svarsalternativ. Layouten <em>Questions</em> innehåller en portal som visar de möjliga svaren. Om en fråga har ett eller flera svar visar följande kod svarsalternativen med den specificerade "typen". </p>
+            <p>Anta att frågan är av typen <em>radio</em>. Bläddra nedåt i dokumentet <span class="page">handle_form.php</span> tills du ser villkoret <em>else if </em>som söker efter frågor av typen <em>radio eller ranking</em>. </p>
+            <p class="code">else if ($question_type =="radio" || $question_type =="ranking")</p>
+            <p>Om villkoret är true hämtar följande kod relaterade svarsalternativ och visar dem som alternativknappsformulärelement. Du kan hämta svarsposter från portalen med FileMaker_Record-objektmetoden <em>getRelatedSet()</em>.</p>
+            <p>När metoden <em>getRelatedSet()</em> anropas måste <strong>namnet på den relaterade tabellen </strong> sändas inom parentes och <strong>den portal som har definierats</strong> med denna relation måste finnas i den layout som används när posten <em>$question</em> hämtas. </p>
+            <p class="code">$relatedSet = $question->getRelatedSet('question_answers');</p>
+            <p>Variabeln <em>$relatedSet</em> innehåller nu en samling postobjekt från den relaterade portalen. Loopa dig igenom samlingen och skicka fältvärdena för varje påträffad post. </p>
+            <p class="code">foreach ($relatedSet as $relatedRow)<br /> {<br />     $possible_answer = $relatedRow->getField('question_answers::answer');<br />     echo '&lt;input type= "radio" name= "radio_answer" value= "'. $possible_answer .'"&gt;' . $possible_answer . '&lt;br/&gt;'; <br /> }</p>
+            <p>Du skulle kunna ha hämtat de relaterade posterna genom att genomföra en sökning, men det är mycket lättare att använda <em>getRelatedSet()</em> med en portal som redan innehåller den relaterade uppsättningen.</p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson5"></a>
+
+            <h2>Lektion 5</h2>
+
+            <h3>Mål</h3>
+            <p>Lektion 5 behandlar den kod som krävs för att lägga till relaterade poster. Om du har definierat en portal på en layout som tillåter att relaterade poster skapas, kan du använda FileMaker API for PHP för att lägga till relaterade poster från webben.</p>
+
+            <h3>Starta</h3>
+            <p>Öppna din webbläsare på sidan <a href="Lesson5/home.php">home.php</a> som finns i Lesson5-katalogen. Klicka på <em>Continue</em> och fyll i onlineöversikten. Öppna FileMaker-databasen questionnaire.fp7 som ligger på FileMaker Server. Välj <em>Review Responses</em> och navigera till den sista posten i tabellen. Den här posten innehåller den svarandeinformation som du har angett. Varje </span>svar sparas som en post i portalen <em>Responses</em>. </p>
+
+            <h3>Lägg till relaterade poster</h3>
+            <p>Du kan lägga till rader med FileMaker API for PHP i fyra steg:</p>
+            <ol>
+              <li>Starta med ett giltigt postobjekt</li>
+              <li>Skapa en ny tom post</li>
+              <li>Lägga till data till den nya posten <em>(valfritt)</em></li>
+              <li>Aktivera den nya posten</li>
+            </ol>
+
+            <h4>Starta med ett giltigt postobjekt</h4>
+            <p class="h4_text">Öppna filen <span class="page">handle_form.php</span> i Lesson5-mappen med ditt textredigeringsverktyg. Bläddra nedåt och sök efter koden som hämtar svarandeposten:</p>
+            <p class="code">$respondent_rec = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p class="h4_text">Koden använder en funktion som har lagts till filen <span class="page">dbaccess.php</span>. Om du öppnar <span class="page">dbaccess.php</span> i ditt textredigeringsverktyg kan du se funktionens definition nästan längst ned. Inuti funktionsdefinitionen kan du se att metoden <em>newFindCommand() </em>använder layouten <em>Respondent</em> för kontexten<em>.</em></p>
+            <p class="code">$find = $fm->newFindCommand('Respondent');</p>
+            <p class="h4_text">Den här funktionen tilldelar postobjektet till variabeln <em>$respondent_rec</em>. Det refereras till variabeln i layouten <em>Respondent</em> eftersom den layouten utgör kontexten för sökkommandot<em>. </em>Därför startar alla metoder som använder variabeln <em>$respondent_rec </em>från kontexten för layouten <em>Respondent</em>.</p>
+
+            <h4>Skapa en ny tom relaterad post</h4>
+            <p class="h4_text">I filen <span class="page">handle_form.php</span> börjar nästa kodrad skapa den nya relaterade posten.</p>
+            <p class="code">$new_response = $respondent_rec->newRelatedRecord('Responses');</p>
+            <p class="h4_text">När den här raden exekveras tilldelas variabeln <em>$new_response</em> ett <strong>tomt</strong> postobjekt (någon ny post har ännu inte skapats i FileMaker-databasen).</p>
+            <p class="h4_text">Det är viktigt att du förstår kontexten för denna åtgärd. Den här koden startar fån layouten för det anropande postobjektet (<em>Responses</em>) och den specificerade relationen för en portal i den layouten. Därefter sänder koden det relaterade tabellnamnet till metoden  <em>newRelatedRecord()</em>. </p>
+
+            <h4>Lägga till data till den nya posten <em>(valfritt)</em></h4>
+            <p class="h4_text">Efter det att du har lagt till en ny tom post och vet vilken portalkontext som posten tillhör kan du börja ange data med metoden <em>setField()</em>. Den här metoden använder två parametrar: <em>field</em> <em>name</em> och <em>field value</em>. Eftersom detta är en relaterad post måste fältnamnet uttryckas med relationsnamnet <strong>och</strong> fältnamnet, separerade med två kolon. </p>
+            <p class="code">$new_response->setField('Responses::Question ID', $cur_question);<br /> $new_response->setField('Responses::Response', $translatedAnswer);</p>
+            <p class="h4_text">När du har skapat den nya relaterade posten och har lagt till data till rätt fält kan du aktivera posten.</p>
+            <p class="h4_text"><strong>Obs! - </strong>Du behöver inte ange fältdata innan du aktiverar den nya tomma posten.</p>
+
+            <h4>Aktivera den nya posten</h4>
+            <p class="h4_text">Inga nya postobjekt skapas i FileMaker-databasen förrän de har aktiverats. Metoden <em>commit()</em> infogar objektet <em>FileMaker_Record</em> i FileMaker-databasen questionnaire.fp7.</p>
+            <p class="code">$result = $new_response->commit();</p>
+            <p class="h4_text"> Variabeln <em>$result </em>tilldelas nu FileMaker_Record-objektet för den nya posten, och den nya posten har skapats i FileMaker-databasen. Om något fel uppstår innehåller variabeln <em>$result</em> ett FileMaker_Error-objekt. Det är lämpligt att kontrollera om det finns några fel när man använder metoden <em>commit()</em>. </p>
+        </div>
+        <div class="sectionWrapper">
+            <a name="lesson6"></a>
+
+            <h2>Lektion 6</h2>
+
+            <h3>Mål</h3>
+            <p>Lektion 6 behandlar den kod som behövs för att visa relaterade fältdata från en portal  Här introduceras även grunderna för överlappande formatmallar (Cascading Style Sheets, CSS) och hur du använder dem för att ändra utseendet på ditt webbprogram.</p>
+
+            <h3>Starta</h3>
+            <p>Öppna din webbläsare på sidan <a href="Lesson6/home.php">home.php</a> som finns i Lesson6-katalogen. Lägg märke till webbplatsens <em>utseende</em>. Denna formatering kommer från en CSS-sida.</span>  CSS-formatmallar kan användas för att formatera HTML-kod som används i ditt webbprogram. De diskuteras i slutet av lektionen.</p>
+            <p>Klicka på <em>Continue</em> och fyll i onlineöversikten. Observera att sidan <span class="page">thankyou.php</span> visar en sammanfattning av de frågor som du har besvarat. Dessa frågor och svar är från layouten<em> Respondent</em> i databasen <span class="database">questionnaire.fp7</span>.  Om en FileMaker-layout innehåller portaldata, kan den visas på webben med FileMaker API for PHP.</p>
+            <h3>Hämta relaterade uppsättningar</h3>
+            <p>Öppna sidan <span class="page">thankyou.php</span><span class="sectionWrapper"> </span>i Lesson6-katalogen med ditt textredigeringsverktyg. Bläddra till slutet av filen och sök efter den sista HTML-tabellen.</p>
+            <p>Lägg märke till koden ovanför tabellen som hämtar svarandeposterna.</p>
+            <p class="code">$respondent_record = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p> Funktionen<em> getRespondentRecordFromRespondentID() </em>definieras på sidan <span class="page">dbaccess.php</span>. Dess kontext är layouten <em>Respondent</em> i databasen <span class="database">questionnaire.fp7</span>.</p>
+            <p>I HTML-tabellen ser du att variabeln <em>$respondent_record</em> används för att hämta en uppsättning relaterade poster. Detta görs med metoden <em>getRelatedSet()</em>. För att kunna använda metoden <em>getRelatedSet()</em> måste du specificera det relaterade tabellnamnet för den önskade portalen och den önskade portalen måste finnas i layouten <em>Respondent</em>.</p>
+            <p class="code">$response_related_set = $respondent_record->getRelatedSet('Responses'); </p>
+            <p>Koden ovan tilldelar en samling som innehåller posterna från portalen <em>Responses</em> till variabeln<em>$response_related_set</em>. Varje svar är ett FileMaker_Record-objekt. Koden använder metoden <em>getField()</em> för FileMaker_Record-objektet för att skicka portalraderna i en HTML-tabell. Tänk på att använda den relaterade tabellens fullständiga namn <strong>och</strong> fältnamnet separerat med två kolon när du skickar relaterade fält. </p>
+            <p>Här är loopen som beskriver den relaterade uppsättningen i HTML.</p>
+            <p class="code">foreach ($response_related_set as $response_related_row)<br /> <br /> {<br /> <br />      $question = $response_related_row->getField('Questions 2::question');<br /> <br />      $answer = $response_related_row->getField('Responses::Response');<br />      //konverterar alla radmatningar i svaret till kommatecken<br />      $answer = str_replace("\n",", ",$answer);<br />      echo '&lt;tr&gt;&lt;td&gt;' . $question . '&lt;/td&gt;';<br />      echo '&lt;td&gt;' . $answer . '&lt;/td&gt;&lt;/tr&gt;';<br /> <br /> }</p>
+
+            <h3>Formatera med CSS</h3>
+            <p>Du kan formatera dina webbprogram med hjälp av CSS-formatmallar (cascading style sheets). Öppna filen <span class="page">style.css</span> i Lesson6-mappen i ett textredigeringsverktyg, och granska formatmallarna som har definierats för vissa av HTML-taggarn. CSS-formatmallarna kan tillämpas på alla THML-taggar, vilket gör det möjligt att formatera flera objekt på flera sidor med hjälp av bara en definition.</p>
+            <p>Om du vill tillämpa formatering på en viss HTML-tagg måste du deklarera taggens namn. Efter taggens namn måste du ange formatattribut inom klammerparenteser. Som i PHP måste varje uttryck avslutas med ett semikolon. </p>
+            <p class="code">body {<br />     background-color: #333333;<br />     padding: 20px;<br />     color: #ffffff;<br />     font-family:Verdana, Arial, Helvetica, sans-serif;<br /> }</p>
+            <p>När du har skapat en CSS-fil kan du tillämpa den på vilket HTML- eller PHP-dokument du vill. Om du vill tillämpa externa formatmallar måste du inkludera eller <em>länka</em> formatmallen till dokumentet: använd taggen &lt;link&gt; (länk) i HTML-huvudet.</p>
+            <p>Öppna filen <span class="page">thankyou.php</span> i Lektion 6-mappen med ditt textredigeringsverktyg.  Kontrollera vilken<em> &lt;</em>link&gt;-tagg (länk) i huvudtaggen som talar om för webbläsaren att <span class="page">style.css</span>-formatering ska tillämpas. När du använder &lt;link&gt;-taggen bör du vara noga med att ge rätt sökväg eller <em>href </em>till din CSS-sida.</p>
+            <p class="code">&lt;link rel="stylesheet" type="text/css" href="style.css" /&gt;</p>
+            <p>Formatmallar kan användas i flera program och varje program kan använda flera formatmallar. Mer information om CSS-formatmallar och deras attribut hittar du på <a href="http://www.w3schools.com/css/css_reference.asp">CSS2 reference på W3Schools</a>.</p>
+        </div>
+    </body>
+</html>

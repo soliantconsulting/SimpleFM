@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Didacticiel FileMaker API for PHP</title>
+        <meta name="generator" content="BBEdit 8.2" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+    </head>
+
+    <body>
+        <div class="sectionWrapper">
+
+            <h1 align="center"><img src="header.gif" width="700" height="150"></h1>
+
+            <h1 align="center">Didacticiel FileMaker<span style="font-size:14px;">®</span> API for PHP</h1>
+        </div>
+
+        <div class="sectionWrapper">
+
+            <h2>Table des matières</h2>
+
+            <a href="#introduction">Introduction</a><br/> <a href="#lesson1" title="Configuration de l'API">Leçon 1</a><br/> <a href="#lesson2" title="Affichage des images multimédia">Leçon 2</a><br/> <a href="#lesson3" title="Ajout de nouveaux enregistrements">Leçon 3</a><br/> <a href="#lesson4">Leçon 4</a><br/> <a href="#lesson5">Leçon 5</a><br/> <a href="#lesson6">Leçon 6</a><br/>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="introduction"></a>
+
+            <h2>Introduction</h2>
+
+            <h3>	Bienvenue dans le didacticiel FileMaker API for PHP</h3>
+            <p>Ce didacticiel présente les principales fonctionnalités de FileMaker API for PHP. Il se compose de 6 leçons visant à vous apprendre comment utiliser l'API afin d'intégrer une base de données FileMaker Pro dans une application Web PHP. Chaque leçon aborde une fonction spécifique de l'API et fournit des explications sur l'écriture du code et son fonctionnement.
+            <p>La base de données du didacticiel est un système de questionnaire FileMaker (questionnaire.fp7<em>). </em>Chaque enregistrement de questionnaire peur disposer de plusieurs questions connexes. Chaque question peut, quant à elle, disposer de plusieurs réponses connexes. Seul un questionnaire est sélectionné comme questionnaire <em>actif</em>. Ce questionnaire actif est celui que les utilisateurs sont invités à prendre lors de l'utilisation de l'application Web PHP. Lorsqu'un utilisateur remplit un questionnaire en ligne, le système ajoute un enregistrement <em>Respondent</em> pour l'utilisateur, ainsi que ses réponses en tant qu'enregistrements liés.
+
+            <p>Ce didacticiel permet d'élaborer une application Web PHP petit à petit, chaque leçon venant s'ajouter à la précédente, comme indiqué ci-après :
+            <ul>
+              <li>            Leçon 1
+                <ul>
+                  <li>Configuration de l'objet de base de données <em>FileMaker</em>
+                    <ul>
+                      <li class="comment"><em>De quoi ai-je besoin pour préparer l'objet de base de données FileMaker afin de l'utiliser dans mes applications Web personnalisées ?</em></li>
+                    </ul>
+                  </li>
+                  <li>Exécution de l'action Rechercher tout
+                    <ul>
+                      <li class="comment"><em>Comment trouver tous les enregistrements d'une base de données et les afficher sur le Web ? </em></li>
+                    </ul>
+                  </li>
+                  <li>Exécution d'une recherche
+                    <ul>
+                      <li class="comment"><em>Comment trouver un enregistrement spécifique dans une base de données et l'afficher sur le Web ? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Leçon 2
+                <ul>
+                  <li>Affichage des images multimédia
+                    <ul>
+                      <li class="comment"><em>Comment afficher des images compatibles avec le Web dans les rubriques multimédia de mon site Web ? </em></li>
+                    </ul>
+                  </li>
+                  <li>Utilisation de ContainerBridge.php
+                    <ul>
+                      <li class="comment"><em>Qu'est-ce que le fichier </em>ContainerBridge.php<em> et comment fonctionne-t-il ? </em> </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Leçon 3
+                <ul>
+                  <li>Affichage des listes de valeurs FileMaker
+                    <ul>
+                      <li class="comment"><em>Comment afficher les listes de valeurs FileMaker personnalisées sur le Web ? </em></li>
+                    </ul>
+                  </li>
+                  <li>Ajout d'enregistrements
+                    <ul>
+                      <li class="comment"><em>Comment ajouter des enregistrements à une base de données FileMaker à partir d'un formulaire soumis par le Web ? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Leçon 4
+                <ul>
+                  <li>Obtention des enregistrements par ID
+                    <ul>
+                      <li class="comment"><em>Comment récupérer un enregistrement FileMaker par son ID interne sans exécuter une autre recherche ? </em></li>
+                    </ul>
+                  </li>
+                  <li>Obtention d'un ensemble correspondant (table externe)
+                    <ul>
+                      <li class="comment"><em>Comment afficher les enregistrements d'une table externe FileMaker sur mon site Web ? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Leçon 5
+                <ul>
+                  <li>Ajout d'enregistrements liés
+                    <ul>
+                      <li class="comment"><em>Comment ajouter des enregistrements dans une table externe à partir de mon site Web ? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Leçon 6
+                <ul>
+                  <li>Examen de l'obtention d'un ensemble correspondant (table externe)
+                    <ul>
+
+                      <li class="comment"><em>Comment afficher les enregistrements d'une table externe FileMaker sur mon site Web ? </em></li>
+                    </ul>
+                  </li>
+                  <li>Personnalisation du format avec les feuilles de style en cascade (CSS)
+                    <ul>
+                      <li class="comment"><em>Comment changer l'apparence de mes données de sortie HTML à l'aide des feuilles de style en cascade ? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+            <p>Ce didacticiel ne couvre pas l'intégralité de l'API. Toutefois, ces leçons permettent d'obtenir de bonnes bases. Afin d'en savoir plus sur l'API, consultez la documentation de FileMaker API for PHP.
+            <p>Pour afficher la documentation de FileMaker API for PHP, allez à la page de démarrage de la console Admin FileMaker Server et cliquez sur « Outils PHP Site Assistant et XSLT Site Assistant ». Sur la page Outils de publication Web, cliquez sur « Documentation de FileMaker API for PHP ». Cette documentation pourra vous servir de référence pour ce didacticiel. Elle vous permettra de mieux découvrir les possibilités offertes par l'API FileMaker pour PHP.
+            <p>Vous devriez également vous familiariser avec la base de données questionnaire.fp7. Découvrez la façon dont elle fonctionne et la façon dont sont créés les questionnaires à l'aide de questions à choix multiples. Votre connaissance de la conception questionnaire.fp7 sera essentielle à la bonne compréhension de la façon dont l'application PHP du didacticiel utilise l'API.
+            <h3>Mise en route</h3>
+
+            <h4>Configuration et installation</h4>
+            <p class="h4_text">FileMaker Server 9 doit être installé et héberger la base de données questionnaire.fp7. Le dossier du didacticiel doit être hébergé sur le même ordinateur que le serveur Web, à l'intérieur de votre déploiement FileMaker. </p>
+            <p class="h4_text">Pour plus d'informations sur l'installation et le déploiement de FileMaker Server 9, consultez le <em>Guide de démarrage de FileMaker Server.</em> Pour plus d'informations sur l'API FileMaker pour PHP, consultez <em>Publication Web personnalisée FileMaker Server avec PHP. </em></p>
+
+            <h4>Connaissances et compétences recommandées</h4>
+            <p class="h4_text">Vous devez avoir des connaissances en programmation HTML : déclarations HTML, en-têtes et balises d'éléments. Si vous avez besoin d'autres informations sur la programmation des pages Web en HTML, consultez le <a href="http://www.w3schools.com/xhtml/xhtml_dtd.asp">didacticiel XHTML sur W3Schools</a>.</p>
+            <p class="h4_text">Vous devez avoir des connaissances en programmation PHP : sortie standard, variables, tableaux, boucles conditionnelles, objets, méthodes et fonctions. Pour plus d'informations sur la programmation en PHP, consultez le <a href="http://www.w3schools.com/php/default.asp">didacticiel PHP sur W3Schools</a>.</p>
+            <p class="h4_text">Vous devez savoir utiliser un éditeur de texte avec HTML et PHP. Ce didacticiel nécessite l'utilisation d'un éditeur de texte pour afficher et modifier le code HTML et PHP.</p>
+            <p class="h4_text">Vous devez également avoir une connaissance pratique de la conception de la base de données FileMaker Pro : rubriques, liens, modèles, tables externes et objets multimédia. Pour plus d'informations sur la conception des bases de données avec FileMaker Pro, consultez la documentation de FileMaker Pro. </p>
+
+            <h4>Pratiques recommandées</h4>
+            <p class="h4_text"> Lors de la modification d'enregistrements dans FileMaker Pro, n'oubliez pas de <em>quitter</em> ou de <em>valider</em> l'enregistrement afin qu'elle soit prise en compte. Les pages Web ne reflètent les modifications saisies dans la base de données que lorsque vous avez quitté l'enregistrement.</p>
+            <p class="h4_text">Afin d'afficher les pages PHP de chaque leçon dans votre navigateur Web, vous devez fournir l'URL entièrement qualifiée pour que le code PHP soit exécuté. Si, par exemple, les fichiers sont hébergés sur l'ordinateur local, saisissez dans votre navigateur une URL commençant par « http://localhost/... ». N'utilisez pas le chemin de fichier local, qui peut commencer par « file:///Volumes/... ». L'utilisation d'une URL « file:// » entraîne l'<strong>affichage</strong> du code PHP, et non son <strong>exécution</strong>. Assurez-vous toujours que l'URL commence par « http », ou « https » si vous avez configuré SSL sur votre serveur Web.</p>
+            <p />
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson1"></a>
+
+            <h2>Leçon 1</h2>
+
+            <h3>Objectif</h3>
+            <p>La leçon 1 vous fournit les données essentielles pour utiliser l'API FileMaker pour PHP dans deux fichiers PHP : <span class="page">home.php</span> et <span class="page">dbaccess.php</span>. Le fichier <span class="page">home.php</span> sert de point de départ au navigateur, tandis que le fichier <span class="page">dbaccess.php</span> définit un objet <em>FileMaker</em> représentant la base de données. Ces pages décrivent les étapes de base nécessaires à l'instanciation de l'objet de base de données <em>FileMaker</em> en définissant ses propriétés principales et en effectuant une recherche dans la base de données <span class="database">questionnaire.fp7</span>.</p>
+
+            <h3>Démarrer</h3>
+            <p>Pour voir l'exemple du didacticiel, dirigez votre navigateur vers <a href="Lesson1/home.php">home.php</a>, situé dans le dossier Lesson1. Cette page affiche l'écran d'accueil du système de questionnaire FileMaker. Lors du chargement de la page, une connexion est établie entre PHP et le moteur de publication Web, ce qui entraîne un résultat trouvé dans la base de données du <span class="database">questionnaire.p7</span>. </p>
+            <p>En utilisant votre éditeur de texte, ouvrez le fichier <span class="page">home.php</span> situé dans le dossier Lesson1. Trouvez le code ci-après, juste après la balise body.</p>
+            <p class="code">&lt;?php include ("dbaccess.php"); ?&gt;</p>
+            <p>L'instruction PHP inclut, ou <em>charge</em>, le fichier <span class="page">dbaccess.php</span>. Le fichier <span class="page">dbaccess.php</span> contient des fonctions permettant de définir l'objet de base de données <em>FileMaker </em>et de le préparer à des opérations de base de données. En conséquence, les méthodes API contenues dans <span class="page">home.php</span> ne fonctionneront pas sans lui. Les méthodes contenues dans le fichier <span class="page">dbaccess.php</span> auraient pu être écrites dans le fichier <span class="page">home.php</span>, mais elles ont été placées dans un autre fichier pour un débogage et une maintenance plus faciles.  </p>
+
+            <h3>Configuration de l'objet de base de données <em>FileMaker</em> </h3>
+            <p>Le fichier <span class="page">dbaccess.php</span> contient le code permettant de définir l'objet de base de données <em>FileMaker</em>. Il joue un rôle essentiel dans la création de l'application du questionnaire. Suivez la procédure ci-après pour définir l'objet <em>FileMaker </em> :  </p>
+
+            <ol>
+                <li>Chargez l'API FileMaker pour PHP.</li>
+                <li>Affectez une instance de la classe de base de données <em>FileMaker</em> à une variable.</li>
+                <li>Définissez les principales propriétés de la nouvelle instance <em>FileMaker</em>. </li>
+            </ol>
+
+            <p>En utilisant votre éditeur de texte, ouvrez le fichier <span class="page">dbaccess.php</span> situé dans le dossier Lesson1 et suivez chacune des instructions détaillées ci-dessous. </p>
+
+            <h4 class="h4_text">1. Chargez l'API FileMaker pour PHP.</h4>
+            <p class="h4_text">Pour utiliser l'API FileMaker, elle doit d'abord être chargée dans la mémoire PHP.  Cette opération est effectuée à l'aide de l'instruction require.</p>
+            <p class="code">require_once ('FileMaker.php');</p>
+            <p class="h4_text">Une fois l'API chargée, vous pouvez créer des instances de la classe de base de données <em>FileMaker</em> et les utiliser pour des connexions à la base de données dans votre application Web.  Si vous essayez d'utiliser l'API sans la charger au préalable, vous obtiendrez une erreur.</p>
+
+            <h4 class="h4_text">2. Affectez une instance de la classe de base de données <em>FileMaker</em> à une variable.</h4>
+            <p class="h4_text">Il est nécessaire de créer une instance de la classe de base de données <em>FileMaker</em> avant de pouvoir l'utiliser. Il faut également l'affecter à une variable afin de pouvoir y faire référence dans le code.</p>
+            <p class="code">$fm = new FileMaker();</p>
+            <p class="h4_text">Le code ci-dessus crée une instance de l'objet de base de données <em>FileMaker</em>. Cette instance est affectée à la variable <em>$fm</em>.</p>
+
+            <h4 class="h4_text">3. Définissez les principales propriétés de la nouvelle instance <em>FileMaker</em>.</h4>
+            <p class="h4_text">L'objet de base de données <em>FileMaker</em> dispose d'un ensemble de propriétés qui peuvent être définies à tout moment. Toutefois, certaines de ces propriétés doivent être définies avant de pouvoir effectuer des opérations de base de données. Vous trouverez ci-dessous le code permettant de définir les propriétés requises pour ce didacticiel.</p>
+            <p class="code">$fm->setProperty('database', 'questionnaire'); <br /> $fm->setProperty('username', 'web'); <br /> $fm->setProperty('password', 'web');        </p>
+            <p class="h4_text"><strong>Remarque : </strong> il n'est pas nécessaire d'ajouter l'extension <em>fp7 </em> au nom de base de données <em>questionnaire</em> dans le paramètre.</p>
+            <p class="h4_text"><strong>Remarque : </strong>consultez la documentation de FileMaker API for PHP pour une liste des propriétés de la classe de base de données <em>FileMaker</em> et leurs descriptions. </p>
+            <p>Le fichier <span class="page">dbaccess.php</span> ne contient que peu de code, mais il permet de préparer l'objet <em>Filemaker</em> à des fins d'utilisation. Une fois le fichier chargé, l'objet <em>FileMaker </em>est utilisable sous la variable $fm et les principales propriétés sont définies aux valeurs requises. Le fichier <span class="page">dbaccess.php</span> permet au fichier <span class="page">home.php</span> de communiquer avec la base de données <span class="database">questionnaire.fp7</span>. </p>
+
+            <h3>Exécution de la recherche, Rechercher tout</h3>
+            <p>Le fichier <span class="page">home.php</span> exécute deux opérations de base de données : <em>Rechercher tout</em> (Afficher tous les enregistrements) et <em>Rechercher</em>. Pour afficher le code de ces opérations, ouvrez le fichier <span class="page">home.php</span> dans votre éditeur de texte. Pour afficher la base de données pour ces opérations, ouvrez le fichier <span class="database">questionnaire.fp7</span> hébergé sur FileMaker Server.</p>
+
+            <h4 class="h4_text">1. Rechercher tout (Afficher tous les enregistrements)</h4>
+            <p class="h4_text">La base de données <span class="database">questionnaire.fp7</span> contient un modèle appelé <em><I>Active Questionnaire</I></em>. Ce modèle fait office d'interface. Sa table ne contient qu'un enregistrement. Dans ce modèle, les utilisateurs choisissent le questionnaire <em>actif</em>. L'application Web doit récupérer l'ID de ce questionnaire <em>actif</em>.</p>
+            <p class="h4_text">L'ID du questionnaire actif est récupéré à l'aide de la fonction Rechercher tout (Afficher tous les enregistrements) du modèle <em>Active Questionnaire. </em>Cette opération utilise l'objet de commande <em>FileMaker_Command_FindAll</em>.</p>
+            <p class="h4_text"><strong>Remarque : </strong> consultez la documentation de FileMaker API for PHP pour une liste des objets de commande et de leurs méthodes. </p>
+            <p class="h4_text"> Une instance de l'objet FileMaker_Command_FindAll est créée de par l'exécution de la méthode <em>newFindAllCommand()</em> de $fm (instance de base de données <em>FileMaker</em>), en spécifiant (entre parenthèses) le nom du modèle <em>Active Questionnaire. </em>Le modèle détermine l'occurrence de table à utiliser (contexte) et les rubriques à renvoyer (résultats).</p>
+            <p class="h4_text">L'instance <em>FileMaker_Command_FindAl</em><em>l </em> doit être affectée à une variable, comme le montre l'exemple ci-après. </p>
+            <p class="code">$findCommand = $fm->newFindAllCommand('Active Questionnaire');</p>
+            <p class="h4_text">Dans le code ci-dessus, on attribue un nouvel objet FileMaker_Command_FindAll à la variable <em>$findCommand</em>. La commande Rechercher tout est exécutée avec la méthode <em>execute() </em>. Les résultats de la recherche doivent être affectés à une variable.</p>
+            <p class="code">$result = $findCommand->execute();</p>
+            <p class="h4_text">Il se peut qu'une erreur se produise après l'exécution d'une commande. Si c'est le cas (ou si aucun enregistrement n'a été trouvé), la variable $result est affectée à un <em>objet FileMaker_Error</em>. Vérifiez l'objet FileMaker_Error à l'aide du code ci-après. Le message d'erreur s'affiche avec la méthode <em>getMessage()</em>.</p>
+            <p class="code"> if (FileMaker::isError($result)) { <br />     echo "&lt;p&gt;Erreur : " . $result->getMessage() . "&lt;/p&gt;"; <br />     exit; <br /> }</p>
+            <p class="h4_text">Si aucune erreur ne s'est produite, la variable <em>$result</em> contient un tableau d'objets FileMaker_Record, un pour chaque enregistrement de l'ensemble trouvé. Utilisez la variable $result pour récupérer le premier enregistrement du résultat de la commande Rechercher tout. Les tableaux PHP étant indexés numériquement par défaut, on peut obtenir le premier enregistrement à l'aide du code suivant.</p>
+            <p class="code">$record = $records[0];    </p>
+            <p class="h4_text">Ce code affecte un objet FileMaker_Record contenant le premier enregistrement du jeu d'enregistrements trouvés à la variable <em>$record</em>. Vous pouvez récupérer le contenu du questionnaire_id à partir de cet enregistrement à l'aide de la méthode <em>getField()</em>. Les résultats de la méthode<em> getField()</em> doivent être affectés à une variable.
+
+            <p class="code">$active_questionnaire_id =  $record->getField('questionnaire_id');    </p>
+            <p class="h4_text">Cette variable contient désormais l'ID du questionnaire actif. Elle est utilisée à l'étape suivante comme paramètre de la prochaine recherche. </p>
+            <p class="h4_text"><strong>Remarque : </strong> consultez la documentation de FileMaker API for PHP pour une liste des objets et de leurs méthodes.</p>
+
+            <h4 class="h4_text">2. Recherche</h4>
+            <p class="h4_text">A présent que vous avez l'ID du questionnaire actif, vous pouvez l'utiliser pour <em>rechercher</em> l'enregistrement du questionnaire. Le code permettant d'exécuter cette opération est situé vers le bas du fichier <span class="page">home.php</span>. Cette opération utilise l'objet de commande <em>FileMaker_Command_Find</em>.</p>
+            <p class="h4_text">Une instance de l'objet FileMaker_Command_Find est créée de par l'exécution de la méthode <em>newFindCommand()</em> de $fm (instance de base de données <em>FileMaker</em>), en spécifiant (entre parenthèses) le nom du modèle <em>Active Questionnaire. </em>Le modèle détermine l'occurrence de table à utiliser dans la recherche et les rubriques à renvoyer dans les résultats.</p>
+            <p class="h4_text">L'instance <em>FileMaker_Command_Find</em><em> </em> doit être affectée à une variable, comme le montre l'exemple ci-après. </p>
+            <p class="code">$findCommand =& $fm->newFindCommand('questionnaire');</p>
+            <p class="h4_text">Pour ajouter des critères à la recherche, utilisez la méthode<em> addFindCriterion()</em>. La méthode <em>addFindCriterion()</em> prend deux paramètres : <em>fieldName </em>et <em>searchParameter</em>. Passez le nom de rubrique « Questionnaire ID » (défini dans FileMaker Pro) et la variable <em>$active_questionnaire_id</em> comme paramètres.</p>
+            <p class="code">$findCommand->addFindCriterion('ID Questionnaire', $active_questionnaire_id);</p>
+            <p class="h4_text"><strong>Remarque : </strong>la méthode <em>addFindCriterion()</em> peut être appelée plusieurs fois, en simulant le AND logique utilisé lors de la saisie de plusieurs critères de recherche en une seule requête dans FileMaker Pro.</p>
+            <p class="h4_text">Une fois les critères de recherche ajoutés, la méthode <em>execute()</em> est utilisée pour effectuer la recherche. Les résultats de la méthode <em>execute()</em> doivent être affectés à une variable.</p>
+            <p class="code">$result = $findCommand->execute();</p>
+            <p class="h4_text">La variable $result contient maintenant un tableau d'objets FileMaker_Record. La recherche ayant été effectuée sur le modèle <em>questionnaire</em>, chaque enregistrement de <em>$result</em> contient les valeurs de chaque rubrique du modèle <em>questionnaire</em>.</p>
+            <p class="h4_text">Le code final de cette page utilise les instructions echo de PHP, ainsi que la méthode <em>getField()</em> pour afficher les rubriques <em>Questionnaire Name</em> et <em>Description</em> sur la page <span class="page">home.php</span>.</p>
+            <p />
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson2"></a>
+
+            <h2>Leçon 2</h2>
+
+            <h3>Objectif</h3>
+            <p>La leçon 2 aborde le code nécessaire à l'affichage des images multimédia de FileMaker Pro sur le Web.  Si vous stockez des images compatibles avec le Web dans une base de données FileMaker Pro, vous pouvez utiliser l'API FileMaker pour PHP pour les récupérer et les afficher sur votre site Web.</p>
+
+            <h3>Démarrage</h3>
+            <p>Ouvrez la base de données <span class="database">questionnaire.fp7</span> du didacticiel de l'API FileMaker et assurez-vous que le questionnaire actif dispose d'une image compatible avec le Web dans la rubrique multimédia.  Affichez ensuite l'exemple du didacticiel PHP en ouvrant le fichier <a href="Lesson2/home.php">home.php</a> de la Lesson2 dans votre navigateur Web. Remarquez que la page affiche l'image du questionnaire actif. Essayez de changer l'image multimédia dans la base de données FileMaker. Assurez-vous de quitter l'enregistrement lorsque vous avez terminé. Actualisez votre navigateur. Le site Web devrait se mettre à jour avec la nouvelle image.</p>
+
+            <h3>Affichage de l'image multimédia</h3>
+            <p>Pour voir comment l'API est utilisée pour cette opération, ouvrez le fichier <span class="page">home.php</span> dans le dossier Lesson2. Regardez les dernières instructions PHP du fichier, en faisant particulièrement attention à la balise &lt;img&gt; (image) et à son attribut <em>src</em> (source).</p>
+            <p>Veuillez noter les points suivants à propos de cette technique.</p>
+            <ol>
+              <li>La rubrique multimédia <em>Graphic</em> se trouve sur le modèle <em>questionnaire</em> (qui est le modèle de la recherche précédente). N'oubliez pas que seules les valeurs des rubriques du <strong>modèle utilisé pour la recherche</strong> sont renvoyées à l'API.</li>
+              <li>La valeur de la rubrique <em>Graphic</em> renvoyée <strong>n'est pas une image</strong>, mais une URL spéciale qui demande l'image du moteur de publication Web.</li>
+            </ol>
+            <p class="code">echo '&lt;img src="ContainerBridge.php?path=' . urlencode($record->getField('Graphic')) . '"&gt;';</p>
+            <p>Une balise HTML &lt;img&gt; (image) devant avoir un <em>chemin d'accès au fichier</em> comme attribut <em>src </em>(source), cette leçon utilise un fichier séparé pour récupérer l'image. Le fichier qui récupère l'image multimédia s'appelle <span class="page">ContainerBridge.php</span> et son nom de fichier s'affiche dans l'attribut <em>src</em> (source) de la balise &lt;img&gt; (image).</p>
+            <p>Le fichier <span class="page">ContainerBridge.php</span> ne sait pas quelle image vous souhaitez afficher. Pour spécifier l'image, vous devez ajouter la valeur de la rubrique <em>Graphic</em> à la fin de l'URL de l'attribut <em>src </em> (source). En HTML, cela s'appelle la méthode GET.</p>
+            <p>A l'aide d'une paire <em>name/value</em>, concaténez la chaîne souhaitée en commençant par un point d'interrogation. Le <em>name</em> est défini sur le chemin, tandis que la <em>value</em> est définie sur le résultat de la méthode <em>getField() </em>, en passant le nom de rubrique multimédia <em>(Graphic)</em> entre parenthèses.</p>
+            <p><strong>Remarque : </strong>le résultat de <em>getField() </em>est passé à la fonction PHP urlencode() afin de garantir le bon codage des caractères spéciaux pour une URL. </p>
+
+            <h3>Utilisation de ContainerBridge.php </h3>
+            <p>En utilisant votre éditeur de texte, ouvrez le fichier <span class="page">ContainerBridge.php</span> situé dans le dossier Lesson2. Ce script simple utilise la méthode FileMaker_Record <em>getContainerData()</em> pour récupérer l'image.</p>
+            <p>Afin que <em>getContainerData()</em> fonctionne, vous devez passer les résultats de rubriques de <em>getField()</em> (d'une rubrique multimédia) à la méthode <em>getContainerData()</em> entre parenthèses. Dans <span class="page">home.php</span>, le résultat de getField() pour la rubrique <em>Graphic</em> a été passé par l'URL. Dans <span class="page">ContainerBridge.php</span>, le résultat est récupéré de l'URL via l'élément <em>path</em> du tableau $_GET et passé à la méthode <em>getContainerData()</em>. </p>
+            <p class="code">echo $fm->getContainerData($_GET['path']);</p>
+            <p>Le fichier <span class="page">ContainerBridge.php</span> récupère simplement le chemin d'accès de la base de données FileMaker Pro de façon à ce que le fichier <span class="page">home.php</span> puisse l'utiliser dans la balise &lt;img&gt; pour afficher l'image dans le navigateur Web. </p>
+            <p><strong>Remarque : </strong> consultez la documentation de FileMaker API for PHP pour une liste des méthodes de l'objet FileMaker_Record.</p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson3"></a>
+            <h2>Leçon 3</h2>
+
+
+            <h3>Objectif</h3>
+            <p>La leçon 3 aborde le code nécessaire à la création d'un formulaire Web dynamique à l'aide d'objets du modèle FileMaker. Il aborde également le code nécessaire à l'ajout d'un nouvel enregistrement FileMaker à partir d'un formulaire Web. Cette leçon utilise deux autres fichiers PHP : <span class="page">Respondent.php</span> et <span class="page">handle_form.php</span>. Le fichier <span class="page">Respondent.php</span> permet de générer dynamiquement un formulaire Web, tandis que le fichier <span class="page">handle_form.php</span> est utilisé pour valider les entrées de formulaire et les entrer comme nouveaux enregistrements dans la base de données <span class="database">questionnaire.fp7</span>.</p>
+
+            <h3>Démarrage</h3>
+            <p>Ouvrez le site Web du questionnaire en dirigeant votre navigateur vers le fichier <a href="Lesson3/home.php">home.php</a> dans le dossier Lesson3. Cette version de la page affiche un bouton <em>Continue</em> qui permet de démarrer l'application de questionnaire. Lorsque vous cliquez sur ce bouton, vous êtes redirigé vers le fichier <span class="page">Respondent.php</span>. Saisissez vos informations dans le formulaire Web et cliquez sur <em>Submit</em> ; recommencez l'opération si vous n'avez pas saisi toutes les informations nécessaires. Lorsque le formulaire est validé, un message de remerciement s'affiche et les informations saisies sont ajoutées à la base de données <span class="database">questionnaire.fp7</span> comme nouvel enregistrement. </p>
+
+            <h3>Récupération des éléments de la liste de valeurs</h3>
+            <p>Pour voir comment fonctionne cette application, ouvrez la page <span class="page">Respondent.php</span> dans votre éditeur de texte. Notez que le fichier<span class="sectionWrapper"> </span><span class="page">dbaccess.php</span> est inclus vers le début. Comme nous l'avons vu dans la leçon 1, cette instruction include garantit une instance de la classe de base de données <em>FileMaker</em> pouvant être utilisée comme variable <em>$fm</em>.</p>
+            <p>Vous remarquerez l'élément de formulaire cercle d'option <span class="page">Respondent.php</span> appelé « prefix ». Cet élément dérive ses valeurs de la base de données FileMaker Pro questionnaire.fp7 en utilisant sa liste de valeurs du même nom. Cette technique vous permet d'élaborer un élément de formulaire dynamique basé sur une liste de valeurs définie dans la base de données FileMaker. Il n'est donc pas nécessaire de mettre à jour votre code PHP à chaque fois que la liste de valeurs change dans la base de données. Cette technique est implémentée dans les étapes ci-après : </p>
+            <ol>
+              <li>Récupérez un objet de modèle via la méthode <em>getLayout() </em> (en passant le nom du modèle entre parenthèses). </li>
+              <ul>
+                <li>La méthode <em>getLayout()</em> renvoie un objet FileMaker_Layout.</li>
+              </ul>
+              <li>Récupérez la liste de valeurs via la méthode <em>getValueList()</em>.          </li>
+              <ul>
+                <li><em>getValueList() </em> est une méthode de l'objet FileMaker_Layout. </li>
+              </ul>
+              <li>Faites une boucle dans le tableau de valeur et sortez chaque valeur en tant que cercle d'option.</li>
+            </ol>
+            Lorsque vous utilisez cette technique, n'oubliez pas que le modèle spécifié doit contenir une rubrique <em>qui est formatée</em> par la liste de valeur spécifiée. Si une liste de valeurs est requise par la méthode <em>getValueList()</em> et que cette liste n'a été formatée sur aucune rubrique du modèle spécifié avec <em>getLayout()</em>, une erreur se produira. Voici le code utilisé pour afficher les cercles d'options dynamiques :
+            <p class="code">$layout =& $fm->getLayout('Respondent');<br /> $values = $layout->getValueList('prefixes');<br /> foreach($values as $value){ <br />           echo '&lt;input type= "radio" name= "prefix" value= "'. $value .'"&gt;' . $value . ' ';<br /> }</p>
+            <p><strong>Remarque :</strong> consultez la documentation de FileMaker API for PHP pour une liste des méthodes de l'objet FileMaker_Layout.</p>
+            <p><strong>Remarque :</strong> le formulaire de <span class="page">Respondent.php</span> contient également plusieurs éléments de formulaire masqués. L'un d'eux, appelé « active_questionnaire_id » contient l'ID de questionnaire de <span class="page">home.php</span>. Ce formulaire passe l'ID à <span class="page">handle_form.php</span> où il sera utilisé dans la leçon 4. </p>
+
+            <h3>Ajout d'un nouvel enregistrement</h3>
+            <p>Lorsque le formulaire <span class="page">Respondent.php</span> a soumis les données, les valeurs sont passées à la page d'action <span class="page">handle_form.php</span> via la méthode POST. En utilisant votre éditeur de texte, ouvrez le fichier <span class="page">handle_form.php</span> situé dans le dossier Lesson3.</p>
+            <p>Notez que les données soumises par l'utilisateur sont regroupées dans un tableau et affectées à la variable <em>$respondent_data</em>. Dans ce tableau associatif, la <em>clé</em> de chaque élément est le nom exact de la rubrique FileMaker vers laquelle les données doivent être envoyées. La <em>valeur</em> de chaque élément correspond aux valeurs soumises de l'élément de formulaire HTML dans le tableau $_POST. Le tableau $respondent_data est utilisé par l'objet <em>FileMaker</em> lors de la création de l'enregistrement de la base de données. </p>
+            <p>Une fois le tableau de données créé, le code PHP effectue quelques vérifications simples. Ces méthodes de validation utilisent le code PHP de façon explicite. Aucune validation n'est effectuée par FileMaker Server au cours de cette opération.</p>
+            <p>Une fois les données de l'utilisateur validées, un nouvel enregistrement peut être créé en deux étapes simples :</p>
+            <ol>
+              <li>Créez un nouvel objet FileMaker_Command_Add, en passant deux paramètres :
+                <ul>
+                  <li>le nom du modèle (ce dernier doit comporter les rubriques nécessaires)</li>
+                  <li>le tableau des données <em>($respondent_data)</em> </li>
+                </ul>
+              </li>
+              <li>Ajoutez l'enregistrement avec la méthode <em>execute() </em></li>
+            </ol>
+            <p class="code"> $newRequest =& $fm->newAddCommand('Respondent', $respondent_data);<br /> $result = $newRequest->execute(); </p>
+            <p>Lors de la création du nouvel objet FileMaker_Command_Add, n'oubliez pas de spécifier le nom du modèle. Le nom du modèle détermine l'occurrence de table à utiliser (contexte) et les rubriques à renvoyer (résultats). Les rubriques utilisées pour saisir les données doivent se trouver sur le modèle.</p>
+            <p>Dans la leçon 4, la page <span class="page">handle_form.php</span> sera agrandie afin d'utiliser l'enregistrement ajouté et d'afficher la première question. </p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson4"></a>
+            <h2>Leçon 4</h2>
+
+            <h3>Objectif</h3>
+            <p>La leçon 4 aborde le code nécessaire à la récupération d'un enregistrement FileMaker par ID et à la récupération des enregistrements liés dans une table externe. Les tables externes sont des contrôles puissants utilisés dans les solutions FileMaker Pro. L'API FileMaker pour PHP comporte des méthodes spécifiques conçues pour une utilisation avec les données de tables externes. Cette leçon présente certains aspects de cette fonctionnalité.</p>
+
+            <h3>Démarrage</h3>
+            <p>Ouvrez la base de données FileMaker Pro <span class="database">questionnaire.fp7</span> hébergée sur FileMaker Server. Cliquez sur le bouton <em>Modifier le questionnaire</em> et assurez-vous que le questionnaire actif comporte au moins un enregistrement dans la table externe <em>Question</em>. </span> Ouvrez ensuite le fichier <a href="Lesson4/home.php">home.php</a> de la Lesson4 dans votre navigateur Web. Cliquez sur le bouton <em>Continue</em> et saisissez les informations de la personne interrogée.</p>
+            <p>La première question du questionnaire actif s'affiche alors. Ouvrez à nouveau la base de données FileMaker Pro <span class="database">questionnaire.fp7</span>. Localisez la première question du questionnaire actif. Essayez de changer le type de la première question. Cliquez sur le bouton <em>Modifier réponses</em> et ajoutez les réponses possibles. Rafraîchissez votre navigateur Web pour afficher la question mise à jour.</p>
+            <p>Cette leçon vous présente les deux nouvelles tâches suivantes : obtenir un enregistrement par son ID et récupérer un jeu d'enregistrements liés dans une table externe.</p>
+
+            <h3>Recherche d'enregistrement par ID</h3>
+            <p>Avec votre éditeur de texte, ouvrez le fichier <span class="page">handle_form.php</span> situé dans le dossier Lesson4. Faites défiler la page jusqu'à un tiers, à l'endroit où le fichier <span class="page">handle_form.php</span> s'est terminé à la leçon 3. Notez que cette leçon ajoute du code nécessitant l'objet d'enregistrement de la nouvelle personne interrogée. Cette requête est nécessaire car la rubrique <em>Respondent ID </em>est définie avec l'option <em>Auto Enter Serial Number</em> de FileMaker Pro et que vous devez récupérer le nombre<em> Entrée automatique</em>. </p>
+            <p>Tout comme avec les fonctions <em>Rechercher</em> de la leçon 1, il est possible de récupérer un nouvel enregistrement en utilisant les méthodes<em> getRecord() </em>et <em>getField()</em>.</p>
+            <p class="code"> $records = $result->getRecords();<br /> $record = $records[0];<br /> $respondent_recid = $record->getField('Respondent ID');</p>
+            <p>La tâche suivante consiste à récupérer le nom du questionnaire actif. Pour cela, utilisez la méthode <em>getRecordById()</em> de l'instance FileMaker <em>($fm)</em>.</p>
+            <p>Lors de l'utilisation de <em>getRecordById()</em>, passez l'ID d'enregistrement FileMaker et le nom du modèle. Le modèle détermine l'occurrence de table à utiliser (contexte) à utiliser et les valeurs de rubriques à renvoyer (résultats). Le code de cette page passe l'<em>active_questionnaire_id</em> du tableau $_POST à cette page à partir du formulaire de la personne interrogée de <span class="page">Respondent.php</span>.</p>
+            <p class="code">  $active_questionnaire_id = $_POST['active_questionnaire_id']; <br /> $active_questionnaire = $fm->getRecordById('questionnaire',$active_questionnaire_id);<br /> $questionnaire_name = $active_questionnaire->getField('Questionnaire Name');</p>
+            <p><strong>Remarque : </strong>chaque objet d'enregistrement d'une opération d'API contient l'ID d'enregistrement FileMaker internet pouvant être récupéré avec la méthode <em>getRecordId()</em>. </p>
+            <p>La tâche suivante consiste à récupérer les enregistrements de questionnaire et à afficher la première question. Recherchez toutes les questions correspondant à l'ID du questionnaire actif. Cette recherche est effectuée à partir du modèle Questions.</p>
+            <p class="code"> $findCommand =& $fm->newFindCommand('Questions');<br /> $findCommand->addFindCriterion('Questionnaire ID', $active_questionnaire_id);<br /> $result = $findCommand->execute();<br /> $records = $result->getRecords();<br /> $question = $records[0];</p>
+
+            <h3>Obtention du jeu d'enregistrements liés</h3>
+            <p>La base de données du questionnaire a été conçue de façon à ce que chaque question ait un type différent (<em>par exemple text, radio et checkbox)</em>. Si le type est celui d'une réponse à choix multiples, chaque question peut avoir plusieurs choix de réponses. Le modèle <em>Questions</em> contient une table externe affichant les réponses possibles. Si une question dispose d'une ou de plusieurs réponses, le code ci-après affiche les choix de réponses à l'aide du « type » spécifié. </p>
+            <p>Pour expliquer ce code, supposons que la question est de type <em>radio</em>. Faites défiler le document <span class="page">handle_form.php</span> jusqu'à la condition <em>else if </em>qui permet de vérifier les types de questions <em>radio ou ranking</em>. </p>
+            <p class="code">else if ($question_type =="radio" || $question_type =="ranking")</p>
+            <p>Si la condition est vraie, le code ci-après récupère les choix de questions correspondants et les affiche comme éléments de formulaire cercles d'options. Les enregistrements de réponses de la table externe peuvent être récupérés à l'aide de la méthode <em>getRelatedSet()</em> de l'objet FileMaker_Record.</p>
+            <p>Lors de l'appel de la méthode <em>getRelatedSet()</em>, le <strong>nom de la table liée </strong> doit être passé entre parenthèses et <strong>la table externe définie</strong> avec cette relation doit se trouver sur le modèle utilisé lors de la récupération de l'enregistrement <em>$question</em>. </p>
+            <p class="code">$relatedSet = $question->getRelatedSet('question_answers');</p>
+            <p>La variable <em>$relatedSet</em> contient désormais un tableau d'objets d'enregistrements de la table externe liée. Faites une boucle dans le tableau et sortez les valeurs de rubrique de chaque enregistrement trouvé. </p>
+            <p class="code">foreach ($relatedSet as $relatedRow)<br /> {<br />     $possible_answer = $relatedRow->getField('question_answers::answer');<br />     echo '&lt;input type= "radio" name= "radio_answer" value= "'. $possible_answer .'"&gt;' . $possible_answer . '&lt;br/&gt;'; <br /> }</p>
+            <p>Vous auriez pu récupérer les enregistrements liés en effectuant une recherche, mais il est beaucoup plus facile d'utiliser la méthode <em>getRelatedSet()</em> avec une table externe contenant déjà le jeu d'enregistrements liés.</p>
+        </div>
+
+        <div class="sectionWrapper">
+            <a name="lesson5"></a>
+
+            <h2>Leçon 5</h2>
+
+            <h3>Objectif</h3>
+            <p>La leçon 5 aborde le code nécessaire à l'ajout d'enregistrements liés. Si une table externe est définie sur un modèle permettant la création d'enregistrements liés, vous pouvez utiliser l'API FileMaker pour PHP pour ajouter des enregistrements liés à partir du Web.</p>
+
+            <h3>Démarrage</h3>
+            <p>Ouvrez votre navigateur Web à la page <a href="Lesson5/home.php">home.php</a> hébergée dans le répertoire Lesson5. Cliquez sur le bouton <em>Continue</em> et remplissez le questionnaire en ligne. Ouvrez la base de données FileMaker questionnaire.fp7 hébergée sur FileMaker Server. Dans le questionnaire actif, sélectionnez le bouton <em>Review Responses </em>et atteignez le dernier enregistrement de la table. Cet enregistrement contient les informations que vous avez saisies sur la personne interrogée. C</span>haque réponse est consignée comme enregistrement dans la table externe <em>Responses</em>. </p>
+
+            <h3>Ajout d'enregistrements liés (rangées de la table externe)</h3>
+            <p>Il est possible d'ajouter des rangées supplémentaires à la table externe avec l'API FileMaker pour PHP en quatre étapes :</p>
+            <ol>
+              <li>Commencer avec un objet d'enregistrement valide.</li>
+              <li>Créer un nouvel enregistrement lié vierge.</li>
+              <li>Ajouter des données aux rubriques du nouvel enregistrement <em>(facultatif)</em>.</li>
+              <li>Valider le nouvel enregistrement.</li>
+            </ol>
+
+            <h4>Commencer avec un objet d'enregistrement valide</h4>
+            <p class="h4_text">Avec votre éditeur de texte, ouvrez le fichier <span class="page">handle_form.php</span> situé dans le dossier Lesson5 du didacticiel. Faites défiler la page et recherchez le code permettant de récupérer l'enregistrement de la personne interrogée :</p>
+            <p class="code">$respondent_rec = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p class="h4_text">Ce code utilise une fonction qui a été ajoutée au fichier <span class="page">dbaccess.php</span>. Si vous ouvrez le fichier <span class="page">dbaccess.php</span> dans votre éditeur de texte, vous verrez la définition de cette fonction vers la fin du fichier. Dans la définition de la fonction, notez que la méthode <em>newFindCommand() </em>utilise le modèle <em>Respondent</em> comme contexte<em>.</em></p>
+            <p class="code">$find = $fm->newFindCommand('Respondent');</p>
+            <p class="h4_text">Cette fonction affecte l'objet d'enregistrement de la personne interrogée à la variable <em>$respondent_rec</em>. La variable est référencée au modèle <em>Respondent</em> car ce dernier était le contexte de la commande de recherche<em>. </em>En conséquence, toute méthode utilisée par la variable <em>$respondent_rec </em>démarre du contexte du modèle <em>Respondent</em>.</p>
+
+            <h4>Créer un nouvel enregistrement lié vierge</h4>
+            <p class="h4_text">De retour au fichier <span class="page">handle_form.php</span>, la ligne de code suivante commence par créer le nouvel enregistrement lié.</p>
+            <p class="code">$new_response = $respondent_rec->newRelatedRecord('Responses');</p>
+            <p class="h4_text">Lors de l'exécution de cette ligne, il est affecté à la variable <em>$new_response</em> un objet d'enregistrement <strong>vierge</strong> (un nouvel enregistrement n'a pas encore été créé dans la base de données FileMaker).</p>
+            <p class="h4_text">Il est important de comprendre le contexte de cette opération. Ce code commence à partir du modèle de l'objet d'enregistrement d'appel (<em>Responses)</em> et spécifie la relation d'une table externe sur ce modèle. Le code passe ensuite le nom de la table liée à la méthode <em>newRelatedRecord()</em>. </p>
+
+            <h4>Ajouter des données aux rubriques du nouvel enregistrement <em>(facultatif)</em></h4>
+            <p class="h4_text">Une fois le nouvel enregistrement vierge créé et que vous savez à quel contexte de table externe il appartient, vous pouvez commencer à saisir des données grâce à la méthode <em>setField()</em>. Cette méthode prend deux paramètres : <em>field</em> <em>name</em> et <em>field value</em>. Cet enregistrement étant lié, le nom de la rubrique doit être exprimé avec le nom de la relation <strong>et</strong> le nom de la rubrique séparés par deux fois deux points. </p>
+            <p class="code">$new_response->setField('Responses::Question ID', $cur_question);<br /> $new_response->setField('Responses::Response', $translatedAnswer);</p>
+            <p class="h4_text">Après avoir créé le nouvel enregistrement lié et ajouté les données aux rubriques appropriées, vous êtes prêt à valider l'entrée.</p>
+            <p class="h4_text"><strong>Remarque : </strong>il n'est pas nécessaire de définir les données de rubrique avant de valider un nouvel enregistrement vierge.</p>
+
+            <h4>Valider le nouvel enregistrement</h4>
+            <p class="h4_text">Aucun nouvel objet d'enregistrement ne sera créé dans la base de données FileMaker tant qu'il n'aura pas été validé. La méthode <em>commit()</em> insère l'objet <em>FileMaker_Record</em> dans la base de données FileMaker questionnaire.fp7.</p>
+            <p class="code">$result = $new_response->commit();</p>
+            <p class="h4_text"> La variable <em>$result </em>est désormais affectée à l'objet FileMaker_Record du nouvel enregistrement et ce dernier a été créé dans la base de données FileMaker. Si une erreur se produit, la variable <em>$result</em> contient un objet FileMaker_Error. Il est judicieux de rechercher les éventuelles erreurs après l'exécution de la méthode <em>commit()</em>. </p>
+        </div>
+        <div class="sectionWrapper">
+            <a name="lesson6"></a>
+
+            <h2>Leçon 6</h2>
+
+            <h3>Objectif</h3>
+            <p>La leçon 6 aborde le code nécessaire à l'affichage des rubriques liées d'une table externe.  Elle présente également des instructions de base pour l'utilisation des feuilles de style en cascade (CSS) pour modifier l'apparence de votre application Web.</p>
+
+            <h3>Démarrage</h3>
+            <p>Ouvrez votre navigateur Web à la page <a href="Lesson6/home.php">home.php</a> hébergée dans le répertoire Lesson6. Remarquez le nouvel <em>aspect</em> du site. Cette mise en forme provient d'une page CSS séparée.</span>  Les styles CSS, qui peuvent être utilisés pour formater le code HTML de votre application Web, sont présentés à la fin de cette leçon.</p>
+            <p>Cliquez sur le bouton <em>Continue</em> et remplissez le questionnaire en ligne. Notez que la page <span class="page">thankyou.php</span> affiche un récapitulatif des questions auxquelles vous avez répondu. Ces questions et réponses proviennent d'une table externe du modèle<em> Respondent</em> dans la base de données <span class="database">questionnaire.fp7</span>.  Si un modèle FileMaker contient des données d'une table externe, il peut être affiché sur le Web à l'aide de FileMaker API for PHP.</p>
+            <h3>Obtention du jeu d'enregistrements liés</h3>
+            <p>En utilisant votre éditeur de texte, ouvrez la page <span class="page">thankyou.php</span><span class="sectionWrapper"></span> située dans le répertoire Lesson6. Faites défiler le fichier jusqu'à la fin et localisez le dernier tableau HTML.</p>
+            <p>Remarquez le code au-dessus du tableau, qui permet de récupérer l'enregistrement de la personne interrogée.</p>
+            <p class="code">$respondent_record = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p> La fonction<em> getRespondentRecordFromRespondentID() </em>est définie à la <span class="page">page dbaccess.php</span>. Elle a pour contexte le modèle <em>Respondent</em> de la base de données <span class="database">questionnaire.fp7</span>.</p>
+            <p>Dans le tableau HTML, notez que la variable <em>$respondent_record</em> est utilisée pour récupérer le jeu d'enregistrements liés. Cette opération est effectuée à l'aide de la méthode <em>getRelatedSet()</em>. Pour utiliser la méthode <em>getRelatedSet()</em>, vous devez préciser le nom de table liée de la table externe souhaitée, tandis que cette dernière doit être sur le modèle <em>Respondent</em>.</p>
+            <p class="code">$response_related_set = $respondent_record->getRelatedSet('Responses'); </p>
+            <p>Le code ci-dessus permet d'affecter un tableau contenant les enregistrements de la table externe <em>Responses</em> à la variable <em>$response_related_set</em>. Chaque réponse est un objet FileMaker_Record. Ce code utilise la méthode <em>getField()</em> de l'objet FileMaker_Record pour sortir les rangées de la table externe dans un tableau HTML. N'oubliez pas d'utiliser le nom complet de la table liée <strong>et</strong> le nom de la rubrique séparés par deux fois deux points lors de la sortie des rubriques liées. </p>
+            <p>Voici la boucle permettant d'afficher le jeu d'enregistrements liés en HTML :</p>
+            <p class="code">foreach ($response_related_set as $response_related_row)<br /> <br /> {<br /> <br />      $question = $response_related_row->getField('Questions 2::question');<br /> <br />      $answer = $response_related_row->getField('Responses::Response');<br />      //convertit les retours à la ligne de la réponse en virgules<br />      $answer = str_replace("\n",", ",$answer);<br />      echo '&lt;tr&gt;&lt;td&gt;' . $question . '&lt;/td&gt;';<br />      echo '&lt;td&gt;' . $answer . '&lt;/td&gt;&lt;/tr&gt;';<br /> <br /> }</p>
+
+            <h3>Mise en forme avec les CSS</h3>
+            <p>Vous pouvez mettre en forme vos applications Web à l'aide des feuilles de style en cascade (CSS). Dans votre éditeur de texte, ouvrez le fichier <span class="page">style.css</span> situé dans le dossier Lesson6 et examinez les styles définis pour certaines des balises HTML. Il est possible d'appliquer des styles CSS à n'importe quelle balise HTML, ce qui vous permet de mettre en forme plusieurs éléments de plusieurs pages grâce à une seule définition.</p>
+            <p>Pour appliquer une mise en forme à une balise HTML spécifique, vous devez déclarer le nom de la balise. Après le nom de la balise, vous devez indiquer les attributs de style dans des accolades. Comme en PHP, chaque instruction doit se terminer par un point-virgule. </p>
+            <p class="code">body {<br />     background-color: #333333;<br />     padding: 20px;<br />     color: #ffffff;<br />     font-family:Verdana, Arial, Helvetica, sans-serif;<br /> }</p>
+            <p>Une fois le fichier CSS créé, vous pouvez l'appliquer à n'importe quel document HTML ou PHP. Pour appliquer des styles externes, vous devez inclure ou <em>lier</em> la feuille de style à votre document : pour cela, utilisez la balise de lien &lt;link&gt; dans l'en-tête de votre document HTML de sortie.</p>
+            <p>Avec votre éditeur de texte, ouvrez le fichier <span class="page">thankyou.php</span> situé dans le dossier Lesson6.  Dans les balises de l'en-tête, remarquez la balise<em> &lt;</em>link&gt; (lien) qui indique au navigateur Web d'utiliser la mise en forme <span class="page">style.css</span>. Lorsque vous utilisez la balise &lt;link&gt;, assurez-vous de fournir le bon chemin d'accès ou <em>href </em>à votre page CSS.</p>
+            <p class="code">&lt;link rel="stylesheet" type="text/css" href="style.css" /&gt;</p>
+            <p>Les feuilles de style peuvent être utilisées dans de nombreuses applications et chacune de ces dernières peut utiliser plusieurs feuilles de style. Pour plus d'informations sur les styles CSS et leurs attributs, consultez les <a href="http://www.w3schools.com/css/css_reference.asp">références CSS2 sur W3Schools</a>.</p>
+        </div>
+    </body>
+</html>

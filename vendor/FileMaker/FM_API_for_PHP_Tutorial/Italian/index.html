@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>Esercitazioni di FileMaker API for PHP</title>
+        <meta name="generator" content="BBEdit 8.2" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+    </head>
+
+    <body>
+        <div class="sectionWrapper">
+            
+            <h1 align="center"><img src="header.gif" width="700" height="150"></h1>  
+            
+            <h1 align="center">Esercitazioni di FileMaker<span style="font-size:14px;">&reg;</span> API for PHP</h1>
+        </div>
+        
+        <div class="sectionWrapper">
+        
+            <h2>Sommario</h2>
+            
+            <a href="#introduction">Introduzione</a><br/>
+            <a href="#lesson1" title="Configurazione dell'API">Lezione 1</a><br/>
+            <a href="#lesson2" title="Visualizzazione immagini Contenitore">Lezione 2</a><br/>
+            <a href="#lesson3" title="Aggiunta di nuovi record">Lezione 3</a><br/>
+            <a href="#lesson4">Lezione 4</a><br/>
+            <a href="#lesson5">Lezione 5</a><br/>
+            <a href="#lesson6">Lezione 6</a><br/>
+        </div>
+        
+        <div class="sectionWrapper">
+            <a name="introduction"></a>
+            
+            <h2>Introduzione</h2>
+            
+            <h3>	Benvenuti alle Esercitazioni di FileMaker API for PHP </h3>
+            <p>Queste Esercitazioni presentano le funzioni di base di FileMaker API for PHP. Le Esercitazioni comprendono 6 lezioni che insegnano ad utilizzare l'API per integrare un database di FileMaker Pro con un'applicazione web PHP. Ogni lezione descrive una funzione particolare dell'API, spiegando il modo in cui si scrive il codice e come funziona.
+            <p>Il database delle Esercitazioni è un sistema questionario FileMaker (questionnaire.fp7<em>). </em>Ogni record del questionario può avere domande multiple correlate. Ogni domanda può avere risposte multiple correlate. Viene selezionato un solo questionario come questionario <em>attivo </em>. Il questionario attivo è quello che gli utenti sono invitati a scegliere durante l'utilizzo dell'applicazione web PHP. 
+            Quando un utente completa un questionario online, il sistema aggiunge un record <em>respondent</em> per l'utente e aggiunge le risposte dell'utente come record correlati.
+ 
+            <p>Le Esercitazioni completano gradualmente un'applicazione web PHP e ogni lezione è costruita sulla lezione precedente come segue:  
+            <ul>
+              <li>            Lezione 1
+                <ul>
+                  <li>Impostazione dell'oggetto del database di <em>FileMaker</em>
+                    <ul>
+                      <li class="comment"><em>Che cosa devo fare per preparare l'oggetto del database di FileMaker da utilizzare nelle mie applicazioni web personalizzate?</em></li>
+                    </ul>
+                  </li>
+                  <li>Esecuzione di Trova tutto
+                    <ul>
+                      <li class="comment"><em>Come posso trovare tutti i record di un database per visualizzarli sul web? </em></li>
+                    </ul>
+                  </li>
+                  <li>Esecuzione della ricerca
+                    <ul>
+                      <li class="comment"><em>Come posso trovare un record particolare nel database per visualizzarlo sul web? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lezione 2
+                <ul>
+                  <li>Visualizzazione immagini Contenitore
+                    <ul>
+                      <li class="comment"><em>Come posso visualizzare immagini compatibili con il web nei campi Contenitore sul sito web? </em></li>
+                    </ul>
+                  </li>
+                  <li>Utilizzo di ContainerBridge.php
+                    <ul>
+                      <li class="comment"><em>Che cos'è il file </em>ContainerBridge.php<em> e come funziona? </em> </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lezione 3
+                <ul>
+                  <li>Visualizzazione liste valori di FileMaker
+                    <ul>
+                      <li class="comment"><em>Come posso visualizzare liste valori personalizzate di FileMaker sul web? </em></li>
+                    </ul>
+                  </li>
+                  <li>Aggiunta di record
+                    <ul>
+                      <li class="comment"><em>Come si aggiungono record ad un database di FileMaker da un modulo web inviato? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lezione 4
+                <ul>
+                  <li>Come ricavare un record in base all'ID
+                    <ul>
+                      <li class="comment"><em>Come posso recuperare un record FileMaker in base al suo ID interno senza eseguire un'altra ricerca? </em></li>
+                    </ul>
+                  </li>
+                  <li>Come ricavare un set correlato (portale)
+                    <ul>
+                      <li class="comment"><em>Come posso visualizzare i record da un portale di FileMaker sul sito Web? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lezione 5
+                <ul>
+                  <li>Aggiunta di record correlati
+                    <ul>
+                      <li class="comment"><em>Come posso aggiungere record ad un portale dal mio sito web? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>Lezione 6
+                <ul>
+                  <li>Revisione del set correlato ricavato (portale)  
+                    <ul>
+                      
+                      <li class="comment"><em>Come posso visualizzare i record da un portale di FileMaker sul sito Web? </em></li>
+                    </ul>
+                  </li>
+                  <li>Personalizzazione di un formato con fogli di stile a cascata
+                  (CSS)
+                    <ul>
+                      <li class="comment"><em>Come posso modificare l'aspetto esteriore del mio output HTML utilizzando fogli di stile a cascata? </em></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+            <p>Queste Esercitazioni non coprono l'intero API. Tuttavia, dopo aver completato queste lezioni, avrete acquisito buone basi. Per maggiori informazioni sull'API, vedere la documentazione FileMaker API for PHP. 
+            <p>Per visualizzare la documentazione FileMaker API for PHP, portarsi sulla pagina iniziale dell'Admin Console di FileMaker Server e fare clic su &quot;Strumenti PHP Site Assistant e XSLT Site Assistant.&quot; Sulla pagina Strumenti per la pubblicazione sul Web fare clic su &quot;documentazione FileMaker API for PHP.&quot; Utilizzare la documentazione come riferimento mentre si completano queste Esercitazioni. Questo riferimento vi mostra come utilizzare in modo più completo FileMaker API for PHP. 
+            <p>È inoltre necessario acquisire familiarità con il database di questionnaire.fp7. Per scoprire come funziona e per comprendere la struttura dei questionari potete creare domande con risposte multiple. La conoscenza della struttura del questionnaire.fp7 è necessaria per capire in che modo l'applicazione delle Esercitazioni PHP utilizza l'API. 
+            <h3>Per cominciare </h3>
+            
+            <h4>Configurazione e installazione</h4>
+            <p class="h4_text">È necessario che FileMaker Server 9 sia installato e che ospiti il database del questionnaire.fp7. La cartella delle Esercitazioni deve essere ospitata sulla macchina del server Web che viene utilizzata per l'installazione di FileMaker Server. </p>
+            <p class="h4_text">Per ulteriori informazioni sull'installazione e sulla distribuzione di FileMaker Server 9, vedere la <em>Guida introduttiva di FileMaker Server.</em> Per ulteriori informazioni su FileMaker API for PHP, vedere <em>Pubblicazione Web personalizzata di FileMaker Server con PHP. </em></p>
+            
+            <h4>Conoscenze e abilità consigliate        </h4>
+            <p class="h4_text">È necessario avere familiarità con la programmazione HTML, ossia conoscere dichiarazioni, intestazioni e tag di elemento HTML. Per ulteriori informazioni sulla programmazione di pagine web con HTML, vedere <a href="http://www.w3schools.com/xhtml/xhtml_dtd.asp">Esercitazioni XHTML in W3Schools</a>.</p>
+            <p class="h4_text">È inoltre richiesta la familiarità con la programmazione PHP. Di conseguenza, devono essere noti output standard, variabili, matrici, loop condizionali, oggetti, metodi e funzioni. Per maggiori informazioni sulla programmazione con PHP, vedere <a href="http://www.w3schools.com/php/default.asp">Esercitazioni PHP in W3Schools</a>.</p>
+            <p class="h4_text">È necessario saper utilizzare un editor di testo con HTML e PHP. Queste Esercitazioni richiedono l'utilizzo di un editor di testo per visualizzare e modificare codici HTML e PHP.</p>
+            <p class="h4_text">È necessario sapere come si lavora con il progetto del database di FileMaker Pro e quindi avere dimestichezza con campi, relazioni, formati, portali e contenitori. Per ulteriori informazioni sulla progettazione di database con FileMaker Pro, vedere la documentazione FileMaker Pro. </p>
+            
+            <h4>Suggerimenti utili  </h4>
+            <p class="h4_text"> quando si modificano dei record in FileMaker Pro, ricordarsi di <em>uscire</em> o di <em>assegnare</em> il record per applicare le modifiche. Le pagine Web riportano le modifiche inserite nel database solo quando si esce dal record.</p>
+            <p class="h4_text">Per visualizzare le pagine PHP di ogni lezione nel browser Web, si deve inserire l'URL completo in modo da poter eseguire il codice PHP. Se, ad esempio, i file sono ospitati sulla macchina locale, puntare il browser su un URL che inizia con &quot;http://localhost/ ...&quot;. Non utilizzare il percorso locale del file che può iniziare con &quot;file:///Volumes/ ...&quot;. Se si utilizza un URL &quot;file://&quot; si ottiene la <strong>visualizzazione</strong> del codice PHP, non la sua <strong>esecuzione</strong>. Assicurarsi sempre che l'URL inizi con &quot;http&quot;o &quot;https&quot; se sul server web è impostato l'SSL.</p>
+            <p />
+        </div>
+        
+        <div class="sectionWrapper">
+            <a name="lesson1"></a>
+            
+            <h2>Lezione 1</h2>
+            
+            <h3>Obiettivo</h3>
+            <p>La lezione 1 contiene le basi per l'utilizzo di FileMaker API for PHP in due file PHP: <span class="page">home.php</span> e <span class="page">dbaccess.php</span>. Il file <span class="page">home.php</span> serve come punto di partenza del browser web e il file <span class="page">dbaccess.php</span> imposta un oggetto <em>FileMaker</em> che rappresenta il database. Queste pagine descrivono i passi fondamentali per l'installazione dell'oggetto del database <em>FileMaker</em>, la configurazione delle sue proprietà chiave e l'esecuzione di una ricerca sul database del <span class="database">questionnaire.fp7</span>.</p>
+            
+            <h3>Avvio</h3>
+            <p>Per visualizzare l'esempio delle Esercitazioni, indirizzare il browser web su <a href="Lesson1/home.php">home.php</a> all'interno della cartella Lesson1. Questa pagina visualizza la schermata iniziale del sistema questionario di FileMaker. Durante il caricamento della pagina, in background viene effettuata la connessione tra PHP e il Motore di Pubblicazione Web, che individua un record nel database <span class="database">questionnaire.p7</span>. </p>
+            <p>Utilizzando l'editor di testo, aprire il file <span class="page">home.php</span> all'interno della cartella Lesson1. Collocare il seguente codice immediatamente dopo il tag body.</p>
+            <p class="code">&lt;?php include (&quot;dbaccess.php&quot;); ?&gt;</p>
+            <p>Questa istruzione PHP contiene o <em>carica</em> il file <span class="page">dbaccess.php</span>. Il file <span class="page">dbaccess.php</span> comprende funzioni che configurano l'oggetto del database di <em>FileMaker</em> e lo preparano per le operazioni di database. Di conseguenza, i metodi API sotto <span class="page">home.php</span> non funzionano senza di esso. Anche se i metodi indicati in <span class="page">dbaccess.php</span> possono essere stati scritti nel file <span class="page">home.php</span>, vengono tuttavia separati per facilitare le operazioni di debug e la manutenzione.  </p>
+            
+            <h3>Configurazione dell'oggetto del database <em>FileMaker</em> </h3>
+            <p>Il file <span class="page">dbaccess.php</span> contiene il codice per impostare l'oggetto del database <em>FileMaker</em>. Svolge un ruolo fondamentale nella costruzione dell'applicazione del questionario. Seguire questi passi per configurare l'oggetto <em>FileMaker</em>:  </p>
+            
+            <ol>
+                <li>Caricare FileMaker API for PHP</li>
+                <li>Assegnare un'istanza della classe del database <em>FileMaker</em> ad una variabile</li>
+                <li>Impostare proprietà chiave per la nuova istanza di <em>FileMaker</em> </li>
+            </ol>
+                
+            <p>Utilizzando l'editor di testo, aprire il file <span class="page">dbaccess.php</span> nella cartella Lesson1 e seguire la descrizione di ogni passo indicato in basso. </p>
+            
+            <h4 class="h4_text">1. Caricare FileMaker API for PHP</h4>
+            <p class="h4_text">Per poter essere utilizzato, FileMaker API deve essere innanzitutto caricato nella memoria PHP.  A tale scopo si deve utilizzare l'istruzione "require".</p>
+            <p class="code">require_once ('FileMaker.php');</p>
+            <p class="h4_text">Dopo aver caricato il software, è possibile creare istanze della classe di database <em>FileMaker</em> utilizzandole per connessioni di database nell'applicazione web.  Se si tenta di utilizzare l'API senza averlo dapprima caricato viene visualizzato un messaggio di errore.</p>
+                
+            <h4 class="h4_text">2. Assegnare un'istanza della classe del database <em>FileMaker</em> ad una variabile</h4>
+            <p class="h4_text">Per poter utilizzare un'istanza della classe di database <em>FileMaker</em> la si deve innanzitutto creare. La si deve inoltre assegnare ad una variabile per farvi riferimento nel codice.</p>
+            <p class="code">$fm = new FileMaker();</p>
+            <p class="h4_text">Il codice indicato sopra crea un'istanza dell'oggetto del database <em>FileMaker</em>. Tale codice viene indicato come variabile <em>$fm</em>.</p>
+            
+            <h4 class="h4_text">3. Impostare proprietà chiave per la nuova istanza di <em>FileMaker</em></h4>
+            <p class="h4_text">L'oggetto del database <em>FileMaker</em> ha un set di proprietà che possono essere impostate in qualsiasi momento. Tuttavia, alcune proprietà devono essere impostate prima di effettuare le operazioni di database. Di seguito viene riportato il codice per impostare le proprietà richieste per queste Esercitazioni.</p>
+            <p class="code">$fm-&gt;setProperty('database', 'questionnaire');
+                <br />
+                $fm-&gt;setProperty('username', 'web');
+          <br />
+          $fm-&gt;setProperty('password', 'web');        </p>
+            <p class="h4_text"><strong>Nota: </strong> Il nome del database <em>questionnaire</em> non richiede l'aggiunta dell'estensione <em>fp7</em> al parametro.</p>
+            <p class="h4_text"><strong>Nota: </strong>Vedere la documentazione di FileMaker API for PHP per avere la lista delle proprietà della classe del database <em>FileMaker</em> e le relative descrizioni. </p>
+            <p>Il file <span class="page">dbaccess.php</span> contiene poco codice, ma prepara efficacemente l'oggetto <em>Filemaker</em> per l'utilizzo. Dopo aver caricato il file, l'oggetto <em>FileMaker</em> è utilizzabile come variabile $fm e le proprietà chiave sono impostate sui valori richiesti. Il file <span class="page">dbaccess.php</span> consente al file <span class="page">home.php</span> di comunicare con il database <span class="database">questionnaire.fp7</span>. </p>
+            
+            <h3>Esecuzione di Trova e di Trova tutto </h3>
+            <p>Il file <span class="page">home.php</span> esegue due operazioni di database: <em>Trova tutto</em> (Mostra tutti i record) e <em>Trova</em>. Per visualizzare il codice di queste operazioni, aprire il file <span class="page">home.php</span> nell'editor di testo. Per visualizzare il database di queste operazioni, aprire il file <span class="database">questionnaire.fp7</span> ospitato su FileMaker Server.</p>
+            
+            <h4 class="h4_text">1. Trova tutto (Mostra tutti i record) </h4>
+            <p class="h4_text">Il database <span class="database">questionnaire.fp7</span> contiene un formato denominato <em>Active Questionnaire</em>. Questo formato funge da interfaccia e contiene un solo record nella tabella. Su questo formato, gli utenti selezionano il questionario <em>attivo</em>. L'applicazione web deve recuperare l'ID del questionario <em>attivo</em>.</p>
+            <p class="h4_text">L'ID del questionario attivo viene recuperato eseguendo Trova tutto (Mostra tutti i record) sul formato <em>Active Questionnaire. </em>Questa operazione utilizza l'oggetto di comando <em>FileMaker_Command_FindAll</em>.</p>
+            <p class="h4_text"><strong>Nota: </strong> Vedere la documentazione di FileMaker API for PHP per avere la lista degli oggetti di comando e dei relativi metodi. </p>
+            <p class="h4_text"> Per creare un'istanza dell'oggetto FileMaker_Command_FindAll si deve far eseguire a $fm (istanza del database <em>FileMaker</em>) il metodo <em>newFindAllCommand()</em> specificando (fra parentesi) il nome del formato <em>Active Questionnaire. </em>Il formato determina quale occorrenza in tabella viene utilizzata (contesto) e quali campi vengono restituiti nei risultati.</p>
+            <p class="h4_text">L'istanza <em>FileMaker_Command_FindAll</em><em>l</em> deve essere assegnata ad una variabile come mostra il seguente esempio. </p>
+            <p class="code">$findCommand = $fm-&gt;newFindAllCommand('Active Questionnaire');</p>
+            <p class="h4_text">Il codice sopra esposto assegna un nuovo oggetto FileMaker_Command_FindAll alla variabile <em>$findCommand</em>. Il comando Trova tutto viene eseguito con il metodo <em>execute()</em>. I risultati della ricerca devono essere assegnati ad una variabile.</p>
+            <p class="code">$result = $findCommand-&gt;execute();</p>
+            <p class="h4_text">Dopo aver eseguito un comando è possibile che si verifichi un errore. Se l'errore si verifica effettivamente (o se la ricerca non dà risultati), la variabile $result viene assegnata all'oggetto <em>FileMaker_Error</em>. Utilizzare il seguente codice per controllare l'oggetto FileMaker_Error. Il messaggio di errore viene visualizzato utilizzando il metodo <em>getMessage()</em>.</p>
+            <p class="code"> if (FileMaker::isError($result)) {
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;echo &quot;&lt;p&gt;Error: &quot; . $result-&gt;getMessage() . &quot;&lt;/p&gt;&quot;;
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;exit;
+                <br />
+                }</p>
+            <p class="h4_text">Se non si sono verificati errori, la variabile <em>$result</em> contiene una matrice degli oggetti FileMaker_Record, uno per ogni record nel set trovato. Utilizzare la variabile $result per recuperare il primo record nei risultati di Trova tutto. Poiché per default le matrici PHP sono indicizzate numericamente, si può visualizzare il primo record utilizzando il seguente codice.</p>
+            <p class="code">$record = $records[0];    </p>
+            <p class="h4_text">Questo codice assegna un oggetto FileMaker_Record contenente il primo record nel set trovato alla variabile <em>$record</em>. Da questo record si possono recuperare i contenuti del questionnaire_id utilizzando il metodo <em>getField()</em>. I risultati del metodo <em>GetField()</em> devono essere assegnati ad una variabile.
+     
+            <p class="code">$active_questionnaire_id =  $record-&gt;getField('questionnaire_id');    </p>
+            <p class="h4_text">Questa variabile contiene attualmente l'ID del questionario attivo. Il passo successivo utilizza questa variabile come parametro per la ricerca successiva. </p>
+            <p class="h4_text"><strong>Nota: </strong> Vedere la documentazione di FileMaker API for PHP per avere la lista degli oggetti e dei relativi metodi.</p>
+            
+            <h4 class="h4_text">2. Trova </h4>
+            <p class="h4_text">Una volta che si conosce l'ID del questionario attivo, lo si può utilizzare per <em>cercare</em> il record del questionario. Il codice per eseguire questa operazione si trova al fondo del file <span class="page">home.php</span>. L'operazione utilizza l'oggetto di comando <em>FileMaker_Command_Find</em>.</p>
+            <p class="h4_text">Per creare un'istanza di FileMaker_Command_Find si deve far eseguire a $fm (istanza del database <em>FileMaker</em>) il metodo <em>newFindCommand()</em>, specificando (fra parentesi) il nome del formato <em>Active Questionnaire. </em>Il formato determina quale occorrenza in tabella viene utilizzata e quali campi vengono restituiti nei risultati.</p>
+            <p class="h4_text">L'istanza <em>FileMaker_Command_Find</em><em> </em> deve essere assegnata ad una variabile come mostra il seguente esempio. </p>
+            <p class="code">$findCommand =&amp; $fm-&gt;newFindCommand('questionnaire');</p>
+            <p class="h4_text">Per aggiungere criteri alla ricerca, utilizzare il metodo <em>addFindCriterion()</em>. Il metodo <em>addFindCriterion()</em> richiede due parametri: <em>fieldName</em> e <em>searchParameter</em>. Utilizzare il nome campo &quot;questionnaire ID&quot; (come definito in FileMaker Pro) e la variabile <em>$active_questionnaire_id</em> come parametri.</p>
+            <p class="code">$findCommand-&gt;addFindCriterion('Questionnaire ID', $active_questionnaire_id);</p>
+            <p class="h4_text"><strong>Nota: </strong>Il metodo <em>addFindCriterion()</em> può essere richiamato più volte, simulando l'AND logico che appare inserendo criteri di ricerca multipla in una sola richiesta di ricerca all'interno di FileMaker Pro.</p>
+            <p class="h4_text">Dopo aver aggiunto i criteri di ricerca si utilizza il metodo <em>execute()</em> per eseguire la ricerca. I risultati del metodo <em>execute()</em> devono essere assegnati ad una variabile.</p>
+            <p class="code">$result = $findCommand-&gt;execute(); </p>
+            <p class="h4_text">La variabile $result contiene ora una matrice di oggetti FileMaker_Record. Poiché la ricerca è stata effettuata sul formato <em>questionnaire</em>, ogni record di <em>$result</em> contiene i valori di ogni campo sul formato <em>questionnaire</em>.</p>
+            <p class="h4_text">Il codice finale di questa pagina utilizza dichiarazioni echo PHP e il metodo <em>GetField()</em> per visualizzare i campi <em>Questionnaire Name</em> e <em>Description</em> sulla pagina <span class="page">home.php</span>.</p>
+            <p />
+        </div>
+        
+        <div class="sectionWrapper">
+            <a name="lesson2"></a>
+            
+            <h2>Lezione 2</h2>
+            
+            <h3>Obiettivo</h3>
+            <p>La lezione 2 riguarda il codice richiesto per visualizzare le immagini contenitore di FileMaker Pro sul web.  Se si memorizzano immagini compatibili con il web in un database di FileMaker Pro, si può utilizzare FileMaker API for PHP per recuperare tali immagini e visualizzarle sul sito web.</p>
+            
+            <h3>Avvio</h3>
+            <p>Aprire il database delle Esercitazioni di FileMaker API <span class="database">questionnaire.fp7</span> e assicurarsi che il questionario attivo disponga di un'immagine compatibile con il web nel campo Contenitore.  Quindi visualizzare l'esempio delle Esercitazioni PHP aprendo il file <a href="Lesson2/home.php">home.php</a> della cartella Lesson2 nel browser web. Tenere presente che la pagina visualizza l'immagine del questionario attivo. Provare a cambiare l'immagine contenitore nel database di FileMaker. Assicurarsi di essere usciti dal record dopo aver finito. Aggiornare il browser e osservare l'aggiornamento del sito web con la nuova immagine.</p>
+            
+            <h3>Visualizzazione immagine Contenitore </h3>
+            <p>Per visualizzare il modo in cui l'API viene utilizzato per questa operazione, aprire il file <span class="page">home.php</span> nella cartella Lesson2. Visualizzare le ultime dichiarazioni PHP nel file facendo particolarmente attenzione al tag &lt;img&gt; (immagine) e al suo attributo <em>src</em> (sorgente).</p>
+            <p>Osservare i seguenti punti concernenti questa tecnica.</p>
+            <ol>
+              <li>Il campo contenitore <em>Graphic</em> è sul formato <em>questionnaire</em> (che è il formato della ricerca precedente). Tenere presente che solo i valori dei campi sul <strong>formato utilizzato per la ricerca</strong> vengono restituiti all'API.</li>
+              <li>Il valore del campo <em>Graphic</em> restituito non è <strong>un'immagine</strong>, ma uno speciale URL che richiede l'immagine dal Motore di Pubblicazione Web.</li>
+            </ol>
+            <p class="code">echo '&lt;img src=&quot;ContainerBridge.php?path=' . urlencode($record-&gt;getField('Graphic')) . '&quot;&gt;';</p>
+            <p>Poiché un tag HTML &lt;img&gt; (immagine) deve avere un <em>percorso file</em> come suo attributo <em>src </em>(sorgente), questa lezione utilizza un file separato per recuperare effettivamente l'immagine. Il file che recupera l'immagine contenitore è denominato <span class="page">ContainerBridge.php</span>e il suo nome appare all'interno dell'attributo <em>src</em> (sorgente) del tag &lt;img&gt; (immagine).</p>
+            <p>Il file <span class="page">ContainerBridge.php</span> non sa quale immagine si intende visualizzare. Per specificare l'immagine, è necessario aggiungere il valore del campo <em>Graphic</em> al fondo dell'URL <em>src </em>(sorgente). Nell'HTML, questo è denominato metodo GET.</p>
+            <p>Utilizzando una coppia <em>nome/valore</em> e iniziando con un punto interrogativo, concatenare la stringa desiderata. Il <em>nome</em> è impostato sul &quot;percorso&quot; e il <em>valore</em> è impostato sul risultato del metodo <em>getField()</em>, con il nome del campo Contenitore <em>(Graphic)</em> fra parentesi.</p>
+            <p><strong>Nota: </strong> il risultato <em>getField()</em>viene trasferito alla funzione PHP urlencode() per garantire la codifica corretta di caratteri speciali per un URL. </p>
+            
+            <h3>Utilizzo di ContainerBridge.php </h3>
+            <p>Utilizzando l'editor di testo, aprire il file <span class="page">ContainerBridge.php</span> nella cartella Lesson2. Questo semplice script utilizza il metodo FileMaker_Record <em>getContainerData()</em> per recuperare l'immagine effettiva.</p>
+            <p>Per garantire il funzionamento di <em>getContainerData()</em> si devono trasferire i risultati del campo da <em>GetField()</em> (di un campo Contenitore) al metodo <em>getContainerData()</em> fra parentesi. In <span class="page">home.php</span>, il risultato di GetField() per il campo <em>Graphic</em> è stato trasferito tramite URL. In <span class="page">ContainerBridge.php</span>, il risultato viene recuperato dall'URL attraverso l'elemento <em>path</em> della matrice $_GET e trasferito al metodo <em>getContainerData()</em>. </p>
+            <p class="code">echo $fm-&gt;getContainerData($_GET['path']);</p>
+            <p>Il file <span class="page">ContainerBridge.php</span> recupera il percorso dell'immagine specificata dal database di FileMaker Pro in modo che il file <span class="page">home.php</span> lo possa utilizzare nel tag &lt;img&gt; per visualizzare l'immagine nel browser web. </p>
+            <p><strong>Nota: </strong> Vedere la documentazione di FileMaker API for PHP per avere la lista dei metodi degli oggetti FileMaker_Record.</p>
+        </div>
+            
+        <div class="sectionWrapper">
+            <a name="lesson3"></a>
+            <h2>Lezione 3</h2>
+            
+            
+            <h3>Obiettivo</h3>
+            <p>La lezione 3 riguarda il codice richiesto per creare un modulo web dinamico utilizzando oggetti del formato FileMaker. Riporta inoltre il codice richiesto per aggiungere un nuovo record FileMaker da un modulo web assegnato. Questa lezione utilizza due file PHP aggiuntivi: <span class="page">Respondent.php</span> e <span class="page">handle_form.php</span>. Il file <span class="page">Repondent.php</span> serve per generare dinamicamente un modulo web, mentre il file <span class="page">handle_form.php</span> è utilizzato per convalidare voci di modulo e inserirle come nuovo record nel database <span class="database">questionnaire.fp7</span>.</p>
+            
+            <h3>Avvio</h3>
+            <p>Aprire il sito web del questionario puntando il browser sul file <a href="Lesson3/home.php">home.php</a> nella cartella Lesson3. Questa versione della pagina visualizza un pulsante <em>Continue</em> per avviare l'applicazione del questionario. Se si fa clic sul pulsante Continue si viene reindirizzati sul file <span class="page">Respondent.php</span>. Inserire le informazioni nel modulo web e fare clic su <em>Submit</em>; se non sono state inserite informazioni sufficienti, riprovare. Quando il modulo viene convalidato, viene visualizzato il messaggio Thank You e le informazioni inserite vengono aggiunte come nuovo record al database <span class="database">questionnaire.fp7</span>. </p>
+            
+            <h3>Recupero degli elementi della lista valori </h3>
+            <p>Per sapere come funziona questa applicazione, aprire la pagina <span class="page">Respondent.php</span> nell'editor di testo. Tenere presente che il file <span class="sectionWrapper"> </span><span class="page">dbaccess.php</span> è incluso in cima. Come si è già detto nella Lesson 1, questa istruzione "include" garantisce la disponibilità di un'istanza della classe del database <em>FileMaker</em> e che l'istanza possa essere utilizzata come variabile <em>$fm</em>.</p>
+            <p>Tenere presente l'elemento del modulo del pulsante di opzione <span class="page">Respondent.php</span> denominato &quot;prefix&quot;. Questo elemento riceve i suoi valori dal database questionnaire.fp7 di FileMaker Pro utilizzando la lista valori con lo stesso nome. Questa tecnica consente di costruire un elemento di modulo dinamico basato su una lista valori definita nel database di FileMaker. In questo modo non si ha la necessità di aggiornare il codice PHP ogni volta che si modifica la lista valori nel database. Questa tecnica è implementata nei seguenti passi: </p>
+            <ol>
+              <li>Recuperare un oggetto di formato attraverso il metodo <em>getLayout()</em> (con il nome del formato fra parentesi) </li>
+              <ul>
+                <li>Il metodo <em>getLayout()</em> restituisce un oggetto FileMaker_Layout</li>
+              </ul>
+              <li>Recuperare i valori della lista attraverso il metodo <em>getValueList()</em>          </li>
+              <ul>
+                <li><em>getValueList()</em> è uno dei metodi dell'oggetto FileMaker_Layout  </li>
+              </ul>
+              <li>Scorrere la matrice di valori e visualizzare ognuno come pulsante di opzione </li>
+            </ol>
+            Quando si utilizza questa tecnica, tenere presente che il formato specificato deve contenere un campo <em>formattato</em> dalla lista valori specificata. Se con il metodo <em>getValueList()</em> viene richiesta una lista valori e se tale lista non è stata formattata su nessun campo del formato specificato con <em>getLayout()</em>, viene visualizzato un errore. Di seguito viene riportato il codice utilizzato per visualizzare i pulsanti di opzione dinamici. 
+            <p class="code">$layout =&amp; $fm-&gt;getLayout('Respondent');<br />
+            $values = $layout-&gt;getValueList('prefixes');<br />
+            foreach($values as $value){
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      echo '&lt;input type= &quot;radio&quot; name= &quot;prefix&quot; value= &quot;'. $value .'&quot;&gt;' . $value . ' ';<br />
+            }</p>
+            <p><strong>Nota - </strong>Per una lista dei metodi oggetto FileMaker_Layout vedere la documentazione di FileMaker API for PHP.</p>
+            <p><strong>Nota -</strong> Il modulo in <span class="page">Respondent.php</span> comprende diversi elementi nascosti. Uno, chiamato &quot;active_questionnaire_id&quot;, contiene il questionnaire ID da <span class="page">home.php</span>. Questo modulo inserisce l'ID in <span class="page">handle_form.php</span>, dove verrà utilizzato nella lezione 4. </p>
+            
+            <h3>Aggiunta di un nuovo record </h3>
+            <p>Quando il modulo <span class="page">Respondent.php</span> ha inviato i dati, i valori vengono trasferiti alla pagina di azione <span class="page">handle_form.php</span> attraverso il metodo POST. Utilizzando l'editor di testo, aprire il file <span class="page">handle_form.php</span> situato nella cartella Lesson3.</p>
+            <p>Si noti che i dati inviati dall'utente vengono assemblati in una matrice e assegnati alla variabile <em>$respondent_data</em>. In questa matrice associativa,  la (<em>chiave</em>) di ogni elemento è il nome esatto del campo FileMaker in cui devono essere inseriti i dati. Il <em>valore</em> di ogni elemento corrisponde ai valori inviati dall'elemento del modulo HTML all'interno della matrice $_POST. Questa matrice $respondent_data è utilizzata dall'oggetto <em>FileMaker</em> per la creazione del record del database. </p>
+            <p>Dopo avere assemblato la matrice dati, il codice PHP effettua alcuni semplici controlli di convalida. Questi metodi di convalida utilizzano il codice PHP esplicitamente; FileMaker Server non esegue nessuna convalida durante questa operazione.</p>
+            <p>Una volta che i dati utente hanno superato la convalida, è possibile aggiungere un nuovo record con due semplici passi:</p>
+            <ol>
+              <li>Creare un nuovo oggetto FileMaker_Command_Add, inserendo due parametri:
+                <ul>
+                  <li>nome del formato (il formato deve disporre dei campi necessari)</li>
+                  <li>matrice dati <em>($respondent_data)</em> </li>
+                </ul>
+              </li>
+              <li>Aggiungere il record con il metodo <em>execute()</em></li>
+            </ol>
+            <p class="code"> $newRequest =&amp; $fm-&gt;newAddCommand('Respondent', $respondent_data);<br />
+            $result = $newRequest-&gt;execute(); </p>
+            <p>Attenzione: per creare un nuovo oggetto FileMaker_Command_Add è necessario specificare il nome del formato. Il nome del formato determina quale ricorrenza di tabella viene usata (contesto) e quali campi vengono restituiti (risultati). I campi utilizzati per inserire dati devono trovarsi sul formato.</p>
+            <p>Nella lezione 4, la pagina <span class="page">handle_form.php</span> viene aumentata per usare il record aggiunto e visualizzare la prima domanda. </p>
+        </div>  
+        
+        <div class="sectionWrapper">
+            <a name="lesson4"></a>
+
+            <h2>Lezione 4</h2>
+            
+            <h3>Obiettivo</h3>
+            <p>La lezione 4 illustra il codice necessario per recuperare un record FileMaker in base all'ID e recuperare record correlati da un portale. I portali sono strumenti potenti usati nelle soluzioni FileMaker Pro. FileMaker API for PHP comprende metodi speciali progettati per lavorare con i dati del portale. Questa lezione presenta alcune di tali funzionalità.</p>
+            
+            <h3>Avvio</h3>
+            <p>Aprire il database <span class="database">questionnaire.fp7</span> FileMaker Pro ospitato su FileMaker Server. Fare clic sul pulsante <em>Modifica questionario</em> e assicurarsi che per il questionario attivo sia presente almeno un record nel portale <em>Question</em>. </span>  Quindi aprire il file  <a href="Lesson4/home.php">home.php</a> della cartella Lesson4 nel browser Web. Selezionare il pulsante <em>Continue</em> e inserire le informazioni dell'intervistato.</p>
+            <p>Di seguito viene presentata la prima domanda del questionario attivo. Aprire nuovamente il database FileMaker Pro <span class="database">questionnaire.fp7</span>. Individuare la prima domanda del questionario attivo. Provare a cambiare il primo tipo di domanda. Fare clic sul pulsante <em>Modifica risposte</em> e aggiungere le risposte possibili. Aggiornare il browser Web per visualizzare la domanda aggiornata.</p>
+            <p>In questa lezione vengono presentate due nuove funzioni: ottenere un record in base all'ID e recuperare un set di record correlati da un portale.</p>
+            
+            <h3>Ricerca di un record in base all'ID </h3>
+            <p>Con l'editor di testo, aprire il file <span class="page">handle_form.php</span> situato all'interno della Lesson4 folder. Scorrere fino a circa un terzo del file dove nella lezione 3 è terminato il file <span class="page">handle_form.php</span>. Si noti che questa lezione aggiunge codice che richiede l'oggetto del nuovo record intervistato. Questa richiesta è necessaria perché il campo <em>Respondent ID</em> è definito con l'opzione <em>Immissione automatica numero di serie</em> in FileMaker Pro ed è necessario recuperare il numero <em>Immissione automatica</em>. </p>
+            <p>Come per le funzioni <em>Trova</em> nella lezione 1, è possibile recuperare un nuovo record usando i metodi <em>getField()</em> e <em>getField()</em>.</p>
+            <p class="code"> $records = $result-&gt;getRecords();<br />
+            $record = $records[0];<br />
+            $respondent_recid = $record-&gt;getField('Respondent ID');</p>
+            <p>L'operazione successiva consiste nel recuperare il nome del questionario attivo. Per eseguire questa operazione, utilizzare il metodo <em>getRecordById()</em> dell'istanza FileMaker <em>($fm)</em>.</p>
+            <p>Per usare <em>getRecordById()</em>,   inserire l'ID record FileMaker interno e il nome del formato. Il formato determina quale ricorrenza di tabella (contesto) viene utilizzata e quali valori di campo (risultati) vengono restituiti. Il codice di questa pagina inserisce l'<em>active_questionnaire_id</em> della matrice $_POST inviato a questo file dal modulo intervistato di <span class="page">Respondent.php</span>.</p>
+            <p class="code">  $active_questionnaire_id = $_POST['active_questionnaire_id'];
+              <br />
+            $active_questionnaire = $fm-&gt;getRecordById('questionnaire',$active_questionnaire_id);<br />
+            $questionnaire_name = $active_questionnaire-&gt;getField('Questionnaire Name');</p>
+            <p><strong>Nota - </strong>Ogni oggetto record restituito da un'operazione API comprende l'ID record FileMaker interno che può essere recuperato con il metodo <em>getRecordId()</em>. </p>
+            <p>L'operazione successiva consiste nel recuperare i record del questionario e visualizzare la prima domanda. Ricercare tutte le domande che corrispondono al questionnaire ID attivo. Questa ricerca viene eseguita nel formato Questions.</p>
+            <p class="code"> $findCommand =&amp; $fm-&gt;newFindCommand('Questions');<br />
+            $findCommand-&gt;addFindCriterion('Questionnaire ID', $active_questionnaire_id);<br />
+            $result = $findCommand-&gt;execute();<br />
+            $records = $result-&gt;getRecords();<br />
+            $question = $records[0];</p>
+            
+            <h3>Come ricavare un set correlato </h3>
+            <p>Il database del questionario è progettato in modo per cui ogni domanda ha un tipo specifico (<em>per esempio, text, radio e checkbox)</em>. Se il tipo è a risposta multipla, per ogni domanda sono possibili più risposte. Il formato <em>Questions</em> contiene un portale che visualizza le possibili risposte. Se una domanda comprende una o più risposte, il codice che segue mostra le possibili risposte usando il &quot;tipo&quot; specificato. </p>
+            <p>Per spiegare questo codice,  supponiamo che la domanda sia del tipo <em>radio</em> (pulsanti di opzione). Scorrere verso il basso il documento <span class="page">handle_form.php</span> fino a vedere la condizione <em>else if </em>che determina i tipi di domande <em>radio</em> (pulsanti di opzione) o <em>ranking</em> (classificazione). </p>
+            <p class="code">else if ($question_type ==&quot;radio&quot; || $question_type ==&quot;ranking&quot;)</p>
+            <p>Se la condizione è true, il seguente codice recupera le opzioni di risposta correlate e le visualizza come elementi modulo del tipo pulsanti di opzione. I record delle risposte del portale possono essere recuperati usando il metodo <em>getRelatedSet()</em> dell'oggetto FileMaker_Record.</p>
+            <p>Per utilizzare il metodo <em>getRelatedSet()</em>, il <strong>nome della tabella correlata </strong> deve essere inserito tra parentesi e <strong>il portale definito</strong> con questa relazione deve trovarsi sul formato usato per recuperare il record <em>$question</em>. </p>
+            <p class="code">$relatedSet = $question-&gt;getRelatedSet('question_answers');</p>
+            <p>La variabile <em>$relatedSet</em> comprende ora una matrice di oggetti record del portale correlato. Eseguire un loop attraverso la matrice e generare i valori di campo per ogni record trovato. </p>
+            <p class="code">foreach ($relatedSet as $relatedRow)<br />
+              {<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;$possible_answer = $relatedRow-&gt;getField('question_answers::answer');<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;input type= &quot;radio&quot; name= &quot;radio_answer&quot; value= &quot;'. $possible_answer .'&quot;&gt;' . $possible_answer . '&lt;br/&gt;'; <br />
+            }</p>
+            <p>Sarebbe stato possibile recuperare i record correlati eseguendo una ricerca, ma è molto più semplice usare <em>getRelatedSet()</em> usando un portale che già contiene il set correlato.</p>
+        </div>  
+        
+        <div class="sectionWrapper">
+            <a name="lesson5"></a>
+            
+            <h2>Lezione 5</h2>
+            
+            <h3>Obiettivo</h3>
+            <p>La lezione 5 illustra il codice necessario per aggiungere record correlati. Nel caso di un portale definito su un formato che consente la creazione di record correlati, è possibile usare FileMaker API for PHP per aggiungere record correlati dal Web.</p>
+            
+            <h3>Avvio</h3>
+            <p>Aprire il browser Web browser alla pagina <a href="Lesson5/home.php">home.php</a> inserita nella cartella Lesson5. Fare clic sul pulsante <em>Continue</em> e completare il questionario online. Aprire il database FileMaker questionnaire.fp7 che è ospitato su FileMaker Server. Dal questionario attivo, fare clic sul pulsante <em>Review Responses</em> e navigare fino all'ultimo record della tabella. Questo record contiene le informazioni dell'intervistato inserite. O</span>gni risposta viene salvata come record nel portale <em>Responses</em>. </p>
+            
+            <h3>Aggiunta di un record correlato (righe del portale) </h3>
+            <p>È possibile aggiungere righe del portale con FileMaker API for PHP in quattro passi:</p>
+            <ol>
+              <li>Iniziare con un oggetto record valido</li>
+              <li>Creare un record correlato vuoto</li>
+              <li>Aggiungere dati ai campi del nuovo record <em>(facoltativo)</em></li>
+              <li>Salvare il nuovo record </li>
+            </ol>
+            
+            <h4>Iniziare con un oggetto record valido</h4>
+            <p class="h4_text">Con un editor di testo, aprire il file <span class="page">handle_form.php</span> situato nella cartella Lesson5 delle Esercitazioni. Scorrere verso il basso e cercare il codice che recupera il record dell'intervistato:</p>
+            <p class="code">$respondent_rec = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p class="h4_text">Questo codice usa una funzione che è stata aggiunta al file <span class="page">dbaccess.php</span>. Aprendo il file <span class="page">dbaccess.php</span> in un editor di testo, verso il fondo è possibile visualizzare la definizione di questa funzione. All'interno della definizione della funzione si noti che il metodo <em>newFindCommand()</em> utilizza il formato <em>Respondent</em> per il contesto<em>.</em></p>
+            <p class="code">$find = $fm-&gt;newFindCommand('Respondent');</p>
+            <p class="h4_text">Questa funzione assegna l'oggetto record intervistato alla variabile <em>$respondent_rec</em>. La variabile è riferita al formato <em>Respondent</em> perché tale formato era il contesto del comando di ricerca<em>. </em>Pertanto tutti i metodi usati dalla variabile <em>$respondent_rec</em> iniziano dal contesto del formato <em>Respondent</em>.</p>
+            
+            <h4>Creare un record correlato vuoto</h4>
+            <p class="h4_text">Ritornando al file <span class="page">handle_form.php</span>, la riga successiva del codice inizia a creare il nuovo record correlato.</p>
+            <p class="code">$new_response = $respondent_rec-&gt;newRelatedRecord('Responses');</p>
+            <p class="h4_text">Quando viene eseguita questa riga, la variabile <em>$new_response</em> viene assegnata ad un oggetto record <strong>vuoto</strong> (non è ancora stato creato un nuovo record nel database FileMaker).</p>
+            <p class="h4_text">È importante comprendere il contesto di questa operazione. Questo codice inizia dal formato dell'oggetto record richiamante (<em>Responses</em>) e specifica la relazione di un portale su tale formato. Quindi il codice passa il nome della tabella correlata al metodo <em>newRelatedRecord()</em>. </p>
+            
+            <h4>Aggiungere dati ai campi del record vuoto <em>(facoltativo)</em></h4>
+            <p class="h4_text">Dopo aver ottenuto un record vuoto e sapendo a quale contesto del portale appartiene il record, è possibile iniziare a inserire i dati con il metodo <em>setField()</em>. Questo metodo comprende due parametri: <em>field</em> <em>name</em> e <em>field value</em>. Poiché si tratta di un record correlato, il nome del campo deve essere espresso con il nome della relazione <strong>e</strong> il nome del campo separato da una coppia di due punti. </p>
+            <p class="code">$new_response-&gt;setField('Responses::Question ID', $cur_question);<br />
+            $new_response-&gt;setField('Responses::Response', $translatedAnswer);</p>
+            <p class="h4_text">Dopo aver creato il nuovo record correlato e aver aggiunto dati ai campi corrispondenti, è possibile salvare i dati inseriti.</p>
+            <p class="h4_text"><strong>Nota - </strong>Non è necessario impostare i dati del campo prima di salvare un nuovo record vuoto.</p>
+            
+            <h4>Salvare il nuovo record</h4>
+            <p class="h4_text">Nel database FileMaker non vengono creati nuovi oggetti record finché non vengono salvati. Il metodo <em>commit()</em> inserisce l'oggetto <em>FileMaker_Record</em> nel database FileMaker questionnaire.fp7.</p>
+            <p class="code">$result = $new_response-&gt;commit();</p>
+            <p class="h4_text"> La variabile <em>$result</em> viene ora assegnata all'oggetto FileMaker_Record del nuovo record; il nuovo record è stato creato nel database FileMaker. Se si verifica un errore, la variabile <em>$result</em> contiene un oggetto FileMaker_Error. Si consiglia di eseguire una verifica degli errori dopo aver eseguito il metodo <em>commit()</em>. </p>
+        </div>
+        <div class="sectionWrapper">
+            <a name="lesson6"></a>
+            
+            <h2>Lezione 6</h2>
+            
+            <h3>Obiettivo</h3>
+            <p>La lezione 6 esamina il codice necessario per visualizzare campi correlati da un portale.  Presenta le istruzioni di base per usare i fogli di stile CSS (Cascading Style Sheets) per modificare l'aspetto dell'applicazione Web.</p>
+            
+            <h3>Avvio</h3>
+            <p>Aprire il browser Web alla pagina <a href="Lesson6/home.php">home.php</a> ospitata nella directory Lesson6. Si noti il nuovo <em>aspetto</em> del sito. Questa formattazione deriva da una pagina CSS distinta.</span>  I fogli di stile CSS possono essere usati per formattare il codice HTML usato nell'applicazione web; sono presentati alla fine di questa lezione.</p>
+            <p>Fare clic sul pulsante <em>Continue</em> e completare il questionario online. Si noti che la pagina <span class="page">thankyou.php</span> mostra un riepilogo delle domande a cui è stata data risposta. Queste domande e risposte provengono da un portale sul formato <em>Respondent</em> nel database <span class="database">questionnaire.fp7</span>.  Se un formato FileMaker contiene dati del portale, può essere visualizzato sul Web usando FileMaker API for PHP.</p>
+            <h3>Come ricavare  set correlati </h3>
+            <p>Usando l'editor di testo, aprire la pagina <span class="page">thankyou.php</span><span class="sectionWrapper"> </span> situata nella directory Lesson6. Scorrere fino alla fine del file e individuare l'ultima tabella HTML.</p>
+            <p>Si noti il codice sopra la tabella che recupera il record dell'intervistato.</p>
+            <p class="code">$respondent_record = getRespondentRecordFromRespondentID($respondent_recid);</p>
+            <p> La funzione <em>getRespondentRecordFromRespondentID()</em> è definita nella <span class="page">pagina dbaccess.php</span>. Il contesto è il formato <em>Respondent</em> nel database <span class="database">questionnaire.fp7</span>.</p>
+            <p>Guardando all'interno della tabella HTML, si noti che la variabile <em>$respondent_record</em> viene usata per recuperare il set di record correlati. Per far ciò si usa il metodo <em>getRelatedSet()</em>. Per usare il metodo <em>getRelatedSet()</em>, è necessario specificare il nome della tabella correlata del portale desiderato e il portale desiderato deve trovarsi sul formato <em>Respondent</em>.</p>
+            <p class="code">$response_related_set = $respondent_record-&gt;getRelatedSet('Responses'); </p>
+            <p>Il codice sopra assegna una matrice che contiene i record dal portale <em>Responses</em> alla variabile <em>$response_related_set</em>. Ogni risposta è un oggetto FileMaker_Record. Questo codice utilizza il metodo <em>getField()</em> dell'oggetto FileMaker_Record per generare le righe del portale in una tabella HTML. Ricordare di usare il nome completo della tabella correlata <strong>e</strong> il nome del campo separati da una coppia di due punti per generare campi correlati. </p>
+            <p>Questo è il loop che mostra il set correlato in HTML.</p>
+            <p class="code">foreach ($response_related_set as $response_related_row)<br />
+              <br />
+              {<br />
+              <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$question = $response_related_row-&gt;getField('Questions 2::question');<br />
+            <br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$answer = $response_related_row-&gt;getField('Responses::Response');<br />
+              converte tutti i ritorni a capo della risposta in virgole<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$answer = str_replace(&quot;\n&quot;,&quot;, &quot;,$answer);<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;tr&gt;&lt;td&gt;'. $question. '&lt;/td&gt;';<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;td&gt;'. $answer. '&lt;/td&gt;&lt;/tr&gt;';<br />
+            <br />      
+            }</p>
+            
+            <h3>Formattazione con CSS</h3>
+            <p>È possibile formattare le applicazioni Web utilizzando i fogli di stile CSS (Cascading Style Sheets). Con l'editor di testo, aprire il file <span class="page">style.css</span> situato all'interno della cartella Lesson6 ed esaminare gli stili definiti per alcuni dei tag HTML. Gli stili CSS possono essere applicati a qualsiasi tag HTML, consentendo di formattare più elementi su più pagine con un'unica definizione.</p>
+            <p>Per applicare la formattazione ad un tag HTML specifico, è necessario dichiarare il nome del tag. Dopo il nome del tag, è necessario indicare gli attributi di stile racchiusi tra parentesi graffe. Come in PHP, ogni istruzione deve essere terminata con un punto e virgola. </p>
+            <p class="code">body<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;background-color: #333333;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;padding: 20px;<br />
+            Colore: #ffffff;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;font-family:Verdana, Arial, Helvetica, sans-serif;<br />
+            }</p>
+            <p>I file CSS creati possono essere applicati a qualsiasi documento HTML o PHP. Per applicare stili esterni, è necessario includere oppure aggiungere un <em>link</em> al foglio di stile del documento: usare il tag &lt;link&gt; (link) nell'intestazione dell'output HTML.</p>
+            <p>Con l'editor di testo, aprire il file <span class="page">thankyou.php</span> situato nella cartella Lesson6.  All'interno dei tag dell'intestazione, notare il tag<em> &lt;</em>link&gt; (link) che comanda al browser Web si applicare la formattazione <span class="page">style.css</span>. Quando si utilizza il tag &lt;link&gt;, assicurarsi di indicare il percorso completo o <em>href </em>alla pagina CSS.</p>
+            <p class="code">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;style.css&quot; /&gt;</p>
+            <p>I fogli di stile possono essere utilizzati in più applicazioni; ogni applicazione può usare più fogli di stile. Per ulteriori informazioni sugli stili CSS e sui relativi attributi consultare il <a href="http://www.w3schools.com/css/css_reference.asp">riferimento CSS2 in W3Schools</a>.</p>
+        </div>    
+    </body>
+</html>

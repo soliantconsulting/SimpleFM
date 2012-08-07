@@ -1,0 +1,417 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>FileMaker API for PHP チュートリアル</title>
+        <meta name="generator" content="BBEdit 8.2" />
+        <link rel="stylesheet" type="text/css" href="index.css" />
+    </head>
+
+    <body>
+        <div class="sectionWrapper">
+            
+            <h1 align="center"><img src="header.gif" width="700" height="150"></h1>  
+            
+<h1 align="center">FileMaker<span style="font-size:14px;">&reg;</span> API for PHP チュートリアル</h1>
+        </div>
+        
+        <div class="sectionWrapper">
+        
+<h2>目次</h2>
+            
+<a href="#introduction">概要</a><br/> <a href="#lesson1" title="API の設定">レッスン 1</a><br/> <a href="#lesson2" title="オブジェクトイメージの表示">レッスン 2</a><br/> <a href="#lesson3" title="新しいレコードの追加">レッスン 3</a><br/> <a href="#lesson4">レッスン 4</a><br/> <a href="#lesson5">レッスン 5</a><br/> <a href="#lesson6">レッスン 6</a><br/>
+        </div>
+        
+        <div class="sectionWrapper">
+            <a name="introduction"></a>
+            
+<h2>概要</h2>
+            
+<h3>	FileMaker API for PHP チュートリアルへようこそ</h3>
+<p>このチュートリアルでは、FileMaker API for PHP の主要な機能を紹介します。チュートリアルの全 6 レッスンで、API を使用して FileMaker Pro データベースを PHP Ｗeb アプリケーションに統合する方法を学習します。各レッスンでは、コードの記述方法やその動作について説明しながら、API の特定の機能を紹介します。
+<p>チュートリアルデータベースは FileMaker アンケートシステム (questionnaire.fp7) です。各アンケートレコードには、複数の関連する質問を含めることができます。各質問には、複数の関連する返答を含めることができます。アクティブアンケートとして選択できるのは 1 つのアンケートのみです。アクティブアンケートとは、ユーザが PHP Web アプリケーションの使用時に回答を求められるアンケートです。ユーザがオンラインアンケートを完了すると、システムによってユーザの回答レコードが追加され、ユーザの回答が関連レコードとして追加されます。
+ 
+<p>このチュートリアルでは、次のように前のレッスンの内容を踏まえながら、徐々に PHP Web アプリケーションを完了していきます。  
+            <ul>
+<li>            レッスン 1
+                <ul>
+<li>FileMaker データベースオブジェクトの設定
+                    <ul>
+<li class="comment">FileMaker データベースオブジェクトをカスタム Web アプリケーションで使用するのに必要な準備</li>
+                    </ul>
+                  </li>
+<li>すべてを検索の実行
+                    <ul>
+<li class="comment">データベース内の全レコードを検索し、それらを Web 上に表示する方法 </li>
+                    </ul>
+                  </li>
+<li>検索の実行
+                    <ul>
+<li class="comment">データベース内の特定のレコードを検索し、それを Web 上に表示する方法 </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+<li>レッスン 2
+                <ul>
+<li>オブジェクトイメージの表示
+                    <ul>
+<li class="comment">Web 互換イメージを Web サイト上のオブジェクトフィールドに表示する方法 </li>
+                    </ul>
+                  </li>
+<li>ContainerBridge.php の使用
+                    <ul>
+<li class="comment">ContainerBridge.php ファイルの概要と動作  </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+<li>レッスン 3
+                <ul>
+<li>FileMaker の値一覧の表示
+                    <ul>
+<li class="comment">FileMaker のカスタム値一覧を Web 上に表示する方法 </li>
+                    </ul>
+                  </li>
+<li>レコードの追加
+                    <ul>
+<li class="comment">送信された Web フォームから FileMaker データベースにレコードを追加する方法 </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+<li>レッスン 4
+                <ul>
+<li>ID を使用したレコードの取得
+                    <ul>
+<li class="comment">別の検索を実行せずに、内部 ID を使用して FileMaker のレコードを取得する方法 </li>
+                    </ul>
+                  </li>
+<li>関連セット (ポータル) の取得
+                    <ul>
+<li class="comment">FileMaker ポータルからのレコードを Web サイト上に表示する方法 </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+<li>レッスン 5
+                <ul>
+<li>関連レコードの追加
+                    <ul>
+<li class="comment">Web サイトからポータルにレコードを追加する方法 </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+<li>レッスン 6
+                <ul>
+<li>関連セット (ポータル) の取得の確認
+                    <ul>
+                      
+<li class="comment">FileMaker ポータルからのレコードを Web サイト上に表示する方法 </li>
+                    </ul>
+                  </li>
+<li>CSS (Cascading Style Sheets) を使用した書式のカスタマイズ
+                    <ul>
+<li class="comment">Cascading Style Sheets を使用して HTML 出力の外観を変更する方法 </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+<p>このチュートリアルでは、すべての API については説明しませんが、これらのレッスンを終了するころには基礎が身についているでしょう。API の詳細については、FileMaker API for PHP のマニュアルを参照してください。 
+<p>FileMaker API for PHP のマニュアルを表示するには、[FileMaker Server Admin Console 開始ページ] に移動し、[PHP Site Assistant および XSLT Site Assistant ツール] をクリックします。Web 公開ツールページで [FileMaker API for PHP マニュアル] をクリックします。このチュートリアルの間は、マニュアルをリファレンスとして使用してください。このリファレンスは、FileMaker API for PHP の詳しい使用法を調べるのに役立ちます。 
+<p>また、questionnaire.fp7 データベースを十分に理解する必要があります。複数の回答がある質問を作成して、その動作と構築方法を学習してください。questionnaire.fp7 の設計に関する知識は、チュートリアル PHP アプリケーションで API を使用する方法を理解するうえで不可欠です。 
+<h3>はじめに</h3>
+            
+<h4>セットアップおよびインストール</h4>
+<p class="h4_text">FileMaker Server 9 がインストールされていて、questionnaire.fp7 データベースをホストしている必要があります。チュートリアルフォルダが、FileMaker Server 展開の一部である Web サーバーマシンでホストされている必要があります。 </p>
+<p class="h4_text">FileMaker Server 9 のインストールおよび展開の詳細については、『FileMaker Server 入門ガイド』を参照してください。FileMaker API for PHP の詳細については、『FileMaker Server カスタム Web 公開 with PHP』を参照してください。</p>
+            
+<h4>必要な知識およびスキル</h4>
+<p class="h4_text">HTML プログラミングを十分に理解してください。これには、HTML の宣言、ヘッダ、および要素タグが含まれます。HTML を使用した Web ページのプログラミングの詳細については、「<a href="http://www.w3schools.com/xhtml/xhtml_dtd.asp">W3Schools の XHTML チュートリアル</a>」を参照してください。</p>
+<p class="h4_text">PHP プログラミングを十分に理解してください。これには、標準の出力、変数、配列、条件分岐、オブジェクト、メソッド、および関数が含まれます。PHP を使用したプログラミングの詳細については、「<a href="http://www.w3schools.com/php/default.asp">W3Schools の PHP チュートリアル</a>」を参照してください。</p>
+<p class="h4_text">HTML および PHP でテキストエディタを問題なく使用できる必要があります。このチュートリアルでは、HTML および PHP コードを表示および変更するのに、テキストエディタを使用する必要があります。</p>
+<p class="h4_text">FileMaker Pro データベース設計の経験が必要です。これには、フィールド、リレーションシップ、レイアウト、およびオブジェクトが含まれます。FileMaker Pro を使用したデータベース設計の詳細については、FileMaker Pro のマニュアルを参照してください。 </p>
+            
+<h4>効果的な活用事例</h4>
+<p class="h4_text"> FileMaker Pro でレコードを編集する場合は、変更を有効にするために、必ずレコードを終了または確定してください。レコードを終了しなければ、データベースに入力された変更は Web ページに反映されません。</p>
+<p class="h4_text">各レッスンの PHP ページを Web ブラウザで表示するには、PHP コードを実行するために完全修飾 URL を入力する必要があります。たとえば、ファイルがローカルマシンでホストされている場合は、&quot;http://localhost/...&quot; で始まる URL をブラウザで参照します。&quot;file:///Volumes/...&quot; で始まるローカルファイルパスは使用しないでください。&quot;file://&quot; URL を使用すると、PHP コードが<strong>実行</strong>されるのではなく、PHP コードが<strong>表示</strong>されます。URL は必ず &quot;http&quot; で始めるか、Web サーバーで SSL を設定してある場合は &quot;https&quot; で始めてください。</p>
+            <p />
+        </div>
+        
+        <div class="sectionWrapper">
+            <a name="lesson1"></a>
+            
+<h2>レッスン 1</h2>
+            
+<h3>目的</h3>
+<p>レッスン 1 では、<span class="page">home.php</span> および <span class="page">dbaccess.php</span> の 2 つの PHP ファイルを使用して、FileMaker API for PHP の使用法の基本について詳しく説明します。<span class="page">home.php</span> ファイルは Web ブラウザの起点として機能します。<span class="page">dbaccess.php</span> ファイルはデータベースを表す FileMaker オブジェクトを設定します。これらのページは、FileMaker データベースオブジェクトをインスタンス化し、そのキープロパティを設定し、<span class="database">questionnaire.fp7</span> データベースで検索を実行する基本的な手順を示します。</p>
+            
+<h3>開始</h3>
+<p>チュートリアルの例を表示するには、「Lesson 1」フォルダにある <a href="Lesson1/home.php">home.php</a> を Web ブラウザで参照します。このページでは、FileMaker アンケートシステムの Welcome 画面が表示されます。ページがロードされると、画面の背後で PHP と Web 公開エンジンの間の接続が確立され、<span class="database">questionnaire.fp7</span> データベースからレコードが検索されます。 </p>
+<p>テキストエディタを使用して、「Lesson 1」フォルダにあるファイル <span class="page">home.php</span> を開きます。body タグの直後にある次のコードを探します。</p>
+<p class="code">&lt;?php include (&quot;dbaccess.php&quot;); ?&gt;</p>
+<p>この PHP ステートメントにより、<span class="page">dbaccess.php</span> ファイルがインクルード (ロード) されます。<span class="page">dbaccess.php</span> ファイルには、FileMaker データベースオブジェクトを設定し、データベース操作のために準備を行う関数が含まれています。そのため、その関数がなければ <span class="page">home.php</span> 内の API メソッドは動作しません。<span class="page">dbaccess.php</span> 内のメソッドは <span class="page">home.php</span> ファイル内に記述することもできますが、デバッグおよび保守を容易にするために分けられています。  </p>
+            
+<h3>FileMaker データベースオブジェクトの設定 </h3>
+<p><span class="page">dbaccess.php</span> ファイルには、FileMaker データベースオブジェクトを設定するためのコードが含まれています。これはアンケートアプリケーションを構築するうえで基本的な役割を果たします。FileMaker オブジェクトを設定するには、次の手順に従います。  </p>
+            
+            <ol>
+<li>FileMaker API for PHP をロードする</li>
+<li>FileMaker データベースクラスのインスタンスを変数に割り当てる</li>
+<li>新しい FileMaker インスタンスのキープロパティを設定する </li>
+            </ol>
+                
+<p>テキストエディタを使用して、「Lesson 1」フォルダにあるファイル <span class="page">dbaccess.php</span> を開き、次の各手順の説明に従います。 </p>
+            
+<h4 class="h4_text">1. FileMaker API for PHP をロードする</h4>
+<p class="h4_text">FileMaker API を使用するには、まずそれを PHP メモリにロードする必要があります。それには require ステートメントを使用します。</p>
+<p class="code">require_once ('FileMaker.php');</p>
+<p class="h4_text">ロードされたら、それらを Web アプリケーション内のデータベース接続に使用して、FileMaker データベースクラスのインスタンスを作成することができます。API をロードせずに使用しようとすると、エラーが返されます。</p>
+                
+<h4 class="h4_text">2. FileMaker データベースクラスのインスタンスを変数に割り当てる</h4>
+<p class="h4_text">FileMaker データベースクラスのインスタンスを使用するには、まずそれを作成する必要があります。また、コード内で参照するために、変数に割り当てる必要があります。</p>
+<p class="code">$fm = new FileMaker();</p>
+<p class="h4_text">上のコードで、FileMaker データベースオブジェクトのインスタンスが作成されます。これは変数 $fm として参照されます。</p>
+            
+<h4 class="h4_text">3. 新しい FileMaker インスタンスのキープロパティを設定する</h4>
+<p class="h4_text">FileMaker データベースオブジェクトには一連のプロパティがあり、いつでも設定することができます。ただし、一部のプロパティは、データベース操作を行う前に設定しておく必要があります。次のコードは、このチュートリアルで必要なプロパティを設定します。</p>
+<p class="code">$fm-&gt;setProperty('database', 'questionnaire'); <br /> $fm-&gt;setProperty('username', 'web'); <br /> $fm-&gt;setProperty('password', 'web');        </p>
+<p class="h4_text"><strong>注意 - </strong> パラメータ内でデータベース名 questionnaire に fp7 拡張子を追加する必要はありません。</p>
+<p class="h4_text"><strong>注意 - </strong>FileMaker データベースクラスのプロパティとその説明の一覧については、FileMaker API for PHP のマニュアルを参照してください。 </p>
+<p><span class="page">dbaccess.php</span> ファイルにはわずかなコードしか含まれていませんが、FileMaker オブジェクトを使用するために効果的に準備を行います。ファイルがロードされると、FileMaker オブジェクトが変数 $fm として使用可能になり、キープロパティが必要な値に設定されます。<span class="page">dbaccess.php</span> ファイルにより、<span class="page">home.php</span> ファイルは <span class="database">questionnaire.fp7</span> データベースと通信できるようになります。 </p>
+            
+<h3>検索の実行とすべてを検索の実行</h3>
+<p><span class="page">home.php</span> ファイルは 2 つのデータベース操作を実行します。すべてを検索 (全レコードを表示) と検索です。これらの操作を行うコードを表示するには、テキストエディタで <span class="page">home.php</span> ファイルを開きます。これらの操作を行うデータベースを表示するには、FileMaker Server でホストしている <span class="database">questionnaire.fp7</span> ファイルを開きます。</p>
+            
+<h4 class="h4_text">1. すべてを検索 (全レコードを表示) </h4>
+<p class="h4_text"><span class="database">questionnaire.fp7</span> データベースには、Active Questionnaire レイアウトが含まれています。このレイアウトはインターフェースとして機能し、テーブル内にレコードが 1 つだけ含まれます。ユーザはこのレイアウトで、どのアンケートをアクティブアンケートにするか選択します。Web アプリケーションはこのアクティブアンケートの ID を取得する必要があります。</p>
+<p class="h4_text">アクティブアンケートの ID を取得するには、Active Questionnaire レイアウトですべてを検索 (全レコードを表示) を実行します。この操作では、コマンドオブジェクト FileMaker_Command_FindAll を使用します。</p>
+<p class="h4_text"><strong>注意 -</strong> コマンドオブジェクトとそのメソッドの一覧については、FileMaker API for PHP のマニュアルを参照してください。 </p>
+<p class="h4_text"> $fm (FileMaker データベースインスタンス) でその newFindAllCommand() メソッドを実行し、Active Questionnaire レイアウトの名前をカッコで囲んで指定すると、FileMaker_Command_FindAll オブジェクトのインスタンスが作成されます。レイアウトによって、どのテーブル名を使用するか (コンテキスト)、およびどのフィールドが返されるか (結果) が決まります。</p>
+<p class="h4_text">次の例に示すように、FileMaker_Command_FindAll  インスタンスを変数に割り当てる必要があります。 </p>
+<p class="code">$findCommand = $fm-&gt;newFindAllCommand('Active Questionnaire');</p>
+<p class="h4_text">上のコードは、新しい FileMaker_Command_FindAll オブジェクトを変数 $findCommand に割り当てます。execute() メソッドですべてを検索コマンドが実行されます。結果の検索を変数に割り当てる必要があります。</p>
+<p class="code">$result = $findCommand-&gt;execute();</p>
+<p class="h4_text">コマンドの実行後にエラーが発生することがあります。エラーが発生する (一致するレコードが見つからない) 場合は、$result 変数に FileMaker_Error object が割り当てられます。次のコードを使用して、FileMaker_Error オブジェクトをチェックします。getMessage() メソッドを使用すると、エラーメッセージが表示されます。</p>
+<p class="code"> if (FileMaker::isError($result)) { <br /> &nbsp;&nbsp;&nbsp;&nbsp;echo &quot;&lt;p&gt;Error:&quot; . $result-&gt;getMessage() .&quot;&lt;/p&gt;&quot;; <br /> &nbsp;&nbsp;&nbsp;&nbsp;exit; <br /> }</p>
+<p class="h4_text">エラーが発生しなかった場合は、変数 $result に、対象レコードごとに FileMaker_Record オブジェクトの配列が含まれます。$result 変数を使用して、すべてを検索の結果内の先頭のレコードを取得します。PHP 配列にはデフォルトで数値の索引が設定されているので、次のコードを使用して先頭のレコードを取得することができます。</p>
+<p class="code">$record = $records[0];    </p>
+<p class="h4_text">このコードは、対象レコードの先頭のレコードを含む FileMaker_Record オブジェクトを、変数 $record に割り当てます。getField() メソッドを使用すると、このレコードから questionnaire_id のコンテンツを取得できます。getField() メソッドの結果を変数に割り当てる必要があります。
+     
+<p class="code">$active_questionnaire_id =  $record-&gt;getField('questionnaire_id');    </p>
+<p class="h4_text">これでこの変数にアクティブアンケートの ID が含まれます。次の手順では、この変数を次の検索でパラメータとして使用します。 </p>
+<p class="h4_text"><strong>注意 -</strong> オブジェクトとそのメソッドの一覧については、FileMaker API for PHP のマニュアルを参照してください。</p>
+            
+<h4 class="h4_text">2. 検索</h4>
+<p class="h4_text">アクティブアンケートの ID を取得したので、それを使用してアンケートレコードを検索します。この操作を実行するためのコードは、<span class="page">home.php</span> ファイルの後半にあります。この操作では、コマンドオブジェクト FileMaker_Command_Find を使用します。</p>
+<p class="h4_text">$fm (FileMaker データベースインスタンス) でその newFindCommand() メソッドを実行し、Active Questionnaire レイアウトの名前をカッコで囲んで指定すると、FileMaker_Command_Find のインスタンスが作成されます。レイアウトによって、検索でどのテーブル名を使用するか、およびどのフィールドが結果に返されるかが決まります。</p>
+<p class="h4_text">次の例に示すように、FileMaker_Command_Find インスタンスを変数に割り当てる必要があります。 </p>
+<p class="code">$findCommand =&amp; $fm-&gt;newFindCommand('questionnaire');</p>
+<p class="h4_text">検索に条件を追加するには、addFindCriterion() メソッドを使用します。addFindCriterion() メソッドは、fieldName と searchParameter の 2 つのパラメータを受け取ります。「Questionnaire ID」フィールド名 (FileMaker Pro で定義されています) と変数 $active_questionnaire_id をパラメータとして渡します。</p>
+<p class="code">$findCommand-&gt;addFindCriterion('Questionnaire ID', $active_questionnaire_id);</p>
+<p class="h4_text"><strong>注意 - </strong>addFindCriterion() メソッドは何度も呼び出して、FileMaker Pro で単一の検索要求に複数の検索条件を入力するときに発生する論理 AND をシミュレートすることができます。</p>
+<p class="h4_text">検索条件を追加した後、execute() メソッドを使用して検索が実行されます。execute() メソッドの結果を変数に割り当てる必要があります。</p>
+<p class="code">$result = $findCommand-&gt;execute();</p>
+<p class="h4_text">これで、$result 変数に FileMaker_Record オブジェクトの配列が含まれます。検索は questionnaire レイアウトで実行されたので、$result 内の各レコードには、questionnaire レイアウト上のすべてのフィールドの値が含まれます。</p>
+<p class="h4_text">このページの最後のコードでは、PHP echo ステートメントおよび getField() メソッドを使用して、<span class="page">home.php</span> ページ上の [アンケート名] および [説明] フィールドに出力します。</p>
+            <p />
+        </div>
+        
+        <div class="sectionWrapper">
+            <a name="lesson2"></a>
+            
+<h2>レッスン 2</h2>
+            
+<h3>目的</h3>
+<p>レッスン 2 では、FileMaker Pro オブジェクトイメージを Web 上に表示するのに必要なコードについて説明します。Web 互換イメージを FileMaker Pro データベース内に保存すると、FileMaker API for PHP を使用してそれらのイメージを取得して、Web サイト上に表示することができます。</p>
+            
+<h3>開始</h3>
+<p>FileMaker API チュートリアルデータベース <span class="database">questionnaire.fp7</span> を開き、アクティブアンケートのオブジェクトフィールドに Web 互換イメージが含まれていることを確認します。次に、「Lesson 2」フォルダの <a href="Lesson2/home.php">home.php</a> ファイルを Web ブラウザで開いて、PHP チュートリアルの例を表示します。ページにアクティブアンケートのイメージが表示されている点に注意してください。FileMaker データベース内のオブジェクトイメージを変更してみてください。終わったら必ずレコードを終了します。ブラウザを更新して、Web サイトが新しいイメージに更新されたことを確認します。</p>
+            
+<h3>オブジェクトイメージの表示</h3>
+<p>この操作での API の使用方法を確認するには、「Lesson 2」フォルダにあるファイル <span class="page">home.php</span> を開きます。ファイル内の末尾の PHP ステートメントを表示します。特に &lt;img&gt; (イメージ) タグとその src (ソース) 属性に注意します。</p>
+<p>この方法では、次の点に注意してください。</p>
+            <ol>
+<li>Graphic オブジェクトフィールドは、questionnaire レイアウト (前の検索で使用したレイアウト) にあります。API に返されるのは、<strong>検索に使用したレイアウト</strong>上のフィールドからの値のみです。</li>
+<li>返された Graphic フィールドの値は<strong>イメージではありません</strong>。Web 公開エンジンからイメージを要求する特別な URL です。</li>
+            </ol>
+<p class="code">echo '&lt;img src=&quot;ContainerBridge.php?path=' . urlencode($record-&gt;getField('Graphic')) . '&quot;&gt;';</p>
+<p>HTML &lt;img&gt; (イメージ) タグにはその src (ソース) 属性としてファイル パスを指定する必要があるので、このレッスンでは別のファイルを使用して実際にイメージを取得します。オブジェクトイメージを取得するファイルは <span class="page">ContainerBridge.php</span> で、そのファイル名は &lt;img&gt; (イメージ) タグの src (ソース) 属性内に表示されます。</p>
+<p><span class="page">ContainerBridge.php</span> ファイルには、どのイメージを表示するかが指定されていません。イメージを指定するには、src (ソース) URL の末尾に Graphic フィールドの値を追加する必要があります。HTML では、これは GET メソッドと呼ばれます。</p>
+<p>name/value の組を使用し、先頭に疑問符を付けて、目的の文字列を連結します。name は「パス」に設定され、value は getField() メソッドの結果に設定され、オブジェクトフィールドの名前 (Graphic) がカッコで囲んで渡されます。</p>
+<p><strong>注意 - </strong>getField() の結果は、特殊文字が URL 用に正しくエンコードされるように、PHP urlencode() 関数に渡されます。 </p>
+            
+<h3>ContainerBridge.php の使用</h3>
+<p>テキストエディタを使用して、「Lesson 2」フォルダにあるファイル <span class="page">ContainerBridge.php</span> を開きます。この簡単なスクリプトでは、getContainerData() FileMaker_Record メソッドを使用して、実際のイメージを取得します。</p>
+<p>getContainerData() を機能させるには、オブジェクトフィールドの getField() からのフィールド結果をカッコで囲んで getContainerData() メソッドに渡す必要があります。<span class="page">home.php</span> では、Graphic フィールドに対する getField() からの結果が URL を介して渡されました。<span class="page">ContainerBridge.php</span> では、$_GET 配列の path 要素を介して URL から結果が取得され、getContainerData() メソッドに渡されます。 </p>
+<p class="code">echo $fm-&gt;getContainerData($_GET['path']);</p>
+<p><span class="page">ContainerBridge.php</span> ファイルは、指定されたイメージのパスを FileMaker Pro データベースから単に取得します。これにより <span class="page">home.php</span> ファイルは、&lt;img&gt; タグ内でそのパスを使用して、Web ブラウザでイメージを表示することができます。 </p>
+<p><strong>注意 -</strong> FileMaker_Record オブジェクトメソッドの一覧については、FileMaker API for PHP のマニュアルを参照してください。</p>
+        </div>
+            
+        <div class="sectionWrapper">
+            <a name="lesson3"></a>
+<h2>レッスン 3</h2>
+            
+            
+<h3>目的</h3>
+<p>レッスン 3 では、FileMaker レイアウトオブジェクトを使用して動的 Web フォームを作成するのに必要なコードについて説明します。また、Web フォームの送信から新しい FileMaker レコードを追加するのに必要なコードについても説明します。このレッスンでは、さらに<span class="page">Respondent.php</span> と <span class="page">handle_form.php</span> の 2 つのファイルを使用します。<span class="page">Repondent.php</span> ファイルは Web フォームを動的に生成します。<span class="page">handle_form.php</span> ファイルは、フォームエントリを検証し、それらを新しいレコードとして <span class="database">questionnaire.fp7</span> データベースに入力するのに使用します。</p>
+            
+<h3>開始</h3>
+<p>「Lesson 3」フォルダにある <a href="Lesson3/home.php">home.php</a> ファイルをブラウザで参照して、アンケート Web サイトを開きます。このバージョンのページには、アンケートアプリケーションを開始するための [Continue] ボタンが表示されます。[Continue] ボタンをクリックすると、<span class="page">Respondent.php</span> ファイルにリダイレクトされます。Web フォームに情報を入力し、[Submit] をクリックします。入力した情報が不足していた場合は、もう一度実行します。フォームが検証されると、Thank you メッセージが表示され、入力した情報が新しいレコードとして <span class="database">questionnaire.fp7</span> データベースに追加されます。 </p>
+            
+<h3>値一覧の項目の取得</h3>
+<p>このアプリケーションの動作を確認するには、テキストエディタで <span class="page">Respondent.php</span> ページを開きます。<span class="sectionWrapper"></span><span class="page">dbaccess.php</span> ファイルが前半にインクルードされている点に注意してください。レッスン 1 で説明したとおり、この include ステートメントによって FileMaker データベースクラスのインスタンスが作成され、そのインスタンスを変数 $fm として使用することができます。</p>
+<p><span class="page">Respondent.php</span> のラジオボタンフォーム要素は「prefix」という名前です。この要素は、同じ名前の値一覧を使用して、FileMaker Pro データベース questionnaire.fp7 からその値を抽出します。この方法を使用すると、FileMaker データベースで定義されている値一覧に基づいて、動的なフォーム要素を構築することができます。この方法では、データベース内の値一覧が変更されるたびに、PHP コードを更新する必要はありません。この方法は、次の手順に従って実装します。 </p>
+            <ol>
+<li>getLayout() メソッドを使用してレイアウトオブジェクトを取得します (レイアウト名をカッコで囲んで渡します) </li>
+              <ul>
+<li>getLayout() メソッドが FileMaker_Layout オブジェクトを返します</li>
+              </ul>
+<li>getValueList() メソッドを使用して値一覧の値を取得します          </li>
+              <ul>
+<li>getValueList() は FileMaker_Layout オブジェクトのメソッドです  </li>
+              </ul>
+<li>値の配列をループ処理し、それぞれラジオボタンとして出力します</li>
+            </ol>
+この方法を使用する場合は、値一覧を指定して書式設定されたフィールドが指定したレイアウトに含まれている必要があります。getValueList() メソッドで値一覧が要求されたとき、getLayout() で指定したレイアウト上の任意のフィールドに対して値一覧が書式設定されていない場合は、エラーが返されます。次のコードは、動的なラジオボタンを表示するのに使用します。 
+<p class="code">$layout =&amp; $fm-&gt;getLayout('Respondent');<br /> $values = $layout-&gt;getValueList('prefixes');<br /> foreach($values as $value){ <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;      echo '&lt;input type= &quot;radio&quot; name= &quot;prefix&quot; value= &quot;'.$value .'&quot;&gt;'. $value . ' ';<br /> }</p>
+<p><strong>注意 -</strong> FileMaker_Layout オブジェクトメソッドの一覧については、FileMaker API for PHP のマニュアルを参照してください。</p>
+<p><strong>注意 -</strong> <span class="page">Respondent.php</span> 内のフォームにも、非表示のフォーム要素がいくつか含まれています。「active_questionnaire_id」という名前の要素には、<span class="page">home.php</span> からのアンケート ID が含まれます。このフォームは、ID をレッスン 4 で使用される <span class="page">handle_form.php</span> に渡します。 </p>
+            
+<h3>新しいレコードの追加</h3>
+<p><span class="page">Respondent.php</span> フォームからデータが送信されると、POST メソッドを介して処理ページ <span class="page">handle_form.php</span> に値が渡されます。テキストエディタを使用して、「Lesson 3」フォルダにあるファイル <span class="page">handle_form.php</span> を開きます。</p>
+<p>ユーザによって送信されたデータは配列に組み立てられ、変数 $respondent_data に割り当てられます。この関連する配列で、各要素のキーとなるのは、データの送信先となる FileMaker フィールドの正確な名前です。各要素の値は、$_POST 配列内の HTML フォーム要素から送信された値に対応しています。この $respondent_data 配列は、データベースレコードの作成時に FileMaker オブジェクトによって使用されます。 </p>
+<p>データ配列の組み立て後、PHP コードはいくつかの簡単な検証を実行します。これらの検証メソッドでは PHP コードを明示的に使用します。この操作中に、FileMaker Server は検証を実行しません。</p>
+<p>ユーザデータが検証を通過したら、次の 2 つの簡単な手順で新しいレコードを作成できます。</p>
+            <ol>
+<li>次の 2 つのパラメータを渡して、新しい FileMaker_Command_Add オブジェクトを作成します。
+                <ul>
+<li>レイアウト名 (レイアウト上に必要なフィールドが必要)</li>
+<li>データ配列 ($respondent_data) </li>
+                </ul>
+              </li>
+<li>execute() メソッドを使用してレコードを追加します</li>
+            </ol>
+<p class="code"> $newRequest =&amp; $fm-&gt;newAddCommand('Respondent', $respondent_data);<br /> $result = $newRequest-&gt;execute(); </p>
+<p>新しい FileMaker_Command_Add オブジェクトを作成する場合は、レイアウトの名前を指定する必要があります。レイアウト名によって、どのテーブル名を使用するか (コンテキスト)、およびどのフィールドが返されるか (結果) が決まります。レイアウト上に、データの入力に使用されるフィールドが必要です。</p>
+<p>レッスン 4 では、<span class="page">handle_form.php</span> ページを拡張して、追加されたレコードを使用し、最初の質問を表示します。 </p>
+        </div>  
+        
+        <div class="sectionWrapper">
+            <a name="lesson4"></a>
+<h2>レッスン 4</h2>
+            
+<h3>目的</h3>
+<p>レッスン 4 では、FileMaker レコードをその ID を使用して取得し、ポータルから関連レコードを取得するのに必要なコードについて説明します。ポータルとは、FileMaker Pro ソリューションで使用される強力なコントロールです。FileMaker API for PHP には、ポータルデータと連携するように設計された特別なメソッドが用意されています。このレッスンでは、その機能の一部を紹介します。</p>
+            
+<h3>開始</h3>
+<p>FileMaker Server でホストされている FileMaker Pro <span class="database">questionnaire.fp7</span> データベースを開きます。[アンケート編集] ボタンをクリックし、アクティブアンケートに Question ポータル内の少なくとも 1 つのレコードが含まれていることを確認します。</span>次に、レッスン 4 の <a href="Lesson4/home.php">home.php</a> ファイルを Web ブラウザで開きます。[Continue] ボタンを選択し、回答情報を入力します。</p>
+<p>次に、アクティブアンケートの最初の質問が表示されます。FileMaker Pro <span class="database">questionnaire.fp7</span> データベースをもう一度開きます。アクティブアンケートの最初の質問を捜します。最初の質問の種類を変更してみてください。[回答編集] ボタンをクリックし、可能な回答を追加します。Web ブラウザを更新して、更新された質問を表示します。</p>
+<p>このレッスンでは、実行できる新しい 2 つのタスクを紹介します。レコードをその ID を使用して取得するタスクと、一連の関連レコードをポータルから取得するタスクです。</p>
+            
+<h3>ID を使用したレコードの検索</h3>
+<p>テキストエディタを使用して、「Lesson 4」フォルダにある <span class="page">handle_form.php</span> ファイルを開きます。<span class="page">handle_form.php</span> ファイル内を 3 分の 1 ほど下方向にスクロールして、レッスン 3 の終了位置に移動します。このレッスンでは、新しい回答レコードのレコードオブジェクトを要求するコードを追加します。FileMaker Pro の [入力値の自動化] の [シリアル番号] オプションで [Respondent ID] フィールドが定義されており、[入力値の自動化] の数値を取得する必要があるので、この要求が必要です。 </p>
+<p>レッスン 1 の 検索関数と同様に、getRecord() および getField() メソッドを使用して新しいレコードを取得できます。</p>
+<p class="code"> $records = $result-&gt;getRecords();<br /> $record = $records[0];<br /> $respondent_recid = $record-&gt;getField('Respondent ID');</p>
+<p>次に、アクティブアンケートの名前を取得します。それには、FileMaker インスタンス ($fm) の getRecordById() メソッドを使用します。</p>
+<p>getRecordById() を使用する場合は、内部 FileMaker レコード ID およびレイアウト名を渡します。レイアウトによって、どのテーブル名 (コンテキスト) を使用するか、およびどのフィールド値 (結果) が返されるかが決まります。このページ内のコードは、<span class="page">Respondent.php</span> の回答フォームからこのファイルに送信された $_POST 配列の active_questionnaire_id を渡します。</p>
+<p class="code">  $active_questionnaire_id = $_POST['active_questionnaire_id']; <br /> $active_questionnaire = $fm-&gt;getRecordById('questionnaire',$active_questionnaire_id);<br /> $questionnaire_name = $active_questionnaire-&gt;getField('Questionnaire Name');</p>
+<p><strong>注意 - </strong>API 操作から返されたすべてのレコードオブジェクトに、getRecordId() メソッドで取得できる内部 FileMaker レコード ID が含まれています。 </p>
+<p>次に、アンケートレコードを取得し、最初の質問を表示します。アクティブアンケート ID と一致するすべての質問を検索します。この検索は、Questions レイアウトに対して実行されます。</p>
+<p class="code"> $findCommand =&amp; $fm-&gt;newFindCommand('Questions');<br /> $findCommand-&gt;addFindCriterion('Questionnaire ID', $active_questionnaire_id);<br /> $result = $findCommand-&gt;execute();<br /> $records = $result-&gt;getRecords();<br /> $question = $records[0];</p>
+            
+<h3>関連セットの取得</h3>
+<p>アンケートデータベースは、各質問が特定の種類 (text、radio、checkbox など) となるように設計されています。複数の選択肢から回答する種類の場合は、各質問に複数の回答の選択肢を含めることができます。Questions レイアウトには、可能な回答を表示するポータルが含まれています。質問に 1 つまたは複数の回答がある場合、次のコードを実行すると、指定された「種類」を使用して回答の選択肢が表示されます。 </p>
+<p>このコードの説明では、質問の種類が radio であることを前提とします。<span class="page">handle_form.php</span> ドキュメントを下方向にスクロールして、質問の種類が radio か ranking かをチェックする else if 条件を表示します。 </p>
+<p class="code">else if ($question_type ==&quot;radio&quot; || $question_type ==&quot;ranking&quot;)</p>
+<p>条件が true の場合、次のコードは関連する回答の選択肢を取得し、それらをラジオボタンフォーム要素として表示します。ポータルからの回答レコードは、FileMaker_Record オブジェクトの getRelatedSet() メソッドを使用して取得できます。</p>
+<p>getRelatedSet() メソッドを呼び出す場合は、<strong>関連テーブルの名前</strong>をカッコで囲んで渡す必要があります。また、$question レコードを取得するときに、このリレーションシップで<strong>定義されたポータル</strong>がレイアウト上にある必要があります。 </p>
+<p class="code">$relatedSet = $question-&gt;getRelatedSet('question_answers');</p>
+<p>変数 $relatedSet に、関連ポータルからのレコードオブジェクトの配列が含まれます。配列をループ処理し、検索された各レコードのフィールド値を出力します。 </p>
+<p class="code">foreach ($relatedSet as $relatedRow)<br /> {<br /> &nbsp;&nbsp;&nbsp;&nbsp;$possible_answer = $relatedRow-&gt;getField('question_answers::answer');<br /> &nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;input type= &quot;radio&quot; name= &quot;radio_answer&quot; value= &quot;'.$possible_answer .'&quot;&gt;'. $possible_answer .'&lt;br/&gt;'; <br /> }</p>
+<p>検索を実行して関連レコードを取得することもできますが、すでに関連セットが含まれているポータルを使用して getRelatedSet() を使用する方が簡単です。</p>
+        </div>  
+        
+        <div class="sectionWrapper">
+            <a name="lesson5"></a>
+            
+<h2>レッスン 5</h2>
+            
+<h3>目的</h3>
+<p>レッスン 5 では、関連レコードを追加するのに必要なコードについて説明します。関連レコードを作成できるレイアウト上でポータルを定義してある場合は、FileMaker API for PHP を使用して Web から関連レコードを追加することができます。</p>
+            
+<h3>開始</h3>
+<p>「Lesson 5」ディレクトリでホストされている <a href="Lesson5/home.php">home.php</a> ページを Web ブラウザで開きます。[Continue] ボタンをクリックし、オンラインアンケートを完了します。FileMaker Server でホストされている FileMaker questionnaire.fp7 データベースを開きます。アクティブアンケートから [回答確認] ボタンを選択し、テーブル内の最後のレコードに移動します。このレコードには、入力した回答情報が含まれています。</span>各回答は、Responses ポータルにレコードとして保存されます。 </p>
+            
+<h3>関連レコード (ポータル行) の追加</h3>
+<p>FileMaker API for PHP では、次の 4 つの手順でポータル行を追加することができます。</p>
+            <ol>
+<li>有効なレコードオブジェクトから開始する</li>
+<li>新しい空の関連レコードを作成する</li>
+<li>新しいレコードのフィールドにデータを追加する (オプション)</li>
+<li>新しいレコードを確定する</li>
+            </ol>
+            
+<h4>有効なレコードオブジェクトから開始する</h4>
+<p class="h4_text">テキストエディタを使用して、「Lesson 5」チュートリアルフォルダにある <span class="page">handle_form.php</span> ファイルを開きます。下方向にスクロールし、回答レコードを取得するコードを探します。</p>
+<p class="code">$respondent_rec = getRespondentRecordFromRespondentID($respondent_recid);</p>
+<p class="h4_text">このコードでは、<span class="page">dbaccess.php</span> ファイルに追加された関数を使用します。テキストエディタで <span class="page">dbaccess.php</span> を開くと、ファイルの後半にこの関数の定義が表示されます。関数の定義内で、newFindCommand() メソッドがそのコンテキストに Respondent レイアウトを使用します。</p>
+<p class="code">$find = $fm-&gt;newFindCommand('Respondent');</p>
+<p class="h4_text">この関数は、回答レコードオブジェクトを $respondent_rec 変数に割り当てます。Respondent レイアウトが検索コマンドのコンテキストだったので、そのレイアウトに対して変数が参照されます。したがって、$respondent_rec 変数で使用されるメソッドは、Respondent レイアウトのコンテキストから開始します。</p>
+            
+<h4>新しい空の関連レコードを作成する</h4>
+<p class="h4_text"><span class="page">handle_form.php</span> ファイルに戻ります。コードの次の行で、新しい関連レコードの作成を開始します。</p>
+<p class="code">$new_response = $respondent_rec-&gt;newRelatedRecord('Responses');</p>
+<p class="h4_text">この行を実行すると、変数 $new_response が<strong>空の</strong>レコードオブジェクトに割り当てられます (新しいレコードは FileMaker データベース内にまだ作成されていません)。</p>
+<p class="h4_text">この操作のコンテキストを理解することが重要です。このコードは、呼び出し元のレコードオブジェクト (Responses) のレイアウトから始まっており、そのレイアウト上のポータルのリレーションシップを指定しました。次にコードは、関連テーブル名を newRelatedRecord() メソッドに渡します。 </p>
+            
+<h4>空のレコードのフィールドにデータを追加する (オプション)</h4>
+<p class="h4_text">新しい空のレコードを作成し、レコードがどのポータルコンテキストに属するのかを確認したら、setField() メソッドを使用してデータの入力を開始できます。このメソッドは、field name と field value の 2 つのパラメータを受け取ります。これは関連レコードなので、フィールド名をリレーションシップ名で表し、<strong></strong>フィールド名をコロンで区切る必要があります。 </p>
+<p class="code">$new_response-&gt;setField('Responses::Question ID', $cur_question);<br /> $new_response-&gt;setField('Responses::Response', $translatedAnswer);</p>
+<p class="h4_text">新しい関連レコードを作成し、適切なフィールドにデータを追加したら、エントリを確定できます。</p>
+<p class="h4_text"><strong>注意 - </strong>新しい空のレコードを確定する前に、フィールドデータを設定する必要はありません。</p>
+            
+<h4>新しいレコードを確定する</h4>
+<p class="h4_text">新しいレコードオブジェクトは、確定するまで FileMaker データベース内に作成されません。commit() メソッドは、questionnaire.fp7 FileMaker データベースに FileMaker_Record オブジェクトを挿入します。</p>
+<p class="code">$result = $new_response-&gt;commit();</p>
+<p class="h4_text"> $result 変数が新しいレコードの FileMaker_Record オブジェクトに割り当てられ、FileMaker データベース内に新しいレコードが作成されます。エラーが発生すると、変数 $result に FileMaker_Error オブジェクトが含まれます。commit() メソッドを実行した後で、エラーをチェックすることをお勧めします。 </p>
+        </div>
+        <div class="sectionWrapper">
+            <a name="lesson6"></a>
+            
+<h2>レッスン 6</h2>
+            
+<h3>目的</h3>
+<p>レッスン 6 では、ポータルから関連フィールドを表示するのに必要なコードについて説明します。また、CSS (Cascading Style Sheets) を使用して Web アプリケーションの外観を変更する基本的な手順を紹介します。</p>
+            
+<h3>開始</h3>
+<p>「Lesson 6」ディレクトリでホストされている <a href="Lesson6/home.php">home.php</a> ページを Web ブラウザで開きます。サイトの外観が新しくなっていることがわかります。この書式は別の CSS ページからのものです。</span>CSS スタイルを使用すると、Web アプリケーションで使用されている HTML コードを書式設定することができます。これについては、このレッスンで後述します。</p>
+<p>[Continue] ボタンをクリックし、オンラインアンケートを完了します。<span class="page">thankyou.php</span> ページに、回答した質問の概要が表示されます。これらの質問および回答は、<span class="database">questionnaire.fp7</span> データベース内の Respondent レイアウト上のポータルからのものです。FileMaker レイアウトにポータルデータが含まれている場合は、FileMaker API for PHP を使用してそのデータを Web 上に表示することができます。</p>
+<h3>関連セットの取得</h3>
+<p>テキストエディタを使用して、「Lesson 6」ディレクトリにある <span class="page">thankyou.php</span><span class="sectionWrapper"> ページ</span>を開きます。ファイルの末尾までスクロールし、最後の HTML テーブルを探します。</p>
+<p>テーブルの上に、回答レコードを取得するコードがあります。</p>
+<p class="code">$respondent_record = getRespondentRecordFromRespondentID($respondent_recid);</p>
+<p> getRespondentRecordFromRespondentID() 関数が <span class="page">dbaccess.php</span> ページ内で定義されています。そのコンテキストは、<span class="database">questionnaire.fp7</span> データベース内の Respondent レイアウトです。</p>
+<p>HTML テーブル内を見てみると、関連レコードのセットを取得するのに $respondent_record 変数が使用されています。それには getRelatedSet() メソッドを使用します。getRelatedSet() メソッドを使用するには、目的のポータルの関連テーブル名を指定する必要があります。また、目的のポータルが Respondent レイアウト上にある必要があります。</p>
+<p class="code">$response_related_set = $respondent_record-&gt;getRelatedSet('Responses'); </p>
+<p>上のコードは、ポータル Responses からのレコードを含む配列を、変数 $response_related_set に割り当てます。各回答は FileMaker_Record オブジェクトです。このコードでは、FileMaker_Record オブジェクトの getField() メソッドを使用して、HTML テーブル内にポータル行を出力します。関連フィールドを出力する際は、必ず関連テーブルの完全な名前を使用し、<strong></strong>フィールド名を 2 つのコロンで区切ってください。 </p>
+<p>次のループは、HTML 内に関連セットを表示します。</p>
+<p class="code">foreach ($response_related_set as $response_related_row)<br /> <br /> {<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$question = $response_related_row-&gt;getField('Questions 2::question');<br /> <br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$answer = $response_related_row-&gt;getField('Responses::Response');<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;//converts any line returns in the answer to commas<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$answer = str_replace(&quot;\n&quot;,&quot;, &quot;,$answer);<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;tr&gt;&lt;td&gt;' .$question .'&lt;/td&gt;';<br /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo '&lt;td&gt;' .$answer .'&lt;/td&gt;&lt;/tr&gt;';<br /> <br /> }</p>
+            
+<h3>CSS による書式設定</h3>
+<p>CSS (Cascading Style Sheets) を使用して Web アプリケーションを書式設定することができます。テキストエディタで「Lesson 6」フォルダにある <span class="page">style.css</span> ファイルを開き、一部の HTML タグに対して定義されているスタイルを確認してください。CSS スタイルは任意の HTML タグに適用することができ、複数のページ上の複数の項目を単一の定義から書式設定することができます。</p>
+<p>特定の HTML タグに書式設定を適用するには、タグ名を宣言する必要があります。タグ名に続けて、スタイル属性を中カッコで囲んで記述します。PHP 内と同様に、各ステートメントの末尾にはセミコロンを付けます。 </p>
+<p class="code">body {<br /> &nbsp;&nbsp;&nbsp;&nbsp;background-color:#333333;<br /> &nbsp;&nbsp;&nbsp;&nbsp;padding:20px;<br /> &nbsp;&nbsp;&nbsp;&nbsp;color:#ffffff;<br /> &nbsp;&nbsp;&nbsp;&nbsp;font-family:Verdana, Arial, Helvetica, sans-serif;<br /> }</p>
+<p>CSS ファイルを作成したら、それを HTML または PHP ドキュメントに適用します。外部スタイルを適用するには、スタイルシートをドキュメントにインクルードまたはリンクする必要があります。HTML 出力のヘッダで &lt;link&gt; (リンク) タグを使用します。</p>
+<p>テキストエディタを使用して、「Lesson 6」フォルダにある <span class="page">thankyou.php</span> ファイルを開きます。ヘッダタグ内に、<span class="page">style.css</span> の書式設定を適用するよう Web ブラウザに命令する  &lt;link&gt; (リンク) タグが含まれています。&lt;link&gt; タグを使用する際は、必ず CSS ページへの正しいパスまたは href を指定してください。</p>
+<p class="code">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;style.css&quot; /&gt;</p>
+<p>スタイルシートは複数のアプリケーションで使用することができます。また、各アプリケーションで複数のスタイルシートを使用することができます。CSS のスタイルとその属性の詳細については、「<a href="http://www.w3schools.com/css/css_reference.asp">W3Schools の CSS2 リファレンス</a>」を参照してください。</p>
+        </div>    
+    </body>
+</html>

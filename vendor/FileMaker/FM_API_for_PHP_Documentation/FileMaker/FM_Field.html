@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class FileMaker_Field</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class FileMaker_Field</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+															<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Field description class. Contains all the information about a  specific field on a layout.</p>
+		<p class="notes">
+			Located in <a class="field" href="FM_Field.php.html">/FileMaker/Field.php</a> (line <span class="field">28</span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+												<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">FileMaker_Field</span>
+										<a href="#FileMaker_Field" title="details" class="method-name">FileMaker_Field</a>
+											(<span class="var-type"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>&nbsp;<span class="var-name">&$layout</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#describeLocalValidationRules" title="details" class="method-name">describeLocalValidationRules</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#describeValidationRule" title="details" class="method-name">describeValidationRule</a>
+											(<span class="var-type">integer</span>&nbsp;<span class="var-name">$validationRule</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#describeValidationRules" title="details" class="method-name">describeValidationRules</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>
+										<a href="#getLayout" title="details" class="method-name">&amp;getLayout</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getLocalValidationRules" title="details" class="method-name">getLocalValidationRules</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getName" title="details" class="method-name">getName</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">integer</span>
+										<a href="#getRepetitionCount" title="details" class="method-name">getRepetitionCount</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getResult" title="details" class="method-name">getResult</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getStyleType" title="details" class="method-name">getStyleType</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getType" title="details" class="method-name">getType</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">integer</span>
+										<a href="#getValidationMask" title="details" class="method-name">getValidationMask</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getValidationRules" title="details" class="method-name">getValidationRules</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getValueList" title="details" class="method-name">getValueList</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#hasValidationRule" title="details" class="method-name">hasValidationRule</a>
+											(<span class="var-type">integer</span>&nbsp;<span class="var-name">$validationRule</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isAutoEntered" title="details" class="method-name">isAutoEntered</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isGlobal" title="details" class="method-name">isGlobal</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean|<a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>
+										<a href="#validate" title="details" class="method-name">validate</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"><a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>&nbsp;<span class="var-name">$error</span> = <span class="var-default">null</span>])
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodFileMaker_Field" id="FileMaker_Field"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor FileMaker_Field</span> (line <span class="line-number">44</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Field object constructor.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">FileMaker_Field</span>
+		<span class="method-name">
+			FileMaker_Field
+		</span>
+					(<span class="var-type"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>&nbsp;<span class="var-name">&$layout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>
+				<span class="var-name">&$layout</span><span class="var-description">: Parent Layout object.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddescribeLocalValidationRules" id="describeLocalValidationRules"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">describeLocalValidationRules</span> (line <span class="line-number">201</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return an array of arrays containing the extra information for  all pre-validation rules on this field that can be evaluated by the  PHP engine.</p>
+<p class="description"><p>Rules such as &quot;unique&quot; and &quot;exists&quot; can be validated only  on the Database Server and are not included in this list.  Indexes of the outer array are FILEMAKER_RULE_* constants,  and values are the same array returned by describeValidationRule().</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An associative array of all extra pre-validation          information, with rule constants as indexes and extra          information as the values.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			describeLocalValidationRules
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methoddescribeValidationRule" id="describeValidationRule"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">describeValidationRule</span> (line <span class="line-number">182</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns any additional information for the specified pre-validation  rule.</p>
+<p class="description"><p>Used for range rules and other rules that have additional  pre-validation parameters.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Any extra information for $validationRule.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			describeValidationRule
+		</span>
+					(<span class="var-type">integer</span>&nbsp;<span class="var-name">$validationRule</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$validationRule</span><span class="var-description">: FILEMAKER_RULE_* constant         to get information for.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddescribeValidationRules" id="describeValidationRules"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">describeValidationRules</span> (line <span class="line-number">213</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns any additional information for all pre-validation rules.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> An associative array of all extra pre-validation          information, with FILEMAKER_RULE_* constants          as keys and extra information as the values.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			describeValidationRules
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetLayout" id="getLayout"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLayout</span> (line <span class="line-number">64</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the FileMaker_Layout object that contains this field.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Layout object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../FileMaker/FM_Layout.html">FileMaker_Layout</a></span>
+		<span class="method-name">
+			&amp;getLayout
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetLocalValidationRules" id="getLocalValidationRules"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLocalValidationRules</span> (line <span class="line-number">130</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of FILEMAKER_RULE_* constants for each rule  set on this field that can be evaluated by the PHP engine.</p>
+<p class="description"><p>Rules such as &quot;unique&quot; and &quot;exists&quot; can only be pre-validated on the  Database Server and are not included in this list.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Local rule array.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getLocalValidationRules
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetName" id="getName"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getName</span> (line <span class="line-number">54</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the name of this field.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Field name.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getName
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRepetitionCount" id="getRepetitionCount"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRepetitionCount</span> (line <span class="line-number">95</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the maximum number of repetitions for this field.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Maximum repetitions of this field.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">integer</span>
+		<span class="method-name">
+			getRepetitionCount
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetResult" id="getResult"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getResult</span> (line <span class="line-number">224</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the result type of this field -- for example, 'text',  'number', 'date', 'time', 'timestamp', or 'container'.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Result type.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getResult
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetStyleType" id="getStyleType"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getStyleType</span> (line <span class="line-number">263</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the control style type of this field -- for example,  'EDITTEXT', 'POPUPLIST', 'POPUPMENU', 'CHECKBOX', 'RADIOBUTTONS' or  'CALENDAR'.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Style type.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getStyleType
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetType" id="getType"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getType</span> (line <span class="line-number">235</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the type of this field -- for example, 'normal',  'calculation', or 'summary'.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Type.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getType
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetValidationMask" id="getValidationMask"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValidationMask</span> (line <span class="line-number">152</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the full additive bitmask of pre-validation rules for this  field.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Rule bitmask.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">integer</span>
+		<span class="method-name">
+			getValidationMask
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetValidationRules" id="getValidationRules"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValidationRules</span> (line <span class="line-number">141</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns an array of FILEMAKER_RULE_* constants for each rule  set on this field.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Rule array.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getValidationRules
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetValueList" id="getValueList"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getValueList</span> (line <span class="line-number">251</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns the list of choices from the value list associated with this  field.</p>
+<p class="description"><p>If this field is not associated with a value list, this method returns  NULL.</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Value list array.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getValueList
+		</span>
+					([<span class="var-type">string</span>&nbsp;<span class="var-name">$recid</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$recid</span><span class="var-description">: Record from which to display the value list.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodhasValidationRule" id="hasValidationRule"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">hasValidationRule</span> (line <span class="line-number">165</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns TRUE if the specified FILEMAKER_RULE_* constant matches the  field's pre-validation bitmask. Otherwise, returns FALSE.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			hasValidationRule
+		</span>
+					(<span class="var-type">integer</span>&nbsp;<span class="var-name">$validationRule</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$validationRule</span><span class="var-description">: Pre-validation rule constant to test.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodisAutoEntered" id="isAutoEntered"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isAutoEntered</span> (line <span class="line-number">75</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns TRUE if data in this field is auto-entered or FALSE  if it is entered manually.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Auto-entered status of this field.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isAutoEntered
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodisGlobal" id="isGlobal"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">isGlobal</span> (line <span class="line-number">85</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns TRUE if this field is global or FALSE if it is not.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Global status of this field.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isGlobal
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodvalidate" id="validate"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">validate</span> (line <span class="line-number">116</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Returns TRUE if $value is valid for this field, or a  FileMaker_Error_Validation object describing how pre-validation  failed.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Result of field          pre-validation on $value.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean|<a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>
+		<span class="method-name">
+			validate
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type"><a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>&nbsp;<span class="var-name">$error</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: Value to pre-validate.</span>			</li>
+					<li>
+				<span class="var-type"><a href="../FileMaker/FME_Validation.html">FileMaker_Error_Validation</a></span>
+				<span class="var-name">$error</span><span class="var-description">: If pre-validation is being         done on more than one field, you may pass validate() an existing         error object to add pre-validation failures to.$error is not         passed by reference, though, so you must catch the return value         of validate() and use it as the new $error object. This method         never overwrites an existing $error object with boolean TRUE.</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 28 Jul 2008 14:47:44 -0700 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>

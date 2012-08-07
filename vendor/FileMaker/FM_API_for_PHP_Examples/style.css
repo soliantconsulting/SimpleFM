@@ -1,0 +1,35 @@
+BODY {
+	font-family: verdana;
+}
+
+TABLE#main {
+	text-align: center;
+	padding: 8px;
+	border: solid 1px;
+}
+
+TH {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+TD {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+.align-left {
+	text-align: left;
+}
+
+.alt-row-color {
+	background-color: aqua;
+}
+
+#table-title {
+	font-size: 16pt;
+}

@@ -8,6 +8,8 @@
  * @author    jsmall@soliantconsulting.com
  */
 
+namespace Soliant\SimpleFM;
+
 class SimpleFMAdapter
 {
     

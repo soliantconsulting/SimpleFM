@@ -13,7 +13,9 @@ ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
 
-require_once('SimpleFMAdapter.php');
+require_once('../src/SimpleFM/SimpleFMAdapter.php');
+
+use Soliant\SimpleFM\SimpleFMAdapter;
 
 // define a constant named DEBUG as true to instruct SimpleFMAdapter return a formated error message when errors occur.
 define('DEBUG',TRUE);
@@ -21,7 +23,7 @@ define('DEBUG',TRUE);
 // The FMServer_Sample is included on stock FileMaker Server installs; you just need to create some credentials
 
 // initialize the adapter and set it with your host params array
-$adapter = new SimpleFmAdapter();
+$adapter = new SimpleFMAdapter();
 $adapter->setHostParams(
     array(
         'hostname'=>'valhalla.soliantconsulting.com',

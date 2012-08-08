@@ -3,9 +3,9 @@
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  * 
- * @package SimpleFM
- * @copyright  Copyright (c) 2007-2012 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
- * @author jsmall@soliantconsulting.com
+ * @package   SimpleFM
+ * @copyright Copyright (c) 2007-2012 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @author    jsmall@soliantconsulting.com
  */
 
 ini_set('display_errors', 1);
@@ -24,7 +24,7 @@ define('DEBUG',TRUE);
 $adapter = new SimpleFmAdapter();
 $adapter->setHostParams(
     array(
-        'host'=>'valhalla.soliantconsulting.com',
+        'hostname'=>'valhalla.soliantconsulting.com',
         'dbname'=>'FMServer_Sample',
         'username'=>'weby',
         'password'=>'weby' 

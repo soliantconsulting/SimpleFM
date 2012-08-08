@@ -3,9 +3,9 @@
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  * 
- * @package SimpleFM
- * @copyright  Copyright (c) 2007-2012 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
- * @author jsmall@soliantconsulting.com
+ * @package   SimpleFM
+ * @copyright Copyright (c) 2007-2012 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @author    jsmall@soliantconsulting.com
  */
 
 class SimpleFMAdapter
@@ -79,11 +79,11 @@ class SimpleFMAdapter
 
     /**
      * Bulk setter for the host args
-     * @param array($host,$dbname,$username,$password)
+     * @param array($hostname,$dbname,$username,$password)
      */
     public function setHostParams($params=array())
     {
-        $this->hostname = @$params['host'];
+        $this->hostname = @$params['hostname'];
         $this->dbname = @$params['dbname'];
         $this->username = @$params['username'];
         $this->password = @$params['password'];

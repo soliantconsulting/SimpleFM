@@ -86,12 +86,13 @@ section, as well as some additional tips about usage.
     
 ### Handle the result
 
-    $url       = $result['url'];           //string
-    $error     = $result['error'];         //int
-    $errortext = $result['errortext'];     //string
-    $count     = $result['count'];         //int
-    $fetchsize = $result['fetchsize'];     //int
-    $rows      = $result['rows'];          //array
+    $url       = $result['url'];           // string
+    $error     = $result['error'];         // int
+    $errortext = $result['errortext'];     // string
+    $errortype = $result['errortype'];     // string
+    $count     = $result['count'];         // int
+    $fetchsize = $result['fetchsize'];     // int
+    $rows      = $result['rows'];          // array
     
 ## About FileMaker Portals
 

@@ -241,10 +241,6 @@ class SimpleFMAdapter
      * @return array
      */
     public function execute () {
-        
-        if ( !defined('DEBUG') ) {
-            define('DEBUG', false );
-        }
     
         libxml_use_internal_errors(true);
         $credentials     = empty($this->username)?'':$this->username.':'.$this->password;
@@ -274,7 +270,7 @@ class SimpleFMAdapter
         if (empty($xml)) {
             
             $simplexmlerrors['xml'] = libxml_get_errors();
-            $simplexmlerrors['php']  = error_get_last();
+            $simplexmlerrors['php'] = error_get_last();
             
             $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
             
@@ -290,11 +286,11 @@ class SimpleFMAdapter
         } else {
             
             $simplexmlerrors = null; 
-            $error           = (int)$xml->error['code'];
+            $error           = (int) $xml->error['code'];
             $errortext       = self::errorToEnglish($error);
             $errortype       = 'FileMaker';
-            $count           = (string)$xml->resultset['count'];
-            $fetchsize       = (string)$xml->resultset['fetch-size'];
+            $count           = (string) $xml->resultset['count'];
+            $fetchsize       = (string) $xml->resultset['fetch-size'];
             
             $rows = $this->parseResult($xml);
             
@@ -309,14 +305,6 @@ class SimpleFMAdapter
             'fetchsize' => $fetchsize,
             'rows'      => $rows
             );
-        
-        /**
-         * @todo throw errors and factor out DEBUG
-         */
-        if ($error!=0 and DEBUG===true) {
-            $sfmresult['rawsimplexmlerrors'] = $simplexmlerrors;
-            echo "<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'><strong>simpleFM error:</strong><br/>Command&nbsp;URL: $commandURLdebug<br/>Error: $error <br/>Error Text: $errortext<br/>Found Count: $count<br/>Fetch Size: $fetchsize<br/></div>";
-        }
         
         return $sfmresult;
         

@@ -131,6 +131,7 @@ $result = $adapter->execute();
 $url       = $result['url'];           // string
 $error     = $result['error'];         // int
 $errortext = $result['errortext'];     // string
+$errortype = $result['errortype'];     // string
 $count     = $result['count'];         // int
 $fetchsize = $result['fetchsize'];     // int
 $rows      = $result['rows'];          // array
@@ -148,9 +149,10 @@ $rows      = $result['rows'];          // array
  * Output some basic meta info about the request
  */
 echo "<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>";
-echo "Command&nbsp;URL: $url<br/>";
+echo "Command URL: $url<br/>";
 echo "Error: $error <br/>";
 echo "Error Text: $errortext<br/>";
+echo "Error Type: $errortype <br/>";
 echo "Found Count: $count<br/>";
 echo "Fetch Size: $fetchsize<br/>";
 echo "</div>";

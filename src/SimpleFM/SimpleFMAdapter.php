@@ -34,9 +34,9 @@ class SimpleFMAdapter
     protected $commandstring = "-findany";
     
     /**
-     * @var string
+     * @var array
      */
-    protected $commandarray = array('-findany'=>'');
+    protected $commandarray = array('-findany' => '');
     
     /**
      * @var string
@@ -51,22 +51,22 @@ class SimpleFMAdapter
     /**
      * @var string
      */
-    protected $protocol="http";
+    protected $protocol = "http";
     
     /**
      * @var string
      */
-    protected $port="80";
+    protected $port = "80";
     
     /**
      * @var string
      */
-    protected $fmresultsetUri="/fmi/xml/fmresultset.xml";
+    protected $fmresultsetUri = "/fmi/xml/fmresultset.xml";
     
     /**
      * @var string
      */
-    protected $fmpxmllayoutUri="/fmi/xml/FMPXMLLAYOUT.xml";
+    protected $fmpxmllayoutUri = "/fmi/xml/FMPXMLLAYOUT.xml";
     
     /**
      * @var boolean
@@ -86,9 +86,10 @@ class SimpleFMAdapter
     public function setHostParams($params=array())
     {
         $this->hostname = @$params['hostname'];
-        $this->dbname = @$params['dbname'];
+        $this->dbname   = @$params['dbname'];
         $this->username = @$params['username'];
         $this->password = @$params['password'];
+        return $this;
     }
     
     /**
@@ -99,6 +100,7 @@ class SimpleFMAdapter
     {
         $this->username = @$params['username'];
         $this->password = @$params['password'];
+        return $this;
     }
     
     /**
@@ -107,71 +109,132 @@ class SimpleFMAdapter
      */
     public function setCallParams($params=array())
     {
-        $this->layoutname = @$params['layoutname'];
+        $this->layoutname    = @$params['layoutname'];
         $this->commandstring = @$params['commandstring'];
+        return $this;
     }
     
+    /**
+     * @return string
+     */
     public function getHostname(){
         return $this->hostname;
     }
 
+    /**
+     * @param string $hostname
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setHostname($hostname){
         $this->hostname = $hostname;
+        return $this;
     }
     
+    /**
+     * @return string
+     */
     public function getUsername(){
         return $this->username;
     }
 
+    /**
+     * @param string $username
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setUsername($username){
         $this->username = $username;
+        return $this;
     }
     
+    /**
+     * @param string $password
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setPassword($password){
         $this->password = $password;
+        return $this;
     }
     
+    /**
+     * @return string
+     */
     public function getDbname(){
         return $this->dbname;
     }
 
+    /**
+     * @param string $dbname
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setDbname($dbname){
         $this->dbname = $dbname;
+        return $this;
     }
     
+    /**
+     * @return string
+     */
     public function getLayoutname(){
         return $this->layoutname;
     }
 
+    /**
+     * @param string $layoutname
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setLayoutname($layoutname){
         $this->layoutname = $layoutname;
+        return $this;
     }
 
-    
+    /**
+     * @return string
+     */
     public function getCommandstring(){
         return $this->commandstring;
     }
     
+    /**
+     * @return array
+     */
     public function getCommandarray(){
         return $this->commandarray;
     }
 
+    /**
+     * @param string $commandstring
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setCommandstring($commandstring){
         $this->commandstring = $commandstring;
         $this->commandarray = self::explodeNameValueString($commandstring);
+        return $this;
     }
     
+    /**
+     * @param array $commandarray
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setCommandarray($commandarray){
         $this->commandarray = $commandarray;
         $this->commandstring = self::repackCommandString($commandarray);
+        return $this;
     }
     
+    /**
+     * @return boolean
+     */
     public function getRowsbyrecid(){
         return $this->rowsbyrecid;
     }
 
+    /**
+     * @param boolean $rowsByRecId
+     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     */
     public function setRowsbyrecid($rowsByRecId=FALSE){
         $this->rowsbyrecid = $rowsByRecId;
+        return $this;
     }
     
     /**
@@ -184,9 +247,9 @@ class SimpleFMAdapter
         }
     
         libxml_use_internal_errors(true);
-        $credentials = empty($this->username)?'':$this->username.':'.$this->password;
-        $postdata = "-db=$this->dbname&-lay=$this->layoutname&$this->commandstring";
-        $commandURL = "http://$credentials@$this->hostname$this->fmresultsetUri?$postdata";
+        $credentials     = empty($this->username)?'':$this->username.':'.$this->password;
+        $postdata        = "-db=$this->dbname&-lay=$this->layoutname&$this->commandstring";
+        $commandURL      = "http://$credentials@$this->hostname$this->fmresultsetUri?$postdata";
         $commandURLdebug = empty($credentials)?$commandURL:str_replace($credentials, $this->username.':[...]', $commandURL);
         
         $authheader = empty($credentials)?'':"Authorization: Basic ".base64_encode($credentials)."\r\n";
@@ -215,10 +278,10 @@ class SimpleFMAdapter
             
             $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
             
-            $error = $phpErrors['error'];
+            $error     = $phpErrors['error'];
             $errortext = $phpErrors['errortext'];
             $errortype = $phpErrors['errortype'];
-            $count = NULL;
+            $count     = NULL;
             $fetchsize = NULL;
             
             $rows = NULL;
@@ -227,28 +290,28 @@ class SimpleFMAdapter
         } else {
             
             $simplexmlerrors = null; 
-            $error = (int)$xml->error['code'];
-            $errortext = self::errorToEnglish($error);
-            $errortype = 'FileMaker';
-            $count = (string)$xml->resultset['count'];
-            $fetchsize = (string)$xml->resultset['fetch-size'];
+            $error           = (int)$xml->error['code'];
+            $errortext       = self::errorToEnglish($error);
+            $errortype       = 'FileMaker';
+            $count           = (string)$xml->resultset['count'];
+            $fetchsize       = (string)$xml->resultset['fetch-size'];
             
-            $rows = $this->parse_result($xml);
+            $rows = $this->parseResult($xml);
             
         }
         
         $sfmresult = array (
-            'url'=>$commandURLdebug,
-            'error'=>$error,
-            'errortext'=>$errortext,
-            'errortype'=>$errortype,
-            'count'=>$count,
-            'fetchsize'=>$fetchsize,
-            'rows'=>$rows
+            'url'       => $commandURLdebug,
+            'error'     => $error,
+            'errortext' => $errortext,
+            'errortype' => $errortype,
+            'count'     => $count,
+            'fetchsize' => $fetchsize,
+            'rows'      => $rows
             );
         
         /**
-         * @todo proper thrown errors
+         * @todo throw errors and factor out DEBUG
          */
         if ($error!=0 and DEBUG===true) {
             $sfmresult['rawsimplexmlerrors'] = $simplexmlerrors;
@@ -259,7 +322,11 @@ class SimpleFMAdapter
         
     }
     
-    protected function parse_result ($xml) {
+    /**
+     * @param xml $xml
+     * @return array
+     */
+    protected function parseResult ($xml) {
 
         $result = array();
         
@@ -273,6 +340,9 @@ class SimpleFMAdapter
 
             $conditional_id = $this->rowsbyrecid === TRUE ? (string) $row['record-id'] : (int) $i;
 
+            /**
+             * @todo handle field-name conflicts with these reserved words
+             */
             $result[$conditional_id]['index'] = (int) $i;
             $result[$conditional_id]['recid'] = (int) $row['record-id'];
             
@@ -295,7 +365,9 @@ class SimpleFMAdapter
                     $result[$conditional_id][$portalname]['parentindex'] = (int) $i;
                     $result[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
                     $result[$conditional_id][$portalname]['portalindex'] = (int) $ii;
-                    //TODO: verify if next line is a bug where portalrecordcount seems to be returning same value for all portals
+                    /**
+                     * TODO: verify if next line is a bug where portalrecordcount seems to be returning same value for all portals
+                     */
                     $result[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
                     
                     $iii=0; // the portal row index
@@ -323,8 +395,12 @@ class SimpleFMAdapter
         return $result;
     }
     
-
-    public function display_xml_error($error, $xml)
+    /**
+     * @param libxml_error $error
+     * @param xml $xml
+     * @return string
+     */
+    public function displayXmlError($error, $xml)
     {
         $return  = $xml[$error->line - 1] . "\n";
         $return .= str_repeat('-', $error->column) . "^\n";
@@ -352,6 +428,10 @@ class SimpleFMAdapter
         return "$return\n\n--------------------------------------------\n\n";
     }
     
+    /**
+     * @param http_error $string
+     * @return string
+     */
     public static function extractErrorFromPhpMessage($string){
         $matches = array();
         // most common message to expect: "file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
@@ -361,23 +441,27 @@ class SimpleFMAdapter
             $result = explode(" ", $matches, 2);
             // normal case will yield an http error code in location 0 and a message in location 1
             if ((int)$result[0]!=0){
-                $return['error'] = (int)$result[0];
+                $return['error']     = (int)$result[0];
                 $return['errortext'] = (string)$result[1];
                 $return['errortype'] = 'HTTP';
             } else {
-                $return['error'] = NULL;
+                $return['error']     = NULL;
                 $return['errortext'] = $matches;
                 $return['errortype'] = 'HTTP';
             }
             return $return;
         } else {
-            $return['error'] = NULL;
+            $return['error']     = NULL;
             $return['errortext'] = $string;
             $return['errortype'] = 'PHP';
             return $return;
         }
     }
     
+    /**
+     * @param int $errornum
+     * @return string
+     */
     public static function errorToEnglish($errornum="-1"){
     
         $error = array(
@@ -652,7 +736,9 @@ class SimpleFMAdapter
     
     /**
      * @todo verify if an SPL function can be used instead
-     * @note can't use native http_build_query because it drops args with empty values like &-find
+     * Can't use native http_build_query because it drops args with empty values like &-find
+     * @param name_value $string
+     * @return array
      */
     protected function explodeNameValueString($string){
         $array=explode('&',$string);
@@ -665,17 +751,18 @@ class SimpleFMAdapter
             }
         } else {
         foreach ($array as $item) {
-            $nameValue=explode('=',$item,2);
-            $name = $nameValue[0];
-            $value = @$nameValue[1];
-            $resultArray[$name]= $value;
+            $nameValue          = explode('=',$item,2);
+            $name               = $nameValue[0];
+            $value              = @$nameValue[1];
+            $resultArray[$name] = $value;
             }
         }
         return $resultArray;
     }
 
     /**
-     * @note can't use native http_build_query because it drops args with empty values like &-find
+     * Can't use native http_build_query because it drops args with empty values like &-find
+     * @return string
      */
     protected function repackCommandString(){
         $amp = "";

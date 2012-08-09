@@ -10,6 +10,8 @@
 
 namespace Soliant\SimpleFM;
 
+use Exception;
+
 class SimpleFMAdapter
 {
     
@@ -328,12 +330,8 @@ class SimpleFMAdapter
 
             $conditional_id = $this->rowsbyrecid === TRUE ? (string) $row['record-id'] : (int) $i;
 
-            /**
-             * @todo handle field-name conflicts with these reserved words
-             */
             $result[$conditional_id]['index'] = (int) $i;
             $result[$conditional_id]['recid'] = (int) $row['record-id'];
-            
             $result[$conditional_id]['modid'] = (int) $row['mod-id'];
             
             foreach ($xml->resultset[0]->record[$i]->field as $field ) { // handle fields
@@ -341,6 +339,7 @@ class SimpleFMAdapter
                 $fieldname = (string) $field['name'];
                 $fielddata = (string) $field->data ;
                 
+                $fieldnameIsValid = $i===0 ? self::fieldnameIsValid($fieldname) : TRUE; // validate fieldnames on first row
                 $result[$conditional_id][$fieldname] = $fielddata; 
                 
             }
@@ -370,6 +369,7 @@ class SimpleFMAdapter
                             $portal_fieldname = (string) str_replace($portalname.'::', '', $portal_field['name']);
                             $portal_fielddata = (string) $portal_field->data ;
     
+                            $fieldnameIsValid = $iii===0 ? self::fieldnameIsValid($portal_fieldname) : TRUE; // validate fieldnames on first row
                             $result[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
                         }
                         ++$iii;
@@ -381,6 +381,21 @@ class SimpleFMAdapter
         }
         
         return $result;
+    }
+    
+    /**
+     * @param string $fieldname
+     * @throws Exception
+     * @return boolean
+     */
+    protected function fieldnameIsValid($fieldname){
+        $reservedNames = array('index','recid','modid');
+        if(in_array($fieldname, $reservedNames)){
+            throw new Exception(
+                'SimpleFM Exception: "' . $fieldname . 
+                '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.');
+        }
+        return TRUE;
     }
     
     /**

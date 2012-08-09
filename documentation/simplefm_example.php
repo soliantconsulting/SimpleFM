@@ -17,106 +17,148 @@ require_once('../src/SimpleFM/SimpleFMAdapter.php');
 
 use Soliant\SimpleFM\SimpleFMAdapter;
 
-// define a constant named DEBUG as true to instruct SimpleFMAdapter return a formated error message when errors occur.
-define('DEBUG',TRUE);
+/**
+ * The hostname can either be an IP address or any valid network name you have configured and hosting the
+ * FileMaker XML API. FMServer_Sample.fmp12 is included with FileMaker Server 12; the default username is
+ * Admin with blank password. You should always leave off the file extension when configuring dbname.
+ */
+$hostParams = array(
+    'hostname' => 'localhost',
+    'dbname'   => 'FMServer_Sample',
+    'username' => 'Admin',
+    'password' => ''
+);
 
-// The FMServer_Sample is included on stock FileMaker Server installs; you just need to create some credentials
+/**
+ * Initialize the adapter with the hostParams array for your environment.
+ */
+$adapter = new SimpleFMAdapter($hostParams);
 
-// initialize the adapter and set it with your host params array
-$adapter = new SimpleFMAdapter();
+/**
+ * At runtime, you can update hostParams on an adapter that has already been instantiated.
+ */
 $adapter->setHostParams(
     array(
-        'hostname'=>'valhalla.soliantconsulting.com',
-        'dbname'=>'FMServer_Sample',
-        'username'=>'weby',
-        'password'=>'weby' 
+        'hostname' => 'localhost',
+        'dbname'   => 'FMServer_Sample',
+        'username' => 'someusername',
+        'password' => 'somepassword' 
     )
 );
 
-// optionally set/reset your call params with an array
+/**
+ * After you have initialized a SimpleFMAdapter with valid credentials, there are a number of ways to make calls with it.
+ * The simplest is to setCallParams with a layoutname and a commandstring. The commandstring follows the XML RPC
+ * syntax for FileMaker Server 12. See /documentation/fms12_cwp_xml_en.pdf, Appendix A on page 43 for details.
+ */
 $adapter->setCallParams(
     array(
-        'layoutname'=>'English_List_View',
-        'commandstring'=>'-findany'
+        'layoutname'    => 'Tasks',
+        'commandstring' => '-max=10&-skip=5&-findall'
     )
 );
 
-// optionally set/reset your credentials as an array
+/**
+ * You may also update an adapter's credentials at runtime, either by setCredentials with a new array
+ */
 $adapter->setCredentials(
     array(
-        'username'=>'webx',
-        'password'=>'webx'
+        'username' => 'someotherusername',
+        'password' => 'someotherpassword'
     )
 );
 
-// or update the credentials with the individual setters
-$adapter->setUsername('web');
-$adapter->setPassword('web');
 
-// there are individual getters and settes for every property except there is no getter for password
-// experiment with the getters and setters to modify the adapter and set new queries for execution
-$adapter->setLayoutname('English_Portal_View');
+/**
+ * ...or with the setUsername and setPassword methods.
+ */
+$adapter->setUsername('Admin');
+$adapter->setPassword('');
 
-// you can define commands using the standard url command syntax
-$adapter->setCommandstring('-max=3&-skip=21&-findall');
+/**
+ * There are individual getters and settes for every property (except there is no getter for the password property)
+ * Experiment with the getters and setters to modify the adapter and set new queries for execution
+ */
+$adapter->setLayoutname('Projects');
 
-// or you can get and set the adapter command array
-// this is useful because it lets you modify existing and add new commands without disrupting the rest of the command properties
-//$commandarray = $adapter->getCommandarray();
-//$commandarray['-max'] = 40 ; // change the -max value
-//$commandarray['-skip'] = 10 ; // add a -skip command
-//$adapter->setCommandarray($commandarray); // set it back on the adapter
+/**
+ * As already mentioned, for basic usage, you can define commands using the FileMaker XML url api syntax. 
+ * See /documentation/fms12_cwp_xml_en.pdf
+ */
+$adapter->setCommandstring('-findall');
 
-/*
-// experiment with dumping out the command string and command array
-//note how the setters keep them in sync
+/**
+ * For more fine-grained control, you can also interact with the adapter's commandarray.
+ * This is useful because it lets you modify existing commands on the adpater, and add new commands 
+ * without blowing away existing command properties. For example:
+ 
+    $commandarray = $adapter->getCommandarray();
+    $commandarray['-max']  = 40 ;             // change -max value
+    $commandarray['-skip'] = 10 ;             // add a -skip command
+    $adapter->setCommandarray($commandarray); // set it back on the adapter
 
-$commandarray = $adapter->getCommandarray();
-$commandstring = $adapter->getCommandstring();
-echo '<pre>';
-var_dump($commandarray);
-echo($commandstring);
-die();
+ *
+ */
 
-*/
+/**
+ * Experiment with dumping out the command string and command array and notice that it doesn't matter
+ * which method you use for setting commands. They both affect the same properties of the adapter. For example:
 
-// try setting the Boolean rowsbyrecid property
-// this makes the rows associative by the FileMaker recid instead of a default indexed array
+    $commandarray  = $adapter->getCommandarray();
+    $commandstring = $adapter->getCommandstring();
+    echo '<pre>';
+    var_dump($commandarray);
+    echo($commandstring);
+    die();
+
+ *
+ */
+
+/**
+ * SimpleFMAdapter also provides a Boolean rowsbyrecid property which makes the returned rows of data associative 
+ * by FileMaker recid instead of the default behavior which is rows as an arbitrarily indexed array.
+ */
 $adapter->setRowsbyrecid(FALSE);
 
-
-// once your adapter is all ready to fire, use execute
+/**
+ * Once your adapter is ready, use execute to make the host request.
+ */
 $result = $adapter->execute();
 
-/*
-echo '<pre>';
-var_dump($result);
-die();
-*/
-
-// here are all the elements simpleFM returns.
-$url = $result['url'];                 //string
-$error = $result['error'];             //int
-$errortext = $result['errortext'];     //string
-$count = $result['count'];             //int
-$fetchsize = $result['fetchsize'];     //int
-$rows = $result['rows'];            //array
+/**
+ * These are the elements simpleFM returns in the result array.
+ */
+$url       = $result['url'];           // string
+$error     = $result['error'];         // int
+$errortext = $result['errortext'];     // string
+$count     = $result['count'];         // int
+$fetchsize = $result['fetchsize'];     // int
+$rows      = $result['rows'];          // array
 
 
-// here are some examples of what you can do with the query results.
-if ($error===0){
+ /** 
+ * Handle the result:
+ * 
+ * Below are some very basic examples of what you can do with the query results. These examples are designed to be
+ * a flexible way to view raw results, and are probably not the way you would normally handle results in an OOP
+ * solution (see Best practices in the included README.md).
+ */
 
-    if (DEBUG===true) {
-        echo "<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>";
-        echo "Command&nbsp;URL: $url<br/>";
-        echo "Error: $error <br/>";
-        echo "Error Text: $errortext<br/>";
-        echo "Found Count: $count<br/>";
-        echo "Fetch Size: $fetchsize<br/>";
-        echo "</div>";
-    }
+/**
+ * Output some basic meta info about the request
+ */
+echo "<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>";
+echo "Command&nbsp;URL: $url<br/>";
+echo "Error: $error <br/>";
+echo "Error Text: $errortext<br/>";
+echo "Found Count: $count<br/>";
+echo "Fetch Size: $fetchsize<br/>";
+echo "</div>";
     
-    // Here we introspect the fetched data and display it like a FileMaker Table View
+if ($error===0){
+    /**
+     * Format the result rows like a FileMaker Table View
+     */
     echo "<h2>Table View</h2><table border=1><tr>";
         $indexed = array_values($rows);
         foreach ($indexed[0] as $key => $value) { echo "<th>$key</th>"; }
@@ -128,7 +170,9 @@ if ($error===0){
         echo "</tr>";}    
     echo "</table>";
     
-    // Here we introspect the fetched data and display it like a FileMaker Form in List View 
+    /**
+     * Format the result rows like a FileMaker Form in List View
+     */
     echo "<h2>Form List View</h2>";
     foreach ($rows as $i => $data) {
         echo "<table border=1>";
@@ -138,23 +182,13 @@ if ($error===0){
         }
         echo "</table><br/>";
     }
-    
-    // Note: The FMServer_Sample file doesnt have portals in it, but SimpleFM supports portals.
-    // portals are returned as named child arrays to every record in the fetched set.
-    // simpleFM returns N portals for every record in the found set (there can be more than one portal on a layout)
-    
-    // Assuming you set the adapter to setRowsbyrecid(TRUE), here is syntax that would echo the data from a portal by parent recid, portal name, child recid, and portal fieldname
-    // echo $rows[154]['Portal_TO_Name']['rows'][335932]['app_rnk_SCH__Schools::schoolName'];
-    
-    // Assuming you left the adapter rowsbyrecid FALSE (the default setting), here is syntax that would echo the data from a portal by parent index, portalname, child index and fieldname.
-    // Note that index, recid and modid are available on every parent and child record, regardless of the setting on rowsbyrecid
-    // echo $rows[0]['Portal_TO_Name']['rows'][0]['recid'].'<br/>';
-    // echo $rows[0]['Portal_TO_Name']['rows'][0]['schoolName'];
+}
 
-    if (DEBUG===true) {
-        echo "<hr><pre>";
-        var_dump($result);
-    }
+/**
+ * Finally, a dump of the raw result
+ */
+echo "<hr><pre>";
+var_dump($result);
+    
 
 
-}//end if

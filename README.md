@@ -39,7 +39,7 @@ that uses fmresultset.xml grammar, however, backward compatibility is not mainta
 SimpleFM is free for commercial and non-commercial use, licensed under the business-friendly standard MIT license.
 
 
-# Documentation
+# SimpleFM Documentation
 
 All the examples included with SimpleFM are based the FMServer_Sample which is included with FileMaker Server 12. To use the examples it is assumed that you have FMServer_Sample running on a FileMaker 12 host with XML web publishing enabled. (You may also have any other FMS services enabled, including PHP web publishing, but only XML is required for SimpleFM.) Setup and configuration of FileMaker server is beyond the scope of this documentation.
 
@@ -50,7 +50,7 @@ section, as well as some additional tips about usage.
 
 ### Import the adapter
 
-    use Soliant\SimpleFM\SimpleFMAdapter;
+    use Soliant\SimpleFM\Adapter;
     
 ### Basic adapter configuration
 
@@ -63,7 +63,7 @@ section, as well as some additional tips about usage.
 
 ### Instantiate the adapter
 
-    $adapter = new SimpleFMAdapter($hostParams);
+    $adapter = new Adapter($hostParams);
 
 ### Set layout context
 
@@ -72,6 +72,15 @@ section, as well as some additional tips about usage.
     
 ### Set command(s)
 
+    /**
+     * @Note: See fms12_cwp_xml_en.pdf Appendix A for a complete command reference.
+     * Commands that take no arguments, such as -findall, must be set with either a
+     * NULL value or an empty string.
+     * 
+     * @WARNING: Copy/paste out of the pdf must be done with caution. The typsetting
+     * uses emdash, not hyphen characters. They look very similar, and this can be
+     * very hard to troubleshoot if you are not careful.
+     */
     $adapter->setCommandarray(
         array(
             '-max'     => 10,
@@ -96,11 +105,7 @@ section, as well as some additional tips about usage.
     
 ## About FileMaker Portals
 
-Portals are returned as named child arrays to every record in the fetched set. Be careful about adding
-portals to your web layouts, as all associations are loaded eagerly, and this could bloat your result array. SimpleFM 
-can't take advantage of techniques like lazy loading that help mitigate performance issues with large related data
-sets in ORMs like Doctrine, so it is up to the developer to tailor the web layouts appropriately for best
-performance.
+Portals are returned as named child arrays to every record in the fetched set. Be careful about adding portals to your web layouts, as all associations are loaded eagerly, and this could bloat your result array. SimpleFM can't take advantage of techniques like lazy loading that help mitigate performance issues with large related data sets in ORMs like Doctrine, so it is up to the developer to tailor the web layouts appropriately for best performance.
 
 There can be more than one portal on a layout. SimpleFM returns n portals for every record in the found set.
 
@@ -111,8 +116,7 @@ Note that index, recid and modid are always properties on every parent and child
     echo $rows[0]['Portal_TO_Name']['rows'][0]['recid'].'<br/>';    
     echo $rows[0]['Portal_TO_Name']['rows'][0]['myField'];
  
-If you set rowsbyrecid to TRUE on your adapter, here is syntax that would echo the data from a portal where
-the parent row has recid 154 and the child row has recid 335932.
+If you set rowsbyrecid to TRUE on your adapter, here is syntax that would echo the data from a portal where the parent row has recid 154 and the child row has recid 335932.
 
     echo $rows[154]['Portal_TO_Name']['rows'][335932]['Related_TO_Name::fieldOnPortal'];
 

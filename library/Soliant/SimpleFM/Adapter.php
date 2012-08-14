@@ -3,16 +3,16 @@
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  * 
- * @package   SimpleFM
+ * @package   Soliant\SimpleFM
  * @copyright Copyright (c) 2007-2012 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
 namespace Soliant\SimpleFM;
 
-use Exception;
+use Soliant\SimpleFM\Exception\ReservedWordException;
 
-class SimpleFMAdapter
+class Adapter
 {
     
     /**
@@ -353,7 +353,8 @@ class SimpleFMAdapter
                     $result[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
                     $result[$conditional_id][$portalname]['portalindex'] = (int) $ii;
                     /**
-                     * TODO: verify if next line is a bug where portalrecordcount seems to be returning same value for all portals
+                     * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all 
+                     * portals. Test for possible issues with $portalname being non-unique.
                      */
                     $result[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
                     
@@ -391,9 +392,10 @@ class SimpleFMAdapter
     protected function fieldnameIsValid($fieldname){
         $reservedNames = array('index','recid','modid');
         if(in_array($fieldname, $reservedNames)){
-            throw new Exception(
+            throw new ReservedWordException(
                 'SimpleFM Exception: "' . $fieldname . 
-                '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.');
+                '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.',
+                $fieldname);
         }
         return TRUE;
     }

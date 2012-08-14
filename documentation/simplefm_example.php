@@ -13,9 +13,9 @@ ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
 
-require_once('../src/SimpleFM/SimpleFMAdapter.php');
+require_once('../library/Soliant/SimpleFM/Adapter.php');
 
-use Soliant\SimpleFM\SimpleFMAdapter;
+use Soliant\SimpleFM\Adapter;
 
 /**
  * The hostname can either be an IP address or any valid network name you have configured and hosting the
@@ -32,7 +32,7 @@ $hostParams = array(
 /**
  * Initialize the adapter with the hostParams array for your environment.
  */
-$adapter = new SimpleFMAdapter($hostParams);
+$adapter = new Adapter($hostParams);
 
 /**
  * At runtime, you can update hostParams on an adapter that has already been instantiated.

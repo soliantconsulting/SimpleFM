@@ -85,7 +85,8 @@ class Adapter
 
     /**
      * Bulk setter for the host args
-     * @param array($hostname,$dbname,$username,$password)
+     * @param array($hostname, $dbname, $username, $password)
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setHostParams($params=array())
     {
@@ -98,7 +99,8 @@ class Adapter
     
     /**
      * Bulk setter for the credentials
-     * @param array($username,$password)
+     * @param array($username, $password)
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setCredentials($params=array())
     {
@@ -109,7 +111,8 @@ class Adapter
     
     /**
      * Bulk setter for the call args
-     * @param array($layoutname,$commandstring)
+     * @param array($layoutname, $commandstring)
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setCallParams($params=array())
     {
@@ -128,7 +131,7 @@ class Adapter
 
     /**
      * @param string $hostname
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setHostname($hostname)
     {
@@ -146,7 +149,7 @@ class Adapter
 
     /**
      * @param string $username
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setUsername($username)
     {
@@ -156,7 +159,7 @@ class Adapter
     
     /**
      * @param string $password
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setPassword($password)
     {
@@ -174,7 +177,7 @@ class Adapter
 
     /**
      * @param string $dbname
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setDbname($dbname)
     {
@@ -192,7 +195,7 @@ class Adapter
 
     /**
      * @param string $layoutname
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setLayoutname($layoutname)
     {
@@ -218,7 +221,7 @@ class Adapter
 
     /**
      * @param string $commandstring
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setCommandstring($commandstring)
     {
@@ -229,7 +232,7 @@ class Adapter
     
     /**
      * @param array $commandarray
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setCommandarray($commandarray)
     {
@@ -325,7 +328,7 @@ class Adapter
 
     /**
      * @param boolean $rowsByRecId
-     * @return \Soliant\SimpleFM\SimpleFMAdapter
+     * @return \Soliant\SimpleFM\Adapter
      */
     public function setRowsbyrecid($rowsByRecId = FALSE)
     {
@@ -480,7 +483,7 @@ class Adapter
     
     /**
      * @param string $fieldname
-     * @throws Exception
+     * @throws ReservedWordException
      * @return boolean
      */
     protected function fieldnameIsValid($fieldname)

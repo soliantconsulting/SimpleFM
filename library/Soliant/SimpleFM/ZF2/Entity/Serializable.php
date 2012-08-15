@@ -15,7 +15,7 @@ interface Serializable
     /**
      * @note Maps a SimpleFM\Adapter row onto the Entity.
      */
-    public function unserialize($array = array());
+    public function unserialize($simpleFMAdapterRow = array());
 
     /**
      * @note Maps the Entity onto a SimpleFM\Adapter row.

@@ -14,9 +14,9 @@ abstract class AbstractEntity
     protected $recid;
     protected $modid;
     
-    public function __construct($array = array())
+    public function __construct($simpleFMAdapterRow = array())
     {
-        $this->unserialize($array);
+        $this->unserialize($simpleFMAdapterRow);
     }
     
     /**
@@ -44,7 +44,7 @@ abstract class AbstractEntity
     /**
      * @note Maps a SimpleFM\Adapter row onto the Entity
      */
-    abstract public function unserialize($array = array());
+    abstract public function unserialize($simpleFMAdapterRow = array());
     
     /**
      * @note Return the alias defined for the entity's controller class in the

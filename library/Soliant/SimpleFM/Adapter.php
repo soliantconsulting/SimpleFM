@@ -10,6 +10,7 @@
 
 namespace Soliant\SimpleFM;
 
+use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\Exception\ReservedWordException;
 
 class Adapter
@@ -234,6 +235,83 @@ class Adapter
     {
         $this->commandarray = $commandarray;
         $this->commandstring = self::repackCommandString($commandarray);
+        return $this;
+    }
+    
+    /**
+     * @return the $protocol
+     */
+    public function getProtocol ()
+    {
+        return $this->protocol;
+    }
+    
+    /**
+     * @param string $protocol
+     * @throws InvalidArgumentException
+     * @return \Soliant\SimpleFM\Adapter
+     */
+    public function setProtocol ($protocol)
+    {
+        if(in_array($protocol, array('http','https'))){
+            $this->protocol = $protocol;
+        } else {
+            throw new InvalidArgumentException('setProtocol() accepts only "http" or "https" as an argument.');
+        }
+        return $this;
+    }
+    
+    /**
+     * @return the $port
+     */
+    public function getPort ()
+    {
+        return $this->port;
+    }
+    
+    /**
+     * @param int $port
+     * @return \Soliant\SimpleFM\Adapter
+     */
+    public function setPort ($port)
+    {
+        $this->port = $port;
+        return $this;
+    }
+    
+    /**
+     * @return the $fmresultsetUri
+     */
+    public function getFmresultsetUri ()
+    {
+        return $this->fmresultsetUri;
+    }
+    
+    /**
+     * @param string $fmresultsetUri
+     * @return \Soliant\SimpleFM\Adapter
+     */
+    public function setFmresultsetUri ($fmresultsetUri)
+    {
+        $this->fmresultsetUri = $fmresultsetUri;
+        return $this;
+    }
+    
+    /**
+     * @return the $fmpxmllayoutUri
+     */
+    public function getFmpxmllayoutUri ()
+    {
+        return $this->fmpxmllayoutUri;
+    }
+    
+    /**
+     * @param string $fmpxmllayoutUri
+     * @return \Soliant\SimpleFM\Adapter
+     */
+    public function setFmpxmllayoutUri ($fmpxmllayoutUri)
+    {
+        $this->fmpxmllayoutUri = $fmpxmllayoutUri;
         return $this;
     }
     

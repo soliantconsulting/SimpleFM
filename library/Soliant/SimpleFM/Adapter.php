@@ -344,17 +344,17 @@ class Adapter
         $commandURL      = "http://$credentials@$this->hostname$this->fmresultsetUri?$postdata";
         $commandURLdebug = empty($credentials)?$commandURL:str_replace($credentials, $this->username.':[...]', $commandURL);
         
-        $authheader = empty($credentials)?'':"Authorization: Basic ".base64_encode($credentials)."\r\n";
+        $authheader = empty($credentials) ? '' : 'Authorization: Basic '.base64_encode($credentials) . PHP_EOL;
         
         $opts = array('http' =>
             array(
-                'method'  => "POST",
-                'header'  => "User-Agent: SimpleFM\r\n".
-                             $authheader.
-                             "Accept: text/xml,text/html,text/plain\r\n".
-                             "Content-type: application/x-www-form-urlencoded\r\n".
-                             "Content-length: " . strlen($postdata) . "\r\n".
-                             "\r\n",
+                'method'  => 'POST',
+                'header'  => 'User-Agent: SimpleFM' . PHP_EOL .
+                             $authheader .
+                             'Accept: text/xml,text/html,text/plain' . PHP_EOL .
+                             'Content-type: application/x-www-form-urlencoded' . PHP_EOL .
+                             'Content-length: ' . strlen($postdata) .  PHP_EOL .
+                              PHP_EOL,
                 'content' => $postdata
             )
         );

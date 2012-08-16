@@ -26,7 +26,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function __construct($simpleFMAdapterRow = array())
     {
-        $this->unserialize($simpleFMAdapterRow);
+        if (!empty($simpleFMAdapterRow)) $this->unserialize($simpleFMAdapterRow);
     }
     
     /**
@@ -35,7 +35,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function getRecid()
     {
-        return $this->recid;
+        return (string) $this->recid;
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function getModid()
     {
-        return $this->modid;
+        return (string) $this->modid;
     }
     
     /**

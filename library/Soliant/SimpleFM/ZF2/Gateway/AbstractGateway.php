@@ -13,6 +13,10 @@ use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
+use Soliant\SimpleFM\Exception\ErrorException;
+use Soliant\SimpleFM\Exception\FileMakerException;
+use Soliant\SimpleFM\Exception\HttpException;
+use Soliant\SimpleFM\Exception\XmlException;
 use Soliant\SimpleFM\ZF2\Entity\EntityInterface;
 use Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface;
 
@@ -71,6 +75,99 @@ abstract class AbstractGateway
     {
         return $this->find($pointer->getRecid());
     }
+    
+    public function find($recid)
+    {
+        $commandArray = array('-recid' => $recid, '-find' => NULL);
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
+        $entity = new $this->entityName($result['rows'][0]);
+        return $entity;
+    }
+    
+    public function findOneBy(array $search)
+    {
+        $commandArray = array_merge(
+            $search, 
+            array(
+                '-max' => '1',
+                '-find' => NULL
+            )
+        );
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
+        $entity = new $this->entityName($result['rows'][0]);
+        return $entity;
+    }
+    
+    public function findAll(array $sort = array(), $max = NULL, $skip = NULL)
+    {
+        $commandArray = array_merge(
+            $this->sortArrayToCommandArray($sort),
+            $this->maxSkipToCommandArray($max, $skip),
+            array('-findall' => NULL)
+        );
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        return $this->rowsToArrayCollection($result['rows']);
+    
+    }
+    
+    public function findBy(array $search, array $sort = array(), $max = NULL, $skip = NULL)
+    {
+        $commandArray = array_merge(
+            $search,
+            $this->sortArrayToCommandArray($sort),
+            $this->maxSkipToCommandArray($max, $skip),
+            array('-findall' => NULL)
+        );
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        return $this->rowsToArrayCollection($result['rows']);
+    }
+    
+    public function create(SerializableEntityInterface $entity)
+    {
+        $serializedValues = $entity->serialize();
+        unset($serializedValues['recid']);
+        unset($serializedValues['modid']);
+        $commandArray = array_merge(
+            $serializedValues,
+            array('-new' => NULL)
+        );
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        $entity = new $this->entityName($result['rows'][0]);
+        return $entity;
+    }
+    
+    public function edit(SerializableEntityInterface $entity)
+    {
+        $commandArray = array_merge(
+            $entity->serialize(),
+            array(
+                '-edit' => NULL,
+            )
+        );
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        
+        $entity = new $this->entityName($result['rows'][0]);
+        return $entity;
+    }
+    
+    public function delete(EntityInterface $entity)
+    {
+        $commandArray = array(
+            '-recid' => $entity->getRecid(),
+            '-modid' => $entity->getModid(),
+            '-delete' => NULL,
+        );
+        $this->simpleFMAdapter->setCommandArray($commandArray);
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        return true;
+    }
+    
 
     /**
      * @return SimpleFMAdapter
@@ -162,7 +259,7 @@ abstract class AbstractGateway
      * @param int $skip
      * @return array:
      */
-    protected function maxSkipToCommandArray(int $max, int $skip)
+    protected function maxSkipToCommandArray($max = NULL, $skip = NULL)
     {
     
         $maxCommand = empty($max) ? array() : array('-max' => $max);
@@ -223,4 +320,45 @@ abstract class AbstractGateway
         return $command;
     
     }
+    
+    /**
+     * @param array $rows
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    protected function rowsToArrayCollection(array $rows)
+    {
+        $collection = new ArrayCollection();
+        if (!empty($rows)){
+            foreach($rows as $row){
+                $collection[] = new $this->entityPointerName($row);
+            }
+        }
+        
+        return $collection;
+    }
+    
+    protected function handleAdapterResult($simpleFMAdapterResult)
+    {
+        $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' . 
+                       $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
+        
+        if ($simpleFMAdapterResult['error'] === 0){
+            return $simpleFMAdapterResult;
+        
+        } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker') {
+            throw new FileMakerException($message, $simpleFMAdapterResult['error']);
+        
+        } elseif ($simpleFMAdapterResult['errortype'] == 'HTTP') {
+            throw new HttpException($message, $simpleFMAdapterResult['error']);
+            
+        } elseif ($simpleFMAdapterResult['errortype'] == 'XML') {
+            throw new XmlException($message, $simpleFMAdapterResult['error']);
+
+        } else {
+            throw new ErrorException($message, $simpleFMAdapterResult['error']);
+        }
+    }
+    
 }
+
+

@@ -747,6 +747,8 @@ class Adapter
             956 => 'Maximum number of database sessions exceeded (CWP)',
             957 => 'Conflicting commands (CWP)',
             958 => 'Parameter missing (CWP)',
+            959 => 'Custom Web Publishing technology disabled (CWP)',
+            960 => 'Parameter is invalid (CWP)',
             1200 => 'Generic calculation error',
             1201 => 'Too few parameters in the function',
             1202 => 'Too many parameters in the function',
@@ -834,7 +836,12 @@ class Adapter
             20605 => 'No network connection is available',
         );
         
-        return $error[$errornum];
+        if (array_key_exists($errornum, $error)){
+            return $error[$errornum];
+        } else {
+            return 'Undefined';
+        }
+        
     }
     
     /**

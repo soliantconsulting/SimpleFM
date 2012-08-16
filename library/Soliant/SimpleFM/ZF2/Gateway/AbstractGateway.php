@@ -11,9 +11,10 @@ namespace Soliant\SimpleFM\ZF2\Gateway;
 
 use Zend\EventManager\EventManager;
 use Zend\ServiceManager\ServiceManager;
-use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
-use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
+use Soliant\SimpleFM\ZF2\Entity\EntityInterface;
+use Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface;
 
 abstract class AbstractGateway 
 {
@@ -29,7 +30,16 @@ abstract class AbstractGateway
     protected $serviceManager;
     
     /**
-     * concrete \Soliant\SimpleFM\ZF2\Entity\AbstractEntity  class name
+     * The fully qualified class name for a concrete implementation of
+     * \Soliant\SimpleFM\ZF2\Entity\EntityInterface
+     * @var string
+     */
+    protected $entityPointerName;
+    
+    /**
+     * The fully qualified class name for the object that extends
+     * $this->entityPointerName and implements 
+     * \Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface
      * @var string
      */
     protected $entityName;
@@ -45,18 +55,19 @@ abstract class AbstractGateway
      * @param SimpleFMAdapter $simpleFMAdapter
      * @param string $layoutname
      */
-    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, $layoutname=NULL) 
+    public function __construct(ServiceManager $serviceManager, SerializableEntityInterface $entity, SimpleFMAdapter $simpleFMAdapter, $layoutname=NULL) 
     {
         $this->setServiceManager($serviceManager);
         $this->setSimpleFMAdapter($simpleFMAdapter->setLayoutname($layoutname));
-        $this->entityName = get_class($entity);
+        $this->entityPointerName = $entity->getEntityPointerName();
+        $this->entityName = $entity->getEntityName();
     }
     
     /**
      * @param AbstractEntity $pointer
-     * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
+     * @return \Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface
      */
-    public function resolvePointer(AbstractEntity $pointer)
+    public function resolvePointer(EntityInterface $pointer)
     {
         return $this->find($pointer->getRecid());
     }

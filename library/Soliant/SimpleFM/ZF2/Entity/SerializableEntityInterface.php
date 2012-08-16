@@ -9,16 +9,15 @@
 
 namespace Soliant\SimpleFM\ZF2\Entity;
 
-interface Serializable
+interface SerializableEntityInterface extends EntityInterface
 {
-
-    /**
-     * @note Maps a SimpleFM\Adapter row onto the Entity.
-     */
-    public function unserialize($simpleFMAdapterRow = array());
-
     /**
      * @note Maps the Entity onto a SimpleFM\Adapter row.
+     * The array association should be a fully qualified field name,
+     * with the exception of recid and modid, which must have a leading
+     * dash as shown here:
+     * $simpleFMAdapterRow["-recid"] = $this->getRecid();
+     * $simpleFMAdapterRow["-modid"] = $this->getModid();
      */
     public function serialize();
     

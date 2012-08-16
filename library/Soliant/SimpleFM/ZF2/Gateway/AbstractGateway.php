@@ -18,9 +18,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 abstract class AbstractGateway 
 {
 
+    /**
+     * @var \Zend\EventManager\EventManager
+     */
     protected $eventManager;
+    
+    /**
+     * @var \Zend\ServiceManager\ServiceManager
+     */
     protected $serviceManager;
+    
+    /**
+     * concrete \Soliant\SimpleFM\ZF2\Entity\AbstractEntity  class name
+     * @var string
+     */
     protected $entityName;
+    
+    /**
+     * @var \Soliant\SimpleFM\Adapter
+     */
     protected $simpleFMAdapter;
 
     /**

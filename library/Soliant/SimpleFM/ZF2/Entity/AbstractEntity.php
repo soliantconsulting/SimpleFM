@@ -11,9 +11,19 @@ namespace Soliant\SimpleFM\ZF2\Entity;
 
 abstract class AbstractEntity
 {
+    /**
+     * @var int
+     */
     protected $recid;
+
+    /**
+     * @var int
+     */
     protected $modid;
     
+    /**
+     * @param array $simpleFMAdapterRow
+     */
     public function __construct($simpleFMAdapterRow = array())
     {
         $this->unserialize($simpleFMAdapterRow);
@@ -21,6 +31,7 @@ abstract class AbstractEntity
     
     /**
      * @note FileMaker internal recid
+     * @return the $recid
      */
     public function getRecid()
     {
@@ -29,6 +40,7 @@ abstract class AbstractEntity
 
     /**
      * @note FileMaker internal modid
+     * @return the $modid
      */
     public function getModid()
     {
@@ -49,12 +61,12 @@ abstract class AbstractEntity
     /**
      * @note Return the alias defined for the entity's controller class in the
      * module.config.php to be used as Uri route segment.
-     * Example return: waterfall-work-request
+     * Example return: work-request
      */
     abstract public function getControllerAlias(); 
 
     /**
-     * Example return: Application\Entity\Entity
+     * Example return: Application\Entity\WorkRequest
      * @return string
      */
     public function getEntityName()
@@ -63,7 +75,7 @@ abstract class AbstractEntity
     }
     
     /**
-     * Example return: WorkRequestAttachment
+     * Example return: WorkRequest
      * @return string
      */
     public function getClassName()

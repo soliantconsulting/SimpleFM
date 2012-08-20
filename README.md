@@ -1,10 +1,10 @@
 # SimpleFM
 
-SimpleFM is a fast, convenient and free tool designed by [Soliant Consulting, Inc.][1] to facilitate connections
-between PHP web applications and FileMaker Server.
+SimpleFM is a fast, convenient and free tool designed by [Soliant Consulting, Inc.][1] to facilitate connections between PHP web applications and FileMaker Server.
 
-SimpleFM is an ultra-lightweight PHP5 package that uses the [FileMaker Server][2] XML API. The FMS XML API is
-commonly referred to as Custom Web Publishing (CWP for short).
+SimpleFM is an ultra-lightweight PHP5 package that uses the [FileMaker Server][2] XML API. The FMS XML API is commonly referred to as Custom Web Publishing (CWP for short).
+
+See also, the [SimpleFM_FMServer_Sample][3] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
 
 ## Features
 
@@ -20,9 +20,7 @@ commonly referred to as Custom Web Publishing (CWP for short).
 
 ## Simplicity and Performance
 
-SimpleFM is a single class with less than 700 lines of code. While SimpleFM was written with simplicity as the main 
-guiding principle, it also perfoms well. We have informally benchmarked it, and obtained faster results for the same 
-queries compared to the two most common CWP PHP alternatives.
+SimpleFM is a single class with less than 1000 lines of code. While SimpleFM was written with simplicity as the main guiding principle, it also perfoms well. We have informally benchmarked it, and obtained faster results for the same queries compared to the two most common CWP PHP alternatives.
 
 ## System Requirements
 
@@ -31,8 +29,7 @@ SimpleFM, the examples and this documentation are tailored for PHP 5.3 and FileM
 * PHP 5.3+
 * FileMaker Server 12+
 
-With minimum effort, you could get them to work with PHP 5.0 (requires SimpleXML) and any version of FileMaker server 
-that uses fmresultset.xml grammar, however, backward compatibility is not maintained.
+With minimum effort, you could get them to work with PHP 5.0 (requires SimpleXML) and any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not maintained.
 
 ## License
 
@@ -43,8 +40,7 @@ SimpleFM is free for commercial and non-commercial use, licensed under the busin
 
 All the examples included with SimpleFM are based the FMServer_Sample which is included with FileMaker Server 12. To use the examples it is assumed that you have FMServer_Sample running on a FileMaker 12 host with XML web publishing enabled. (You may also have any other FMS services enabled, including PHP web publishing, but only XML is required for SimpleFM.) Setup and configuration of FileMaker server is beyond the scope of this documentation.
 
-See /documentation/simplefm_example.php for a working PHP example that follows the basic steps shown in this Quickstart
-section, as well as some additional tips about usage.
+See /documentation/simplefm_example.php for a working PHP example that follows the basic steps shown in this Quickstart section, as well as some additional tips about usage.
 
 ## Quickstart
 
@@ -109,9 +105,7 @@ Portals are returned as named child arrays to every record in the fetched set. B
 
 There can be more than one portal on a layout. SimpleFM returns n portals for every record in the found set.
 
-Assuming you leave rowsbyrecid as FALSE (the default setting), here is example array notation that would echo 
-the the recid and the field value from the first portal row on the first record in the result set.
-Note that index, recid and modid are always properties on every parent and child row.
+Assuming you leave rowsbyrecid as FALSE (the default setting), here is example array notation that would echo the the recid and the field value from the first portal row on the first record in the result set. Note that index, recid and modid are always properties on every parent and child row.
 
     echo $rows[0]['Portal_TO_Name']['rows'][0]['recid'].'<br/>';    
     echo $rows[0]['Portal_TO_Name']['rows'][0]['myField'];
@@ -122,6 +116,10 @@ If you set rowsbyrecid to TRUE on your adapter, here is syntax that would echo t
 
 It is left to you do decide which way you want the results indexed.
 
+## Best Practices
+
+See the [SimpleFM_FMServer_Sample][3] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
 
 [1]: http://www.soliantconsulting.com
 [2]: http://www.filemaker.com/products/filemaker-server/
+[3]: https://github.com/soliantconsulting/SimpleFM_FMServer_Sample

@@ -151,8 +151,8 @@ abstract class AbstractGateway
     public function create(SerializableEntityInterface $entity)
     {
         $serializedValues = $entity->serialize();
-        unset($serializedValues['recid']);
-        unset($serializedValues['modid']);
+        unset($serializedValues['-recid']);
+        unset($serializedValues['-modid']);
         $commandArray = array_merge(
             $serializedValues,
             array('-new' => NULL)

@@ -1,0 +1,6 @@
+autoload.php
+vendor/bin
+vendor/composer
+vendor/doctrine
+vendor/phpunit
+vendor/symfony

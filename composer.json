@@ -13,11 +13,13 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "doctrine/common": ">=2.2.2"
+        "doctrine/common": ">=2.2.2",
+        "phpunit/PHPUnit": "3.7.*"
     },
     "autoload": {
         "psr-0": {
-            "Soliant": "library/"
+            "Soliant\\": "library/",
+            "SoliantTest\\": "tests/"
         }
     }
 }

@@ -4,3 +4,4 @@ vendor/composer
 vendor/doctrine
 vendor/phpunit
 vendor/symfony
+composer.lock

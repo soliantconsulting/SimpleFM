@@ -27,7 +27,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Adapter;
+    	$params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
+        
+        $this->object = new Adapter($params);
+        
     }
 
     /**
@@ -36,6 +39,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
+    
     }
 
     /**
@@ -44,10 +48,17 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetHostParams()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
+        
+        $value = $this->object->setHostParams($params);
+        $this->assertTrue($value instanceof $this->object);
+        //echo "<pre>";
+        //var_dump($this->object);
+        //die;
+        $this->assertEquals($this->object->getHostname(),'127.0.0.1');
+       
+        //$this->assertEquals($this->object->gethHostParams(),$params);
+              
     }
 
     /**
@@ -79,11 +90,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      * @todo   Implement testGetHostname().
      */
     public function testGetHostname()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    {      	
+        $test = $this->object->setHostname('127.0.0.1');
+        $this->assertTrue($test instanceof $this->object);
+        $this->assertEquals($this->object->getHostname(),'127.0.0.1');
     }
 
     /**
@@ -103,11 +113,11 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      * @todo   Implement testGetUsername().
      */
     public function testGetUsername()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    {   
+    	
+    	$test=$this->object->setUsername('root');
+    	$this->assertTrue($test instanceof $this->object);
+        $this->assertEquals($this->object->getUsername(),'root');   
     }
 
     /**
@@ -116,10 +126,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUsername()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    	//$test = $this->object->setUsername('unittest');
+    	//$this->assertTrue($test instanceof $this->object);    	
+    	//assert $this->object->setUserName('unittest') is type Adapter;
+    	//assert $this->object->getUserName() == 'unittest';          
     }
 
     /**
@@ -140,10 +150,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetDbname()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $test = $this->object->setDbname('test');
+        $this->assertTrue($test instanceof $this->object);
+        $this->assertEquals($this->object->getDbname(),'test'); 
     }
 
     /**
@@ -164,10 +173,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLayoutname()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $test = $this->object->setLayoutname('tab');
+        $this->assertTrue($test instanceof $this->object);
+        $this->assertEquals($this->object->getLayoutname(),'tab'); 
     }
 
     /**
@@ -236,10 +244,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetProtocol()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+         $value = $this->object->setProtocol('https');
+         $this->assertTrue($value instanceof $this->object);
+         $this->assertEquals($this->object->getProtocol(),'https'); 
     }
 
     /**
@@ -260,10 +267,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPort()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $value=$this->object->setPort('8080');
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getPort(),'8080'); 
     }
 
     /**
@@ -284,10 +290,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFmresultsetUri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+       
+        $value = $this->object->setFmresultsetUri('./abc/fmresult.xml');
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getFmresultsetUri(),'./abc/fmresult.xml'); 
     }
 
     /**
@@ -308,10 +314,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetFmpxmllayoutUri()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $value = $this->object->setFmpxmllayoutUri('./abc/fmlayout.xml');
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getFmpxmllayoutUri(),'./abc/fmlayout.xml'); 
     }
 
     /**
@@ -332,10 +337,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetRowsbyrecid()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $value = $this->object->setRowsbyrecid('1876612984689092');
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getRowsbyrecid(),'1876612984689092'); 
     }
 
     /**
@@ -396,5 +400,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete(
           'This test has not been implemented yet.'
         );
+        
     }
 }

@@ -27,9 +27,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-    	$params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
+    	//$params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
         
-        $this->object = new Adapter($params);
+        $this->object = new Adapter();
         
     }
 

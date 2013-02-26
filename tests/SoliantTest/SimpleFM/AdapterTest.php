@@ -27,10 +27,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-    	//$params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
-        
-        $this->object = new Adapter();
-        
+        $this->object = new Adapter();   
     }
 
     /**
@@ -51,9 +48,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
         $value = $this->object->setHostParams($params);
         $this->assertTrue($value instanceof $this->object);
-        //echo "<pre>";
-        //var_dump($this->object);
-        //die;
         $this->assertEquals($this->object->getHostname(),'127.0.0.1');
         $this->assertEquals($this->object->getDbname(),'testdb');
         $this->assertEquals($this->object->getUsername(),'root');
@@ -137,9 +131,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetPassword()
     {
-        $value = $this->object->setPassword('soliant');
-        $this->assertTrue($value instanceof $this->object);
-        //$this->assertEquals(
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+          'This test has not been implemented yet.'
+        );
     }
 
     /**

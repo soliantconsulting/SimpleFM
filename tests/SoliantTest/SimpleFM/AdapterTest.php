@@ -419,7 +419,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $result = $this->object->execute();		       
        	$rowset = $result['rows'];
        	$rows =$rowset[4]['Tasks']['rows'][0]['Task Name'];
-        $this->assertEquals($rows, 'Zoink1');     			         	        		    
+        $this->assertEquals($rows, 'Zoink');     			         	        		    
     	  	
     }
     

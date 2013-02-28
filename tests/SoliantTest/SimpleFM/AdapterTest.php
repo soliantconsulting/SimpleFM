@@ -338,7 +338,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
-     * @todo   Implement testExecute().
+     * @todo Implement injectable optional LoaderInterface and default to file_get_contents if
+     * no LoaderInterface is provided (to ensure backward compatibility).
+     * @todo Implement MockLoader which returns provided sample xml without an api connection
+     * @todo Write more meaningful tests for testExecute
      */
     public function testExecute()
     {
@@ -372,38 +375,15 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $file = dirname(__FILE__) . '/TestAssets/projectsampledata.xml';
         $xml = simplexml_load_file($file);
         
-        
-        $this->object->setHostParams(
-    	array(
-        'hostname' => 'shn.serveftp.net',
-        'dbname'   => 'FMServer_Sample',
-        'username' => 'Admin',
-        'password' => '' 
-    		)
-		);
-		
-		$this->object->setCallParams(
-    	array(
-        'layoutname'    => 'Tasks',
-        'commandstring' => '-max=10&-skip=5&-findall'
-    		)
-		);
-		
-		$this->object->setLayoutname('Projects');
-		$this->object->setCommandstring('-findall');
-        
         //rowsbyrecid as TRUE
         $this->object->setRowsbyrecid(TRUE);	
-        $result = $this->object->execute();		 
-       	$rowset = $result['rows'];
+        $rowset = $this->object->parseResult($xml);
        	$rows =$rowset[7676]['Tasks']['rows'][15001]['Task Name'];       
         $this->assertEquals($rows, 'Review mock ups');
         
-        
         //rowsbyrecid as FALSE 
         $this->object->setRowsbyrecid(FALSE);	
-        $result = $this->object->execute();		       
-       	$rowset = $result['rows'];
+        $rowset = $this->object->parseResult($xml);
        	$rows =$rowset[4]['Tasks']['rows'][0]['Task Name'];
         $this->assertEquals($rows, 'Zoink');     			         	        		    
     	  	

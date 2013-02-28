@@ -1,0 +1,417 @@
+<?xml version ="1.0" encoding="UTF-8" standalone="no" ?><!DOCTYPE fmresultset PUBLIC "-//FMI//DTD fmresultset//EN" "http://shn.serveftp.net:80/fmi/xml/fmresultset.dtd">
+<fmresultset xmlns="http://www.filemaker.com/xml/fmresultset"
+	version="1.0">
+	<error code="0"></error>
+	<product build="03/15/2012" name="FileMaker Web Publishing Engine"
+		version="12.0.1.150"></product>
+	<datasource database="FMServer_Sample_web" date-format="MM/dd/yyyy"
+		layout="Project" table="Projects" time-format="HH:mm:ss"
+		timestamp-format="MM/dd/yyyy HH:mm:ss" total-count="5"></datasource>
+	<metadata>
+		<field-definition auto-enter="yes" four-digit-year="no"
+			global="no" max-repeat="1" name="PROJECT ID MATCH FIELD" not-empty="no"
+			numeric-only="no" result="number" time-of-day="no" type="normal"></field-definition>
+		<field-definition auto-enter="yes" four-digit-year="no"
+			global="no" max-repeat="1" name="Created By" not-empty="no"
+			numeric-only="no" result="text" time-of-day="no" type="normal"></field-definition>
+		<field-definition auto-enter="yes" four-digit-year="no"
+			global="no" max-repeat="1" name="Creation TimeStamp" not-empty="no"
+			numeric-only="no" result="timestamp" time-of-day="no" type="normal"></field-definition>
+		<field-definition auto-enter="yes" four-digit-year="no"
+			global="no" max-repeat="1" name="Project Name" not-empty="no"
+			numeric-only="no" result="text" time-of-day="no" type="normal"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Description" not-empty="no"
+			numeric-only="no" result="text" time-of-day="no" type="normal"></field-definition>
+		<field-definition auto-enter="yes" four-digit-year="no"
+			global="no" max-repeat="1" name="Status" not-empty="no" numeric-only="no"
+			result="number" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="yes" four-digit-year="no"
+			global="no" max-repeat="1" name="Status on Screen" not-empty="no"
+			numeric-only="no" result="text" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Start Date" not-empty="no"
+			numeric-only="no" result="date" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Due Date" not-empty="no"
+			numeric-only="no" result="date" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Days Remaining" not-empty="no"
+			numeric-only="no" result="number" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Days Elapsed" not-empty="no"
+			numeric-only="no" result="number" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Project Completion" not-empty="no"
+			numeric-only="no" result="number" time-of-day="no" type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Tag" not-empty="no" numeric-only="no"
+			result="text" time-of-day="no" type="normal"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Start Date Project Completion"
+			not-empty="no" numeric-only="no" result="date" time-of-day="no"
+			type="calculation"></field-definition>
+		<field-definition auto-enter="no" four-digit-year="no"
+			global="no" max-repeat="1" name="Due Date Project Completion"
+			not-empty="no" numeric-only="no" result="date" time-of-day="no"
+			type="calculation"></field-definition>
+		<relatedset-definition table="Tasks">
+			<field-definition auto-enter="yes" four-digit-year="no"
+				global="no" max-repeat="1" name="Tasks::Task Name" not-empty="no"
+				numeric-only="no" result="text" time-of-day="no" type="normal"></field-definition>
+			<field-definition auto-enter="yes" four-digit-year="no"
+				global="no" max-repeat="1" name="Tasks::TASK ID MATCH FIELD"
+				not-empty="no" numeric-only="no" result="number" time-of-day="no"
+				type="normal"></field-definition>
+		</relatedset-definition>
+	</metadata>
+	<resultset count="5" fetch-size="5">
+		<record mod-id="11" record-id="7676">
+			<field name="PROJECT ID MATCH FIELD">
+				<data>1</data>
+			</field>
+			<field name="Created By">
+				<data>Tim Thomson</data>
+			</field>
+			<field name="Creation TimeStamp">
+				<data>02/22/2012 17:19:47</data>
+			</field>
+			<field name="Project Name">
+				<data>Launch web site 9</data>
+			</field>
+			<field name="Description">
+				<data>myDescription</data>
+			</field>
+			<field name="Status">
+				<data>4</data>
+			</field>
+			<field name="Status on Screen">
+				<data>Overdue</data>
+			</field>
+			<field name="Start Date">
+				<data>04/13/2011</data>
+			</field>
+			<field name="Due Date">
+				<data>05/02/2012</data>
+			</field>
+			<field name="Days Remaining">
+				<data>0</data>
+			</field>
+			<field name="Days Elapsed">
+				<data>275</data>
+			</field>
+			<field name="Project Completion">
+				<data>.48</data>
+			</field>
+			<field name="Tag">
+				<data>myTag</data>
+			</field>
+			<field name="Start Date Project Completion">
+				<data>04/13/2011</data>
+			</field>
+			<field name="Due Date Project Completion">
+				<data>05/02/2012</data>
+			</field>
+			<relatedset count="5" table="Tasks">
+				<record mod-id="0" record-id="14999">
+					<field name="Tasks::Task Name">
+						<data>Site map sketch</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>2</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15000">
+					<field name="Tasks::Task Name">
+						<data>Send art to vendor</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>4</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15001">
+					<field name="Tasks::Task Name">
+						<data>Review mock ups</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>5</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15002">
+					<field name="Tasks::Task Name">
+						<data>Write page text</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>6</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15003">
+					<field name="Tasks::Task Name">
+						<data>New logo art</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>3</data>
+					</field>
+				</record>
+			</relatedset>
+		</record>
+		<record mod-id="2" record-id="7677">
+			<field name="PROJECT ID MATCH FIELD">
+				<data>7</data>
+			</field>
+			<field name="Created By">
+				<data>Tim Thomson</data>
+			</field>
+			<field name="Creation TimeStamp">
+				<data>02/22/2012 17:19:47</data>
+			</field>
+			<field name="Project Name">
+				<data>Prototype</data>
+			</field>
+			<field name="Description">
+				<data>Build a working prototype of the new product.</data>
+			</field>
+			<field name="Status">
+				<data></data>
+			</field>
+			<field name="Status on Screen">
+				<data>Completed</data>
+			</field>
+			<field name="Start Date">
+				<data></data>
+			</field>
+			<field name="Due Date">
+				<data></data>
+			</field>
+			<field name="Days Remaining">
+				<data>0</data>
+			</field>
+			<field name="Days Elapsed">
+				<data>0</data>
+			</field>
+			<field name="Project Completion">
+				<data></data>
+			</field>
+			<field name="Tag">
+				<data>manufacturing</data>
+			</field>
+			<field name="Start Date Project Completion">
+				<data></data>
+			</field>
+			<field name="Due Date Project Completion">
+				<data></data>
+			</field>
+			<relatedset count="0" table="Tasks"></relatedset>
+		</record>
+		<record mod-id="2" record-id="7678">
+			<field name="PROJECT ID MATCH FIELD">
+				<data>13</data>
+			</field>
+			<field name="Created By">
+				<data>Tim Thomson</data>
+			</field>
+			<field name="Creation TimeStamp">
+				<data>02/22/2012 17:19:47</data>
+			</field>
+			<field name="Project Name">
+				<data>Investor meeting</data>
+			</field>
+			<field name="Description">
+				<data>This is important. We need the investors to have confidence.</data>
+			</field>
+			<field name="Status">
+				<data>4</data>
+			</field>
+			<field name="Status on Screen">
+				<data>Overdue</data>
+			</field>
+			<field name="Start Date">
+				<data>12/12/2011</data>
+			</field>
+			<field name="Due Date">
+				<data>03/22/2012</data>
+			</field>
+			<field name="Days Remaining">
+				<data>0</data>
+			</field>
+			<field name="Days Elapsed">
+				<data>73</data>
+			</field>
+			<field name="Project Completion">
+				<data>.4285714285714286</data>
+			</field>
+			<field name="Tag">
+				<data>finance</data>
+			</field>
+			<field name="Start Date Project Completion">
+				<data>01/02/2012</data>
+			</field>
+			<field name="Due Date Project Completion">
+				<data>03/22/2012</data>
+			</field>
+			<relatedset count="7" table="Tasks">
+				<record mod-id="0" record-id="15004">
+					<field name="Tasks::Task Name">
+						<data>Gather requirements</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>1</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15008">
+					<field name="Tasks::Task Name">
+						<data>Investor meeting</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>13</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15009">
+					<field name="Tasks::Task Name">
+						<data>Final draft of slides</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>12</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15010">
+					<field name="Tasks::Task Name">
+						<data>Complete business plan</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>10</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15011">
+					<field name="Tasks::Task Name">
+						<data>First draft of slides</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>11</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15012">
+					<field name="Tasks::Task Name">
+						<data>Market research</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>14</data>
+					</field>
+				</record>
+				<record mod-id="0" record-id="15013">
+					<field name="Tasks::Task Name">
+						<data>Competitive analysis</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>15</data>
+					</field>
+				</record>
+			</relatedset>
+		</record>
+		<record mod-id="0" record-id="7707">
+			<field name="PROJECT ID MATCH FIELD">
+				<data>10</data>
+			</field>
+			<field name="Created By">
+				<data>Admin</data>
+			</field>
+			<field name="Creation TimeStamp">
+				<data>08/15/2012 23:42:13</data>
+			</field>
+			<field name="Project Name">
+				<data>myNewProjectName</data>
+			</field>
+			<field name="Description">
+				<data>myDescription</data>
+			</field>
+			<field name="Status">
+				<data></data>
+			</field>
+			<field name="Status on Screen">
+				<data>Completed</data>
+			</field>
+			<field name="Start Date">
+				<data></data>
+			</field>
+			<field name="Due Date">
+				<data></data>
+			</field>
+			<field name="Days Remaining">
+				<data>0</data>
+			</field>
+			<field name="Days Elapsed">
+				<data>0</data>
+			</field>
+			<field name="Project Completion">
+				<data></data>
+			</field>
+			<field name="Tag">
+				<data>myTag</data>
+			</field>
+			<field name="Start Date Project Completion">
+				<data></data>
+			</field>
+			<field name="Due Date Project Completion">
+				<data></data>
+			</field>
+			<relatedset count="0" table="Tasks"></relatedset>
+		</record>
+		<record mod-id="1" record-id="7708">
+			<field name="PROJECT ID MATCH FIELD">
+				<data>11</data>
+			</field>
+			<field name="Created By">
+				<data>Admin</data>
+			</field>
+			<field name="Creation TimeStamp">
+				<data>08/16/2012 00:22:48</data>
+			</field>
+			<field name="Project Name">
+				<data>myNewestProjectName</data>
+			</field>
+			<field name="Description">
+				<data>myDescription</data>
+			</field>
+			<field name="Status">
+				<data>4</data>
+			</field>
+			<field name="Status on Screen">
+				<data>Overdue</data>
+			</field>
+			<field name="Start Date">
+				<data>08/16/2012</data>
+			</field>
+			<field name="Due Date">
+				<data>08/17/2012</data>
+			</field>
+			<field name="Days Remaining">
+				<data>0</data>
+			</field>
+			<field name="Days Elapsed">
+				<data>1</data>
+			</field>
+			<field name="Project Completion">
+				<data>.2</data>
+			</field>
+			<field name="Tag">
+				<data>myTag</data>
+			</field>
+			<field name="Start Date Project Completion">
+				<data>08/16/2012</data>
+			</field>
+			<field name="Due Date Project Completion">
+				<data>08/17/2012</data>
+			</field>
+			<relatedset count="1" table="Tasks">
+				<record mod-id="2" record-id="15099">
+					<field name="Tasks::Task Name">
+						<data>Zoink</data>
+					</field>
+					<field name="Tasks::TASK ID MATCH FIELD">
+						<data>18</data>
+					</field>
+				</record>
+			</relatedset>
+		</record>
+	</resultset>
+</fmresultset>

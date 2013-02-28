@@ -337,6 +337,7 @@ class Adapter
     
     /**
      * @return array
+     * @todo implement method injection of new LoaderInterface to make unit testable
      */
     public function execute ()
     {
@@ -411,8 +412,10 @@ class Adapter
     /**
      * @param xml $xml
      * @return array
+     * @todo make protected again after execute is modified to accept Mock LoaderInterface class
+     * (made public temporarily to allow direct unit testing)
      */
-    protected function parseResult ($xml)
+    public function parseResult ($xml)
     {
         $result = array();
         

@@ -19,18 +19,15 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Adapter
      */
-    protected $object;
+    protected $object;  
 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp()
-    {
-    	$params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
-        
-        $this->object = new Adapter($params);
-        
+    {    	
+    	$this->object = new Adapter();   
     }
 
     /**
@@ -44,50 +41,42 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setHostParams
-     * @todo   Implement testSetHostParams().
      */
     public function testSetHostParams()
     {
         $params=array('hostname'=>'127.0.0.1','dbname'=>'testdb','username'=>'root','password'=>'soliant');
-        
         $value = $this->object->setHostParams($params);
         $this->assertTrue($value instanceof $this->object);
-        //echo "<pre>";
-        //var_dump($this->object);
-        //die;
         $this->assertEquals($this->object->getHostname(),'127.0.0.1');
-       
-        //$this->assertEquals($this->object->gethHostParams(),$params);
-              
+        $this->assertEquals($this->object->getDbname(),'testdb');
+        $this->assertEquals($this->object->getUsername(),'root');
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setCredentials
-     * @todo   Implement testSetCredentials().
      */
     public function testSetCredentials()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $params=array('username'=> 'root' , 'password'=>'soliant');
+        $value = $this->object->setCredentials($params);
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getUsername(),'root');           
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setCallParams
-     * @todo   Implement testSetCallParams().
      */
     public function testSetCallParams()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $params=array('layoutname'=> 'tab' , 'commandstring'=>'soliant=consulting');
+        $value = $this->object->setCallParams($params);
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getLayoutname(),'tab'); 
+        $this->assertEquals($this->object->getCommandstring(),'soliant=consulting');
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getHostname
-     * @todo   Implement testGetHostname().
      */
     public function testGetHostname()
     {      	
@@ -110,7 +99,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getUsername
-     * @todo   Implement testGetUsername().
      */
     public function testGetUsername()
     {   
@@ -126,10 +114,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetUsername()
     {
-    	//$test = $this->object->setUsername('unittest');
-    	//$this->assertTrue($test instanceof $this->object);    	
-    	//assert $this->object->setUserName('unittest') is type Adapter;
-    	//assert $this->object->getUserName() == 'unittest';          
+    	// Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+          'This test has not been implemented yet.'
+        );
     }
 
     /**
@@ -146,7 +134,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getDbname
-     * @todo   Implement testGetDbname().
      */
     public function testGetDbname()
     {
@@ -169,12 +156,11 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getLayoutname
-     * @todo   Implement testGetLayoutname().
      */
     public function testGetLayoutname()
     {
-        $test = $this->object->setLayoutname('tab');
-        $this->assertTrue($test instanceof $this->object);
+        $value = $this->object->setLayoutname('tab');
+        $this->assertTrue($value instanceof $this->object);
         $this->assertEquals($this->object->getLayoutname(),'tab'); 
     }
 
@@ -192,26 +178,25 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandstring
-     * @todo   Implement testGetCommandstring().
      */
     public function testGetCommandstring()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $value = $this->object->setCommandstring('A=B&C=D&E=F');
+        $this->assertTrue($value instanceof $this->object);
+        $this->assertEquals($this->object->getCommandstring(),'A=B&C=D&E=F'); 
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandarray
-     * @todo   Implement testGetCommandarray().
      */
     public function testGetCommandarray()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $value = $this->object->setCommandstring('A=B&C=D');
+        $this->assertTrue($value instanceof $this->object);
+        $arr = $this->object->getCommandarray(); 
+        $arr1=array('A' => 'B',
+        			'C' => 'D');      
+        $this->assertEquals($arr, $arr1);
     }
 
     /**
@@ -263,7 +248,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getPort
-     * @todo   Implement testGetPort().
      */
     public function testGetPort()
     {
@@ -286,7 +270,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getFmresultsetUri
-     * @todo   Implement testGetFmresultsetUri().
      */
     public function testGetFmresultsetUri()
     {
@@ -310,7 +293,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getFmpxmllayoutUri
-     * @todo   Implement testGetFmpxmllayoutUri().
      */
     public function testGetFmpxmllayoutUri()
     {
@@ -333,7 +315,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
-     * @todo   Implement testGetRowsbyrecid().
+     * @todo fix this method so it casts result as Boolean. Current assertion should fail.
      */
     public function testGetRowsbyrecid()
     {
@@ -356,50 +338,100 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
-     * @todo   Implement testExecute().
+     * @todo Implement injectable optional LoaderInterface and default to file_get_contents if
+     * no LoaderInterface is provided (to ensure backward compatibility).
+     * @todo Implement MockLoader which returns provided sample xml without an api connection
+     * @todo Write more meaningful tests for testExecute
      */
     public function testExecute()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    	$file = dirname(__FILE__) . '/TestAssets/projectsampledata.xml';
+        $xml = simplexml_load_file($file);
+        $sfmresult = array (
+            'url' => 'http://Mark:[...]@127.0.0.1/fmi/xml/fmresultset.xml?-db=test&-lay=tab&A=B&C=D&E=F',
+            'error'     => null,
+            'errortext' => 'file_get_contents(https://127.0.0.1:8080/fmi/xml/fmresultset.xml): failed to open stream: Connection refused',
+            'errortype' => 'PHP',
+            'count'     => null,
+            'fetchsize' => null,
+            'rows'      => null
+            );
+        
+        $this->object->setUsername('Mark');
+        $this->object->setPassword('soliant');
+        $this->object->setDbname('test');
+        $this->object->setLayoutname('tab');
+        $this->object->setHostname('127.0.0.1');
+        $this->object->setPort('8080');
+        $this->object->setCommandstring('A=B&C=D&E=F');
+        $this->object->setProtocol('https');
+        $this->object->setFmpxmllayoutUri('./abc/fmlayout.xml');
+        $this->assertEquals($this->object->execute(),$sfmresult);
+             
     }
+    
+    public function testParseResult()
+    {
+        $file = dirname(__FILE__) . '/TestAssets/projectsampledata.xml';
+        $xml = simplexml_load_file($file);
+        
+        //rowsbyrecid as TRUE
+        $this->object->setRowsbyrecid(TRUE);	
+        $rowset = $this->object->parseResult($xml);
+       	$rows =$rowset[7676]['Tasks']['rows'][15001]['Task Name'];       
+        $this->assertEquals($rows, 'Review mock ups');
+        
+        //rowsbyrecid as FALSE 
+        $this->object->setRowsbyrecid(FALSE);	
+        $rowset = $this->object->parseResult($xml);
+       	$rows =$rowset[4]['Tasks']['rows'][0]['Task Name'];
+        $this->assertEquals($rows, 'Zoink');     			         	        		    
+    	  	
+    }
+    
 
     /**
      * @covers Soliant\SimpleFM\Adapter::displayXmlError
-     * @todo   Implement testDisplayXmlError().
      */
     public function testDisplayXmlError()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
+        $file = dirname(__FILE__) . '/TestAssets/sample.xml';
+        $xml = simplexml_load_file($file);		
+        $errors = libxml_get_errors();
+        $string = '
+----------------------------------------------^
+Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
+  Line: 4
+  Column: 46
+  File: ' . dirname(__FILE__) . '/TestAssets/sample.xml
 
+--------------------------------------------
+
+';
+        foreach ($errors as $error) {
+			$this->assertEquals($this->object->displayXmlError($error,$xml),$string);	
+		}
+      }  
+        
+    
     /**
      * @covers Soliant\SimpleFM\Adapter::extractErrorFromPhpMessage
      * @todo   Implement testExtractErrorFromPhpMessage().
      */
     public function testExtractErrorFromPhpMessage()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    	$return = array('error' => '401' , 'errortext' => 'Unauthorized' , 'errortype' => 'HTTP');
+        $string = 'HTTP/1.1 401 Unauthorized';
+        $this->assertEquals($this->object->extractErrorFromPhpMessage($string) , $return);
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::errorToEnglish
-     * @todo   Implement testErrorToEnglish().
      */
     public function testErrorToEnglish()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-        
+    	
+    	$error = array( 0 => 'No Error', 10 => 'Requested data is missing');
+        $this->assertEquals($this->object->errorToEnglish(10),'Requested data is missing');    
     }
 }

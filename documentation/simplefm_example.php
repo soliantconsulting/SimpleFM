@@ -14,6 +14,7 @@ ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
 
 require_once('../library/Soliant/SimpleFM/Adapter.php');
+require_once('../library/Soliant/SimpleFM/Loader/FilePostContents.php');
 
 use Soliant\SimpleFM\Adapter;
 

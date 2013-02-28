@@ -9,6 +9,8 @@
 
 namespace Soliant\SimpleFM;
 
+use Soliant\SimpleFM\Loader\LoaderInterface;
+use Soliant\SimpleFM\Loader\FilePostContents; 
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\Exception\ReservedWordException;
 
@@ -74,11 +76,26 @@ class Adapter
      * @var boolean
      */
     protected $rowsbyrecid = FALSE;
+    
+    /**
+     * @var string
+     */
+    protected $commandURLdebug;
+    
+    /**
+     * @var LoaderInterface
+     */
+    protected $loader;
 
-    public function __construct($hostParams=array())
+    public function __construct($hostParams=array(), $loader=NULL)
     {
         if ( !empty($hostParams)) {
             self::setHostParams($hostParams);
+        }
+        if ($loader instanceof LoaderInterface) {
+            $this->loader = $loader;
+        } else {
+            $this->loader = new FilePostContents();
         }
     }
 
@@ -154,6 +171,14 @@ class Adapter
     {
         $this->username = $username;
         return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPassword ()
+    {
+        return $this->password;
     }
     
     /**
@@ -336,35 +361,46 @@ class Adapter
     }
     
     /**
+     * @return the $commandURLdebug
+     */
+    public function getCommandURLdebug ()
+    {
+        return $this->commandURLdebug;
+    }
+
+	/**
+     * @param string $commandURLdebug
+     */
+    public function setCommandURLdebug ($commandURLdebug)
+    {
+        $this->commandURLdebug = $commandURLdebug;
+        return $this;
+    }
+
+	/**
+     * @return the $loader
+     */
+    public function getLoader ()
+    {
+        return $this->loader;
+    }
+
+	/**
+     * @param \Soliant\SimpleFM\Loader\LoaderInterface $loader
+     */
+    public function setLoader ($loader)
+    {
+        $this->loader = $loader;
+        return $this;
+    }
+
+	/**
      * @return array
      * @todo implement method injection of new LoaderInterface to make unit testable
      */
     public function execute ()
     {
-        libxml_use_internal_errors(true);
-        $credentials     = empty($this->username)?'':$this->username.':'.$this->password;
-        $postdata        = "-db=$this->dbname&-lay=$this->layoutname&$this->commandstring";
-        $commandURL      = "http://$credentials@$this->hostname$this->fmresultsetUri?$postdata";
-        $commandURLdebug = empty($credentials)?$commandURL:str_replace($credentials, $this->username.':[...]', $commandURL);
-        
-        $authheader = empty($credentials) ? '' : 'Authorization: Basic '.base64_encode($credentials) . PHP_EOL;
-        
-        $opts = array('http' =>
-            array(
-                'method'  => 'POST',
-                'header'  => 'User-Agent: SimpleFM' . PHP_EOL .
-                             $authheader .
-                             'Accept: text/xml,text/html,text/plain' . PHP_EOL .
-                             'Content-type: application/x-www-form-urlencoded' . PHP_EOL .
-                             'Content-length: ' . strlen($postdata) .  PHP_EOL .
-                              PHP_EOL,
-                'content' => $postdata
-            )
-        );
-        
-        $context  = stream_context_create($opts);
-
-        @$xml = simplexml_load_string(file_get_contents($this->protocol.'://'.$this->hostname.':'.$this->port.$this->fmresultsetUri, FALSE , $context));
+        @$xml = $this->loader->load($this);
         
         if (empty($xml)) {
             
@@ -396,7 +432,7 @@ class Adapter
         }
         
         $sfmresult = array (
-            'url'       => $commandURLdebug,
+            'url'       => $this->getCommandURLdebug(),
             'error'     => $error,
             'errortext' => $errortext,
             'errortype' => $errortype,
@@ -412,10 +448,8 @@ class Adapter
     /**
      * @param xml $xml
      * @return array
-     * @todo make protected again after execute is modified to accept Mock LoaderInterface class
-     * (made public temporarily to allow direct unit testing)
      */
-    public function parseResult ($xml)
+    protected function parseResult ($xml)
     {
         $result = array();
         
@@ -892,3 +926,4 @@ class Adapter
     }
     
 }
+

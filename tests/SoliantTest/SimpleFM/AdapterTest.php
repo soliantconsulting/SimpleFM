@@ -27,7 +27,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {    	
-    	
     	$this->object = new Adapter();   
     }
 
@@ -42,7 +41,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setHostParams
-     * @todo   Implement testSetHostParams().
      */
     public function testSetHostParams()
     {
@@ -56,7 +54,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setCredentials
-     * @todo   Implement testSetCredentials().
      */
     public function testSetCredentials()
     {
@@ -68,7 +65,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setCallParams
-     * @todo   Implement testSetCallParams().
      */
     public function testSetCallParams()
     {
@@ -81,7 +77,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getHostname
-     * @todo   Implement testGetHostname().
      */
     public function testGetHostname()
     {      	
@@ -104,7 +99,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getUsername
-     * @todo   Implement testGetUsername().
      */
     public function testGetUsername()
     {   
@@ -140,7 +134,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getDbname
-     * @todo   Implement testGetDbname().
      */
     public function testGetDbname()
     {
@@ -163,7 +156,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getLayoutname
-     * @todo   Implement testGetLayoutname().
      */
     public function testGetLayoutname()
     {
@@ -186,7 +178,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandstring
-     * @todo   Implement testGetCommandstring().
      */
     public function testGetCommandstring()
     {
@@ -197,7 +188,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandarray
-     * @todo   Implement testGetCommandarray().
      */
     public function testGetCommandarray()
     {
@@ -258,7 +248,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getPort
-     * @todo   Implement testGetPort().
      */
     public function testGetPort()
     {
@@ -281,7 +270,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getFmresultsetUri
-     * @todo   Implement testGetFmresultsetUri().
      */
     public function testGetFmresultsetUri()
     {
@@ -305,7 +293,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getFmpxmllayoutUri
-     * @todo   Implement testGetFmpxmllayoutUri().
      */
     public function testGetFmpxmllayoutUri()
     {

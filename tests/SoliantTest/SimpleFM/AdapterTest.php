@@ -424,7 +424,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
   Line: 4
   Column: 46
-  File: /usr/local/zend/apache2/htdocs/SimpleFM/tests/SoliantTest/SimpleFM/TestAssets/sample.xml
+  File: ' . dirname(__FILE__) . '/TestAssets/sample.xml
 
 --------------------------------------------
 

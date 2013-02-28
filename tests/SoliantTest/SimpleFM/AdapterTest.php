@@ -315,7 +315,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
-     * @todo   Implement testGetRowsbyrecid().
+     * @todo fix this method so it casts result as Boolean. Current assertion should fail.
      */
     public function testGetRowsbyrecid()
     {

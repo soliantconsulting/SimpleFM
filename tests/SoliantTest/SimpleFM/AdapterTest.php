@@ -392,7 +392,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::displayXmlError
-     * @todo   Implement testDisplayXmlError().
      */
     public function testDisplayXmlError()
     {
@@ -428,7 +427,6 @@ Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
 
     /**
      * @covers Soliant\SimpleFM\Adapter::errorToEnglish
-     * @todo   Implement testErrorToEnglish().
      */
     public function testErrorToEnglish()
     {

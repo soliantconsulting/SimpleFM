@@ -412,7 +412,7 @@ class Adapter
      * @param xml $xml
      * @return array
      */
-    protected function parseResult ($xml)
+    public function parseResult ($xml)
     {
         $result = array();
         

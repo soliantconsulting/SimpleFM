@@ -28,7 +28,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {    	
-    	
     	$this->object = new Adapter();   
     }
 
@@ -43,7 +42,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setHostParams
-     * @todo   Implement testSetHostParams().
      */
     public function testSetHostParams()
     {
@@ -57,7 +55,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setCredentials
-     * @todo   Implement testSetCredentials().
      */
     public function testSetCredentials()
     {
@@ -69,7 +66,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setCallParams
-     * @todo   Implement testSetCallParams().
      */
     public function testSetCallParams()
     {
@@ -82,7 +78,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getHostname
-     * @todo   Implement testGetHostname().
      */
     public function testGetHostname()
     {      	
@@ -105,7 +100,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getUsername
-     * @todo   Implement testGetUsername().
      */
     public function testGetUsername()
     {   
@@ -141,7 +135,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getDbname
-     * @todo   Implement testGetDbname().
      */
     public function testGetDbname()
     {
@@ -164,7 +157,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getLayoutname
-     * @todo   Implement testGetLayoutname().
      */
     public function testGetLayoutname()
     {
@@ -187,7 +179,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandstring
-     * @todo   Implement testGetCommandstring().
      */
     public function testGetCommandstring()
     {
@@ -198,7 +189,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandarray
-     * @todo   Implement testGetCommandarray().
      */
     public function testGetCommandarray()
     {
@@ -259,7 +249,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getPort
-     * @todo   Implement testGetPort().
      */
     public function testGetPort()
     {
@@ -282,7 +271,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getFmresultsetUri
-     * @todo   Implement testGetFmresultsetUri().
      */
     public function testGetFmresultsetUri()
     {
@@ -306,7 +294,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getFmpxmllayoutUri
-     * @todo   Implement testGetFmpxmllayoutUri().
      */
     public function testGetFmpxmllayoutUri()
     {
@@ -329,7 +316,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
-     * @todo   Implement testGetRowsbyrecid().
+     * @todo fix this method so it casts result as Boolean. Current assertion should fail.
      */
     public function testGetRowsbyrecid()
     {
@@ -352,7 +339,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
-     * @todo   Implement testExecute().
+     * @todo Implement injectable optional LoaderInterface and default to file_get_contents if
+     * no LoaderInterface is provided (to ensure backward compatibility).
+     * @todo Implement MockLoader which returns provided sample xml without an api connection
+     * @todo Write more meaningful tests for testExecute
      */
     public function testExecute()
     {
@@ -386,38 +376,15 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $file = dirname(__FILE__) . '/TestAssets/projectsampledata.xml';
         $xml = simplexml_load_file($file);
         
-        
-        $this->object->setHostParams(
-    	array(
-        'hostname' => 'shn.serveftp.net',
-        'dbname'   => 'FMServer_Sample',
-        'username' => 'Admin',
-        'password' => '' 
-    		)
-		);
-		
-		$this->object->setCallParams(
-    	array(
-        'layoutname'    => 'Tasks',
-        'commandstring' => '-max=10&-skip=5&-findall'
-    		)
-		);
-		
-		$this->object->setLayoutname('Projects');
-		$this->object->setCommandstring('-findall');
-        
         //rowsbyrecid as TRUE
         $this->object->setRowsbyrecid(TRUE);	
-        $result = $this->object->execute();		 
-       	$rowset = $result['rows'];
+        $rowset = $this->object->parseResult($xml);
        	$rows =$rowset[7676]['Tasks']['rows'][15001]['Task Name'];       
         $this->assertEquals($rows, 'Review mock ups');
         
-        
         //rowsbyrecid as FALSE 
         $this->object->setRowsbyrecid(FALSE);	
-        $result = $this->object->execute();		       
-       	$rowset = $result['rows'];
+        $rowset = $this->object->parseResult($xml);
        	$rows =$rowset[4]['Tasks']['rows'][0]['Task Name'];
         $this->assertEquals($rows, 'Zoink');     			         	        		    
     	  	
@@ -426,7 +393,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::displayXmlError
-     * @todo   Implement testDisplayXmlError().
      */
     public function testDisplayXmlError()
     {
@@ -438,7 +404,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
   Line: 4
   Column: 46
-  File: /usr/local/zend/apache2/htdocs/SimpleFM/tests/SoliantTest/SimpleFM/TestAssets/sample.xml
+  File: ' . dirname(__FILE__) . '/TestAssets/sample.xml
 
 --------------------------------------------
 
@@ -462,7 +428,6 @@ Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
 
     /**
      * @covers Soliant\SimpleFM\Adapter::errorToEnglish
-     * @todo   Implement testErrorToEnglish().
      */
     public function testErrorToEnglish()
     {

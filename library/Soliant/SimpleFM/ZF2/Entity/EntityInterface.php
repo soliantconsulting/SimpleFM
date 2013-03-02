@@ -40,20 +40,8 @@ interface EntityInterface
     public function unserialize($simpleFMAdapterRow = array());
     
     /**
-     * @note Return the alias defined for the entity's controller class in the
-     * module.config.php to be used as Uri route segment.
-     * Example return: work-request
+     * @note FileMaker layout name the Entity represents
      */
-    public function getControllerAlias(); 
-
-    /**
-     * Example return: Application\Entity\WorkRequestPointer
-     */
-    public function getEntityPointerName();
-
-    /**
-     * Example return: Application\Entity\WorkRequest
-     */
-    public function getEntityName();
+    public static function getLayoutName();
     
 }

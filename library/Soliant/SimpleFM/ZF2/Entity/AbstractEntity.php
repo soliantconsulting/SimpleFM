@@ -27,6 +27,13 @@ abstract class AbstractEntity
      * @var array
      */
     protected $simpleFMAdapterRow;
+
+    /**
+     * This property is marked TRUE by the constructor and may be updated by unserializeField()
+     * to allow serialization logic to avoid unintentional nullification of existing field values.
+     * @var boolean
+     */
+    protected $isSerializable;
     
     /**
      * @param array $simpleFMAdapterRow
@@ -34,6 +41,7 @@ abstract class AbstractEntity
     public function __construct($simpleFMAdapterRow = array())
     {
         $this->simpleFMAdapterRow = $simpleFMAdapterRow;
+        $this->isSerializable = TRUE;
         if (!empty($this->simpleFMAdapterRow)) $this->unserialize();
     }
     
@@ -47,12 +55,30 @@ abstract class AbstractEntity
     }
 
     /**
+     * @param number $recid
+     */
+    public function setRecid ($recid)
+    {
+        $this->recid = $recid;
+        return $this;
+    }
+
+	/**
      * @note FileMaker internal modid
      * @return the $modid
      */
     public function getModid()
     {
         return (string) $this->modid;
+    }
+
+	/**
+     * @param number $modid
+     */
+    public function setModid ($modid)
+    {
+        $this->modid = $modid;
+        return $this;
     }
     
     /**
@@ -62,59 +88,90 @@ abstract class AbstractEntity
     abstract public function getName();
     
     /**
-     * @note default FileMaker layout for the Entity
-     * which should include all the writable fields
+     * @return the $isSerializable
+     */
+    public function getIsSerializable ()
+    {
+        return $this->isSerializable;
+    }
+
+	/**
+     * @param boolean $isSerializable
+     */
+    public function setIsSerializable ($isSerializable)
+    {
+        $this->isSerializable = $isSerializable;
+        return $this;
+    }
+
+	/**
+     * Default FileMaker layout for the Entity which should include all the writable fields
      */
     abstract public static function getDefaultWriteLayoutName();
     
     /**
-     * @note Maps the Entity onto a SimpleFM\Adapter row.
-     * The array association should be a fully qualified field name,
-     * with the exception of recid and modid, which must have a leading
-     * dash as shown here:
-     * $simpleFMAdapterRow["-recid"] = $this->getRecid();
-     * $simpleFMAdapterRow["-modid"] = $this->getModid();
-     */
-    abstract public function serialize();
-    
-    /**
-     * @note Maps a SimpleFM\Adapter row onto the Entity
+     * Maps a SimpleFM\Adapter row onto the Entity.
+     * @see $this->unserializeField()
      */
     abstract public function unserialize();
     
+    /**
+     * Maps the Entity onto a SimpleFM\Adapter row. The array association should be a 
+     * fully qualified field name, with the exception of pseudo-fields recid and modid.
+     * @see $this->serializeField()
+     */
+    abstract public function serialize();
+    
     
     /**
-     * @note for unserialize, optimized layouts are permitted to omit fields defined by the entity
+     * For unserialize, optimized layouts are permitted to omit fields defined by the entity.
+     * If a required field is omitted, $this->isSerializable is marked FALSE
      * @param string $propertyName
      * @param string $fileMakerFieldName
      * @throws InvalidArgumentException
      */
-    protected function mapFmFieldOntoProperty($propertyName, $fileMakerFieldName)
+    protected function unserializeField($propertyName, $fileMakerFieldName, $isWritable=FALSE)
     {
         if (!property_exists($this, $propertyName)){
             throw new InvalidArgumentException($propertyName . ' is not a valid property.');
         }
         if (array_key_exists($fileMakerFieldName, $this->simpleFMAdapterRow)){
             $this->$propertyName = $this->simpleFMAdapterRow[$fileMakerFieldName];
+        } elseif ($isWritable) {
+            $this->isSerializable = FALSE;
         }
     }
     
     /**
-     * @note for serialize, all defined fields are required
+     * For serialize, all isRequired fields are required except the pseudo-fields recid and modid
+     * which are always optional to handle force edit (blank modid) and new (blank recid).
      * @param string $fileMakerFieldName
      * @param string $getterName
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    protected function mapPropertyOntoFmField($fileMakerFieldName, $getterName)
+    protected function serializeField($fileMakerFieldName, $getterName)
     {
-        try {
-            $simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
-        } catch (\Exception $e) {
-            if (!is_callable($this, $getterName)){
-                throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
-            } else {
-                throw $e;
+        if ($getterName == 'getRecid'){
+            $value = $this->getRecid();
+            if (!empty($value)){
+                $simpleFMAdapterRow['-recid'] = $value;
+            }
+        } elseif ($getterName == 'getModid'){
+            $recid = $this->getRecid();
+            $modid = $this->getModid();
+            if (!empty($modid) && !empty($recid)){
+                $simpleFMAdapterRow['-modid'] = $modid;
+            }
+        } else {
+            try {
+                $simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
+            } catch (\Exception $e) {
+                if (!is_callable($this, $getterName)){
+                    throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
+                } else {
+                    throw $e;
+                }
             }
         }
     }

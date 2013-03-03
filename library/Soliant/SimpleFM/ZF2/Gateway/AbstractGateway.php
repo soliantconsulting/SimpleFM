@@ -68,12 +68,12 @@ abstract class AbstractGateway
      * @param AbstractEntity $pointer
      * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      */
-    public function resolveEntity(AbstractEntity $pointer, $entityLayout=NULL)
+    public function resolveEntity(AbstractEntity $entity, $entityLayout=NULL)
     {
         if (!empty($entityLayout)){
             $this->setEntityLayout($entityLayout);
         }
-        return $this->find($pointer->getRecid());
+        return $this->find($entity->getRecid());
     }
     
     public function find($recid)

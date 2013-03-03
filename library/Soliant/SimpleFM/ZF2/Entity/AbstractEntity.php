@@ -113,14 +113,24 @@ abstract class AbstractEntity
      * Maps a SimpleFM\Adapter row onto the Entity.
      * @see $this->unserializeField()
      */
-    abstract public function unserialize();
+    public function unserialize()
+    {
+    	$this->unserializeField('recid', 'recid');
+    	$this->unserializeField('modid', 'modid');
+    }
     
     /**
      * Maps the Entity onto a SimpleFM\Adapter row. The array association should be a 
      * fully qualified field name, with the exception of pseudo-fields recid and modid.
      * @see $this->serializeField()
      */
-    abstract public function serialize();
+    public function serialize()
+    {
+        $this->simpleFMAdapterRow = array();
+        
+        $this->serializeField('-recid', 'getRecid');
+        $this->serializeField('-modid', 'getModid');
+    }
     
     
     /**

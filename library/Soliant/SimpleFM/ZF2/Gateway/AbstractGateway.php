@@ -65,7 +65,8 @@ abstract class AbstractGateway
     }
     
     /**
-     * @param AbstractEntity $pointer
+     * @param AbstractEntity $entity
+     * @param string $entityLayout
      * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      */
     public function resolveEntity(AbstractEntity $entity, $entityLayout=NULL)

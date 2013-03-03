@@ -17,8 +17,7 @@ use Soliant\SimpleFM\Exception\ErrorException;
 use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
-use Soliant\SimpleFM\ZF2\Entity\EntityInterface;
-use Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface;
+use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 
 abstract class AbstractGateway 
 {
@@ -35,10 +34,16 @@ abstract class AbstractGateway
 
     /**
      * The fully qualified class name for an object that implements
-     * \Soliant\SimpleFM\ZF2\Entity\EntityInterface
+     * \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      * @var string
      */
     protected $entityName;
+    
+    /**
+     * The FileMaker Layout assigned to the $entityPointerName
+     * @var string
+     */
+    protected $entityLayout;
     
     /**
      * @var \Soliant\SimpleFM\Adapter
@@ -49,21 +54,25 @@ abstract class AbstractGateway
      * @param ServiceManager $serviceManager
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
-     * @param string $layoutname
      */
-    public function __construct(ServiceManager $serviceManager, $entityName, SimpleFMAdapter $simpleFMAdapter) 
+    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter) 
     {
         $this->setServiceManager($serviceManager);
         $this->setSimpleFMAdapter($simpleFMAdapter);
-        $this->setEntityName($entityName);
+        $this->setEntityName(get_class($entity));
+        $this->setEntityLayout($entity::getDefaultWriteLayoutName());
+        
     }
     
     /**
      * @param AbstractEntity $pointer
-     * @return \Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface
+     * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      */
-    public function resolvePointer(EntityInterface $pointer)
+    public function resolveEntity(AbstractEntity $pointer, $entityLayout=NULL)
     {
+        if (!empty($entityLayout)){
+            $this->setEntityLayout($entityLayout);
+        }
         return $this->find($pointer->getRecid());
     }
     
@@ -124,7 +133,7 @@ abstract class AbstractGateway
         return $this->rowsToArrayCollection($result['rows']);
     }
     
-    public function create(SerializableEntityInterface $entity)
+    public function create(AbstractEntity $entity)
     {
         $serializedValues = $entity->serialize();
         unset($serializedValues['-recid']);
@@ -141,7 +150,7 @@ abstract class AbstractGateway
         return $entity;
     }
     
-    public function edit(SerializableEntityInterface $entity)
+    public function edit(AbstractEntity $entity)
     {
         $commandArray = array_merge(
             $entity->serialize(),
@@ -158,7 +167,7 @@ abstract class AbstractGateway
         return $entity;
     }
     
-    public function delete(EntityInterface $entity)
+    public function delete(AbstractEntity $entity)
     {
         $commandArray = array(
             '-recid' => $entity->getRecid(),
@@ -192,12 +201,22 @@ abstract class AbstractGateway
     }
 
 	/**
-     * @return the FileMaker layout name defined in the entity class
+     * @return the $entityLayout
      */
     public function getEntityLayout ()
     {
-	    $entity = $this->entityName;
-	    return $entity::getLayoutName();
+        return $this->entityLayout;
+    }
+
+	/**
+     * @param string $entityLayout
+     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
+     */
+    public function setEntityLayout ($entityLayout)
+    {
+        $this->entityLayout = $entityLayout;
+        return $this;
+        
     }
 
 	/**

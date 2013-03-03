@@ -155,17 +155,17 @@ abstract class AbstractEntity
         if ($getterName == 'getRecid'){
             $value = $this->getRecid();
             if (!empty($value)){
-                $simpleFMAdapterRow['-recid'] = $value;
+                $this->simpleFMAdapterRow['-recid'] = $value;
             }
         } elseif ($getterName == 'getModid'){
             $recid = $this->getRecid();
             $modid = $this->getModid();
             if (!empty($modid) && !empty($recid)){
-                $simpleFMAdapterRow['-modid'] = $modid;
+                $this->simpleFMAdapterRow['-modid'] = $modid;
             }
         } else {
             try {
-                $simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
+                $this->simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
             } catch (\Exception $e) {
                 if (!is_callable($this, $getterName)){
                     throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);

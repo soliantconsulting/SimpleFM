@@ -17,8 +17,7 @@ use Soliant\SimpleFM\Exception\ErrorException;
 use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
-use Soliant\SimpleFM\ZF2\Entity\EntityInterface;
-use Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface;
+use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 
 abstract class AbstractGateway 
 {
@@ -32,24 +31,10 @@ abstract class AbstractGateway
      * @var \Zend\ServiceManager\ServiceManager
      */
     protected $serviceManager;
-    
+
     /**
-     * The fully qualified class name for a concrete implementation of
-     * \Soliant\SimpleFM\ZF2\Entity\EntityInterface
-     * @var string
-     */
-    protected $entityPointerName;
-    
-    /**
-     * The FileMaker Layout assigned to the $entityPointerName
-     * @var string
-     */
-    protected $entityPointerLayout;
-    
-    /**
-     * The fully qualified class name for the object that extends
-     * $this->entityPointerName and implements 
-     * \Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface
+     * The fully qualified class name for an object that implements
+     * \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      * @var string
      */
     protected $entityName;
@@ -64,30 +49,32 @@ abstract class AbstractGateway
      * @var \Soliant\SimpleFM\Adapter
      */
     protected $simpleFMAdapter;
-
+    
     /**
      * @param ServiceManager $serviceManager
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
-     * @param string $layoutname
      */
-    public function __construct(ServiceManager $serviceManager, SerializableEntityInterface $entity, SimpleFMAdapter $simpleFMAdapter, $layoutnamePointer=NULL, $layoutname=NULL) 
+    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter) 
     {
         $this->setServiceManager($serviceManager);
         $this->setSimpleFMAdapter($simpleFMAdapter);
-        $this->setEntityPointerName($entity->getEntityPointerName());
-        $this->setEntityPointerLayout($layoutnamePointer);
-        $this->setEntityName($entity->getEntityName());
-        $this->setEntityLayout($layoutname);
+        $this->setEntityName(get_class($entity));
+        $this->setEntityLayout($entity::getDefaultWriteLayoutName());
+        
     }
     
     /**
-     * @param AbstractEntity $pointer
-     * @return \Soliant\SimpleFM\ZF2\Entity\SerializableEntityInterface
+     * @param AbstractEntity $entity
+     * @param string $entityLayout
+     * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      */
-    public function resolvePointer(EntityInterface $pointer)
+    public function resolveEntity(AbstractEntity $entity, $entityLayout=NULL)
     {
-        return $this->find($pointer->getRecid());
+        if (!empty($entityLayout)){
+            $this->setEntityLayout($entityLayout);
+        }
+        return $this->find($entity->getRecid());
     }
     
     public function find($recid)
@@ -127,10 +114,9 @@ abstract class AbstractGateway
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityPointerLayout());
+             ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
         return $this->rowsToArrayCollection($result['rows']);
-    
     }
     
     public function findBy(array $search, array $sort = array(), $max = NULL, $skip = NULL)
@@ -143,12 +129,12 @@ abstract class AbstractGateway
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityPointerLayout());
+             ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
         return $this->rowsToArrayCollection($result['rows']);
     }
     
-    public function create(SerializableEntityInterface $entity)
+    public function create(AbstractEntity $entity)
     {
         $serializedValues = $entity->serialize();
         unset($serializedValues['-recid']);
@@ -165,7 +151,7 @@ abstract class AbstractGateway
         return $entity;
     }
     
-    public function edit(SerializableEntityInterface $entity)
+    public function edit(AbstractEntity $entity)
     {
         $commandArray = array_merge(
             $entity->serialize(),
@@ -182,7 +168,7 @@ abstract class AbstractGateway
         return $entity;
     }
     
-    public function delete(EntityInterface $entity)
+    public function delete(AbstractEntity $entity)
     {
         $commandArray = array(
             '-recid' => $entity->getRecid(),
@@ -191,7 +177,7 @@ abstract class AbstractGateway
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityPointerLayout());
+             ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
         return true;
     }
@@ -215,24 +201,6 @@ abstract class AbstractGateway
         return $this;
     }
 
-    /**
-     * @return the $entityPointerLayout
-     */
-    public function getEntityPointerLayout ()
-    {
-        return $this->entityPointerLayout;
-    }
-
-	/**
-     * @param string $entityPointerLayout
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
-     */
-    public function setEntityPointerLayout ($entityPointerLayout)
-    {
-        $this->entityPointerLayout = $entityPointerLayout;
-        return $this;
-    }
-
 	/**
      * @return the $entityLayout
      */
@@ -249,6 +217,7 @@ abstract class AbstractGateway
     {
         $this->entityLayout = $entityLayout;
         return $this;
+        
     }
 
 	/**
@@ -275,24 +244,6 @@ abstract class AbstractGateway
     public function getLocator()
     {
         return $this->getServiceManager();
-    }
-    
-    /**
-     * @return the $entityPointerName
-     */
-    public function getEntityPointerName ()
-    {
-        return $this->entityPointerName;
-    }
-
-	/**
-     * @param string $entityPointerName
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
-     */
-    public function setEntityPointerName ($entityPointerName)
-    {
-        $this->entityPointerName = $entityPointerName;
-        return $this;
     }
 
 	/**
@@ -429,7 +380,7 @@ abstract class AbstractGateway
         $collection = new ArrayCollection();
         if (!empty($rows)){
             foreach($rows as $row){
-                $collection[] = new $this->entityPointerName($row);
+                $collection[] = new $this->entityName($row);
             }
         }
         

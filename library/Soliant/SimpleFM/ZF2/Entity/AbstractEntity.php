@@ -110,6 +110,12 @@ abstract class AbstractEntity
     abstract public static function getDefaultWriteLayoutName();
     
     /**
+     * The route segment for the entity controller.
+     * Example: MyEntity route segment is normally my-entity
+     */
+    abstract public static function getDefaultControllerRouteSegment();
+    
+    /**
      * Maps a SimpleFM\Adapter row onto the Entity.
      * @see $this->unserializeField()
      */

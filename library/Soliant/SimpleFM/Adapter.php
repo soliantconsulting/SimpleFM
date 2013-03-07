@@ -400,7 +400,6 @@ class Adapter
 
 	/**
      * @return array
-     * @todo implement method injection of new LoaderInterface to make unit testable
      */
     public function execute ()
     {

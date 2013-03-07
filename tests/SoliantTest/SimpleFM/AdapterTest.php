@@ -1,4 +1,5 @@
 <?php
+ 
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
@@ -80,29 +81,18 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Adapter::getHostname
      */
-    public function testGetHostname()
+    public function testGetSetHostname()
     {      	
         $test = $this->object->setHostname('127.0.0.1');
         $this->assertTrue($test instanceof $this->object);
         $this->assertEquals($this->object->getHostname(),'127.0.0.1');
     }
 
-    /**
-     * @covers Soliant\SimpleFM\Adapter::setHostname
-     * @todo   Implement testSetHostname().
-     */
-    public function testSetHostname()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getUsername
      */
-    public function testGetUsername()
+    public function testGetSetUsername()
     {   
     	
     	$test=$this->object->setUsername('root');
@@ -111,33 +101,19 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setUsername
-     * @todo   Implement testSetUsername().
-     */
-    public function testSetUsername()
-    {
-    	// Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::setPassword
      * @todo   Implement testSetPassword().
      */
     public function testSetPassword()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $value = $this->object->setpassword("Soliant");
+        $this->assertTrue($value instanceof $this->object);
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getDbname
      */
-    public function testGetDbname()
+    public function testGetSetDbname()
     {
         $test = $this->object->setDbname('test');
         $this->assertTrue($test instanceof $this->object);
@@ -145,21 +121,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setDbname
-     * @todo   Implement testSetDbname().
-     */
-    public function testSetDbname()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getLayoutname
      */
-    public function testGetLayoutname()
+    public function testGetSetLayoutname()
     {
         $value = $this->object->setLayoutname('tab');
         $this->assertTrue($value instanceof $this->object);
@@ -167,21 +131,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setLayoutname
-     * @todo   Implement testSetLayoutname().
-     */
-    public function testSetLayoutname()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getCommandstring
      */
-    public function testGetCommandstring()
+    public function testGetSetCommandstring()
     {
         $value = $this->object->setCommandstring('A=B&C=D&E=F');
         $this->assertTrue($value instanceof $this->object);
@@ -191,7 +143,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Adapter::getCommandarray
      */
-    public function testGetCommandarray()
+    public function testGetSetCommandarray()
     {
         $value = $this->object->setCommandstring('A=B&C=D');
         $this->assertTrue($value instanceof $this->object);
@@ -202,33 +154,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setCommandstring
-     * @todo   Implement testSetCommandstring().
-     */
-    public function testSetCommandstring()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Soliant\SimpleFM\Adapter::setCommandarray
-     * @todo   Implement testSetCommandarray().
-     */
-    public function testSetCommandarray()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getProtocol
      */
-    public function testGetProtocol()
+    public function testGetSetProtocol()
     {
          $value = $this->object->setProtocol('https');
          $this->assertTrue($value instanceof $this->object);
@@ -236,21 +164,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setProtocol
-     * @todo   Implement testSetProtocol().
-     */
-    public function testSetProtocol()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getPort
      */
-    public function testGetPort()
+    public function testGetSetPort()
     {
         $value=$this->object->setPort('8080');
         $this->assertTrue($value instanceof $this->object);
@@ -258,21 +174,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setPort
-     * @todo   Implement testSetPort().
-     */
-    public function testSetPort()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getFmresultsetUri
      */
-    public function testGetFmresultsetUri()
+    public function testGetSetFmresultsetUri()
     {
        
         $value = $this->object->setFmresultsetUri('./abc/fmresult.xml');
@@ -281,21 +185,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setFmresultsetUri
-     * @todo   Implement testSetFmresultsetUri().
-     */
-    public function testSetFmresultsetUri()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getFmpxmllayoutUri
      */
-    public function testGetFmpxmllayoutUri()
+    public function testGetSetFmpxmllayoutUri()
     {
         $value = $this->object->setFmpxmllayoutUri('./abc/fmlayout.xml');
         $this->assertTrue($value instanceof $this->object);
@@ -303,38 +195,25 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setFmpxmllayoutUri
-     * @todo   Implement testSetFmpxmllayoutUri().
-     */
-    public function testSetFmpxmllayoutUri()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
      * @todo fix this method so it casts result as Boolean. Current assertion should fail.
      */
-    public function testGetRowsbyrecid()
+    public function testGetSetRowsbyrecid()
     {
         $value = $this->object->setRowsbyrecid('1876612984689092');
         $this->assertTrue($value instanceof $this->object);
         $this->assertEquals($this->object->getRowsbyrecid(),'1876612984689092'); 
     }
-
+    
     /**
-     * @covers Soliant\SimpleFM\Adapter::setRowsbyrecid
-     * @todo   Implement testSetRowsbyrecid().
+     * @covers Soliant\SimpleFM\Adapter::getSetCommandURLDebug
      */
-    public function testSetRowsbyrecid()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+    public function testGetSetCommandURLDebug()
+    {	 
+    	 $commandURL = '$http://root@127.0.0.1:8080./abc/fmresult.xml?-db=testdb&-lay=tab&A=B&C=D&E=F';
+    	 $value = $this->object->setCommandURLdebug($commandURL);
+    	 $this->assertTrue($value instanceof $this->object);         
+         $this->assertEquals($this->object->getCommandURLdebug(), $commandURL);
     }
 
     /**

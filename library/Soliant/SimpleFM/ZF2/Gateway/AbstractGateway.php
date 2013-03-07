@@ -18,6 +18,7 @@ use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
 use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
+use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 
 abstract class AbstractGateway 
 {
@@ -55,12 +56,17 @@ abstract class AbstractGateway
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
      */
-    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter) 
+    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL ) 
     {
         $this->setServiceManager($serviceManager);
         $this->setSimpleFMAdapter($simpleFMAdapter);
         $this->setEntityName(get_class($entity));
         $this->setEntityLayout($entity::getDefaultWriteLayoutName());
+        
+        if (!empty($identity) && !empty($encryptionKey)) {
+            $this->simpleFMAdapter->setUsername($identity->getUsername());
+            $this->simpleFMAdapter->setPassword($identity->getPassword($encryptionKey));
+        }
         
     }
     

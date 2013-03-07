@@ -360,7 +360,7 @@ class Adapter
      */
     public function setRowsbyrecid($rowsByRecId = FALSE)
     {
-        $this->rowsbyrecid = $rowsByRecId;
+        $this->rowsbyrecid = (boolean)$rowsByRecId;
         return $this;
     }
     

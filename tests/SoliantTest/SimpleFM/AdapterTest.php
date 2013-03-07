@@ -206,13 +206,12 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
-     * @todo fix this method so it casts result as Boolean. Current assertion should fail.
      */
     public function testGetSetRowsbyrecid()
     {
         $value = $this->object->setRowsbyrecid('1876612984689092');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getRowsbyrecid(),'1876612984689092'); 
+        $this->assertEquals($this->object->getRowsbyrecid(),TRUE); 
     }
     
     /**

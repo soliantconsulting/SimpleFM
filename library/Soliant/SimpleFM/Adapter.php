@@ -110,6 +110,10 @@ class Adapter
         $this->dbname   = @$params['dbname'];
         $this->username = @$params['username'];
         $this->password = @$params['password'];
+        
+        if (isset($params['port']))     $this->port     = $params['port'];
+        if (isset($params['protocol'])) $this->protocol = $params['protocol'];
+        
         return $this;
     }
     

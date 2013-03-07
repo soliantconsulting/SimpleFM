@@ -111,8 +111,8 @@ class Adapter
         $this->username = @$params['username'];
         $this->password = @$params['password'];
         
-        if (isset($params['port']))     $this->port     = $params['port'];
-        if (isset($params['protocol'])) $this->protocol = $params['protocol'];
+        if (isset($params['port']))     $this->setPort($params['port']);
+        if (isset($params['protocol'])) $this->setProtocol($params['protocol']);
         
         return $this;
     }

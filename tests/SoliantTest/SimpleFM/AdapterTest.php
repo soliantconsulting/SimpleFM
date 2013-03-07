@@ -53,6 +53,17 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->object->getHostname(),'127.0.0.1');
         $this->assertEquals($this->object->getDbname(),'testdb');
         $this->assertEquals($this->object->getUsername(),'root');
+        $this->assertEquals($this->object->getPort(),'80');
+        $this->assertEquals($this->object->getProtocol(),'http');
+        
+        $params=array('port'=>'9000','protocol'=>'https');
+        $value = $this->object->setHostParams($params);
+        $this->assertEquals($this->object->getPort(),'9000');
+        $this->assertEquals($this->object->getProtocol(),'https');
+        
+        $params=array('protocol'=>'xyz');
+        $this->setExpectedException('InvalidArgumentException');
+        $value = $this->object->setHostParams($params);
     }
 
     /**

@@ -53,6 +53,17 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->object->getHostname(),'127.0.0.1');
         $this->assertEquals($this->object->getDbname(),'testdb');
         $this->assertEquals($this->object->getUsername(),'root');
+        $this->assertEquals($this->object->getPort(),'80');
+        $this->assertEquals($this->object->getProtocol(),'http');
+        
+        $params=array('port'=>'9000','protocol'=>'https');
+        $value = $this->object->setHostParams($params);
+        $this->assertEquals($this->object->getPort(),'9000');
+        $this->assertEquals($this->object->getProtocol(),'https');
+        
+        $params=array('protocol'=>'xyz');
+        $this->setExpectedException('InvalidArgumentException');
+        $value = $this->object->setHostParams($params);
     }
 
     /**
@@ -102,7 +113,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::setPassword
-     * @todo   Implement testSetPassword().
      */
     public function testSetPassword()
     {
@@ -196,13 +206,12 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
-     * @todo fix this method so it casts result as Boolean. Current assertion should fail.
      */
     public function testGetSetRowsbyrecid()
     {
         $value = $this->object->setRowsbyrecid('1876612984689092');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getRowsbyrecid(),'1876612984689092'); 
+        $this->assertEquals($this->object->getRowsbyrecid(),TRUE); 
     }
     
     /**
@@ -270,7 +279,6 @@ Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
     
     /**
      * @covers Soliant\SimpleFM\Adapter::extractErrorFromPhpMessage
-     * @todo   Implement testExtractErrorFromPhpMessage().
      */
     public function testExtractErrorFromPhpMessage()
     {

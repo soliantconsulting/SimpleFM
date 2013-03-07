@@ -110,6 +110,10 @@ class Adapter
         $this->dbname   = @$params['dbname'];
         $this->username = @$params['username'];
         $this->password = @$params['password'];
+        
+        if (isset($params['port']))     $this->setPort($params['port']);
+        if (isset($params['protocol'])) $this->setProtocol($params['protocol']);
+        
         return $this;
     }
     
@@ -356,7 +360,7 @@ class Adapter
      */
     public function setRowsbyrecid($rowsByRecId = FALSE)
     {
-        $this->rowsbyrecid = $rowsByRecId;
+        $this->rowsbyrecid = (boolean)$rowsByRecId;
         return $this;
     }
     
@@ -396,7 +400,6 @@ class Adapter
 
 	/**
      * @return array
-     * @todo implement method injection of new LoaderInterface to make unit testable
      */
     public function execute ()
     {

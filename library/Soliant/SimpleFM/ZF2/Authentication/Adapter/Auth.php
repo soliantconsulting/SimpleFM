@@ -156,7 +156,7 @@ class Auth implements \Zend\Authentication\Adapter\AdapterInterface
         $this->simpleFmValidateAdapter->setCredentials($this->credentials);
         
         $command = array(
-                    $this->accountNameField => self::escapeStringForFileMakerSearch($this->username),
+                    $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
                     '-find' => NULL,
                 );
         $this->simpleFmValidateAdapter->setCommandarray($command);

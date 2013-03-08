@@ -38,7 +38,7 @@ class Identity
     
     /**
      * @Annotation\Type("Zend\Form\Element\Checkbox")
-     * @Annotation\Options({"label":"Remember Me ?:"})
+     * @Annotation\Options({"label":"Remember Me:"})
      */
     public $rememberme;
     
@@ -61,8 +61,25 @@ class Identity
         
         if (!empty($simpleFMAdapterRow)){ 
             foreach ($simpleFMAdapterRow as $field => $value){
-                $this->$field = $value;
+                $this->setArbitraryProperty($field, $value);
             }
+        }
+    }
+    
+    /**
+     * Keep the provided syntax for the property name, but also create one that is only alphanumeric
+     * in case the field comes with spaces or special characters, so you don't have to do this every
+     * time you want to use a property: $identity->{'My Table::My Field'}
+     * @param $field
+     * @param $value
+     */
+    protected function setArbitraryProperty($field, $value)
+    {
+        if (!empty($field)) {
+            $this->$field = $value;
+            $noSpaces = str_replace(' ', '_', $field);
+            $alphaNum = preg_replace("/[^A-Za-z0-9-_]/", '', $noSpaces);
+            $this->$alphaNum = $value;
         }
     }
 

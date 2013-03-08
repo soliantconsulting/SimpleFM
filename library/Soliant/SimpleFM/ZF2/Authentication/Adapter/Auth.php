@@ -156,7 +156,7 @@ class Auth implements \Zend\Authentication\Adapter\AdapterInterface
         $this->simpleFmValidateAdapter->setCredentials($this->credentials);
         
         $command = array(
-                    $this->accountNameField => $this->username,
+                    $this->accountNameField => self::escapeStringForFileMakerSearch($this->username),
                     '-find' => NULL,
                 );
         $this->simpleFmValidateAdapter->setCommandarray($command);
@@ -183,6 +183,11 @@ class Auth implements \Zend\Authentication\Adapter\AdapterInterface
                     array('reason' => 'Auth request failed','sfm_auth_response' => $result)
                 );
         }
+    }
+    
+    static public function escapeStringForFileMakerSearch($string)
+    {
+        return str_replace('@', '\@', $string);
     }
 
 }

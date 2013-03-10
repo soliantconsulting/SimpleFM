@@ -131,7 +131,7 @@ abstract class AbstractGateway
             $search,
             $this->sortArrayToCommandArray($sort),
             $this->maxSkipToCommandArray($max, $skip),
-            array('-findall' => NULL)
+            array('-find' => NULL)
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)

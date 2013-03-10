@@ -14,7 +14,7 @@ use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 use Soliant\SimpleFM\Adapter;
 use Zend\Authentication\Result;
 
-class Auth implements \Zend\Authentication\Adapter\AdapterInterface
+class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
 {
 
     /**
@@ -163,24 +163,37 @@ class Auth implements \Zend\Authentication\Adapter\AdapterInterface
         
         $result = $this->simpleFmValidateAdapter->execute();
         
+        $error = $result['error'];
+        $errortext = $result['errortext'];
+        $errortype = $result['errortype'];
+        
         // Based on the status, return auth result
-        switch ($result['error']) {
+        switch ($error) {
             case '0':
-                // Return result as identity only for status '0'
+                // Return null as identity only for error 0
                 $identity = new Identity($this->username, $this->password, $this->encryptionKey, $result['rows'][0]);
                 $identity->setIsLoggedIn(TRUE);
                 return new Result(
                     Result::SUCCESS,
                     $identity
                 );
+            case '401':
+                // Return null identity plus reason as message array for HTTP 401
+                if ($errortype == 'HTTP') {
+                    $identity = null;
+                    return new Result(
+                        Result::FAILURE,
+                        $identity,
+                        array('reason' => 'Username and/or password not valid' ,'sfm_auth_response' => $result)
+                    );
+                }
             default:
-                // Return empty identity and result as message array for every other result status
-                $identity = new Identity($this->username, $this->password, $this->encryptionKey);
-                $identity->setIsLoggedIn(FALSE);
+                // Return empty identity plus reason as message array for every other result status
+                $identity = null;
                 return new Result(
                     Result::FAILURE,
-                    array(),
-                    array('reason' => 'Auth request failed','sfm_auth_response' => $result)
+                    $identity,
+                    array('reason' => $errortype . ' error ' . $error . ': ' . $errortext ,'sfm_auth_response' => $result)
                 );
         }
     }

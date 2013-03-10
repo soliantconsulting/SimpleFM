@@ -33,13 +33,6 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     protected $password;
 
     /**
-     * URI of user login form
-     *
-     * @var string
-     */
-    protected $loginUrl;
-
-    /**
      * Adapter to be used for login validation
      *
      * @var string
@@ -85,22 +78,18 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      * Constructor
      *
      * @param  array $config Configuration settings:
-     *    'loginUrl'                => string Example: '/login'
      *    'validateSimpleFmAdapter' => Soliant\SimpleFM\Adapter
      *    'encryptionKey'           => string Example: '56cb36c21eb9a29c1317092b973a5f9cba393a367de783af45a2799f7302c',
      *    'appUsername'             => string Example: 'webSystem'
      *    'appPassword'             => string Example: '317akx1gr43m4pd'
+     *    'identityLayout'          => string Example: 'gateway_User'
+     *    'accountNameField'        => string Example: 'AccountName'
      * @throws Soliant\SimpleFM\ZF2\Authentication\Adapter\InvalidArgumentException
      * @return void
      */
     public function __construct(array $config, Adapter $simpleFmValidateAdapter)
     {
         $this->simpleFmValidateAdapter = $simpleFmValidateAdapter;
-
-        if (empty($config['loginUrl'])) {
-            throw new Exception\InvalidArgumentException('Config key \'loginUrl\' is required');
-        }
-        $this->loginUrl = $config['loginUrl'];
 
         if (empty($config['encryptionKey'])) {
             throw new Exception\InvalidArgumentException('Config key \'encryptionKey\' is required');

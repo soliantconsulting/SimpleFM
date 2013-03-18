@@ -34,7 +34,7 @@ abstract class AbstractEntity
      * @var boolean
      */
     protected $isSerializable;
-    
+
     /**
      * @param array $simpleFMAdapterRow
      */
@@ -44,7 +44,16 @@ abstract class AbstractEntity
         $this->isSerializable = TRUE;
         if (!empty($this->simpleFMAdapterRow)) $this->unserialize();
     }
-    
+
+    /**
+     * @return the name value for the object
+     */
+
+    public function __toString()
+    {
+    	return (string) $this->getName();
+    }
+
     /**
      * @note FileMaker internal recid
      * @return the $recid
@@ -80,13 +89,13 @@ abstract class AbstractEntity
         $this->modid = $modid;
         return $this;
     }
-    
+
     /**
      * @note Can be a concrete field e.g. $this->name,
      * or return derived value based on business logic
      */
     abstract public function getName();
-    
+
     /**
      * @return the $isSerializable
      */
@@ -108,13 +117,13 @@ abstract class AbstractEntity
      * Default FileMaker layout for the Entity which should include all the writable fields
      */
     abstract public static function getDefaultWriteLayoutName();
-    
+
     /**
      * The route segment for the entity controller.
      * Example: MyEntity route segment is normally my-entity
      */
     abstract public static function getDefaultControllerRouteSegment();
-    
+
     /**
      * Maps a SimpleFM\Adapter row onto the Entity.
      * @see $this->unserializeField()
@@ -124,21 +133,21 @@ abstract class AbstractEntity
     	$this->unserializeField('recid', 'recid');
     	$this->unserializeField('modid', 'modid');
     }
-    
+
     /**
-     * Maps the Entity onto a SimpleFM\Adapter row. The array association should be a 
+     * Maps the Entity onto a SimpleFM\Adapter row. The array association should be a
      * fully qualified field name, with the exception of pseudo-fields recid and modid.
      * @see $this->serializeField()
      */
     public function serialize()
     {
         $this->simpleFMAdapterRow = array();
-        
+
         $this->serializeField('-recid', 'getRecid');
         $this->serializeField('-modid', 'getModid');
     }
-    
-    
+
+
     /**
      * For unserialize, optimized layouts are permitted to omit fields defined by the entity.
      * If a required field is omitted, $this->isSerializable is marked FALSE
@@ -157,7 +166,7 @@ abstract class AbstractEntity
             $this->isSerializable = FALSE;
         }
     }
-    
+
     /**
      * For serialize, all isRequired fields are required except the pseudo-fields recid and modid
      * which are always optional to handle force edit (blank modid) and new (blank recid).
@@ -191,6 +200,6 @@ abstract class AbstractEntity
             }
         }
     }
-    
-    
+
+
 }

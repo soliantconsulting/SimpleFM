@@ -1,7 +1,7 @@
 <?php
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
- * 
+ *
  * @package   Soliant\SimpleFM
  * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
@@ -10,78 +10,78 @@
 namespace Soliant\SimpleFM;
 
 use Soliant\SimpleFM\Loader\LoaderInterface;
-use Soliant\SimpleFM\Loader\FilePostContents; 
+use Soliant\SimpleFM\Loader\FilePostContents;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\Exception\ReservedWordException;
 
 class Adapter
 {
-    
+
     /**
      * @var string
      */
     protected $hostname = '127.0.0.1';
-    
+
     /**
      * @var string
      */
     protected $dbname = '';
-    
+
     /**
      * @var string
      */
     protected $layoutname = '';
-    
+
     /**
      * @var string
      */
     protected $commandstring = '-findany';
-    
+
     /**
      * @var array
      */
     protected $commandarray = array('-findany' => '');
-    
+
     /**
      * @var string
      */
     protected $username = '';
-    
+
     /**
      * @var string
      */
     protected $password = '';
-    
+
     /**
      * @var string
      */
     protected $protocol = 'http';
-    
+
     /**
      * @var int
      */
     protected $port = 80;
-    
+
     /**
      * @var string
      */
     protected $fmresultsetUri = '/fmi/xml/fmresultset.xml';
-    
+
     /**
      * @var string
      */
     protected $fmpxmllayoutUri = '/fmi/xml/FMPXMLLAYOUT.xml';
-    
+
     /**
      * @var boolean
      */
     protected $rowsbyrecid = FALSE;
-    
+
     /**
      * @var string
      */
     protected $commandURLdebug;
-    
+
     /**
      * @var LoaderInterface
      */
@@ -110,13 +110,13 @@ class Adapter
         $this->dbname   = @$params['dbname'];
         $this->username = @$params['username'];
         $this->password = @$params['password'];
-        
+
         if (isset($params['port']))     $this->setPort($params['port']);
         if (isset($params['protocol'])) $this->setProtocol($params['protocol']);
-        
+
         return $this;
     }
-    
+
     /**
      * Bulk setter for the credentials
      * @param array($username, $password)
@@ -128,7 +128,7 @@ class Adapter
         $this->password = @$params['password'];
         return $this;
     }
-    
+
     /**
      * Bulk setter for the call args
      * @param array($layoutname, $commandstring)
@@ -140,7 +140,7 @@ class Adapter
         $this->commandstring = @$params['commandstring'];
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -158,7 +158,7 @@ class Adapter
         $this->hostname = $hostname;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -176,7 +176,7 @@ class Adapter
         $this->username = $username;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -184,7 +184,7 @@ class Adapter
     {
         return $this->password;
     }
-    
+
     /**
      * @param string $password
      * @return \Soliant\SimpleFM\Adapter
@@ -194,7 +194,7 @@ class Adapter
         $this->password = $password;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -212,7 +212,7 @@ class Adapter
         $this->dbname = $dbname;
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -238,7 +238,7 @@ class Adapter
     {
         return $this->commandstring;
     }
-    
+
     /**
      * @return array
      */
@@ -257,7 +257,7 @@ class Adapter
         $this->commandarray = self::explodeNameValueString($commandstring);
         return $this;
     }
-    
+
     /**
      * @param array $commandarray
      * @return \Soliant\SimpleFM\Adapter
@@ -268,7 +268,7 @@ class Adapter
         $this->commandstring = self::repackCommandString($commandarray);
         return $this;
     }
-    
+
     /**
      * @return the $protocol
      */
@@ -276,7 +276,7 @@ class Adapter
     {
         return $this->protocol;
     }
-    
+
     /**
      * @param string $protocol
      * @throws InvalidArgumentException
@@ -291,7 +291,7 @@ class Adapter
         }
         return $this;
     }
-    
+
     /**
      * @return the $port
      */
@@ -299,7 +299,7 @@ class Adapter
     {
         return $this->port;
     }
-    
+
     /**
      * @param int $port
      * @return \Soliant\SimpleFM\Adapter
@@ -309,7 +309,7 @@ class Adapter
         $this->port = $port;
         return $this;
     }
-    
+
     /**
      * @return the $fmresultsetUri
      */
@@ -317,7 +317,7 @@ class Adapter
     {
         return $this->fmresultsetUri;
     }
-    
+
     /**
      * @param string $fmresultsetUri
      * @return \Soliant\SimpleFM\Adapter
@@ -327,7 +327,7 @@ class Adapter
         $this->fmresultsetUri = $fmresultsetUri;
         return $this;
     }
-    
+
     /**
      * @return the $fmpxmllayoutUri
      */
@@ -335,7 +335,7 @@ class Adapter
     {
         return $this->fmpxmllayoutUri;
     }
-    
+
     /**
      * @param string $fmpxmllayoutUri
      * @return \Soliant\SimpleFM\Adapter
@@ -345,7 +345,7 @@ class Adapter
         $this->fmpxmllayoutUri = $fmpxmllayoutUri;
         return $this;
     }
-    
+
     /**
      * @return boolean
      */
@@ -363,7 +363,7 @@ class Adapter
         $this->rowsbyrecid = (boolean)$rowsByRecId;
         return $this;
     }
-    
+
     /**
      * @return the $commandURLdebug
      */
@@ -372,7 +372,7 @@ class Adapter
         return $this->commandURLdebug;
     }
 
-	/**
+    /**
      * @param string $commandURLdebug
      */
     public function setCommandURLdebug ($commandURLdebug)
@@ -381,7 +381,7 @@ class Adapter
         return $this;
     }
 
-	/**
+    /**
      * @return the $loader
      */
     public function getLoader ()
@@ -389,7 +389,7 @@ class Adapter
         return $this->loader;
     }
 
-	/**
+    /**
      * @param \Soliant\SimpleFM\Loader\LoaderInterface $loader
      */
     public function setLoader ($loader)
@@ -398,42 +398,42 @@ class Adapter
         return $this;
     }
 
-	/**
+    /**
      * @return array
      */
     public function execute ()
     {
         @$xml = $this->loader->load($this);
-        
+
         if (empty($xml)) {
-            
+
             $simplexmlerrors['xml'] = libxml_get_errors();
             $simplexmlerrors['php'] = error_get_last();
-            
+
             $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
-            
+
             $error     = $phpErrors['error'];
             $errortext = $phpErrors['errortext'];
             $errortype = $phpErrors['errortype'];
             $count     = NULL;
             $fetchsize = NULL;
-            
+
             $rows = NULL;
             libxml_clear_errors();
-            
+
         } else {
-            
-            $simplexmlerrors = null; 
+
+            $simplexmlerrors = null;
             $error           = (int) $xml->error['code'];
             $errortext       = self::errorToEnglish($error);
             $errortype       = 'FileMaker';
             $count           = (string) $xml->resultset['count'];
             $fetchsize       = (string) $xml->resultset['fetch-size'];
-            
+
             $rows = $this->parseResult($xml);
-            
+
         }
-        
+
         $sfmresult = array (
             'url'       => $this->getCommandURLdebug(),
             'error'     => $error,
@@ -443,11 +443,11 @@ class Adapter
             'fetchsize' => $fetchsize,
             'rows'      => $rows
             );
-        
+
         return $sfmresult;
-        
+
     }
-    
+
     /**
      * @param xml $xml
      * @return array
@@ -455,12 +455,12 @@ class Adapter
     protected function parseResult ($xml)
     {
         $result = array();
-        
+
         /**
          *   simplexml fmresultset path reference:
          *   $fmresultset->resultset[0]->record[0]->field[0]->data[0]
          */
-        
+
         $i=0; // the row index
         foreach ($xml->resultset[0]->record as $row){ // handle rows
 
@@ -469,43 +469,43 @@ class Adapter
             $result[$conditional_id]['index'] = (int) $i;
             $result[$conditional_id]['recid'] = (int) $row['record-id'];
             $result[$conditional_id]['modid'] = (int) $row['mod-id'];
-            
+
             foreach ($xml->resultset[0]->record[$i]->field as $field ) { // handle fields
-                
+
                 $fieldname = (string) $field['name'];
                 $fielddata = (string) $field->data ;
-                
+
                 $fieldnameIsValid = $i===0 ? self::fieldnameIsValid($fieldname) : TRUE; // validate fieldnames on first row
-                $result[$conditional_id][$fieldname] = $fielddata; 
-                
+                $result[$conditional_id][$fieldname] = $fielddata;
+
             }
             if (isset($xml->resultset[0]->record[0]->relatedset)){ // check if portals exist
-                
+
                 $ii=0; // the portal index
                 foreach ($xml->resultset[0]->record[0]->relatedset as $portal ) { // handle portals
                     $portalname = (string) $portal['table'];
-    
+
                     $result[$conditional_id][$portalname]['parentindex'] = (int) $i;
                     $result[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
                     $result[$conditional_id][$portalname]['portalindex'] = (int) $ii;
                     /**
-                     * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all 
+                     * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
                      * portals. Test for possible issues with $portalname being non-unique.
                      */
                     $result[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
-                    
+
                     $iii=0; // the portal row index
                     foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record as $portal_row ) { // handle portal rows
                         $portal_conditional_id = $this->rowsbyrecid === TRUE ? (int) $portal_row['record-id'] : $iii;
-    
+
                         $result[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int) $iii;
                         $result[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int) $portal_row['mod-id'];
                         $result[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int) $portal_row['record-id'];
-                        
+
                         foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record[$iii]->field as $portal_field ) { // handle portal fields
                             $portal_fieldname = (string) str_replace($portalname.'::', '', $portal_field['name']);
                             $portal_fielddata = (string) $portal_field->data ;
-    
+
                             $fieldnameIsValid = $iii===0 ? self::fieldnameIsValid($portal_fieldname) : TRUE; // validate fieldnames on first row
                             $result[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
                         }
@@ -516,10 +516,10 @@ class Adapter
             }
             ++$i;
         }
-        
+
         return $result;
     }
-    
+
     /**
      * @param string $fieldname
      * @throws ReservedWordException
@@ -530,13 +530,13 @@ class Adapter
         $reservedNames = array('index','recid','modid');
         if(in_array($fieldname, $reservedNames)){
             throw new ReservedWordException(
-                'SimpleFM Exception: "' . $fieldname . 
+                'SimpleFM Exception: "' . $fieldname .
                 '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.',
                 $fieldname);
         }
         return TRUE;
     }
-    
+
     /**
      * @param libxml_error $error
      * @param xml $xml
@@ -546,7 +546,7 @@ class Adapter
     {
         $return  = $xml[$error->line - 1] . "\n";
         $return .= str_repeat('-', $error->column) . "^\n";
-    
+
         switch ($error->level) {
             case LIBXML_ERR_WARNING:
                 $return .= "Warning $error->code: ";
@@ -558,18 +558,18 @@ class Adapter
                 $return .= "Fatal Error $error->code: ";
                 break;
         }
-    
+
         $return .= trim($error->message) .
                    "\n  Line: $error->line" .
                    "\n  Column: $error->column";
-    
+
         if ($error->file) {
             $return .= "\n  File: $error->file";
         }
-    
+
         return "$return\n\n--------------------------------------------\n\n";
     }
-    
+
     /**
      * @param http_error $string
      * @return string
@@ -601,7 +601,7 @@ class Adapter
             return $return;
         }
     }
-    
+
     /**
      * @param int $errornum
      * @return string
@@ -875,15 +875,15 @@ class Adapter
             20413 => 'Too Many Files',
             20605 => 'No network connection is available',
         );
-        
+
         if (array_key_exists($errornum, $error)){
             return $error[$errornum];
         } else {
             return 'Undefined';
         }
-        
+
     }
-    
+
     /**
      * @todo verify if an SPL function can be used instead
      * Can't use native http_build_query because it drops args with empty values like &-find
@@ -927,6 +927,6 @@ class Adapter
         }
         return $commandstring;
     }
-    
+
 }
 

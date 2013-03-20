@@ -19,9 +19,9 @@ class Session extends ZendSession
              $this->session->getManager()->rememberMe($time);
          }
     }
-    
+
     public function forgetMe()
     {
         $this->session->getManager()->forgetMe();
-    } 
+    }
 }

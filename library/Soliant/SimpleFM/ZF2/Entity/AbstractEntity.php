@@ -51,7 +51,7 @@ abstract class AbstractEntity
 
     public function __toString()
     {
-    	return (string) $this->getName();
+        return (string) $this->getName();
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class AbstractEntity
         return $this;
     }
 
-	/**
+    /**
      * @note FileMaker internal modid
      * @return the $modid
      */
@@ -81,7 +81,7 @@ abstract class AbstractEntity
         return (string) $this->modid;
     }
 
-	/**
+    /**
      * @param number $modid
      */
     public function setModid ($modid)
@@ -104,7 +104,7 @@ abstract class AbstractEntity
         return $this->isSerializable;
     }
 
-	/**
+    /**
      * @param boolean $isSerializable
      */
     public function setIsSerializable ($isSerializable)
@@ -113,7 +113,7 @@ abstract class AbstractEntity
         return $this;
     }
 
-	/**
+    /**
      * Default FileMaker layout for the Entity which should include all the writable fields
      */
     abstract public static function getDefaultWriteLayoutName();
@@ -130,8 +130,8 @@ abstract class AbstractEntity
      */
     public function unserialize()
     {
-    	$this->unserializeField('recid', 'recid');
-    	$this->unserializeField('modid', 'modid');
+        $this->unserializeField('recid', 'recid');
+        $this->unserializeField('modid', 'modid');
     }
 
     /**
@@ -150,12 +150,12 @@ abstract class AbstractEntity
 
     /**
      * For unserialize, optimized layouts are permitted to omit fields defined by the entity.
-     * If a required field is omitted, $this->isSerializable is marked FALSE
+     * If a required field is omitted, $this->isSerializable is marked false
      * @param string $propertyName
      * @param string $fileMakerFieldName
      * @throws InvalidArgumentException
      */
-    protected function unserializeField($propertyName, $fileMakerFieldName, $isWritable=FALSE)
+    protected function unserializeField($propertyName, $fileMakerFieldName, $isWritable = false)
     {
         if (!property_exists($this, $propertyName)){
             throw new InvalidArgumentException($propertyName . ' is not a valid property.');
@@ -163,7 +163,7 @@ abstract class AbstractEntity
         if (array_key_exists($fileMakerFieldName, $this->simpleFMAdapterRow)){
             $this->$propertyName = $this->simpleFMAdapterRow[$fileMakerFieldName];
         } elseif ($isWritable) {
-            $this->isSerializable = FALSE;
+            $this->isSerializable = false;
         }
     }
 

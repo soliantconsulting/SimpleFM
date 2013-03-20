@@ -115,7 +115,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         $this->accountNameField = $config['accountNameField'];
 
     }
-    
+
     /**
      * @return Soliant\SimpleFM\ZF2\Authentication\Adapter\Auth
      */
@@ -124,7 +124,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         $this->credentials['username'] = $username;
         return $this;
     }
-    
+
     /**
      * @return Soliant\SimpleFM\ZF2\Authentication\Adapter\Auth
      */
@@ -133,7 +133,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         $this->credentials['password'] = $password;
         return $this;
     }
-    
+
 
     /**
      * @return Zend\Authentication\Result
@@ -143,19 +143,19 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
 
         $this->simpleFmValidateAdapter->setLayoutname($this->identityLayout);
         $this->simpleFmValidateAdapter->setCredentials($this->credentials);
-        
+
         $command = array(
                     $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
                     '-find' => NULL,
                 );
         $this->simpleFmValidateAdapter->setCommandarray($command);
-        
+
         $result = $this->simpleFmValidateAdapter->execute();
-        
+
         $error = $result['error'];
         $errortext = $result['errortext'];
         $errortype = $result['errortype'];
-        
+
         // Based on the status, return auth result
         switch ($error) {
             case '0':
@@ -186,7 +186,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 );
         }
     }
-    
+
     static public function escapeStringForFileMakerSearch($string)
     {
         return str_replace('@', '\@', $string);

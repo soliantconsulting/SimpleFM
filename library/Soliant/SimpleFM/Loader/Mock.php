@@ -20,7 +20,7 @@ class Mock extends AbstractLoader
      * @var string
      */
     protected $testXml;
-    
+
     /**
      * @return the $testXml
      */
@@ -29,7 +29,7 @@ class Mock extends AbstractLoader
         return $this->testXml;
     }
 
-	/**
+    /**
      * @param string $testXml
      */
     public function setTestXml ($testXml)
@@ -38,21 +38,21 @@ class Mock extends AbstractLoader
         return $this;
     }
 
-	/**
+    /**
      * @return SimpleXMLElement
      */
     public function load(Adapter $adapter, $testXmlOverride=NULL)
     {
         $this->adapter = $adapter;
-        
+
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
-        
+
         self::prepare();
-        
+
         libxml_use_internal_errors(true);
-        
+
         return simplexml_load_string($testXml);
-    
+
     }
-    
+
 }

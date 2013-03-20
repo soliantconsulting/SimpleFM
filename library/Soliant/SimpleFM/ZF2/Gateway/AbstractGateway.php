@@ -9,29 +9,18 @@
 
 namespace Soliant\SimpleFM\ZF2\Gateway;
 
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
 use Soliant\SimpleFM\Exception\ErrorException;
 use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
+use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 
 abstract class AbstractGateway
 {
-
-    /**
-     * @var \Zend\EventManager\EventManager
-     */
-    protected $eventManager;
-    
-    /**
-     * @var \Zend\ServiceManager\ServiceManager
-     */
-    protected $serviceManager;
 
     /**
      * The fully qualified class name for an object that implements
@@ -47,6 +36,11 @@ abstract class AbstractGateway
     protected $entityLayout;
 
     /**
+     * @var array
+     */
+    protected $fieldMap;
+
+    /**
      * @var \Soliant\SimpleFM\Adapter
      */
     protected $simpleFMAdapter;
@@ -56,12 +50,29 @@ abstract class AbstractGateway
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
      */
-    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL ) 
+    public function __construct($fieldMap, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL )
     {
-        $this->setServiceManager($serviceManager);
+        if (!is_array($fieldMap)){
+            throw new InvalidArgumentException('$fieldMap must be an array.');
+        }
+
         $this->setSimpleFMAdapter($simpleFMAdapter);
         $this->setEntityName(get_class($entity));
         $this->setEntityLayout($entity->getDefaultWriteLayoutName());
+
+        if (!array_key_exists($this->getEntityName(), $fieldMap)){
+            throw new InvalidArgumentException($this->getEntityName() . ' is missing from $fieldMap.');
+        }
+
+        $this->fieldMap = $fieldMap;
+
+        if (!array_key_exists('writeable', $this->fieldMap[$this->getEntityName()])){
+            throw new InvalidArgumentException($this->getEntityName() . ' fieldMap is missing from "writeable" array.');
+        }
+
+        if (!array_key_exists('readonly', $this->fieldMap[$this->getEntityName()])){
+            throw new InvalidArgumentException($this->getEntityName() . ' fieldMap is missing from "readonly" array.');
+        }
 
         if (!empty($identity) && !empty($encryptionKey)) {
             $this->simpleFMAdapter->setUsername($identity->getUsername());
@@ -223,36 +234,10 @@ abstract class AbstractGateway
     {
         $this->entityLayout = $entityLayout;
         return $this;
-        
-    }
 
-	/**
-     * @param ServiceManager $serviceManager
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        return $this;
     }
 
     /**
-     * @return ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
-    }
-
-    /**
-     * @return \Zend\ServiceManager\ServiceManager
-     */
-    public function getLocator()
-    {
-        return $this->getServiceManager();
-    }
-
-	/**
      * Example return: Application\Entity\Entity
      * @return string
      */
@@ -272,42 +257,17 @@ abstract class AbstractGateway
     }
 
     /**
-     * @return the $eventManager
+     * @return the $fieldMap
      */
-    public function getEventManager ()
-    {
-        return $this->eventManager;
-    }
-
-	/**
-     * Set the event manager to use with this object
-     * @param EventManager $events
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
-     */
-    public function setEventManager(EventManager $events)
-    {
-        $this->eventManager = $events;
-        return $this;
+    public function getFieldMap() {
+        return $this->fieldMap;
     }
 
     /**
-     * Retrieve the currently set event manager
-     *
-     * If none is initialized, an EventManager instance will be created with
-     * the contexts of this class, the current class name (if extending this
-     * class), and "bootstrap".
-     *
-     * @return EventManager
+     * @param multitype: $fieldMap
      */
-    public function events()
-    {
-        if (!$this->eventManager instanceof EventManager) {
-            $this->setEventManager(new EventManager(array(
-                __CLASS__,
-                get_called_class(),
-            )));
-        }
-        return $this->eventManager;
+    public function setFieldMap($fieldMap) {
+        $this->fieldMap = $fieldMap;
     }
 
     /**
@@ -386,7 +346,7 @@ abstract class AbstractGateway
         $collection = new ArrayCollection();
         if (!empty($rows)){
             foreach($rows as $row){
-                $collection[] = new $this->entityName($row);
+                $collection[] = new $this->entityName($this->fieldMap, $row);
             }
         }
 
@@ -395,7 +355,7 @@ abstract class AbstractGateway
 
     protected function handleAdapterResult($simpleFMAdapterResult)
     {
-        $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' . 
+        $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' .
                        $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
 
         if ($simpleFMAdapterResult['error'] === 0){

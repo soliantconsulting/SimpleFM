@@ -29,6 +29,11 @@ abstract class AbstractEntity
     protected $simpleFMAdapterRow;
 
     /**
+     * @var array
+     */
+    protected $fieldMap;
+
+    /**
      * This property is marked TRUE by the constructor and may be updated by unserializeField()
      * to allow serialization logic to avoid unintentional nullification of existing field values.
      * @var boolean
@@ -38,9 +43,27 @@ abstract class AbstractEntity
     /**
      * @param array $simpleFMAdapterRow
      */
-    public function __construct($simpleFMAdapterRow = array())
+    public function __construct($fieldMap, $simpleFMAdapterRow = array())
     {
         $this->simpleFMAdapterRow = $simpleFMAdapterRow;
+
+        if (empty($fieldMap)){
+            throw new InvalidArgumentException(get_class($this) . ' is empty or missing.');
+        }
+
+        if (!array_key_exists(get_class($this), $fieldMap)){
+            throw new InvalidArgumentException(get_class($this) . ' is missing from $fieldMap.');
+        }
+
+        $this->fieldMap = $fieldMap;
+        if (!array_key_exists('writeable', $this->fieldMap[get_class($this)])){
+            throw new InvalidArgumentException(get_class($this) . ' fieldMap must contain a "writeable" array.');
+        }
+
+        if (!array_key_exists('readonly', $this->fieldMap[get_class($this)])){
+            throw new InvalidArgumentException(get_class($this) . ' fieldMap must contain a "readonly" array.');
+        }
+
         $this->isSerializable = TRUE;
         if (!empty($this->simpleFMAdapterRow)) $this->unserialize();
     }
@@ -132,6 +155,14 @@ abstract class AbstractEntity
     {
         $this->unserializeField('recid', 'recid');
         $this->unserializeField('modid', 'modid');
+
+        foreach ($this->fieldMap[get_class($this)]['writeable'] as $property=>$field) {
+            $this->unserializeField($property, $field, true);
+        }
+
+        foreach ($this->fieldMap[get_class($this)]['readonly'] as $property=>$field) {
+            $this->unserializeField($property, $field, false);
+        }
     }
 
     /**
@@ -145,6 +176,15 @@ abstract class AbstractEntity
 
         $this->serializeField('-recid', 'getRecid');
         $this->serializeField('-modid', 'getModid');
+
+        foreach ($this->fieldMap[get_class($this)]['writeable'] as $property=>$field) {
+            $this->serializeField($field, $property);
+        }
+
+        foreach ($this->fieldMap[get_class($this)]['readonly'] as $property=>$field) {
+            $this->serializeField($field, $property);
+        }
+
     }
 
 
@@ -171,12 +211,14 @@ abstract class AbstractEntity
      * For serialize, all isRequired fields are required except the pseudo-fields recid and modid
      * which are always optional to handle force edit (blank modid) and new (blank recid).
      * @param string $fileMakerFieldName
-     * @param string $getterName
+     * @param string $propertyName
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    protected function serializeField($fileMakerFieldName, $getterName)
+    protected function serializeField($fileMakerFieldName, $propertyName)
     {
+        $getterName = 'get' . ucfirst($propertyName);
+
         if ($getterName == 'getRecid'){
             $value = $this->getRecid();
             if (!empty($value)){

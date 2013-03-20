@@ -139,13 +139,13 @@ abstract class AbstractEntity
     /**
      * Default FileMaker layout for the Entity which should include all the writable fields
      */
-    abstract public static function getDefaultWriteLayoutName();
+    abstract public function getDefaultWriteLayoutName();
 
     /**
      * The route segment for the entity controller.
      * Example: MyEntity route segment is normally my-entity
      */
-    abstract public static function getDefaultControllerRouteSegment();
+    abstract public function getDefaultControllerRouteSegment();
 
     /**
      * Maps a SimpleFM\Adapter row onto the Entity.

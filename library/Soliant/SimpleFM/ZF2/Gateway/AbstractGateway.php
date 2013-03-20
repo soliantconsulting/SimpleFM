@@ -101,7 +101,7 @@ abstract class AbstractGateway
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
         return $entity;
     }
 
@@ -118,7 +118,7 @@ abstract class AbstractGateway
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
         return $entity;
     }
 
@@ -164,7 +164,7 @@ abstract class AbstractGateway
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
         return $entity;
     }
 
@@ -181,7 +181,7 @@ abstract class AbstractGateway
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
 
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
         return $entity;
     }
 

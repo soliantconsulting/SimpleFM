@@ -34,6 +34,11 @@ abstract class AbstractEntity
     protected $fieldMap;
 
     /**
+     * @var array
+     */
+    protected $entityAsArray;
+
+    /**
      * This property is marked TRUE by the constructor and may be updated by unserializeField()
      * to allow serialization logic to avoid unintentional nullification of existing field values.
      * @var boolean
@@ -187,6 +192,24 @@ abstract class AbstractEntity
 
     }
 
+    /**
+     * @return the $entityAsArray
+     */
+    public function toArray() {
+
+        $this->addPropertyToEntityAsArray('recid');
+        $this->addPropertyToEntityAsArray('modid');
+
+        foreach ($this->fieldMap[get_class($this)]['writeable'] as $property=>$field) {
+            $this->addPropertyToEntityAsArray($property);
+        }
+
+        foreach ($this->fieldMap[get_class($this)]['readonly'] as $property=>$field) {
+            $this->addPropertyToEntityAsArray($property);
+        }
+
+        return $this->entityAsArray;
+    }
 
     /**
      * For unserialize, optimized layouts are permitted to omit fields defined by the entity.
@@ -243,5 +266,26 @@ abstract class AbstractEntity
         }
     }
 
+    /**
+     * For toArray, all fields should be mapped
+     * @param string $propertyName
+     * @throws InvalidArgumentException
+     * @throws Exception
+     */
+    protected function addPropertyToEntityAsArray($propertyName)
+    {
+        $getterName = 'get' . ucfirst($propertyName);
+
+        try {
+            $this->entityAsArray[$propertyName] = $this->$getterName();
+        } catch (\Exception $e) {
+            if (!is_callable($this, $getterName)){
+                throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
+            } else {
+                throw $e;
+            }
+        }
+
+    }
 
 }

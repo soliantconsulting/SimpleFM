@@ -19,7 +19,7 @@ use Zend\Form\Annotation;
 class Identity
 {
     protected $isLoggedIn = FALSE;
-    
+
     /**
      * @Annotation\Type("Zend\Form\Element\Text")
      * @Annotation\Required({"required":"true" })
@@ -27,7 +27,7 @@ class Identity
      * @Annotation\Options({"label":"Username:"})
      */
     public $username;
-    
+
     /**
      * @Annotation\Type("Zend\Form\Element\Password")
      * @Annotation\Required({"required":"true" })
@@ -35,13 +35,13 @@ class Identity
      * @Annotation\Options({"label":"Password:"})
      */
     public $password;
-    
+
     /**
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Options({"label":"Remember Me:"})
      */
     public $rememberme;
-    
+
     /**
      * @Annotation\Type("Zend\Form\Element\Submit")
      * @Annotation\Attributes({"value":"Submit"})
@@ -49,23 +49,23 @@ class Identity
     public $submit;
 
     public function __construct($username=NULL, $password=NULL, $encryptionKey=NULL, array $simpleFMAdapterRow=NULL){
-        
+
         $this->setUsername($username);
-        
+
         if (!empty($password)){
             if (empty($encryptionKey)) {
                 throw new Exception\InvalidArgumentException('The you must provide an encryptionKey with the password.');
             }
             $this->setPassword($password, $encryptionKey);
         }
-        
-        if (!empty($simpleFMAdapterRow)){ 
+
+        if (!empty($simpleFMAdapterRow)){
             foreach ($simpleFMAdapterRow as $field => $value){
                 $this->setArbitraryProperty($field, $value);
             }
         }
     }
-    
+
     /**
      * Keep the provided syntax for the property name, but also create one that is only alphanumeric
      * in case the field comes with spaces or special characters, so you don't have to do this every
@@ -91,8 +91,8 @@ class Identity
         $this->isLoggedIn = $value;
         return $this;
     }
-    
-	/**
+
+    /**
      * @return the $username
      */
     public function getUsername ()
@@ -100,7 +100,7 @@ class Identity
         return $this->username;
     }
 
-	/**
+    /**
      * @param field_type $username
      */
     public function setUsername ($username)
@@ -109,7 +109,7 @@ class Identity
         return $this;
     }
 
-	/**
+    /**
      * @return the $password
      */
     public function getPassword ($encryptionKey)
@@ -117,18 +117,18 @@ class Identity
         if (empty($encryptionKey)) {
             throw new Exception\InvalidArgumentException('The encryptionKey must not be empty');
         }
-        
+
         $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
         $blockCipher->setKey($encryptionKey);
         return $blockCipher->decrypt($this->password);
     }
 
-	/**
+    /**
      * @param string $password
      */
     public function setPassword ($password, $encryptionKey)
     {
-        
+
         /**
          * Password is encrypted so that the identity object is never at rest
          * (e.g. in the session file or database) with a password in clear text.
@@ -139,11 +139,11 @@ class Identity
         if (empty($encryptionKey)) {
             throw new Exception\InvalidArgumentException('The encryptionKey must not be empty');
         }
-        
+
         $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
         $blockCipher->setKey($encryptionKey);
         $this->password = $blockCipher->encrypt($password);
-        
+
         $this;
     }
 

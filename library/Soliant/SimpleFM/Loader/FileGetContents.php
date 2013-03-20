@@ -16,20 +16,20 @@ use Soliant\SimpleFM\Adapter;
 
 class FileGetContents extends AbstractLoader
 {
-    
+
     /**
      * @return SimpleXMLElement
      */
     public function load(Adapter $adapter)
     {
         $this->adapter = $adapter;
-        
+
         self::prepare();
-        
+
         libxml_use_internal_errors(true);
-        
+
         return simplexml_load_string(file_get_contents($this->commandURL));
-    
+
     }
-    
+
 }

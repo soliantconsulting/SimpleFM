@@ -13,12 +13,11 @@ use Soliant\SimpleFM\Adapter;
 
 interface LoaderInterface
 {
-    
+
     /**
      * @param array $simpleFMAdapterRow
      * @return SimpleXMLElement
      */
     public function load(Adapter $adapter);
-    
-}
 
+}

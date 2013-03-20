@@ -16,29 +16,29 @@ use Soliant\SimpleFM\Adapter;
 
 class FilePostContents extends AbstractLoader
 {
-    
+
     protected function createPostURL()
     {
         $protocol = $this->adapter->getProtocol();
         $hostname = $this->adapter->getHostname();
         $port = $this->adapter->getPort();
         $fmresultsetUri = $this->adapter->getFmresultsetUri();
-        
+
         return "$protocol://$hostname:$port$fmresultsetUri";
     }
-    
+
     /**
      * @return SimpleXMLElement
      */
     public function load(Adapter $adapter)
     {
         $this->adapter = $adapter;
-        
+
         self::prepare();
-        
+
         libxml_use_internal_errors(true);
         $authheader = empty($this->credentials) ? '' : 'Authorization: Basic '.base64_encode($this->credentials) . PHP_EOL;
-        
+
         $opts = array('http' =>
                 array(
                         'method'  => 'POST',
@@ -51,12 +51,12 @@ class FilePostContents extends AbstractLoader
                         'content' => $this->args
                 )
         );
-        
+
         $context  = stream_context_create($opts);
-        
-        
+
+
         return simplexml_load_string(file_get_contents(self::createPostURL(), FALSE , $context));
-    
+
     }
-    
+
 }

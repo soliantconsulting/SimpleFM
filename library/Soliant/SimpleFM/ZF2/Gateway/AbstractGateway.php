@@ -9,29 +9,18 @@
 
 namespace Soliant\SimpleFM\ZF2\Gateway;
 
-use Zend\EventManager\EventManager;
-use Zend\ServiceManager\ServiceManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
 use Soliant\SimpleFM\Exception\ErrorException;
 use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
+use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 
-abstract class AbstractGateway 
+abstract class AbstractGateway
 {
-
-    /**
-     * @var \Zend\EventManager\EventManager
-     */
-    protected $eventManager;
-    
-    /**
-     * @var \Zend\ServiceManager\ServiceManager
-     */
-    protected $serviceManager;
 
     /**
      * The fully qualified class name for an object that implements
@@ -39,37 +28,59 @@ abstract class AbstractGateway
      * @var string
      */
     protected $entityName;
-    
+
     /**
      * The FileMaker Layout assigned to the $entityPointerName
      * @var string
      */
     protected $entityLayout;
-    
+
+    /**
+     * @var array
+     */
+    protected $fieldMap;
+
     /**
      * @var \Soliant\SimpleFM\Adapter
      */
     protected $simpleFMAdapter;
-    
+
     /**
      * @param ServiceManager $serviceManager
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
      */
-    public function __construct(ServiceManager $serviceManager, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL ) 
+    public function __construct($fieldMap, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL )
     {
-        $this->setServiceManager($serviceManager);
+        if (!is_array($fieldMap)){
+            throw new InvalidArgumentException('$fieldMap must be an array.');
+        }
+
         $this->setSimpleFMAdapter($simpleFMAdapter);
         $this->setEntityName(get_class($entity));
-        $this->setEntityLayout($entity::getDefaultWriteLayoutName());
-        
+        $this->setEntityLayout($entity->getDefaultWriteLayoutName());
+
+        if (!array_key_exists($this->getEntityName(), $fieldMap)){
+            throw new InvalidArgumentException($this->getEntityName() . ' is missing from $fieldMap.');
+        }
+
+        $this->fieldMap = $fieldMap;
+
+        if (!array_key_exists('writeable', $this->fieldMap[$this->getEntityName()])){
+            throw new InvalidArgumentException($this->getEntityName() . ' fieldMap is missing from "writeable" array.');
+        }
+
+        if (!array_key_exists('readonly', $this->fieldMap[$this->getEntityName()])){
+            throw new InvalidArgumentException($this->getEntityName() . ' fieldMap is missing from "readonly" array.');
+        }
+
         if (!empty($identity) && !empty($encryptionKey)) {
             $this->simpleFMAdapter->setUsername($identity->getUsername());
             $this->simpleFMAdapter->setPassword($identity->getPassword($encryptionKey));
         }
-        
+
     }
-    
+
     /**
      * @param AbstractEntity $entity
      * @param string $entityLayout
@@ -82,7 +93,7 @@ abstract class AbstractGateway
         }
         return $this->find($entity->getRecid());
     }
-    
+
     public function find($recid)
     {
         $commandArray = array('-recid' => $recid, '-find' => NULL);
@@ -93,11 +104,11 @@ abstract class AbstractGateway
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
-    
+
     public function findOneBy(array $search)
     {
         $commandArray = array_merge(
-            $search, 
+            $search,
             array(
                 '-max' => '1',
                 '-find' => NULL
@@ -110,7 +121,7 @@ abstract class AbstractGateway
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
-    
+
     public function findAll(array $sort = array(), $max = NULL, $skip = NULL)
     {
         $commandArray = array_merge(
@@ -121,10 +132,10 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
-        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         return $this->rowsToArrayCollection($result['rows']);
     }
-    
+
     public function findBy(array $search, array $sort = array(), $max = NULL, $skip = NULL)
     {
         $commandArray = array_merge(
@@ -136,10 +147,10 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
-        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         return $this->rowsToArrayCollection($result['rows']);
     }
-    
+
     public function create(AbstractEntity $entity)
     {
         $serializedValues = $entity->serialize();
@@ -152,11 +163,11 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
-        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
-    
+
     public function edit(AbstractEntity $entity)
     {
         $commandArray = array_merge(
@@ -168,12 +179,12 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
-        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
-        
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
+
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
-    
+
     public function delete(AbstractEntity $entity)
     {
         $commandArray = array(
@@ -184,10 +195,10 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
-        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());    
+        $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         return true;
     }
-    
+
 
     /**
      * @return SimpleFMAdapter
@@ -196,7 +207,7 @@ abstract class AbstractGateway
     {
         return $this->simpleFMAdapter;
     }
-    
+
     /**
      * @param SimpleFMAdapter $simpleFMAdapter
      * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
@@ -207,7 +218,7 @@ abstract class AbstractGateway
         return $this;
     }
 
-	/**
+    /**
      * @return the $entityLayout
      */
     public function getEntityLayout ()
@@ -215,7 +226,7 @@ abstract class AbstractGateway
         return $this->entityLayout;
     }
 
-	/**
+    /**
      * @param string $entityLayout
      * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
      */
@@ -223,36 +234,10 @@ abstract class AbstractGateway
     {
         $this->entityLayout = $entityLayout;
         return $this;
-        
-    }
 
-	/**
-     * @param ServiceManager $serviceManager
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
-     */
-    public function setServiceManager(ServiceManager $serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        return $this;
     }
 
     /**
-     * @return ServiceManager
-     */
-    public function getServiceManager()
-    {
-        return $this->serviceManager;
-    }
-
-    /**
-     * @return \Zend\ServiceManager\ServiceManager
-     */
-    public function getLocator()
-    {
-        return $this->getServiceManager();
-    }
-
-	/**
      * Example return: Application\Entity\Entity
      * @return string
      */
@@ -261,7 +246,7 @@ abstract class AbstractGateway
         return $this->entityName;
     }
 
-	/**
+    /**
      * @param string $entityName
      * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
      */
@@ -272,44 +257,19 @@ abstract class AbstractGateway
     }
 
     /**
-     * @return the $eventManager
+     * @return the $fieldMap
      */
-    public function getEventManager ()
-    {
-        return $this->eventManager;
-    }
-
-	/**
-     * Set the event manager to use with this object
-     * @param EventManager $events
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
-     */
-    public function setEventManager(EventManager $events)
-    {
-        $this->eventManager = $events;
-        return $this;
+    public function getFieldMap() {
+        return $this->fieldMap;
     }
 
     /**
-     * Retrieve the currently set event manager
-     *
-     * If none is initialized, an EventManager instance will be created with
-     * the contexts of this class, the current class name (if extending this
-     * class), and "bootstrap".
-     *
-     * @return EventManager
+     * @param multitype: $fieldMap
      */
-    public function events()
-    {
-        if (!$this->eventManager instanceof EventManager) {
-            $this->setEventManager(new EventManager(array(
-                __CLASS__,
-                get_called_class(),
-            )));
-        }
-        return $this->eventManager;
+    public function setFieldMap($fieldMap) {
+        $this->fieldMap = $fieldMap;
     }
-    
+
     /**
      * @param int $max
      * @param int $skip
@@ -317,30 +277,30 @@ abstract class AbstractGateway
      */
     protected function maxSkipToCommandArray($max = NULL, $skip = NULL)
     {
-    
+
         $maxCommand = empty($max) ? array() : array('-max' => $max);
         $skipCommand = empty($skip) ? array() : array('-skip' => $skip);
-    
+
         return array_merge($maxCommand, $skipCommand);
     }
-    
+
     /**
      * @param array $sort
      * @return array
      */
     protected function sortArrayToCommandArray(array $sort)
     {
-    
+
         // -sortfield.[1-9] = fully-qualified-field-name
         // -sortorder.[1-9] = [ascend|descend|value-list-name]
-    
+
         if (empty($sort)) return array();
-    
+
         $i = 1;
         $command = array();
         foreach ($sort as $field => $method){
             if ($i > 9) break; // FileMaker API limited to max 9 fields
-    
+
             switch ($method) {
                 case 'dsc':
                     $sortMethod = 'descend';
@@ -367,16 +327,16 @@ abstract class AbstractGateway
                     $sortMethod = $method;
                     break;
             }
-    
+
             $command['-sortfield.' . $i] = $field;
             $command['-sortorder.' . $i] = $sortMethod;
             $i++;
         }
-    
+
         return $command;
-    
+
     }
-    
+
     /**
      * @param array $rows
      * @return \Doctrine\Common\Collections\ArrayCollection
@@ -386,27 +346,27 @@ abstract class AbstractGateway
         $collection = new ArrayCollection();
         if (!empty($rows)){
             foreach($rows as $row){
-                $collection[] = new $this->entityName($row);
+                $collection[] = new $this->entityName($this->fieldMap, $row);
             }
         }
-        
+
         return $collection;
     }
-    
+
     protected function handleAdapterResult($simpleFMAdapterResult)
     {
-        $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' . 
+        $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' .
                        $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
-        
+
         if ($simpleFMAdapterResult['error'] === 0){
             return $simpleFMAdapterResult;
-        
+
         } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker') {
             throw new FileMakerException($message, $simpleFMAdapterResult['error']);
-        
+
         } elseif ($simpleFMAdapterResult['errortype'] == 'HTTP') {
             throw new HttpException($message, $simpleFMAdapterResult['error']);
-            
+
         } elseif ($simpleFMAdapterResult['errortype'] == 'XML') {
             throw new XmlException($message, $simpleFMAdapterResult['error']);
 
@@ -414,7 +374,7 @@ abstract class AbstractGateway
             throw new ErrorException($message, $simpleFMAdapterResult['error']);
         }
     }
-    
+
 }
 
 

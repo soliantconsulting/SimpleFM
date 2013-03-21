@@ -36,11 +36,6 @@ abstract class AbstractGateway
     protected $entityLayout;
 
     /**
-     * @var array
-     */
-    protected $fieldMap;
-
-    /**
      * @var \Soliant\SimpleFM\Adapter
      */
     protected $simpleFMAdapter;
@@ -50,29 +45,11 @@ abstract class AbstractGateway
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
      */
-    public function __construct($fieldMap, AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL )
+    public function __construct(AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL )
     {
-        if (!is_array($fieldMap)){
-            throw new InvalidArgumentException('$fieldMap must be an array.');
-        }
-
         $this->setSimpleFMAdapter($simpleFMAdapter);
         $this->setEntityName(get_class($entity));
         $this->setEntityLayout($entity->getDefaultWriteLayoutName());
-
-        if (!array_key_exists($this->getEntityName(), $fieldMap)){
-            throw new InvalidArgumentException($this->getEntityName() . ' is missing from $fieldMap.');
-        }
-
-        $this->fieldMap = $fieldMap;
-
-        if (!array_key_exists('writeable', $this->fieldMap[$this->getEntityName()])){
-            throw new InvalidArgumentException($this->getEntityName() . ' fieldMap is missing from "writeable" array.');
-        }
-
-        if (!array_key_exists('readonly', $this->fieldMap[$this->getEntityName()])){
-            throw new InvalidArgumentException($this->getEntityName() . ' fieldMap is missing from "readonly" array.');
-        }
 
         if (!empty($identity) && !empty($encryptionKey)) {
             $this->simpleFMAdapter->setUsername($identity->getUsername());
@@ -101,7 +78,7 @@ abstract class AbstractGateway
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
+        $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
@@ -118,7 +95,7 @@ abstract class AbstractGateway
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
+        $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
@@ -164,7 +141,7 @@ abstract class AbstractGateway
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
+        $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
@@ -181,7 +158,7 @@ abstract class AbstractGateway
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
 
-        $entity = new $this->entityName($this->fieldMap, $result['rows'][0]);
+        $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
@@ -254,20 +231,6 @@ abstract class AbstractGateway
     {
         $this->entityName = $entityName;
         return $this;
-    }
-
-    /**
-     * @return the $fieldMap
-     */
-    public function getFieldMap() {
-        return $this->fieldMap;
-    }
-
-    /**
-     * @param multitype: $fieldMap
-     */
-    public function setFieldMap($fieldMap) {
-        $this->fieldMap = $fieldMap;
     }
 
     /**
@@ -346,7 +309,7 @@ abstract class AbstractGateway
         $collection = new ArrayCollection();
         if (!empty($rows)){
             foreach($rows as $row){
-                $collection[] = new $this->entityName($this->fieldMap, $row);
+                $collection[] = new $this->entityName($row);
             }
         }
 

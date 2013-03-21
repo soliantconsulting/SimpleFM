@@ -31,11 +31,6 @@ abstract class AbstractEntity
     /**
      * @var array
      */
-    protected $fieldMap;
-
-    /**
-     * @var array
-     */
     protected $entityAsArray;
 
     /**
@@ -48,27 +43,9 @@ abstract class AbstractEntity
     /**
      * @param array $simpleFMAdapterRow
      */
-    public function __construct($fieldMap, $simpleFMAdapterRow = array())
+    public function __construct($simpleFMAdapterRow = array())
     {
         $this->simpleFMAdapterRow = $simpleFMAdapterRow;
-
-        if (empty($fieldMap)){
-            throw new InvalidArgumentException(get_class($this) . ' is empty or missing.');
-        }
-
-        if (!array_key_exists(get_class($this), $fieldMap)){
-            throw new InvalidArgumentException(get_class($this) . ' is missing from $fieldMap.');
-        }
-
-        $this->fieldMap = $fieldMap;
-        if (!array_key_exists('writeable', $this->fieldMap[get_class($this)])){
-            throw new InvalidArgumentException(get_class($this) . ' fieldMap must contain a "writeable" array.');
-        }
-
-        if (!array_key_exists('readonly', $this->fieldMap[get_class($this)])){
-            throw new InvalidArgumentException(get_class($this) . ' fieldMap must contain a "readonly" array.');
-        }
-
         $this->isSerializable = TRUE;
         if (!empty($this->simpleFMAdapterRow)) $this->unserialize();
     }
@@ -142,7 +119,35 @@ abstract class AbstractEntity
     }
 
     /**
-     * Default FileMaker layout for the Entity which should include all the writable fields
+     * An array of properties and FileMaker field names each maps to which are writeable/serializable .
+     * List fields in this map which the web app can modify, such as text and number fields. Normally
+     * it will be most convenient to define the array directly in the method implementation.
+     * Example: return array ('myEntityName' => 'My Entity Name', 'status' => 'SomeTableOccurance::Status');
+     * @return array
+     */
+    abstract public function getFieldMapWriteable();
+
+    /**
+     * An array of properties and FileMaker field names each maps to which are readonly. List fields
+     * in this map which cannot be updated by the web app, such a s primary keys and calc fields.
+     * Normally it will be most convenient to define the array directly in the method implementation.
+     * Example: return array ('id' => 'PrimaryKey', 'total' => 'Total');
+     * @return array
+     */
+    abstract public function getFieldMapReadonly();
+
+    /**
+     * Utility function combines both field maps into a single map.
+     * @return array
+     */
+    public function getFieldMapMerged()
+    {
+        return array_merge($this->getFieldMapWriteable(), $this->getFieldMapReadOnly());
+    }
+
+    /**
+     * Default FileMaker layout for the Entity. This layout should usually at least include all the
+     * writable fields, but it may also include readonly fields and portals/associations.
      */
     abstract public function getDefaultWriteLayoutName();
 
@@ -161,11 +166,11 @@ abstract class AbstractEntity
         $this->unserializeField('recid', 'recid');
         $this->unserializeField('modid', 'modid');
 
-        foreach ($this->fieldMap[get_class($this)]['writeable'] as $property=>$field) {
+        foreach ($this->getFieldMapWriteable() as $property=>$field) {
             $this->unserializeField($property, $field, true);
         }
 
-        foreach ($this->fieldMap[get_class($this)]['readonly'] as $property=>$field) {
+        foreach ($this->getFieldMapReadOnly() as $property=>$field) {
             $this->unserializeField($property, $field, false);
         }
     }
@@ -182,14 +187,9 @@ abstract class AbstractEntity
         $this->serializeField('-recid', 'getRecid');
         $this->serializeField('-modid', 'getModid');
 
-        foreach ($this->fieldMap[get_class($this)]['writeable'] as $property=>$field) {
+        foreach ($this->getFieldMapMerged() as $property=>$field) {
             $this->serializeField($field, $property);
         }
-
-        foreach ($this->fieldMap[get_class($this)]['readonly'] as $property=>$field) {
-            $this->serializeField($field, $property);
-        }
-
     }
 
     /**
@@ -200,11 +200,7 @@ abstract class AbstractEntity
         $this->addPropertyToEntityAsArray('recid');
         $this->addPropertyToEntityAsArray('modid');
 
-        foreach ($this->fieldMap[get_class($this)]['writeable'] as $property=>$field) {
-            $this->addPropertyToEntityAsArray($property);
-        }
-
-        foreach ($this->fieldMap[get_class($this)]['readonly'] as $property=>$field) {
+        foreach ($this->getFieldMapMerged() as $property=>$field) {
             $this->addPropertyToEntityAsArray($property);
         }
 

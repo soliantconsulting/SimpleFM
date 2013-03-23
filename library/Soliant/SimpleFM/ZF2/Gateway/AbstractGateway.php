@@ -324,6 +324,12 @@ abstract class AbstractGateway
         if ($simpleFMAdapterResult['error'] === 0){
             return $simpleFMAdapterResult;
 
+        } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker' && $simpleFMAdapterResult['error'] === 401) {
+            /**
+             * Don't throw an error for a FileMaker 401: "No records match the request"
+             */
+            return $simpleFMAdapterResult;
+
         } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker') {
             throw new FileMakerException($message, $simpleFMAdapterResult['error']);
 

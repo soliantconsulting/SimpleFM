@@ -184,12 +184,14 @@ abstract class AbstractEntity
     {
         $this->simpleFMAdapterRow = array();
 
-        $this->serializeField('-recid', 'getRecid');
-        $this->serializeField('-modid', 'getModid');
+        $this->serializeField('-recid', 'recid');
+        $this->serializeField('-modid', 'modid');
 
         foreach ($this->getFieldMapMerged() as $property=>$field) {
             $this->serializeField($field, $property);
         }
+
+        return $this->simpleFMAdapterRow;
     }
 
     /**

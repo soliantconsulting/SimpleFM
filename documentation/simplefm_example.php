@@ -2,7 +2,7 @@
 
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
- * 
+ *
  * @package   SimpleFM
  * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
@@ -43,7 +43,7 @@ $adapter->setHostParams(
         'hostname' => 'localhost',
         'dbname'   => 'FMServer_Sample',
         'username' => 'someusername',
-        'password' => 'somepassword' 
+        'password' => 'somepassword'
     )
 );
 
@@ -83,16 +83,16 @@ $adapter->setPassword('');
 $adapter->setLayoutname('Projects');
 
 /**
- * As already mentioned, for basic usage, you can define commands using the FileMaker XML url api syntax. 
+ * As already mentioned, for basic usage, you can define commands using the FileMaker XML url api syntax.
  * See /documentation/fms12_cwp_xml_en.pdf
  */
 $adapter->setCommandstring('-findall');
 
 /**
  * For more fine-grained control, you can also interact with the adapter's commandarray.
- * This is useful because it lets you modify existing commands on the adpater, and add new commands 
+ * This is useful because it lets you modify existing commands on the adpater, and add new commands
  * without blowing away existing command properties. For example:
- 
+
     $commandarray = $adapter->getCommandarray();
     $commandarray['-max']  = 40 ;             // change -max value
     $commandarray['-skip'] = 10 ;             // add a -skip command
@@ -116,7 +116,7 @@ $adapter->setCommandstring('-findall');
  */
 
 /**
- * SimpleFMAdapter also provides a Boolean rowsbyrecid property which makes the returned rows of data associative 
+ * SimpleFMAdapter also provides a Boolean rowsbyrecid property which makes the returned rows of data associative
  * by FileMaker recid instead of the default behavior which is rows as an arbitrarily indexed array.
  */
 $adapter->setRowsbyrecid(FALSE);
@@ -138,9 +138,9 @@ $fetchsize = $result['fetchsize'];     // int
 $rows      = $result['rows'];          // array
 
 
- /** 
+ /**
  * Handle the result:
- * 
+ *
  * Below are some very basic examples of what you can do with the query results. These examples are designed to be
  * a flexible way to view raw results, and are probably not the way you would normally handle results in an OOP
  * solution (see Best practices in the included README.md).
@@ -157,8 +157,8 @@ echo "Error Type: $errortype <br/>";
 echo "Found Count: $count<br/>";
 echo "Fetch Size: $fetchsize<br/>";
 echo "</div>";
-    
-if ($error===0){
+
+if ($error === 0){
     /**
      * Format the result rows like a FileMaker Table View
      */
@@ -167,12 +167,30 @@ if ($error===0){
         foreach ($indexed[0] as $key => $value) { echo "<th>$key</th>"; }
         echo "</tr>";
         foreach ($rows as $data) { echo "<tr>";
-            foreach ($data as $value) { 
-                $value = $value===""?"&nbsp;":$value; 
+            foreach ($data as $value) {
+                $value = $value === "" ? "&nbsp;" : $value;
+                if (is_array($value)) {
+                    if (isset($value['parentindex'])){
+                        // portal
+                        $tempvalue = '';
+                        foreach ($value as $k=>$v){
+                            if (is_array($v)) {
+                                continue;
+                            }
+                            $tempvalue .= $k . ':&nbsp;' . $v . '<br>';
+                        }
+                        $value = $tempvalue;
+                    } else {
+                        // repeating field
+                        $value = implode("<br>", $value);
+                    }
+                } else {
+                    $value = nl2br($value);
+                }
                 echo "<td>$value</td>"; }
-        echo "</tr>";}    
+        echo "</tr>";}
     echo "</table>";
-    
+
     /**
      * Format the result rows like a FileMaker Form in List View
      */
@@ -180,7 +198,25 @@ if ($error===0){
     foreach ($rows as $i => $data) {
         echo "<table border=1>";
         foreach ($data as $key => $value) {
-            $value = $value===""?"&nbsp;":$value;
+            $value = $value === "" ? "&nbsp;" : $value;
+            if (is_array($value)) {
+                if (isset($value['parentindex'])){
+                    // portal
+                    $tempvalue = '';
+                    foreach ($value as $k=>$v){
+                        if (is_array($v)) {
+                            continue;
+                        }
+                        $tempvalue .= $k . ':&nbsp;' . $v . '<br>';
+                    }
+                    $value = $tempvalue;
+                } else {
+                    // repeating field
+                    $value = implode("<br>", $value);
+                }
+            } else {
+                $value = nl2br($value);
+            }
             echo "<tr><th>$key</th><td>$value</td></tr>";
         }
         echo "</table><br/>";
@@ -192,6 +228,6 @@ if ($error===0){
  */
 echo "<hr><pre>";
 var_dump($result);
-    
+
 
 

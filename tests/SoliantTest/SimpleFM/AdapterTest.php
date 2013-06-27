@@ -227,7 +227,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
-     * @todo Write more meaningful tests for testExecute which also exercise the parser
+     * @todo Write more assertions for testExecute which exercise un-covered parser edge cases
      */
     public function testExecute()
     {
@@ -237,19 +237,40 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
         // return three records
         $result = $this->object->execute();
+
         $this->assertEquals($result['count'],3);
+
 
         // parsed with rowsbyrecid TRUE
         $this->object->setRowsbyrecid(TRUE);
         $result = $this->object->execute();
-           $taskNameField = $result['rows'][7676]['Tasks']['rows'][15001]['Task Name'];
+
+        $taskNameField = $result['rows'][7676]['Tasks']['rows'][15001]['Task Name'];
         $this->assertEquals($taskNameField, 'Review mock ups');
 
-        // parsed with rowsbyrecid FALSE
+
+        // parsed with rowsbyrecid FALSE (the default behavior)
         $this->object->setRowsbyrecid(FALSE);
         $result = $this->object->execute();
-           $taskNameField = $result['rows'][1]['Tasks']['rows'][2]['Task Name'];
+
+        $nonRepeatingField = $result['rows'][0]['Status'];
+        $this->assertEquals($nonRepeatingField, '4');
+        $this->assertInternalType('string', $nonRepeatingField);
+        $this->assertNotInternalType('array', $nonRepeatingField);
+
+        $repeatingField = $result['rows'][0]['Repeating Field'];
+        $this->assertInternalType('array', $repeatingField);
+        $this->assertNotInternalType('string', $repeatingField);
+
+        $taskNameField = $result['rows'][1]['Tasks']['rows'][2]['Task Name'];
         $this->assertEquals($taskNameField, 'Complete sketches');
+        $this->assertInternalType('string', $taskNameField);
+        $this->assertNotInternalType('array', $taskNameField);
+
+        $taskRepeatingField = $result['rows'][1]['Tasks']['rows'][2]['Repeating Field'];
+        $this->assertInternalType('array', $taskRepeatingField);
+        $this->assertNotInternalType('string', $taskRepeatingField);
+
     }
 
     /**

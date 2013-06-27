@@ -473,7 +473,14 @@ class Adapter
             foreach ($xml->resultset[0]->record[$i]->field as $field ) { // handle fields
 
                 $fieldname = (string) $field['name'];
-                $fielddata = (string) $field->data ;
+                if (count($field) > 1) {
+                    $fielddata = array();
+                    foreach ($field->data as $data){
+                        $fielddata[] = (string) $data;
+                    }
+                } else {
+                    $fielddata = (string) $field->data;
+                }
 
                 $fieldnameIsValid = $i===0 ? self::fieldnameIsValid($fieldname) : TRUE; // validate fieldnames on first row
                 $result[$conditional_id][$fieldname] = $fielddata;
@@ -504,7 +511,15 @@ class Adapter
 
                         foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record[$iii]->field as $portal_field ) { // handle portal fields
                             $portal_fieldname = (string) str_replace($portalname.'::', '', $portal_field['name']);
-                            $portal_fielddata = (string) $portal_field->data ;
+                            if (count($portal_field) > 1) {
+                                $portal_fielddata = array();
+                                foreach ($portal_field->data as $data){
+                                    $portal_fielddata[] = (string) $data;
+                                }
+                            } else {
+                                $portal_fielddata = (string) $portal_field->data;
+                            }
+
 
                             $fieldnameIsValid = $iii===0 ? self::fieldnameIsValid($portal_fieldname) : TRUE; // validate fieldnames on first row
                             $result[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;

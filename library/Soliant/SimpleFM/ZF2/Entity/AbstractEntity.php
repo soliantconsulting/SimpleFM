@@ -56,7 +56,11 @@ abstract class AbstractEntity
 
     public function __toString()
     {
-        return (string) $this->getName();
+        if (method_exists($this, 'getName')) {
+            return (string) $this->getName();
+        } else {
+            return '<toString is unconfigured>';
+        }
     }
 
     /**
@@ -94,12 +98,6 @@ abstract class AbstractEntity
         $this->modid = $modid;
         return $this;
     }
-
-    /**
-     * @note Can be a concrete field e.g. $this->name,
-     * or return derived value based on business logic
-     */
-    abstract public function getName();
 
     /**
      * @return the $isSerializable

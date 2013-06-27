@@ -1,5 +1,5 @@
 <?php
- 
+
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
@@ -21,16 +21,16 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Adapter
      */
-    protected $object;  
+    protected $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
     protected function setUp()
-    {    	
+    {
         $params=array('hostname'=>'localhost','dbname'=>'testdb','username'=>'Admin','password'=>'');
-    	$this->object = new Adapter($params, new Mock());
+        $this->object = new Adapter($params, new Mock());
     }
 
     /**
@@ -39,7 +39,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-    
+
     }
 
     /**
@@ -55,12 +55,12 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->object->getUsername(),'root');
         $this->assertEquals($this->object->getPort(),'80');
         $this->assertEquals($this->object->getProtocol(),'http');
-        
+
         $params=array('port'=>'9000','protocol'=>'https');
         $value = $this->object->setHostParams($params);
         $this->assertEquals($this->object->getPort(),'9000');
         $this->assertEquals($this->object->getProtocol(),'https');
-        
+
         $params=array('protocol'=>'xyz');
         $this->setExpectedException('InvalidArgumentException');
         $value = $this->object->setHostParams($params);
@@ -74,7 +74,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $params=array('username'=> 'root' , 'password'=>'soliant');
         $value = $this->object->setCredentials($params);
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getUsername(),'root');           
+        $this->assertEquals($this->object->getUsername(),'root');
     }
 
     /**
@@ -85,7 +85,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $params=array('layoutname'=> 'tab' , 'commandstring'=>'soliant=consulting');
         $value = $this->object->setCallParams($params);
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getLayoutname(),'tab'); 
+        $this->assertEquals($this->object->getLayoutname(),'tab');
         $this->assertEquals($this->object->getCommandstring(),'soliant=consulting');
     }
 
@@ -93,7 +93,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Adapter::getHostname
      */
     public function testGetSetHostname()
-    {      	
+    {
         $test = $this->object->setHostname('127.0.0.1');
         $this->assertTrue($test instanceof $this->object);
         $this->assertEquals($this->object->getHostname(),'127.0.0.1');
@@ -104,11 +104,11 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Adapter::getUsername
      */
     public function testGetSetUsername()
-    {   
-    	
-    	$test=$this->object->setUsername('root');
-    	$this->assertTrue($test instanceof $this->object);
-        $this->assertEquals($this->object->getUsername(),'root');   
+    {
+
+        $test=$this->object->setUsername('root');
+        $this->assertTrue($test instanceof $this->object);
+        $this->assertEquals($this->object->getUsername(),'root');
     }
 
     /**
@@ -127,7 +127,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $test = $this->object->setDbname('test');
         $this->assertTrue($test instanceof $this->object);
-        $this->assertEquals($this->object->getDbname(),'test'); 
+        $this->assertEquals($this->object->getDbname(),'test');
     }
 
     /**
@@ -137,7 +137,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $value = $this->object->setLayoutname('tab');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getLayoutname(),'tab'); 
+        $this->assertEquals($this->object->getLayoutname(),'tab');
     }
 
     /**
@@ -147,7 +147,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $value = $this->object->setCommandstring('A=B&C=D&E=F');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getCommandstring(),'A=B&C=D&E=F'); 
+        $this->assertEquals($this->object->getCommandstring(),'A=B&C=D&E=F');
     }
 
     /**
@@ -157,9 +157,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $value = $this->object->setCommandstring('A=B&C=D');
         $this->assertTrue($value instanceof $this->object);
-        $arr = $this->object->getCommandarray(); 
+        $arr = $this->object->getCommandarray();
         $arr1=array('A' => 'B',
-        			'C' => 'D');      
+                    'C' => 'D');
         $this->assertEquals($arr, $arr1);
     }
 
@@ -170,7 +170,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
          $value = $this->object->setProtocol('https');
          $this->assertTrue($value instanceof $this->object);
-         $this->assertEquals($this->object->getProtocol(),'https'); 
+         $this->assertEquals($this->object->getProtocol(),'https');
     }
 
     /**
@@ -180,7 +180,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $value=$this->object->setPort('8080');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getPort(),'8080'); 
+        $this->assertEquals($this->object->getPort(),'8080');
     }
 
     /**
@@ -188,10 +188,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetFmresultsetUri()
     {
-       
+
         $value = $this->object->setFmresultsetUri('./abc/fmresult.xml');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getFmresultsetUri(),'./abc/fmresult.xml'); 
+        $this->assertEquals($this->object->getFmresultsetUri(),'./abc/fmresult.xml');
     }
 
     /**
@@ -201,7 +201,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $value = $this->object->setFmpxmllayoutUri('./abc/fmlayout.xml');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getFmpxmllayoutUri(),'./abc/fmlayout.xml'); 
+        $this->assertEquals($this->object->getFmpxmllayoutUri(),'./abc/fmlayout.xml');
     }
 
     /**
@@ -211,45 +211,66 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     {
         $value = $this->object->setRowsbyrecid('1876612984689092');
         $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getRowsbyrecid(),TRUE); 
+        $this->assertEquals($this->object->getRowsbyrecid(),TRUE);
     }
-    
+
     /**
      * @covers Soliant\SimpleFM\Adapter::getSetCommandURLDebug
      */
     public function testGetSetCommandURLDebug()
-    {	 
-    	 $commandURL = '$http://root@127.0.0.1:8080./abc/fmresult.xml?-db=testdb&-lay=tab&A=B&C=D&E=F';
-    	 $value = $this->object->setCommandURLdebug($commandURL);
-    	 $this->assertTrue($value instanceof $this->object);         
+    {
+         $commandURL = '$http://root@127.0.0.1:8080./abc/fmresult.xml?-db=testdb&-lay=tab&A=B&C=D&E=F';
+         $value = $this->object->setCommandURLdebug($commandURL);
+         $this->assertTrue($value instanceof $this->object);
          $this->assertEquals($this->object->getCommandURLdebug(), $commandURL);
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
-     * @todo Write more meaningful tests for testExecute which also exercise the parser
+     * @todo Write more assertions for testExecute which exercise un-covered parser edge cases
      */
     public function testExecute()
     {
-    	$file = dirname(__FILE__) . '/TestAssets/projectsampledata.xml';
+        $file = dirname(__FILE__) . '/TestAssets/projectsampledata.xml';
         $mockLoader = $this->object->getLoader();
         $mockLoader->setTestXml(file_get_contents($file));
-        
-        // return five records
+
+        // return three records
         $result = $this->object->execute();
-        $this->assertEquals($result['count'],5);
-        
+
+        $this->assertEquals($result['count'],3);
+
+
         // parsed with rowsbyrecid TRUE
-        $this->object->setRowsbyrecid(TRUE);	
+        $this->object->setRowsbyrecid(TRUE);
         $result = $this->object->execute();
-       	$taskNameField = $result['rows'][7676]['Tasks']['rows'][15001]['Task Name'];       
+
+        $taskNameField = $result['rows'][7676]['Tasks']['rows'][15001]['Task Name'];
         $this->assertEquals($taskNameField, 'Review mock ups');
-        
-        // parsed with rowsbyrecid FALSE 
-        $this->object->setRowsbyrecid(FALSE);	
+
+
+        // parsed with rowsbyrecid FALSE (the default behavior)
+        $this->object->setRowsbyrecid(FALSE);
         $result = $this->object->execute();
-       	$taskNameField = $result['rows'][4]['Tasks']['rows'][0]['Task Name'];
-        $this->assertEquals($taskNameField, 'Zoink');     			         	        		    
+
+        $nonRepeatingField = $result['rows'][0]['Status'];
+        $this->assertEquals($nonRepeatingField, '4');
+        $this->assertInternalType('string', $nonRepeatingField);
+        $this->assertNotInternalType('array', $nonRepeatingField);
+
+        $repeatingField = $result['rows'][0]['Repeating Field'];
+        $this->assertInternalType('array', $repeatingField);
+        $this->assertNotInternalType('string', $repeatingField);
+
+        $taskNameField = $result['rows'][1]['Tasks']['rows'][2]['Task Name'];
+        $this->assertEquals($taskNameField, 'Complete sketches');
+        $this->assertInternalType('string', $taskNameField);
+        $this->assertNotInternalType('array', $taskNameField);
+
+        $taskRepeatingField = $result['rows'][1]['Tasks']['rows'][2]['Repeating Field'];
+        $this->assertInternalType('array', $taskRepeatingField);
+        $this->assertNotInternalType('string', $taskRepeatingField);
+
     }
 
     /**
@@ -257,7 +278,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testDisplayXmlError()
     {
-        $file = dirname(__FILE__) . '/TestAssets/sample.xml';
+        $file = dirname(__FILE__) . '/TestAssets/invalid.xml';
         libxml_use_internal_errors(true);
         $xml = simplexml_load_file($file);
         $errors = libxml_get_errors();
@@ -266,23 +287,23 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
   Line: 4
   Column: 46
-  File: ' . dirname(__FILE__) . '/TestAssets/sample.xml
+  File: ' . dirname(__FILE__) . '/TestAssets/invalid.xml
 
 --------------------------------------------
 
 ';
         foreach ($errors as $error) {
-			$this->assertEquals($this->object->displayXmlError($error,$xml),$string);	
-		}
-      }  
-        
-    
+            $this->assertEquals($this->object->displayXmlError($error,$xml),$string);
+        }
+      }
+
+
     /**
      * @covers Soliant\SimpleFM\Adapter::extractErrorFromPhpMessage
      */
     public function testExtractErrorFromPhpMessage()
     {
-    	$return = array('error' => '401' , 'errortext' => 'Unauthorized' , 'errortype' => 'HTTP');
+        $return = array('error' => '401' , 'errortext' => 'Unauthorized' , 'errortype' => 'HTTP');
         $string = 'HTTP/1.1 401 Unauthorized';
         $this->assertEquals($this->object->extractErrorFromPhpMessage($string) , $return);
     }
@@ -292,8 +313,7 @@ Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
      */
     public function testErrorToEnglish()
     {
-    	
-    	$error = array( 0 => 'No Error', 10 => 'Requested data is missing');
-        $this->assertEquals($this->object->errorToEnglish(10),'Requested data is missing');    
+        $error = array( 0 => 'No Error', 10 => 'Requested data is missing');
+        $this->assertEquals($this->object->errorToEnglish(10),'Requested data is missing');
     }
 }

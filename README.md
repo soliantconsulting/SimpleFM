@@ -40,64 +40,82 @@ SimpleFM is free for commercial and non-commercial use, licensed under the busin
 
 All the examples included with SimpleFM are based the FMServer_Sample which is included with FileMaker Server 12. To use the examples it is assumed that you have FMServer_Sample running on a FileMaker 12 host with XML web publishing enabled. (You may also have any other FMS services enabled, including PHP web publishing, but only XML is required for SimpleFM.) Setup and configuration of FileMaker server is beyond the scope of this documentation.
 
-See /documentation/simplefm_example.php for a working PHP example that follows the basic steps shown in this Quickstart section, as well as some additional tips about usage.
+See `/documentation/fms12_cwp_xml_en.pdf` for the official FileMaker documentation. In particular, Appendix A (page 43) contains a useful command reference.
+
+> WARNING: Copy/paste out of the pdf documentation must be done with caution. The typsetting uses emdash, not hyphen characters. They look very similar, and this can be very hard to troubleshoot if you are not careful.
+
+See `/documentation/simplefm_example.php` for a working PHP example that follows the basic steps shown in this Quickstart section, as well as some additional tips about usage.
 
 ## Quickstart
 
 ### Import the adapter
 
-    use Soliant\SimpleFM\Adapter;
+```
+use Soliant\SimpleFM\Adapter;
+```
     
 ### Basic adapter configuration
 
-    $hostParams = array(
-        'hostname' => 'localhost',
-        'dbname'   => 'FMServer_Sample',
-        'username' => 'Admin',
-        'password' => ''
-    );
+```
+$hostParams = array(
+    'hostname' => 'localhost',
+    'dbname'   => 'FMServer_Sample',
+    'username' => 'Admin',
+    'password' => ''
+);
+```
 
 ### Instantiate the adapter
 
-    $adapter = new Adapter($hostParams);
+```
+$adapter = new Adapter($hostParams);
+```
 
 ### Set layout context
 
-    $adapter->setLayoutname('Tasks');
+```
+$adapter->setLayoutname('Tasks');
+```
     
     
 ### Set command(s)
 
-    /**
-     * @Note: See fms12_cwp_xml_en.pdf Appendix A for a complete command reference.
-     * Commands that take no arguments, such as -findall, must be set with either a
-     * NULL value or an empty string.
-     * 
-     * @WARNING: Copy/paste out of the pdf must be done with caution. The typsetting
-     * uses emdash, not hyphen characters. They look very similar, and this can be
-     * very hard to troubleshoot if you are not careful.
-     */
-    $adapter->setCommandarray(
-        array(
-            '-max'     => 10,
-            '-skip'    => 5,
-            '-findall' => NULL
-        )
-    );
+```
+/**
+ * @Note: See fms12_cwp_xml_en.pdf Appendix A for a complete command reference.
+ * Commands that take no arguments, such as -findall, must be set with either a
+ * NULL value or an empty string.
+ * 
+ * @WARNING: Copy/paste out of the pdf must be done with caution. The typsetting
+ * uses emdash, not hyphen characters. They look very similar, and this can be
+ * very hard to troubleshoot if you are not careful.
+ */
+$adapter->setCommandarray(
+    array(
+        '-max'     => 10,
+        '-skip'    => 5,
+        '-findall' => NULL
+    )
+);
+```
 
 ### Execute
 
-    $result = $adapter->execute();
+```
+$result = $adapter->execute();
+```
     
 ### Handle the result
 
-    $url       = $result['url'];           // string
-    $error     = $result['error'];         // int
-    $errortext = $result['errortext'];     // string
-    $errortype = $result['errortype'];     // string
-    $count     = $result['count'];         // int
-    $fetchsize = $result['fetchsize'];     // int
-    $rows      = $result['rows'];          // array
+```
+$url       = $result['url'];           // string
+$error     = $result['error'];         // int
+$errortext = $result['errortext'];     // string
+$errortype = $result['errortype'];     // string
+$count     = $result['count'];         // int
+$fetchsize = $result['fetchsize'];     // int
+$rows      = $result['rows'];          // array
+```
     
 ## About FileMaker Portals
 
@@ -107,14 +125,74 @@ There can be more than one portal on a layout. SimpleFM returns n portals for ev
 
 Assuming you leave rowsbyrecid as FALSE (the default setting), here is example array notation that would echo the the recid and the field value from the first portal row on the first record in the result set. Note that index, recid and modid are always properties on every parent and child row.
 
-    echo $rows[0]['Portal_TO_Name']['rows'][0]['recid'].'<br/>';    
-    echo $rows[0]['Portal_TO_Name']['rows'][0]['myField'];
- 
+```
+echo $rows[0]['Portal_TO_Name']['rows'][0]['recid'].'<br>';    
+echo $rows[0]['Portal_TO_Name']['rows'][0]['myField'];
+```
+
 If you set rowsbyrecid to TRUE on your adapter, here is syntax that would echo the data from a portal where the parent row has recid 154 and the child row has recid 335932.
 
-    echo $rows[154]['Portal_TO_Name']['rows'][335932]['Related_TO_Name::fieldOnPortal'];
+```
+echo $rows[154]['Portal_TO_Name']['rows'][335932]['Related_TO_Name::fieldOnPortal'];
+```
 
 It is left to you do decide which way you want the results indexed.
+
+## About FileMaker Repeating Fields
+
+FileMaker supports a field configuration called "Repeating". If the field is defined as repeating in the FileMaker schema, but the layout associated with the request only defines a single repetition, SimpleFM will treat it like a normal field. Assume a repeating field named myRepeatingField is defined with three repetitions, containing the following three values in each repetition, respectively:
+
+1. Foo
+1. Bar
+1. Baz
+
+```
+// If the layout only defines one repetition for the field
+
+echo $rows[0]['myRepeatingField'];
+
+// output:
+// Foo
+```
+
+```
+// If the layout defines more than one repetition for the field
+
+echo $rows[0]['myRepeatingField'][0] . <br>;
+echo $rows[0]['myRepeatingField'][1] . <br>;
+echo $rows[0]['myRepeatingField'][2];
+
+// output:
+// Foo
+// Bar
+// Baz
+```
+
+Note that FileMaker repetitions, are 1 indexed, and of course php arrays are 0 indexed, so repetition 1 is `$myRepeatingField[0]` and so on.
+
+## About the syntax for a fully qualified field name
+
+In particular, you will need to understand qualified field name conventions in order to set repetitions (other than 1) on repeating fields. 
+
+```field-name(repetition-number)
+```
+
+If you leave off the repetition number when setting fields in your commandArray, it defaults to setting repetition 1.
+
+Example:
+
+```
+    $adapter->setCommandarray(
+        array(
+            'myRepeatingField'    => 'Foo',
+            'myRepeatingField(2)' => 'Bar',
+            'myRepeatingField(3)' => 'Baz',
+            '-new'                => NULL
+        )
+    );
+```
+
+See more details in the official API Documentation Appendix A (page 45):Note that to be accessible, fields (and field repetitions) must be on the layout you specify in the query.
 
 ## Best Practices
 

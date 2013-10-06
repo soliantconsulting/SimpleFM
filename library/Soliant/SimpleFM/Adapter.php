@@ -60,7 +60,7 @@ class Adapter
     /**
      * @var int
      */
-    protected $port = 80;
+    protected $port = '';
 
     /**
      * @var string
@@ -75,7 +75,7 @@ class Adapter
     /**
      * @var boolean
      */
-    protected $rowsbyrecid = FALSE;
+    protected $rowsbyrecid = false;
 
     /**
      * @var string
@@ -111,8 +111,8 @@ class Adapter
         $this->username = @$params['username'];
         $this->password = @$params['password'];
 
-        if (isset($params['port']))     $this->setPort($params['port']);
         if (isset($params['protocol'])) $this->setProtocol($params['protocol']);
+        if (isset($params['port'])) $this->setPort($params['port']);
 
         return $this;
     }
@@ -297,6 +297,13 @@ class Adapter
      */
     public function getPort ()
     {
+        if (empty($this->port)) {
+            if ($this->getProtocol() == 'https') {
+                $this->setPort('443');
+            } elseif ($this->getProtocol() == 'http') {
+                $this->setPort('80');
+            }
+        }
         return $this->port;
     }
 

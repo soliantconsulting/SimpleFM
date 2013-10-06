@@ -37,18 +37,20 @@ class Curl extends AbstractLoader
 
         self::prepare();
 
+        $url = self::createPostURL();
 
-        $curlHandle = curl_init(self::createPostURL());
+        $curlHandle = curl_init($url);
 
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);
         curl_setopt($curlHandle, CURLOPT_POST, TRUE);
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->args);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
 
         ob_start();
 
         if (!curl_exec($curlHandle)) {
             ob_end_clean();
-            throw new LoaderException('cURL was unable to connect.');
+            throw new LoaderException('cURL was unable to connect to ' . $url . '.');
         }
 
         curl_close($curlHandle);

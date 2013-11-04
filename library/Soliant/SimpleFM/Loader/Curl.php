@@ -44,7 +44,7 @@ class Curl extends AbstractLoader
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);
         curl_setopt($curlHandle, CURLOPT_POST, TRUE);
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->args);
-        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getSslverifypeer());
 
         ob_start();
 

@@ -27,8 +27,16 @@ class FileGetContents extends AbstractLoader
         self::prepare();
 
         libxml_use_internal_errors(true);
+        
+        $opts = array(
+            'ssl'=> array(
+                'verify_peer'' => $this->adapter->getSslverifypeer(),
+            ),
+        );
+        
+        $context  = stream_context_create($opts);
 
-        return simplexml_load_string(file_get_contents($this->commandURL));
+        return simplexml_load_string(file_get_contents($this->commandURL, false, $context));
 
     }
 

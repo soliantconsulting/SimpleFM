@@ -58,9 +58,14 @@ class Adapter
     protected $protocol = 'http';
 
     /**
+     * @var boolean
+     */
+    protected $sslverifypeer = true;
+
+    /**
      * @var int
      */
-    protected $port = '';
+    protected $port = 80;
 
     /**
      * @var string
@@ -113,6 +118,7 @@ class Adapter
 
         if (isset($params['protocol'])) $this->setProtocol($params['protocol']);
         if (isset($params['port'])) $this->setPort($params['port']);
+        if (isset($params['sslverifypeer'])) $this->setSslverifypeer($params['sslverifypeer']);
 
         return $this;
     }
@@ -293,6 +299,24 @@ class Adapter
     }
 
     /**
+     * @return the $sslVerifyPeer
+     */
+    public function getSslverifypeer()
+    {
+        return (boolean) $this->sslverifypeer;
+    }
+
+	/**
+     * @param boolean $sslverifypeer
+     * @return \Soliant\SimpleFM\Adapter
+     */
+    public function setSslverifypeer($sslverifypeer)
+    {
+        $this->sslverifypeer = (boolean) $sslverifypeer;
+        return $this;
+    }
+
+	/**
      * @return the $port
      */
     public function getPort ()
@@ -358,7 +382,7 @@ class Adapter
      */
     public function getRowsbyrecid()
     {
-        return $this->rowsbyrecid;
+        return (boolean) $this->rowsbyrecid;
     }
 
     /**
@@ -367,7 +391,7 @@ class Adapter
      */
     public function setRowsbyrecid($rowsByRecId = FALSE)
     {
-        $this->rowsbyrecid = (boolean)$rowsByRecId;
+        $this->rowsbyrecid = (boolean) $rowsByRecId;
         return $this;
     }
 

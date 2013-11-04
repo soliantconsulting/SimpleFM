@@ -174,6 +174,17 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::getSslverifypeer
+     */
+    public function testGetSetSslverifypeer()
+    {
+         $this->assertEquals($this->object->getSslverifypeer(),true);
+         $value = $this->object->setSslverifypeer(false);
+         $this->assertTrue($value instanceof $this->object);
+         $this->assertEquals($this->object->getSslverifypeer(),false);
+    }
+
+    /**
      * @covers Soliant\SimpleFM\Adapter::getPort
      */
     public function testGetSetPort()

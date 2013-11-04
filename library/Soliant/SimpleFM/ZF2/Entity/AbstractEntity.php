@@ -185,7 +185,7 @@ abstract class AbstractEntity
         $this->serializeField('-recid', 'recid');
         $this->serializeField('-modid', 'modid');
 
-        foreach ($this->getFieldMapMerged() as $property=>$field) {
+        foreach ($this->getFieldMapWriteable() as $property=>$field) {
             $this->serializeField($field, $property);
         }
 

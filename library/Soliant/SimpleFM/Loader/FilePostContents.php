@@ -39,17 +39,20 @@ class FilePostContents extends AbstractLoader
         libxml_use_internal_errors(true);
         $authheader = empty($this->credentials) ? '' : 'Authorization: Basic '.base64_encode($this->credentials) . PHP_EOL;
 
-        $opts = array('http' =>
-                array(
-                        'method'  => 'POST',
-                        'header'  => 'User-Agent: SimpleFM' . PHP_EOL .
-                        $authheader .
-                        'Accept: text/xml,text/html,text/plain' . PHP_EOL .
-                        'Content-type: application/x-www-form-urlencoded' . PHP_EOL .
-                        'Content-length: ' . strlen($this->args) .  PHP_EOL .
-                        PHP_EOL,
-                        'content' => $this->args
-                )
+        $opts = array(
+            'http' => array(
+                'method'  => 'POST',
+                'header'  => 'User-Agent: SimpleFM' . PHP_EOL .
+                $authheader .
+                'Accept: text/xml,text/html,text/plain' . PHP_EOL .
+                'Content-type: application/x-www-form-urlencoded' . PHP_EOL .
+                'Content-length: ' . strlen($this->args) .  PHP_EOL .
+                PHP_EOL,
+                'content' => $this->args,
+            ),
+            'ssl'=> array(
+                'verify_peer'' => $this->adapter->getSslverifypeer(),
+            ),
         );
 
         $context  = stream_context_create($opts);

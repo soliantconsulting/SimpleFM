@@ -595,7 +595,7 @@ class Adapter
             }
             return $return;
         } else {
-            $return['error']     = NULL;
+            $return['error']     = 7;
             $return['errortext'] = $string;
             $return['errortype'] = 'PHP';
             return $return;

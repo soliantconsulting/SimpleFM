@@ -176,6 +176,16 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                         array('reason' => 'Username and/or password not valid' ,'sfm_auth_response' => $result)
                     );
                 }
+            case '7':
+                // there most likely was a error connecting to the host
+                if ($errortype == 'PHP') {
+                    $identity = null;
+                    return new Result(
+                        Result::FAILURE,
+                        $identity,
+                        array('reason' => 'There was a system error trying to make the request.  Please try again later.' ,'sfm_auth_response' => $result)
+                    );
+                }
             default:
                 // Return empty identity plus reason as message array for every other result status
                 $identity = null;

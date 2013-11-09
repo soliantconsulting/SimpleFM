@@ -641,7 +641,8 @@ class Adapter
             }
             return $return;
         } else {
-            $return['error']     = NULL;
+            // example: file_get_contents throws an error if hostname does not resolve with dns
+            $return['error']     = 7;
             $return['errortext'] = $string;
             $return['errortype'] = 'PHP';
             return $return;

@@ -195,8 +195,8 @@ abstract class AbstractEntity
     /**
      * @return the $entityAsArray
      */
-    public function toArray() {
-
+    public function getArrayCopy()
+    {
         $this->addPropertyToEntityAsArray('recid');
         $this->addPropertyToEntityAsArray('modid');
 
@@ -205,6 +205,29 @@ abstract class AbstractEntity
         }
 
         return $this->entityAsArray;
+    }
+    
+    /**
+     * @deprecated
+     */
+    public function toArray()
+    {
+        return $this->getArrayCopy();
+    }
+    
+    /**
+     * @param array $data
+     * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
+     */
+    public function exchangeArray($data)
+    {
+        $this->recid = empty($data['recid']) ? '' : $data['recid'];
+        $this->modid = empty($data['modid']) ? '' : $data['modid'];
+        foreach ($this->getFieldMapWriteable() as $field=>$column){
+            $this->$field = empty($data[$field]) ? '' : $data[$field];
+        }
+        $this->serialize();
+        return $this;
     }
 
     /**

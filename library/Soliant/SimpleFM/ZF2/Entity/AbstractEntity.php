@@ -10,8 +10,9 @@
 namespace Soliant\SimpleFM\ZF2\Entity;
 
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
+use Zend\Stdlib\ArraySerializableInterface;
 
-abstract class AbstractEntity
+abstract class AbstractEntity implements ArraySerializableInterface
 {
     /**
      * @var int
@@ -206,7 +207,7 @@ abstract class AbstractEntity
 
         return $this->entityAsArray;
     }
-    
+
     /**
      * @deprecated
      */
@@ -214,12 +215,12 @@ abstract class AbstractEntity
     {
         return $this->getArrayCopy();
     }
-    
+
     /**
      * @param array $data
      * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      */
-    public function exchangeArray($data)
+    public function exchangeArray(array $data)
     {
         $this->recid = empty($data['recid']) ? '' : $data['recid'];
         $this->modid = empty($data['modid']) ? '' : $data['modid'];

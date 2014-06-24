@@ -174,7 +174,8 @@ Note that FileMaker repetitions, are 1 indexed, and of course php arrays are 0 i
 
 In particular, you will need to understand qualified field name conventions in order to set repetitions (other than 1) on repeating fields. 
 
-```field-name(repetition-number)
+```
+field-name(repetition-number)
 ```
 
 If you leave off the repetition number when setting fields in your commandArray, it defaults to setting repetition 1.
@@ -192,7 +193,30 @@ Example:
     );
 ```
 
-See more details in the official API Documentation Appendix A (page 45):Note that to be accessible, fields (and field repetitions) must be on the layout you specify in the query.
+
+ZF2 Abstract Gateway
+--------------------
+Included in this library is a gateway adapter for ZF2.  This gateway includes
+
+* findOneBy()
+* findBy()
+
+These functions take an array of commands.  Any command not prefixed with a hyphen is considered a search query.  _by default search queries are executed as a LIKE_.  If you want to search for an exact match prefix your criteria with ==.
+
+Examples
+```
+$gateway->findBy([
+    'field1' => '==value1',
+    'field2' => 'part'
+]);
+```
+
+This query will search for field equal to ```value1``` and all values of ```field2``` which contain the string ```part```.
+
+
+See more details in the official API Documentation Appendix A (page 45):
+
+Note that to be accessible, fields (and field repetitions) must be on the layout you specify in the query.
 
 ## Best Practices
 

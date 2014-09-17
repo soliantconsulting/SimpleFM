@@ -47,9 +47,9 @@ abstract class AbstractLoader implements LoaderInterface
         $protocol = $this->adapter->getProtocol();
         $hostname = $this->adapter->getHostname();
         $port = $this->adapter->getPort();
-        $fmresultsetUri = $this->adapter->getFmresultsetUri();
+        $uri = $this->adapter->getUri();
 
-        $this->commandURL = "$protocol://$credentials@$hostname:$port$fmresultsetUri?$args";
+        $this->commandURL = "$protocol://$credentials@$hostname:$port$uri?$args";
         return $this->commandURL;
     }
 

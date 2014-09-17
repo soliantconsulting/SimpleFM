@@ -22,9 +22,9 @@ class FilePostContents extends AbstractLoader
         $protocol = $this->adapter->getProtocol();
         $hostname = $this->adapter->getHostname();
         $port = $this->adapter->getPort();
-        $Uri = $this->adapter->getURI();
+        $uri = $this->adapter->getUri();
 
-        return "$protocol://$hostname:$port$Uri";
+        return "$protocol://$hostname:$port$uri";
     }
 
     /**

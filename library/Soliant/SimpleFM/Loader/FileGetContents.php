@@ -30,7 +30,7 @@ class FileGetContents extends AbstractLoader
         
         $opts = array(
             'ssl'=> array(
-                'verify_peer'' => $this->adapter->getSslverifypeer(),
+                'verify_peer' => $this->adapter->getSslverifypeer(),
             ),
         );
         

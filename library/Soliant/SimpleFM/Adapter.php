@@ -18,6 +18,12 @@ class Adapter
 {
 
     /**
+     * fm/xml grammars
+     */
+    const FMRESULTSET_URI   = '/fmi/xml/fmresultset.xml';
+    const FMPXMLLAYOUT_URI  = '/fmi/xml/FMPXMLLAYOUT.xml';
+
+    /**
      * @var string
      */
     protected $hostname = '127.0.0.1';
@@ -70,22 +76,7 @@ class Adapter
     /**
      * @var string
      */
-    protected $fmresultsetUri = '/fmi/xml/fmresultset.xml';
-
-    /**
-     * @var string
-     */
-    protected $fmpxmllayoutUri = '/fmi/xml/FMPXMLLAYOUT.xml';
-
-    /**
-     * @var array
-     */
-    protected $validGrammars = array('fmresultset', 'fmpxmllayout');
-
-    /**
-     * @var string
-     */
-    protected $grammar = 'fmresultset';
+    protected $uri = self::FMRESULTSET_URI;
 
     /**
      * @var boolean
@@ -352,77 +343,29 @@ class Adapter
     }
 
     /**
-     * @return the $fmresultsetUri
+     * @return the current uri
      */
-    public function getFmresultsetUri ()
+    public function getUri()
     {
-        return $this->fmresultsetUri;
+        return $this->uri;
     }
 
     /**
-     * @param string $fmresultsetUri
      * @return \Soliant\SimpleFM\Adapter
      */
-    public function setFmresultsetUri ($fmresultsetUri)
+    public function useLayoutGrammar()
     {
-        $this->fmresultsetUri = $fmresultsetUri;
+        $this->uri = self::FMPXMLLAYOUT_URI;
         return $this;
     }
 
     /**
-     * @return the $fmpxmllayoutUri
-     */
-    public function getFmpxmllayoutUri ()
-    {
-        return $this->fmpxmllayoutUri;
-    }
-
-    /**
-     * @param string $fmpxmllayoutUri
      * @return \Soliant\SimpleFM\Adapter
      */
-    public function setFmpxmllayoutUri ($fmpxmllayoutUri)
+    public function useResultsetGrammar()
     {
-        $this->fmpxmllayoutUri = $fmpxmllayoutUri;
+        $this->uri = self::FMRESULTSET_URI;
         return $this;
-    }
-
-    /**
-     * @return the $grammar
-     */
-    public function getGrammar ()
-    {
-        return $this->grammar;
-    }
-
-    /**
-     * @param string $grammar
-     * @return \Soliant\SimpleFM\Adapter
-     */
-    public function setGrammar ($grammar)
-    {
-        $grammar = strtolower($grammar);
-        if(! in_array($grammar, $this->validGrammars))
-        {
-            throw new InvalidArgumentException('Unsupported FileMaker XML grammar.');
-        }
-
-        $this->grammar = $grammar;
-        return $this;
-    }
-
-    /**
-     * @return the uri based on grammar property
-     */
-    public function getURI ()
-    {
-        if($this->getGrammar() == 'fmresultset')
-        {
-            return $this->fmresultsetUri;
-        }elseif ($this->getGrammar() == 'fmpxmllayout')
-        {
-            return $this->fmpxmllayoutUri;
-        }
     }
 
     /**
@@ -484,15 +427,14 @@ class Adapter
     {
         @$xml = $this->loader->load($this);
 
-        if (strtolower($this->getGrammar()) == 'fmresultset')
-        {
+        $sfmresult  = null;
+        if ($this->uri == self::FMRESULTSET_URI) {
             $sfmresult = $this->parseFmResultSet($xml);
-        }elseif (strtoupper($this->getGrammar())  == 'FMPXMLLAYOUT')
-        {
+        }elseif ($this->uri == self::FMPXMLLAYOUT_URI) {
             $sfmresult = $this->parseFmpXmlLayout($xml);
-        }
-        else{
-            $sfmresult = false;  // this really can't happen, as the getURI() method will have thrown an exception by now
+        }else{
+            // this really can't happen, as the URI is wired into the properties
+            $sfmresult = null;
         }
 
         return $sfmresult;

@@ -46,7 +46,7 @@ abstract class AbstractEntity
     public function __construct($simpleFMAdapterRow = array())
     {
         $this->simpleFMAdapterRow = $simpleFMAdapterRow;
-        $this->isSerializable = TRUE;
+        $this->isSerializable = true;
         if (!empty($this->simpleFMAdapterRow)) $this->unserialize();
     }
 
@@ -223,7 +223,7 @@ abstract class AbstractEntity
     {
         $this->recid = empty($data['recid']) ? '' : $data['recid'];
         $this->modid = empty($data['modid']) ? '' : $data['modid'];
-        foreach ($this->getFieldMapWriteable() as $field=>$column){
+        foreach ($this->getFieldMapWriteable() as $field=>$column) {
             $this->$field = empty($data[$field]) ? '' : $data[$field];
         }
         $this->serialize();
@@ -239,10 +239,10 @@ abstract class AbstractEntity
      */
     protected function unserializeField($propertyName, $fileMakerFieldName, $isWritable = false)
     {
-        if (!property_exists($this, $propertyName)){
+        if (!property_exists($this, $propertyName)) {
             throw new InvalidArgumentException($propertyName . ' is not a valid property.');
         }
-        if (array_key_exists($fileMakerFieldName, $this->simpleFMAdapterRow)){
+        if (array_key_exists($fileMakerFieldName, $this->simpleFMAdapterRow)) {
             $this->$propertyName = $this->simpleFMAdapterRow[$fileMakerFieldName];
         } elseif ($isWritable) {
             $this->isSerializable = false;
@@ -261,22 +261,22 @@ abstract class AbstractEntity
     {
         $getterName = 'get' . ucfirst($propertyName);
 
-        if ($getterName == 'getRecid'){
+        if ($getterName == 'getRecid') {
             $value = $this->getRecid();
-            if (!empty($value)){
+            if (!empty($value)) {
                 $this->simpleFMAdapterRow['-recid'] = $value;
             }
-        } elseif ($getterName == 'getModid'){
+        } elseif ($getterName == 'getModid') {
             $recid = $this->getRecid();
             $modid = $this->getModid();
-            if (!empty($modid) && !empty($recid)){
+            if (!empty($modid) && !empty($recid)) {
                 $this->simpleFMAdapterRow['-modid'] = $modid;
             }
         } else {
             try {
                 $this->simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
             } catch (\Exception $e) {
-                if (!is_callable($this, $getterName)){
+                if (!is_callable($this, $getterName)) {
                     throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
                 } else {
                     throw $e;
@@ -298,7 +298,7 @@ abstract class AbstractEntity
         try {
             $this->entityAsArray[$propertyName] = $this->$getterName();
         } catch (\Exception $e) {
-            if (!is_callable($this, $getterName)){
+            if (!is_callable($this, $getterName)) {
                 throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
             } else {
                 throw $e;

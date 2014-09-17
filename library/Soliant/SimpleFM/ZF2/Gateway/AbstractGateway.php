@@ -45,7 +45,7 @@ abstract class AbstractGateway
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
      */
-    public function __construct(AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=NULL, $encryptionKey=NULL )
+    public function __construct(AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=null, $encryptionKey=null)
     {
         $this->setSimpleFMAdapter($simpleFMAdapter);
         $this->setEntityName(get_class($entity));
@@ -63,9 +63,9 @@ abstract class AbstractGateway
      * @param string $entityLayout
      * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
      */
-    public function resolveEntity(AbstractEntity $entity, $entityLayout=NULL)
+    public function resolveEntity(AbstractEntity $entity, $entityLayout=null)
     {
-        if (!empty($entityLayout)){
+        if (!empty($entityLayout)) {
             $this->setEntityLayout($entityLayout);
         }
         return $this->find($entity->getRecid());
@@ -73,7 +73,7 @@ abstract class AbstractGateway
 
     public function find($recid)
     {
-        $commandArray = array('-recid' => $recid, '-find' => NULL);
+        $commandArray = array('-recid' => $recid, '-find' => null);
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
@@ -88,7 +88,7 @@ abstract class AbstractGateway
             $search,
             array(
                 '-max' => '1',
-                '-find' => NULL
+                '-find' => null
             )
         );
         $this->simpleFMAdapter
@@ -99,12 +99,12 @@ abstract class AbstractGateway
         return $entity;
     }
 
-    public function findAll(array $sort = array(), $max = NULL, $skip = NULL)
+    public function findAll(array $sort = array(), $max = null, $skip = null)
     {
         $commandArray = array_merge(
             $this->sortArrayToCommandArray($sort),
             $this->maxSkipToCommandArray($max, $skip),
-            array('-findall' => NULL)
+            array('-findall' => null)
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
@@ -113,13 +113,13 @@ abstract class AbstractGateway
         return $this->rowsToArrayCollection($result['rows']);
     }
 
-    public function findBy(array $search, array $sort = array(), $max = NULL, $skip = NULL)
+    public function findBy(array $search, array $sort = array(), $max = null, $skip = null)
     {
         $commandArray = array_merge(
             $search,
             $this->sortArrayToCommandArray($sort),
             $this->maxSkipToCommandArray($max, $skip),
-            array('-find' => NULL)
+            array('-find' => null)
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
@@ -135,7 +135,7 @@ abstract class AbstractGateway
         unset($serializedValues['-modid']);
         $commandArray = array_merge(
             $serializedValues,
-            array('-new' => NULL)
+            array('-new' => null)
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
@@ -150,7 +150,7 @@ abstract class AbstractGateway
         $commandArray = array_merge(
             $entity->serialize(),
             array(
-                '-edit' => NULL,
+                '-edit' => null,
             )
         );
         $this->simpleFMAdapter
@@ -167,7 +167,7 @@ abstract class AbstractGateway
         $commandArray = array(
             '-recid' => $entity->getRecid(),
             '-modid' => $entity->getModid(),
-            '-delete' => NULL,
+            '-delete' => null,
         );
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
@@ -238,7 +238,7 @@ abstract class AbstractGateway
      * @param int $skip
      * @return array:
      */
-    protected function maxSkipToCommandArray($max = NULL, $skip = NULL)
+    protected function maxSkipToCommandArray($max = null, $skip = null)
     {
 
         $maxCommand = empty($max) ? array() : array('-max' => $max);
@@ -261,7 +261,7 @@ abstract class AbstractGateway
 
         $i = 1;
         $command = array();
-        foreach ($sort as $field => $method){
+        foreach ($sort as $field => $method) {
             if ($i > 9) break; // FileMaker API limited to max 9 fields
 
             switch ($method) {
@@ -283,7 +283,7 @@ abstract class AbstractGateway
                 case '':
                     $sortMethod = 'ascend';
                     break;
-                case NULL:
+                case null:
                     $sortMethod = 'ascend';
                     break;
                 default:
@@ -307,8 +307,8 @@ abstract class AbstractGateway
     protected function rowsToArrayCollection(array $rows)
     {
         $collection = new ArrayCollection();
-        if (!empty($rows)){
-            foreach($rows as $row){
+        if (!empty($rows)) {
+            foreach ($rows as $row) {
                 $collection[] = new $this->entityName($row);
             }
         }
@@ -321,7 +321,7 @@ abstract class AbstractGateway
         $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' .
                        $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
 
-        if ($simpleFMAdapterResult['error'] === 0){
+        if ($simpleFMAdapterResult['error'] === 0) {
             return $simpleFMAdapterResult;
 
         } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker' && $simpleFMAdapterResult['error'] === 401) {

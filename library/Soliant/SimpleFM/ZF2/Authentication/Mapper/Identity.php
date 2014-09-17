@@ -18,7 +18,7 @@ use Zend\Form\Annotation;
  */
 class Identity
 {
-    protected $isLoggedIn = FALSE;
+    protected $isLoggedIn = false;
 
     /**
      * @Annotation\Type("Zend\Form\Element\Text")
@@ -48,19 +48,20 @@ class Identity
      */
     public $submit;
 
-    public function __construct($username=NULL, $password=NULL, $encryptionKey=NULL, array $simpleFMAdapterRow=NULL){
+    public function __construct($username=null, $password=null, $encryptionKey=null, array $simpleFMAdapterRow=null)
+    {
 
         $this->setUsername($username);
 
-        if (!empty($password)){
+        if (!empty($password)) {
             if (empty($encryptionKey)) {
                 throw new Exception\InvalidArgumentException('The you must provide an encryptionKey with the password.');
             }
             $this->setPassword($password, $encryptionKey);
         }
 
-        if (!empty($simpleFMAdapterRow)){
-            foreach ($simpleFMAdapterRow as $field => $value){
+        if (!empty($simpleFMAdapterRow)) {
+            foreach ($simpleFMAdapterRow as $field => $value) {
                 $this->setArbitraryProperty($field, $value);
             }
         }
@@ -83,11 +84,11 @@ class Identity
         }
     }
 
-    public function isLoggedIn(){
+    public function isLoggedIn() {
         return $this->isLoggedIn;
     }
 
-    public function setIsLoggedIn($value){
+    public function setIsLoggedIn($value) {
         $this->isLoggedIn = $value;
         return $this;
     }

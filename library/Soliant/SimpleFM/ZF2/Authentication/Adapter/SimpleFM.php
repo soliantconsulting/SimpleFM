@@ -119,7 +119,8 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     /**
      * @return Soliant\SimpleFM\ZF2\Authentication\Adapter\Auth
      */
-    public function setUsername($username){
+    public function setUsername($username)
+    {
         $this->username = $username;
         $this->credentials['username'] = $username;
         return $this;
@@ -128,7 +129,8 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     /**
      * @return Soliant\SimpleFM\ZF2\Authentication\Adapter\Auth
      */
-    public function setPassword($password){
+    public function setPassword($password)
+    {
         $this->password = $password;
         $this->credentials['password'] = $password;
         return $this;
@@ -146,7 +148,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
 
         $command = array(
                     $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
-                    '-find' => NULL,
+                    '-find' => null,
                 );
         $this->simpleFmValidateAdapter->setCommandarray($command);
 
@@ -161,7 +163,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
             case '0':
                 // Return null as identity only for error 0
                 $identity = new Identity($this->username, $this->password, $this->encryptionKey, $result['rows'][0]);
-                $identity->setIsLoggedIn(TRUE);
+                $identity->setIsLoggedIn(true);
                 return new Result(
                     Result::SUCCESS,
                     $identity

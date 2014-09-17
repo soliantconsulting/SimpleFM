@@ -58,7 +58,7 @@ class FilePostContents extends AbstractLoader
         $context  = stream_context_create($opts);
 
 
-        return simplexml_load_string(file_get_contents(self::createPostURL(), FALSE , $context));
+        return simplexml_load_string(file_get_contents(self::createPostURL(), false, $context));
 
     }
 

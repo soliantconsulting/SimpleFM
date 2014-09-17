@@ -24,7 +24,7 @@ class Mock extends AbstractLoader
     /**
      * @return the $testXml
      */
-    public function getTestXml ()
+    public function getTestXml()
     {
         return $this->testXml;
     }
@@ -32,7 +32,7 @@ class Mock extends AbstractLoader
     /**
      * @param string $testXml
      */
-    public function setTestXml ($testXml)
+    public function setTestXml($testXml)
     {
         $this->testXml = $testXml;
         return $this;
@@ -41,7 +41,7 @@ class Mock extends AbstractLoader
     /**
      * @return SimpleXMLElement
      */
-    public function load(Adapter $adapter, $testXmlOverride=NULL)
+    public function load(Adapter $adapter, $testXmlOverride=null)
     {
         $this->adapter = $adapter;
 

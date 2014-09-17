@@ -78,6 +78,16 @@ class Adapter
     protected $fmpxmllayoutUri = '/fmi/xml/FMPXMLLAYOUT.xml';
 
     /**
+     * @var array
+     */
+    protected $validGrammars = array('fmresultset', 'fmpxmllayout');
+
+    /**
+     * @var string
+     */
+    protected $grammar = 'fmresultset';
+
+    /**
      * @var boolean
      */
     protected $rowsbyrecid = false;
@@ -378,6 +388,44 @@ class Adapter
     }
 
     /**
+     * @return the $grammar
+     */
+    public function getGrammar ()
+    {
+        return $this->grammar;
+    }
+
+    /**
+     * @param string $grammar
+     * @return \Soliant\SimpleFM\Adapter
+     */
+    public function setGrammar ($grammar)
+    {
+        $grammar = strtolower($grammar);
+        if(! in_array($grammar, $this->validGrammars))
+        {
+            throw new InvalidArgumentException('Unsupported FileMaker XML grammar.');
+        }
+
+        $this->grammar = $grammar;
+        return $this;
+    }
+
+    /**
+     * @return the uri based on grammar property
+     */
+    public function getURI ()
+    {
+        if($this->getGrammar() == 'fmresultset')
+        {
+            return $this->fmresultsetUri;
+        }elseif ($this->getGrammar() == 'fmpxmllayout')
+        {
+            return $this->fmpxmllayoutUri;
+        }
+    }
+
+    /**
      * @return boolean
      */
     public function getRowsbyrecid()
@@ -436,44 +484,16 @@ class Adapter
     {
         @$xml = $this->loader->load($this);
 
-        if (empty($xml)) {
-
-            $simplexmlerrors['xml'] = libxml_get_errors();
-            $simplexmlerrors['php'] = error_get_last();
-
-            $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
-
-            $error     = $phpErrors['error'];
-            $errortext = $phpErrors['errortext'];
-            $errortype = $phpErrors['errortype'];
-            $count     = NULL;
-            $fetchsize = NULL;
-
-            $rows = NULL;
-            libxml_clear_errors();
-
-        } else {
-
-            $simplexmlerrors = null;
-            $error           = (int) $xml->error['code'];
-            $errortext       = self::errorToEnglish($error);
-            $errortype       = 'FileMaker';
-            $count           = (string) $xml->resultset['count'];
-            $fetchsize       = (string) $xml->resultset['fetch-size'];
-
-            $rows = $this->parseResult($xml);
-
+        if (strtolower($this->getGrammar()) == 'fmresultset')
+        {
+            $sfmresult = $this->parseFmResultSet($xml);
+        }elseif (strtoupper($this->getGrammar())  == 'FMPXMLLAYOUT')
+        {
+            $sfmresult = $this->parseFmpXmlLayout($xml);
         }
-
-        $sfmresult = array (
-            'url'       => $this->getCommandURLdebug(),
-            'error'     => $error,
-            'errortext' => $errortext,
-            'errortype' => $errortype,
-            'count'     => $count,
-            'fetchsize' => $fetchsize,
-            'rows'      => $rows
-            );
+        else{
+            $sfmresult = false;  // this really can't happen, as the getURI() method will have thrown an exception by now
+        }
 
         return $sfmresult;
 
@@ -483,23 +503,41 @@ class Adapter
      * @param xml $xml
      * @return array
      */
-    protected function parseResult ($xml)
+    protected function parseFmResultSet ($xml)
     {
         $result = array();
+        $result['url']  = $this->getCommandURLdebug();
+
+        if (empty($xml)) {
+            $simplexmlerrors['xml'] = libxml_get_errors();
+            $simplexmlerrors['php'] = error_get_last();
+            $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
+            $result['error'] = $phpErrors['error'];
+            $result['errortext'] = $phpErrors['errortext'];
+            $result['errortype'] = $phpErrors['errortype'];
+            $result['count']     = NULL;
+            $result['fetchsize'] = NULL;
+            $result['rows'] = NULL;
+
+            libxml_clear_errors();
+            return $result;        ////////////////////////////// we bomb out here if there is no xml to parse
+        }
+
+        $rows = array();
 
         /**
          *   simplexml fmresultset path reference:
          *   $fmresultset->resultset[0]->record[0]->field[0]->data[0]
          */
 
-        $i=0; // the row index
+        $i=0; // loop over rows
         foreach ($xml->resultset[0]->record as $row){ // handle rows
 
             $conditional_id = $this->rowsbyrecid === TRUE ? (string) $row['record-id'] : (int) $i;
 
-            $result[$conditional_id]['index'] = (int) $i;
-            $result[$conditional_id]['recid'] = (int) $row['record-id'];
-            $result[$conditional_id]['modid'] = (int) $row['mod-id'];
+            $rows[$conditional_id]['index'] = (int) $i;
+            $rows[$conditional_id]['recid'] = (int) $row['record-id'];
+            $rows[$conditional_id]['modid'] = (int) $row['mod-id'];
 
             foreach ($xml->resultset[0]->record[$i]->field as $field ) { // handle fields
 
@@ -514,7 +552,7 @@ class Adapter
                 }
 
                 $fieldnameIsValid = $i===0 ? self::fieldnameIsValid($fieldname) : TRUE; // validate fieldnames on first row
-                $result[$conditional_id][$fieldname] = $fielddata;
+                $rows[$conditional_id][$fieldname] = $fielddata;
 
             }
             if (isset($xml->resultset[0]->record[0]->relatedset)){ // check if portals exist
@@ -523,22 +561,22 @@ class Adapter
                 foreach ($xml->resultset[0]->record[0]->relatedset as $portal ) { // handle portals
                     $portalname = (string) $portal['table'];
 
-                    $result[$conditional_id][$portalname]['parentindex'] = (int) $i;
-                    $result[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
-                    $result[$conditional_id][$portalname]['portalindex'] = (int) $ii;
+                    $rows[$conditional_id][$portalname]['parentindex'] = (int) $i;
+                    $rows[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
+                    $rows[$conditional_id][$portalname]['portalindex'] = (int) $ii;
                     /**
                      * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
                      * portals. Test for possible issues with $portalname being non-unique.
                      */
-                    $result[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
+                    $rows[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
 
                     $iii=0; // the portal row index
                     foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record as $portal_row ) { // handle portal rows
                         $portal_conditional_id = $this->rowsbyrecid === TRUE ? (int) $portal_row['record-id'] : $iii;
 
-                        $result[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int) $iii;
-                        $result[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int) $portal_row['mod-id'];
-                        $result[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int) $portal_row['record-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int) $iii;
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int) $portal_row['mod-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int) $portal_row['record-id'];
 
                         foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record[$iii]->field as $portal_field ) { // handle portal fields
                             $portal_fieldname = (string) str_replace($portalname.'::', '', $portal_field['name']);
@@ -553,7 +591,7 @@ class Adapter
 
 
                             $fieldnameIsValid = $iii===0 ? self::fieldnameIsValid($portal_fieldname) : TRUE; // validate fieldnames on first row
-                            $result[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
+                            $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
                         }
                         ++$iii;
                     }
@@ -562,6 +600,85 @@ class Adapter
             }
             ++$i;
         }
+
+        $simplexmlerrors        = null;
+        $result['error']        = (int) $xml->error['code'];
+        $result['errortext']    = self::errorToEnglish($result['error']);
+        $result['errortype']    = 'FileMaker';
+        $result['count']        = (string) $xml->resultset['count'];
+        $result['fetchsize']    = (string) $xml->resultset['fetch-size'];
+        $result['rows']         = $rows;
+
+        return $result;
+    }
+
+
+    /**
+     * @param xml $xml
+     * @return array
+     */
+    protected function parseFmpXmlLayout ($xml)
+    {
+        $result     = array();
+        $result['url']  = $this->getCommandURLdebug();
+
+        if (empty($xml)) {
+            $simplexmlerrors['xml'] = libxml_get_errors();
+            $simplexmlerrors['php'] = error_get_last();
+            $phpErrors              = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
+            $result['error']        = $phpErrors['error'];
+            $result['errortext']    = $phpErrors['errortext'];
+            $result['errortype']    = $phpErrors['errortype'];
+            $result['product']      = NULL;
+            $result['layout']       = NULL;
+            $result['valuelists']   = NULL;
+            libxml_clear_errors();
+            return $result;        ////////////////////////////// we bomb out here if there is no xml to parse
+        }
+
+        $fields     = array();
+        $valueLists = array();
+
+        $i=0; // loop over LAYOUT fields
+        foreach ($xml->LAYOUT[0]->FIELD as $field)
+        {
+
+            $fieldname = (string) $field->attributes()->NAME;
+            $fieldnameIsValid = self::fieldnameIsValid($fieldname); // throws an exception if name not valid
+
+            $fields[$i]['name'] = $fieldname;
+            $fields[$i]['type'] =  (string) $field->STYLE->attributes()->TYPE;
+            $fields[$i]['valuelist'] =  (string) $field->STYLE->attributes()->VALUELIST;
+            ++$i;
+        }
+
+        $j=0;  // loop over VALUELISTS
+        foreach ($xml->VALUELISTS[0] as $valueList)  // handle value lists
+        {
+
+            $valueLists[$j]['name'] = (string) $valueList->attributes()->NAME;
+            $valueLists[$j]['values'] = array();
+            $jj = 0;
+            foreach($valueList->VALUE as $value)
+            {
+                $valueLists[$j]['values'][$jj]['value']    = (string) $value[0];
+                $valueLists[$j]['values'][$jj]['display']  = (string) $value->attributes()->DISPLAY;
+                $jj++;
+            }
+            ++$j;
+        }
+
+        $simplexmlerrors                = null;
+        $result['error']                = (int) $xml->ERRORCODE;
+        $result['errortext']            = self::errorToEnglish($result['error']);
+        $result['errortype']            = 'FileMaker';
+        $result['product']['build']     = (string) $xml->PRODUCT->attributes()->BUILD;
+        $result['product']['name']      = (string) $xml->PRODUCT->attributes()->NAME;
+        $result['product']['version']   = (string) $xml->PRODUCT->attributes()->VERSION;
+        $result['layout']['database']   = (string) $xml->LAYOUT->attributes()->DATABASE;
+        $result['layout']['name']       = (string) $xml->LAYOUT->attributes()->NAME;
+        $result['layout']['fields']     = $fields;
+        $result['valuelists']           = $valueLists;
 
         return $result;
     }

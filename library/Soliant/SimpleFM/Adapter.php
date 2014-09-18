@@ -307,7 +307,7 @@ class Adapter
         return (boolean) $this->sslverifypeer;
     }
 
-	/**
+    /**
      * @param boolean $sslverifypeer
      * @return \Soliant\SimpleFM\Adapter
      */
@@ -1034,6 +1034,9 @@ class Adapter
         $commandstring = '';
         if (!empty($this->commandarray)) {
             foreach ($this->commandarray as $name=>$value) {
+                if ($value instanceof \Datetime) {
+                    $value = $value->format('m/d/Y H:i:s');
+                }
                 $commandstring .= ($value===null || $value == '') ? $amp.urlencode($name): $amp.urlencode($name).'='.urlencode($value);
                 $amp = '&';
             }

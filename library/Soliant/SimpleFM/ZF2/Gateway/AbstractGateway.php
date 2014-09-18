@@ -84,6 +84,10 @@ abstract class AbstractGateway
 
     public function findOneBy(array $search)
     {
+        foreach ($search as $field => $value) {
+            $search[$field] = str_replace('@', '\@', $value);
+        }
+
         $commandArray = array_merge(
             $search,
             array(
@@ -91,12 +95,16 @@ abstract class AbstractGateway
                 '-find' => null
             )
         );
+
         $this->simpleFMAdapter
              ->setCommandArray($commandArray)
              ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($result['rows'][0]);
-        return $entity;
+
+        if (isset($result['rows'][0]) and $result['rows'][0]) {
+            $entity = new $this->entityName($result['rows'][0]);
+            return $entity;
+        }
     }
 
     public function findAll(array $sort = array(), $max = null, $skip = null)
@@ -115,6 +123,10 @@ abstract class AbstractGateway
 
     public function findBy(array $search, array $sort = array(), $max = null, $skip = null)
     {
+        foreach ($search as $field => $value) {
+            $search[$field] = str_replace('@', '\@', $value);
+        }
+
         $commandArray = array_merge(
             $search,
             $this->sortArrayToCommandArray($sort),
@@ -131,6 +143,7 @@ abstract class AbstractGateway
     public function create(AbstractEntity $entity)
     {
         $serializedValues = $entity->serialize();
+
         unset($serializedValues['-recid']);
         unset($serializedValues['-modid']);
         $commandArray = array_merge(
@@ -147,8 +160,10 @@ abstract class AbstractGateway
 
     public function edit(AbstractEntity $entity)
     {
+        $serializedValues = $entity->serialize();
+
         $commandArray = array_merge(
-            $entity->serialize(),
+            $serializedValues,
             array(
                 '-edit' => null,
             )

@@ -195,27 +195,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::getFmresultsetUri
-     */
-    public function testGetSetFmresultsetUri()
-    {
-
-        $value = $this->object->setFmresultsetUri('./abc/fmresult.xml');
-        $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getFmresultsetUri(),'./abc/fmresult.xml');
-    }
-
-    /**
-     * @covers Soliant\SimpleFM\Adapter::getFmpxmllayoutUri
-     */
-    public function testGetSetFmpxmllayoutUri()
-    {
-        $value = $this->object->setFmpxmllayoutUri('./abc/fmlayout.xml');
-        $this->assertTrue($value instanceof $this->object);
-        $this->assertEquals($this->object->getFmpxmllayoutUri(),'./abc/fmlayout.xml');
-    }
-
-    /**
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
      */
     public function testGetSetRowsbyrecid()

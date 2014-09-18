@@ -18,7 +18,7 @@ class Adapter
 {
 
     /**
-     * fm/xml grammars
+     * fmi/xml grammars
      */
     const FMRESULTSET_URI   = '/fmi/xml/fmresultset.xml';
     const FMPXMLLAYOUT_URI  = '/fmi/xml/FMPXMLLAYOUT.xml';
@@ -432,9 +432,6 @@ class Adapter
             $sfmresult = $this->parseFmResultSet($xml);
         } elseif ($this->uri == self::FMPXMLLAYOUT_URI) {
             $sfmresult = $this->parseFmpXmlLayout($xml);
-        } else {
-            // this really can't happen, as the URI is wired into the properties
-            $sfmresult = null;
         }
 
         return $sfmresult;

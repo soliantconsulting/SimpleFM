@@ -1,25 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./Bootstrap.php" colors="true">
-    <testsuites>
-        <testsuite name="SimpleFM Test Suite">
-            <directory>./SoliantTest</directory>
-            <exclude>./SoliantTest/_files/</exclude>
-            <exclude>./SoliantTest/AllTests/</exclude>
-        </testsuite>
-    </testsuites>
-
-    <groups>
-        <exclude>
-            <group>disable</group>
-            <group>integration</group>
-            <group>integration-sqlserver</group>
-            <group>integration-ibm_db2</group>
-        </exclude>
-    </groups>
-
-    <php>
-
-    </php>
-
-
-
+    <testsuite name="SimpleFM Test Suite">
+        <directory>./SoliantTest</directory>
+        <exclude>./SoliantTest/_files/</exclude>
+        <exclude>./SoliantTest/AllTests/</exclude>
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">./src/</directory>
+        </whitelist>
+    </filter>
 </phpunit>

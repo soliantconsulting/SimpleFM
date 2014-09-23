@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SimpleFM" default="phpunit" basedir=".">
+    <!-- Testing -->
+    <target name="phpunit" description="Run PhpUnit tests">
+        <exec executable="vendor/bin/phpunit" failonerror="true">
+            <arg value="-c"/>
+            <arg value="tests/phpunit.xml.dist"/>
+        </exec>
+    </target>
+</project>

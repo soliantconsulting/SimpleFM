@@ -269,9 +269,14 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteWithParseFmResultSet()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $file = dirname(__FILE__) . '/TestAssets/sample_fmresultset.xml';
+        $mockLoader = $this->object->getLoader();
+        $mockLoader->setTestXml(file_get_contents($file));
+
+        $this->object->useResultsetGrammar();
+        $result = $this->object->execute();
+
+        $this->assertContains('fmresultset', $result);
     }
 
     /**
@@ -280,9 +285,14 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testExecuteWithParseFmpXmlLayout()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $file = dirname(__FILE__) . '/TestAssets/sample_fmpxmllayout.xml';
+        $mockLoader = $this->object->getLoader();
+        $mockLoader->setTestXml(file_get_contents($file));
+
+        $this->object->useLayoutGrammar();
+        $result = $this->object->execute();
+
+        $this->assertContains('FMPXMLLAYOUT', $result);
     }
 
     /**

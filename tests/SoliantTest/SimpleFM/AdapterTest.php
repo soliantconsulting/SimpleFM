@@ -264,6 +264,61 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::execute
+     * test parse execution with parseFmResultSet()
+     */
+    public function testExecuteWithParseFmResultSet()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::execute
+     * test parse execution for parseFmpXmlLayout()
+     */
+    public function testExecuteWithParseFmpXmlLayout()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::execute
+     * test parse execution with different values for rowsbyrecid
+     */
+    public function testExecuteWithIndexing()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::execute
+     * test parse execution with 2 identical portals on the same layout
+     */
+    public function testExecuteWithNonUniquePortalsOnSameLayout()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::execute
+     * test parse execution with invalid field names
+     */
+    public function testExecuteWithInvalidFieldName()
+    {
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
+
+    /**
      * @covers Soliant\SimpleFM\Adapter::displayXmlError
      */
     public function testDisplayXmlError()

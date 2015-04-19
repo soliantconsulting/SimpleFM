@@ -34,19 +34,19 @@ class Identity
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Options({"label":"Password:"})
      */
-    public $password;
+    protected $password;
 
     /**
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Options({"label":"Remember Me:"})
      */
-    public $rememberme;
+    protected $rememberme;
 
     /**
      * @Annotation\Type("Zend\Form\Element\Submit")
      * @Annotation\Attributes({"value":"Submit"})
      */
-    public $submit;
+    protected $submit;
 
     public function __construct($username=null, $password=null, $encryptionKey=null, array $simpleFMAdapterRow=null)
     {

@@ -136,6 +136,13 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getAccountNameField()
+    {
+        return $this->accountNameField;
+    }
 
     /**
      * @return Zend\Authentication\Result

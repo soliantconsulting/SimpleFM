@@ -97,9 +97,12 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         $this->simpleFmValidateAdapter = $simpleFmValidateAdapter;
 
         if (empty($config['encryptionKey'])) {
-            throw new Exception\InvalidArgumentException('Config key \'encryptionKey\' is required');
+            // If encryptionKey is not set, Identity will not keep the password
+            $this->encryptionKey = null;
+        } else {
+            // If encryptionKey is set, Identity will encrypt password
+            $this->encryptionKey = $config['encryptionKey'];
         }
-        $this->encryptionKey = $config['encryptionKey'];
 
         if (!empty($config['appUsername'])) {
             $this->setUsername($config['appUsername']);

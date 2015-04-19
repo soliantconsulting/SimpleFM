@@ -67,9 +67,12 @@ class Identity
 
         if (!empty($password)) {
             if (empty($encryptionKey)) {
-                throw new Exception\InvalidArgumentException('The you must provide an encryptionKey with the password.');
+                //If encryptionKey is not set, Identity will not keep $password
+                $this->password = null;
+            } else {
+                //If encryptionKey is set, setter encrypts $password
+                $this->setPassword($password, $encryptionKey);
             }
-            $this->setPassword($password, $encryptionKey);
         }
 
         $this->rememberme = (boolean) $rememberme;
@@ -130,7 +133,11 @@ class Identity
     public function getPassword ($encryptionKey)
     {
         if (empty($encryptionKey)) {
-            throw new Exception\InvalidArgumentException('The encryptionKey must not be empty');
+            return null;
+        }
+
+        if (empty($this->password)) {
+            return null;
         }
 
         $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));

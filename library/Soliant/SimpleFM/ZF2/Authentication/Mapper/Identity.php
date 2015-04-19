@@ -3,7 +3,7 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM\ZF2
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
@@ -18,6 +18,10 @@ use Zend\Form\Annotation;
  */
 class Identity
 {
+    /**
+     * @Annotation\Exclude
+     * @var bool
+     */
     protected $isLoggedIn = false;
 
     /**
@@ -25,6 +29,7 @@ class Identity
      * @Annotation\Required({"required":"true" })
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Options({"label":"Username:"})
+     * @var string
      */
     public $username;
 
@@ -33,32 +38,53 @@ class Identity
      * @Annotation\Required({"required":"true" })
      * @Annotation\Filter({"name":"StripTags"})
      * @Annotation\Options({"label":"Password:"})
+     * @var string
      */
-    public $password;
+    protected $password;
 
     /**
      * @Annotation\Type("Zend\Form\Element\Checkbox")
      * @Annotation\Options({"label":"Remember Me:"})
+     * @var boolean
      */
-    public $rememberme;
+    protected $rememberme;
 
     /**
+     * This property allows the AnnotationBuilder can add the submit button for us. It is not used by this class.
      * @Annotation\Type("Zend\Form\Element\Submit")
      * @Annotation\Attributes({"value":"Submit"})
      */
-    public $submit;
+    protected $submit;
 
-    public function __construct($username=null, $password=null, $encryptionKey=null, array $simpleFMAdapterRow=null)
-    {
+    /**
+     * @param string|null $username
+     * @param string|null $password
+     * @param string|null $encryptionKey
+     * @param array $simpleFMAdapterRow
+     * @param boolean $rememberMe
+     * @return void
+     */
+    public function __construct(
+        $username = null,
+        $password = null,
+        $rememberme = false,
+        $encryptionKey = null,
+        array $simpleFMAdapterRow = []
+    ) {
 
         $this->setUsername($username);
 
         if (!empty($password)) {
             if (empty($encryptionKey)) {
-                throw new Exception\InvalidArgumentException('The you must provide an encryptionKey with the password.');
+                //If encryptionKey is not set, Identity will not keep $password
+                $this->password = null;
+            } else {
+                //If encryptionKey is set, setter encrypts $password
+                $this->setPassword($password, $encryptionKey);
             }
-            $this->setPassword($password, $encryptionKey);
         }
+
+        $this->rememberme = (boolean) $rememberme;
 
         if (!empty($simpleFMAdapterRow)) {
             foreach ($simpleFMAdapterRow as $field => $value) {
@@ -73,6 +99,7 @@ class Identity
      * time you want to use a property: $identity->{'My Table::My Field'}
      * @param $field
      * @param $value
+     * @return Identity
      */
     protected function setArbitraryProperty($field, $value)
     {
@@ -82,41 +109,57 @@ class Identity
             $alphaNum = preg_replace("/[^A-Za-z0-9-_]/", '', $noSpaces);
             $this->$alphaNum = $value;
         }
-    }
-
-    public function isLoggedIn() {
-        return $this->isLoggedIn;
-    }
-
-    public function setIsLoggedIn($value) {
-        $this->isLoggedIn = $value;
         return $this;
     }
 
     /**
-     * @return the $username
+     * @return boolean
      */
-    public function getUsername ()
+    public function getIsLoggedIn()
+    {
+        return (boolean) $this->isLoggedIn;
+    }
+
+    /**
+     * @param boolean $value
+     * @return Identity
+     */
+    public function setIsLoggedIn($value)
+    {
+        $this->isLoggedIn = (boolean) $value;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
     {
         return $this->username;
     }
 
     /**
-     * @param field_type $username
+     * @param string $username
+     * @return Identity
      */
-    public function setUsername ($username)
+    public function setUsername($username)
     {
         $this->username = $username;
         return $this;
     }
 
     /**
-     * @return the $password
+     * @var string|null $encryptionKey
+     * @return string|null
      */
-    public function getPassword ($encryptionKey)
+    public function getPassword($encryptionKey)
     {
         if (empty($encryptionKey)) {
-            throw new Exception\InvalidArgumentException('The encryptionKey must not be empty');
+            return null;
+        }
+
+        if (empty($this->password)) {
+            return null;
         }
 
         $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
@@ -126,8 +169,9 @@ class Identity
 
     /**
      * @param string $password
+     * @return Identity
      */
-    public function setPassword ($password, $encryptionKey)
+    public function setPassword($password, $encryptionKey)
     {
 
         /**
@@ -145,7 +189,7 @@ class Identity
         $blockCipher->setKey($encryptionKey);
         $this->password = $blockCipher->encrypt($password);
 
-        $this;
+        return $this;
     }
 
 

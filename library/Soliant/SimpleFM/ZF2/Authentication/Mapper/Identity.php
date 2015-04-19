@@ -48,8 +48,20 @@ class Identity
      */
     protected $submit;
 
-    public function __construct($username=null, $password=null, $encryptionKey=null, array $simpleFMAdapterRow=null)
-    {
+    /**
+     * @param string|null $username
+     * @param string|null $password
+     * @param string|null $encryptionKey
+     * @param array $simpleFMAdapterRow
+     * @param boolean $rememberMe
+     */
+    public function __construct(
+        $username = null,
+        $password = null,
+        $rememberme = false,
+        $encryptionKey = null,
+        array $simpleFMAdapterRow = []
+    ) {
 
         $this->setUsername($username);
 
@@ -59,6 +71,8 @@ class Identity
             }
             $this->setPassword($password, $encryptionKey);
         }
+
+        $this->rememberme = (boolean) $rememberme;
 
         if (!empty($simpleFMAdapterRow)) {
             foreach ($simpleFMAdapterRow as $field => $value) {

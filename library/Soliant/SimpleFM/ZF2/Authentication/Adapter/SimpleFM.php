@@ -33,6 +33,11 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     protected $password;
 
     /**
+     * @var boolean
+     */
+    protected $rememberme;
+
+    /**
      * Adapter to be used for login validation
      *
      * @var string
@@ -137,6 +142,15 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
+     * @return SimpleFM
+     */
+    public function setRememberMe($rememberme)
+    {
+        $this->rememberme = (boolean) $rememberme;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getAccountNameField()
@@ -169,7 +183,13 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         switch ($error) {
             case '0':
                 // Return null as identity only for error 0
-                $identity = new Identity($this->username, $this->password, $this->encryptionKey, $result['rows'][0]);
+                $identity = new Identity(
+                    $this->username,
+                    $this->password,
+                    $this->rememberme,
+                    $this->encryptionKey,
+                    $result['rows'][0]
+                );
                 $identity->setIsLoggedIn(true);
                 return new Result(
                     Result::SUCCESS,

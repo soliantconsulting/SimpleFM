@@ -3,7 +3,7 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM\ZF2
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
@@ -14,6 +14,10 @@ use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 use Soliant\SimpleFM\Adapter;
 use Zend\Authentication\Result;
 
+/**
+ * Class SimpleFM
+ * @package Soliant\SimpleFM\ZF2\Authentication\Adapter
+ */
 class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
 {
 
@@ -80,8 +84,6 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     protected $accountNameField;
 
     /**
-     * Constructor
-     *
      * @param  array $config Configuration settings:
      *    'validateSimpleFmAdapter' => Soliant\SimpleFM\Adapter
      *    'encryptionKey'           => string Example: '56cb36c21eb9a29c1317092b973a5f9cba393a367de783af45a2799f7302c',
@@ -89,7 +91,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      *    'appPassword'             => string Example: '317akx1gr43m4pd'
      *    'identityLayout'          => string Example: 'gateway_User'
      *    'accountNameField'        => string Example: 'AccountName'
-     * @throws Soliant\SimpleFM\ZF2\Authentication\Adapter\InvalidArgumentException
+     * @throws Exception\InvalidArgumentException
      * @return void
      */
     public function __construct(array $config, Adapter $simpleFmValidateAdapter)
@@ -125,7 +127,8 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
-     * @return Soliant\SimpleFM\ZF2\Authentication\Adapter\Auth
+     * @var string $username
+     * @return SimpleFM
      */
     public function setUsername($username)
     {
@@ -135,7 +138,8 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
-     * @return Soliant\SimpleFM\ZF2\Authentication\Adapter\Auth
+     * @var string $password
+     * @return SimpleFM
      */
     public function setPassword($password)
     {
@@ -145,6 +149,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
+     * @var boolean $rememberme
      * @return SimpleFM
      */
     public function setRememberMe($rememberme)
@@ -162,7 +167,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
-     * @return Zend\Authentication\Result
+     * @return \Zend\Authentication\Result
      */
     public function authenticate()
     {
@@ -171,9 +176,9 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         $this->simpleFmValidateAdapter->setCredentials($this->credentials);
 
         $command = array(
-                    $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
-                    '-find' => null,
-                );
+            $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
+            '-find' => null,
+        );
         $this->simpleFmValidateAdapter->setCommandarray($command);
 
         $result = $this->simpleFmValidateAdapter->execute();
@@ -198,6 +203,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                     Result::SUCCESS,
                     $identity
                 );
+                break;
             case '401':
                 // Return null identity plus reason as message array for HTTP 401
                 if ($errortype == 'HTTP') {
@@ -205,9 +211,10 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                     return new Result(
                         Result::FAILURE,
                         $identity,
-                        array('reason' => 'Username and/or password not valid' ,'sfm_auth_response' => $result)
+                        array('reason' => 'Username and/or password not valid', 'sfm_auth_response' => $result)
                     );
                 }
+                break;
             case '7':
                 // there most likely was a error connecting to the host
                 if ($errortype == 'PHP') {
@@ -215,20 +222,31 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                     return new Result(
                         Result::FAILURE,
                         $identity,
-                        array('reason' => 'There was a system error trying to make the request.  Please try again later.' ,'sfm_auth_response' => $result)
+                        array(
+                            'reason' => 'There was a system error trying to make the request.  Please try again later.',
+                            'sfm_auth_response' => $result
+                        )
                     );
                 }
+                break;
             default:
                 // Return empty identity plus reason as message array for every other result status
                 $identity = null;
                 return new Result(
                     Result::FAILURE,
                     $identity,
-                    array('reason' => $errortype . ' error ' . $error . ': ' . $errortext ,'sfm_auth_response' => $result)
+                    array(
+                        'reason' => $errortype . ' error ' . $error . ': ' . $errortext,
+                        'sfm_auth_response' => $result
+                    )
                 );
         }
     }
 
+    /**
+     * @param $string
+     * @return string
+     */
     static public function escapeStringForFileMakerSearch($string)
     {
         return str_replace('@', '\@', $string);

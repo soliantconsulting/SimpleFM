@@ -89,7 +89,7 @@ class Adapter
     protected $commandURLdebug;
 
     /**
-     * @var LoaderInterface
+     * @var AbstractLoader
      */
     protected $loader;
 
@@ -98,7 +98,7 @@ class Adapter
         if (!empty($hostParams)) {
             self::setHostParams($hostParams);
         }
-        if ($loader instanceof LoaderInterface) {
+        if ($loader instanceof AbstractLoader) {
             $this->loader = $loader;
         } else {
             $this->loader = new FilePostContents();

@@ -9,15 +9,20 @@
 
 namespace Soliant\SimpleFM\Loader;
 
-require_once('LoaderInterface.php');
 
-abstract class AbstractLoader implements LoaderInterface
+abstract class AbstractLoader
 {
 
+    protected $adapter;
     protected $credentials;
     protected $username;
     protected $args;
     protected $commandURL;
+
+    /**
+     * @param array $simpleFMAdapterRow
+     */
+    abstract public function load(Adapter $adapter);
 
     protected function createCredentials()
     {
@@ -25,7 +30,7 @@ abstract class AbstractLoader implements LoaderInterface
         $password = $this->adapter->getPassword();
 
         $this->username = $username;
-        $this->credentials = empty($username)?'':$username.':'.$password;
+        $this->credentials = empty($username) ? '' : $username . ':' . $password;
         return $this->credentials;
     }
 

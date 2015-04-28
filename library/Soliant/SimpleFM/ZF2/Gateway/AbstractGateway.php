@@ -3,7 +3,7 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM\ZF2
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
@@ -11,6 +11,7 @@ namespace Soliant\SimpleFM\ZF2\Gateway;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
+use Exception;
 use Soliant\SimpleFM\Exception\ErrorException;
 use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
@@ -41,12 +42,17 @@ abstract class AbstractGateway
     protected $simpleFMAdapter;
 
     /**
-     * @param ServiceManager $serviceManager
      * @param AbstractEntity $entity
      * @param SimpleFMAdapter $simpleFMAdapter
+     * @param Identity $identity
+     * @param null $encryptionKey
      */
-    public function __construct(AbstractEntity $entity, SimpleFMAdapter $simpleFMAdapter, Identity $identity=null, $encryptionKey=null)
-    {
+    public function __construct(
+        AbstractEntity $entity,
+        SimpleFMAdapter $simpleFMAdapter,
+        Identity $identity = null,
+        $encryptionKey = null
+    ) {
         $this->setSimpleFMAdapter($simpleFMAdapter);
         $this->setEntityName(get_class($entity));
         $this->setEntityLayout($entity->getDefaultWriteLayoutName());
@@ -60,10 +66,10 @@ abstract class AbstractGateway
 
     /**
      * @param AbstractEntity $entity
-     * @param string $entityLayout
-     * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
+     * @param string|null $entityLayout
+     * @return AbstractEntity
      */
-    public function resolveEntity(AbstractEntity $entity, $entityLayout=null)
+    public function resolveEntity(AbstractEntity $entity, $entityLayout = null)
     {
         if (!empty($entityLayout)) {
             $this->setEntityLayout($entityLayout);
@@ -71,17 +77,33 @@ abstract class AbstractGateway
         return $this->find($entity->getRecid());
     }
 
+    /**
+     * @param int $recid
+     * @return AbstractEntity|null
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function find($recid)
     {
         $commandArray = array('-recid' => $recid, '-find' => null);
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
+    /**
+     * @param array $search
+     * @return AbstractEntity|null
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function findOneBy(array $search)
     {
         foreach ($search as $field => $value) {
@@ -97,16 +119,27 @@ abstract class AbstractGateway
         );
 
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
 
         if (isset($result['rows'][0]) and $result['rows'][0]) {
             $entity = new $this->entityName($result['rows'][0]);
             return $entity;
         }
+        return null;
     }
 
+    /**
+     * @param array $sort
+     * @param int|null $max
+     * @param int|null $skip
+     * @return ArrayCollection
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function findAll(array $sort = array(), $max = null, $skip = null)
     {
         $commandArray = array_merge(
@@ -115,12 +148,23 @@ abstract class AbstractGateway
             array('-findall' => null)
         );
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         return $this->rowsToArrayCollection($result['rows']);
     }
 
+    /**
+     * @param array $search
+     * @param array $sort
+     * @param int|null $max
+     * @param int|null $skip
+     * @return ArrayCollection
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function findBy(array $search, array $sort = array(), $max = null, $skip = null)
     {
         foreach ($search as $field => $value) {
@@ -134,12 +178,20 @@ abstract class AbstractGateway
             array('-find' => null)
         );
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         return $this->rowsToArrayCollection($result['rows']);
     }
 
+    /**
+     * @param AbstractEntity $entity
+     * @return AbstractEntity
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function create(AbstractEntity $entity)
     {
         $serializedValues = $entity->serialize();
@@ -151,13 +203,21 @@ abstract class AbstractGateway
             array('-new' => null)
         );
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
+    /**
+     * @param AbstractEntity $entity
+     * @return AbstractEntity
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function edit(AbstractEntity $entity)
     {
         $serializedValues = $entity->serialize();
@@ -169,14 +229,22 @@ abstract class AbstractGateway
             )
         );
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
 
         $entity = new $this->entityName($result['rows'][0]);
         return $entity;
     }
 
+    /**
+     * @param AbstractEntity $entity
+     * @return bool
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
     public function delete(AbstractEntity $entity)
     {
         $commandArray = array(
@@ -185,8 +253,8 @@ abstract class AbstractGateway
             '-delete' => null,
         );
         $this->simpleFMAdapter
-             ->setCommandArray($commandArray)
-             ->setLayoutname($this->getEntityLayout());
+            ->setCommandArray($commandArray)
+            ->setLayoutname($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
         return true;
     }
@@ -202,7 +270,7 @@ abstract class AbstractGateway
 
     /**
      * @param SimpleFMAdapter $simpleFMAdapter
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
+     * @return $this
      */
     public function setSimpleFMAdapter(SimpleFMAdapter $simpleFMAdapter)
     {
@@ -211,22 +279,21 @@ abstract class AbstractGateway
     }
 
     /**
-     * @return the $entityLayout
+     * @return string
      */
-    public function getEntityLayout ()
+    public function getEntityLayout()
     {
         return $this->entityLayout;
     }
 
     /**
      * @param string $entityLayout
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
+     * @return $this
      */
-    public function setEntityLayout ($entityLayout)
+    public function setEntityLayout($entityLayout)
     {
         $this->entityLayout = $entityLayout;
         return $this;
-
     }
 
     /**
@@ -240,18 +307,18 @@ abstract class AbstractGateway
 
     /**
      * @param string $entityName
-     * @return \Soliant\SimpleFM\ZF2\Gateway\AbstractGateway
+     * @return $this
      */
-    public function setEntityName ($entityName)
+    public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
         return $this;
     }
 
     /**
-     * @param int $max
-     * @param int $skip
-     * @return array:
+     * @param int|null $max
+     * @param int|null $skip
+     * @return array
      */
     protected function maxSkipToCommandArray($max = null, $skip = null)
     {
@@ -272,12 +339,16 @@ abstract class AbstractGateway
         // -sortfield.[1-9] = fully-qualified-field-name
         // -sortorder.[1-9] = [ascend|descend|value-list-name]
 
-        if (empty($sort)) return array();
+        if (empty($sort)) {
+            return array();
+        }
 
         $i = 1;
         $command = array();
         foreach ($sort as $field => $method) {
-            if ($i > 9) break; // FileMaker API limited to max 9 fields
+            if ($i > 9) {
+                break;
+            } // FileMaker API limited to max 9 fields
 
             switch ($method) {
                 case 'dsc':
@@ -317,24 +388,32 @@ abstract class AbstractGateway
 
     /**
      * @param array $rows
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     protected function rowsToArrayCollection(array $rows)
     {
         $collection = new ArrayCollection();
         if (!empty($rows)) {
             foreach ($rows as $row) {
-                $collection[] = new $this->entityName($row);
+                $collection->add(new $this->entityName($row));
             }
         }
 
         return $collection;
     }
 
-    protected function handleAdapterResult($simpleFMAdapterResult)
+    /**
+     * @param array $simpleFMAdapterResult
+     * @return array
+     * @throws ErrorException
+     * @throws FileMakerException
+     * @throws HttpException
+     * @throws XmlException
+     */
+    protected function handleAdapterResult(array $simpleFMAdapterResult)
     {
         $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' .
-                       $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
+            $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
 
         if ($simpleFMAdapterResult['error'] === 0) {
             return $simpleFMAdapterResult;
@@ -358,7 +437,4 @@ abstract class AbstractGateway
             throw new ErrorException($message, $simpleFMAdapterResult['error']);
         }
     }
-
 }
-
-

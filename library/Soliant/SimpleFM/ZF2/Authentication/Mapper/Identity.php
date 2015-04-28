@@ -191,6 +191,4 @@ class Identity
 
         return $this;
     }
-
-
 }

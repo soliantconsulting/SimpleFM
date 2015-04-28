@@ -4,7 +4,7 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   SimpleFM
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
@@ -119,7 +119,7 @@ $adapter->setCommandstring('-findall');
  * SimpleFMAdapter also provides a Boolean rowsbyrecid property which makes the returned rows of data associative
  * by FileMaker recid instead of the default behavior which is rows as an arbitrarily indexed array.
  */
-$adapter->setRowsbyrecid(FALSE);
+$adapter->setRowsbyrecid(false);
 
 /**
  * Once your adapter is ready, use execute to make the host request.
@@ -158,37 +158,42 @@ echo "Found Count: $count<br/>";
 echo "Fetch Size: $fetchsize<br/>";
 echo "</div>";
 
-if ($error === 0){
+if ($error === 0) {
     /**
      * Format the result rows like a FileMaker Table View
      */
     echo "<h2>Table View</h2><table border=1><tr>";
         $indexed = array_values($rows);
-        foreach ($indexed[0] as $key => $value) { echo "<th>$key</th>"; }
+    foreach ($indexed[0] as $key => $value) {
+        echo "<th>$key</th>";
+    }
         echo "</tr>";
-        foreach ($rows as $data) { echo "<tr>";
-            foreach ($data as $value) {
-                $value = $value === "" ? "&nbsp;" : $value;
-                if (is_array($value)) {
-                    if (isset($value['parentindex'])){
-                        // portal
-                        $tempvalue = '';
-                        foreach ($value as $k=>$v){
-                            if (is_array($v)) {
-                                continue;
-                            }
-                            $tempvalue .= $k . ':&nbsp;' . $v . '<br>';
+    foreach ($rows as $data) {
+        echo "<tr>";
+        foreach ($data as $value) {
+            $value = $value === "" ? "&nbsp;" : $value;
+            if (is_array($value)) {
+                if (isset($value['parentindex'])) {
+                    // portal
+                    $tempvalue = '';
+                    foreach ($value as $k => $v) {
+                        if (is_array($v)) {
+                            continue;
                         }
-                        $value = $tempvalue;
-                    } else {
-                        // repeating field
-                        $value = implode("<br>", $value);
+                        $tempvalue .= $k . ':&nbsp;' . $v . '<br>';
                     }
+                    $value = $tempvalue;
                 } else {
-                    $value = nl2br($value);
+                    // repeating field
+                    $value = implode("<br>", $value);
                 }
-                echo "<td>$value</td>"; }
-        echo "</tr>";}
+            } else {
+                $value = nl2br($value);
+            }
+            echo "<td>$value</td>";
+        }
+        echo "</tr>";
+    }
     echo "</table>";
 
     /**
@@ -200,10 +205,10 @@ if ($error === 0){
         foreach ($data as $key => $value) {
             $value = $value === "" ? "&nbsp;" : $value;
             if (is_array($value)) {
-                if (isset($value['parentindex'])){
+                if (isset($value['parentindex'])) {
                     // portal
                     $tempvalue = '';
-                    foreach ($value as $k=>$v){
+                    foreach ($value as $k => $v) {
                         if (is_array($v)) {
                             continue;
                         }
@@ -228,6 +233,3 @@ if ($error === 0){
  */
 echo "<hr><pre>";
 var_dump($result);
-
-
-

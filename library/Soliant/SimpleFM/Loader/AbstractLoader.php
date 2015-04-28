@@ -3,16 +3,21 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM\ZF2
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
 namespace Soliant\SimpleFM\Loader;
 
+use Soliant\SimpleFM\Adapter;
+use SimpleXMLElement;
 
 abstract class AbstractLoader
 {
 
+    /**
+     * @var Adapter
+     */
     protected $adapter;
     protected $credentials;
     protected $username;
@@ -21,9 +26,14 @@ abstract class AbstractLoader
 
     /**
      * @param array $simpleFMAdapterRow
+     * @return SimpleXMLElement
      */
     abstract public function load(Adapter $adapter);
 
+
+    /**
+     * @return string
+     */
     protected function createCredentials()
     {
         $username = $this->adapter->getUsername();
@@ -34,6 +44,9 @@ abstract class AbstractLoader
         return $this->credentials;
     }
 
+    /**
+     * @return string
+     */
     protected function createArgs()
     {
         $dbname = $this->adapter->getDbname();
@@ -44,10 +57,13 @@ abstract class AbstractLoader
         return $this->args;
     }
 
+    /**
+     * @return string
+     */
     protected function createCommandURL()
     {
-        $credentials = self::createCredentials();
-        $args = self::createArgs();
+        $credentials = $this->createCredentials();
+        $args = $this->createArgs();
 
         $protocol = $this->adapter->getProtocol();
         $hostname = $this->adapter->getHostname();
@@ -58,17 +74,28 @@ abstract class AbstractLoader
         return $this->commandURL;
     }
 
+    /**
+     * @return void
+     */
     protected function setAdapterCommandURLdebug()
     {
-        $this->adapter->setCommandURLdebug(empty($this->credentials)?$this->commandURL:str_replace($this->credentials, $this->username.':[...]', $this->commandURL));
+        $this->adapter->setCommandURLdebug(
+            empty($this->credentials) ? $this->commandURL : str_replace(
+                $this->credentials,
+                $this->username . ':[...]',
+                $this->commandURL
+            )
+        );
     }
 
+    /**
+     * @return void
+     */
     protected function prepare()
     {
-        self::createCredentials();
-        self::createArgs();
-        self::createCommandURL();
-        self::setAdapterCommandURLdebug();
+        $this->createCredentials();
+        $this->createArgs();
+        $this->createCommandURL();
+        $this->setAdapterCommandURLdebug();
     }
-
 }

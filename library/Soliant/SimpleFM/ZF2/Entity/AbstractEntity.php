@@ -3,12 +3,13 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM\ZF2
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
 namespace Soliant\SimpleFM\ZF2\Entity;
 
+use Exception;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Zend\Stdlib\ArraySerializableInterface;
 
@@ -48,70 +49,73 @@ abstract class AbstractEntity implements ArraySerializableInterface
     {
         $this->simpleFMAdapterRow = $simpleFMAdapterRow;
         $this->isSerializable = true;
-        if (!empty($this->simpleFMAdapterRow)) $this->unserialize();
+        if (!empty($this->simpleFMAdapterRow)) {
+            $this->unserialize();
+        }
     }
 
     /**
-     * @return the name value for the object
+     * @return string
      */
-
     public function __toString()
     {
         if (method_exists($this, 'getName')) {
-            return (string) $this->getName();
+            return (string)$this->getName();
         } else {
             return '<toString is unconfigured>';
         }
     }
 
     /**
-     * @note FileMaker internal recid
-     * @return the $recid
+     * FileMaker internal recid
+     * @return string
      */
     public function getRecid()
     {
-        return (string) $this->recid;
+        return (string)$this->recid;
     }
 
     /**
-     * @param number $recid
+     * @param int $recid
+     * @return $this
      */
-    public function setRecid ($recid)
+    public function setRecid($recid)
     {
-        $this->recid = $recid;
+        $this->recid = (int)$recid;
         return $this;
     }
 
     /**
-     * @note FileMaker internal modid
-     * @return the $modid
+     * FileMaker internal modid
+     * @return string
      */
     public function getModid()
     {
-        return (string) $this->modid;
+        return (string)$this->modid;
     }
 
     /**
-     * @param number $modid
+     * @param int $modid
      */
-    public function setModid ($modid)
+    public function setModid($modid)
     {
-        $this->modid = $modid;
+        $this->modid = (int)$modid;
         return $this;
     }
 
     /**
-     * @return the $isSerializable
+     * @return bool
      */
-    public function getIsSerializable ()
+    public function getIsSerializable()
     {
         return $this->isSerializable;
     }
 
     /**
-     * @param boolean $isSerializable
+     * @param bool $isSerializable
+     * @return $this
      */
-    public function setIsSerializable ($isSerializable)
+    public function setIsSerializable($isSerializable)
     {
         $this->isSerializable = $isSerializable;
         return $this;
@@ -147,29 +151,32 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * Default FileMaker layout for the Entity. This layout should usually at least include all the
      * writable fields, but it may also include readonly fields and portals/associations.
+     * @return string|null
      */
     abstract public function getDefaultWriteLayoutName();
 
     /**
      * The route segment for the entity controller.
      * Example: MyEntity route segment is normally my-entity
+     * @return string|null
      */
     abstract public function getDefaultControllerRouteSegment();
 
     /**
      * Maps a SimpleFM\Adapter row onto the Entity.
      * @see $this->unserializeField()
+     * @return void
      */
     public function unserialize()
     {
         $this->unserializeField('recid', 'recid');
         $this->unserializeField('modid', 'modid');
 
-        foreach ($this->getFieldMapWriteable() as $property=>$field) {
+        foreach ($this->getFieldMapWriteable() as $property => $field) {
             $this->unserializeField($property, $field, true);
         }
 
-        foreach ($this->getFieldMapReadOnly() as $property=>$field) {
+        foreach ($this->getFieldMapReadOnly() as $property => $field) {
             $this->unserializeField($property, $field, false);
         }
     }
@@ -178,6 +185,8 @@ abstract class AbstractEntity implements ArraySerializableInterface
      * Maps the Entity onto a SimpleFM\Adapter row. The array association should be a
      * fully qualified field name, with the exception of pseudo-fields recid and modid.
      * @see $this->serializeField()
+     * @return array
+     * @throws Exception
      */
     public function serialize()
     {
@@ -186,7 +195,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
         $this->serializeField('-recid', 'recid');
         $this->serializeField('-modid', 'modid');
 
-        foreach ($this->getFieldMapWriteable() as $property=>$field) {
+        foreach ($this->getFieldMapWriteable() as $property => $field) {
             $this->serializeField($field, $property);
         }
 
@@ -194,14 +203,15 @@ abstract class AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * @return the $entityAsArray
+     * @return array
+     * @throws Exception
      */
     public function getArrayCopy()
     {
         $this->addPropertyToEntityAsArray('recid');
         $this->addPropertyToEntityAsArray('modid');
 
-        foreach ($this->getFieldMapMerged() as $property=>$field) {
+        foreach ($this->getFieldMapMerged() as $property => $field) {
             $this->addPropertyToEntityAsArray($property);
         }
 
@@ -210,6 +220,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
 
     /**
      * @deprecated
+     * @return array
      */
     public function toArray()
     {
@@ -218,13 +229,13 @@ abstract class AbstractEntity implements ArraySerializableInterface
 
     /**
      * @param array $data
-     * @return \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
+     * @return $this
      */
     public function exchangeArray(array $data)
     {
         $this->recid = empty($data['recid']) ? '' : $data['recid'];
         $this->modid = empty($data['modid']) ? '' : $data['modid'];
-        foreach ($this->getFieldMapWriteable() as $field=>$column) {
+        foreach ($this->getFieldMapWriteable() as $field => $column) {
             $this->$field = empty($data[$field]) ? '' : $data[$field];
         }
         $this->serialize();
@@ -236,6 +247,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
      * If a required field is omitted, $this->isSerializable is marked false
      * @param string $propertyName
      * @param string $fileMakerFieldName
+     * @param bool $isWritable
      * @throws InvalidArgumentException
      */
     protected function unserializeField($propertyName, $fileMakerFieldName, $isWritable = false)
@@ -287,7 +299,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     }
 
     /**
-     * For toArray, all fields should be mapped
+     * For getArrayCopy, all fields should be mapped
      * @param string $propertyName
      * @throws InvalidArgumentException
      * @throws Exception
@@ -307,5 +319,4 @@ abstract class AbstractEntity implements ArraySerializableInterface
         }
 
     }
-
 }

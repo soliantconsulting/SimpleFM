@@ -3,13 +3,13 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
 namespace Soliant\SimpleFM;
 
-use Soliant\SimpleFM\Loader\LoaderInterface;
+use Soliant\SimpleFM\Loader\AbstractLoader;
 use Soliant\SimpleFM\Loader\FilePostContents;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\Exception\ReservedWordException;
@@ -20,8 +20,8 @@ class Adapter
     /**
      * fmi/xml grammars
      */
-    const FMRESULTSET_URI   = '/fmi/xml/fmresultset.xml';
-    const FMPXMLLAYOUT_URI  = '/fmi/xml/FMPXMLLAYOUT.xml';
+    const FMRESULTSET_URI = '/fmi/xml/fmresultset.xml';
+    const FMPXMLLAYOUT_URI = '/fmi/xml/FMPXMLLAYOUT.xml';
 
     /**
      * @var string
@@ -93,7 +93,7 @@ class Adapter
      */
     protected $loader;
 
-    public function __construct($hostParams=array(), $loader=null)
+    public function __construct(array $hostParams = array(), $loader = null)
     {
         if (!empty($hostParams)) {
             self::setHostParams($hostParams);
@@ -107,29 +107,35 @@ class Adapter
 
     /**
      * Bulk setter for host args
-     * @param array($hostname, $dbname, $username, $password)
+     * @param array ($hostname, $dbname, $username, $password)
      * @return \Soliant\SimpleFM\Adapter
      */
-    public function setHostParams($params=array())
+    public function setHostParams($params = array())
     {
         $this->hostname = @$params['hostname'];
-        $this->dbname   = @$params['dbname'];
+        $this->dbname = @$params['dbname'];
         $this->username = @$params['username'];
         $this->password = @$params['password'];
 
-        if (isset($params['protocol'])) $this->setProtocol($params['protocol']);
-        if (isset($params['port'])) $this->setPort($params['port']);
-        if (isset($params['sslverifypeer'])) $this->setSslverifypeer($params['sslverifypeer']);
+        if (isset($params['protocol'])) {
+            $this->setProtocol($params['protocol']);
+        }
+        if (isset($params['port'])) {
+            $this->setPort($params['port']);
+        }
+        if (isset($params['sslverifypeer'])) {
+            $this->setSslverifypeer($params['sslverifypeer']);
+        }
 
         return $this;
     }
 
     /**
      * Bulk setter for credentials
-     * @param array($username, $password)
+     * @param array ($username, $password)
      * @return \Soliant\SimpleFM\Adapter
      */
-    public function setCredentials($params=array())
+    public function setCredentials($params = array())
     {
         $this->username = @$params['username'];
         $this->password = @$params['password'];
@@ -138,12 +144,12 @@ class Adapter
 
     /**
      * Bulk setter for call args
-     * @param array($layoutname, $commandstring)
+     * @param array ($layoutname, $commandstring)
      * @return \Soliant\SimpleFM\Adapter
      */
-    public function setCallParams($params=array())
+    public function setCallParams($params = array())
     {
-        $this->layoutname    = @$params['layoutname'];
+        $this->layoutname = @$params['layoutname'];
         $this->commandstring = @$params['commandstring'];
         return $this;
     }
@@ -187,7 +193,7 @@ class Adapter
     /**
      * @return string
      */
-    public function getPassword ()
+    public function getPassword()
     {
         return $this->password;
     }
@@ -291,7 +297,7 @@ class Adapter
      */
     public function setProtocol($protocol)
     {
-        if (in_array($protocol, array('http','https'))) {
+        if (in_array($protocol, array('http', 'https'))) {
             $this->protocol = $protocol;
         } else {
             throw new InvalidArgumentException('setProtocol() accepts only "http" or "https" as an argument.');
@@ -304,7 +310,7 @@ class Adapter
      */
     public function getSslverifypeer()
     {
-        return (boolean) $this->sslverifypeer;
+        return (boolean)$this->sslverifypeer;
     }
 
     /**
@@ -313,11 +319,11 @@ class Adapter
      */
     public function setSslverifypeer($sslverifypeer)
     {
-        $this->sslverifypeer = (boolean) $sslverifypeer;
+        $this->sslverifypeer = (boolean)$sslverifypeer;
         return $this;
     }
 
-	/**
+    /**
      * @return $port
      */
     public function getPort()
@@ -336,7 +342,7 @@ class Adapter
      * @param int $port
      * @return \Soliant\SimpleFM\Adapter
      */
-    public function setPort ($port)
+    public function setPort($port)
     {
         $this->port = $port;
         return $this;
@@ -373,7 +379,7 @@ class Adapter
      */
     public function getRowsbyrecid()
     {
-        return (boolean) $this->rowsbyrecid;
+        return (boolean)$this->rowsbyrecid;
     }
 
     /**
@@ -382,7 +388,7 @@ class Adapter
      */
     public function setRowsbyrecid($rowsByRecId = false)
     {
-        $this->rowsbyrecid = (boolean) $rowsByRecId;
+        $this->rowsbyrecid = (boolean)$rowsByRecId;
         return $this;
     }
 
@@ -412,7 +418,7 @@ class Adapter
     }
 
     /**
-     * @param \Soliant\SimpleFM\Loader\LoaderInterface $loader
+     * @param AbstractLoader $loader
      */
     public function setLoader($loader)
     {
@@ -427,7 +433,7 @@ class Adapter
     {
         @$xml = $this->loader->load($this);
 
-        $sfmresult  = null;
+        $sfmresult = array();
         if ($this->uri == self::FMRESULTSET_URI) {
             $sfmresult = $this->parseFmResultSet($xml);
         } elseif ($this->uri == self::FMPXMLLAYOUT_URI) {
@@ -444,8 +450,8 @@ class Adapter
      */
     protected function parseFmResultSet($xml)
     {
-        $result         = array();
-        $result['url']  = $this->getCommandURLdebug();
+        $result = array();
+        $result['url'] = $this->getCommandURLdebug();
 
         // No xml to parse so return here
         if (empty($xml)) {
@@ -455,7 +461,7 @@ class Adapter
             $result['error'] = $phpErrors['error'];
             $result['errortext'] = $phpErrors['errortext'];
             $result['errortype'] = $phpErrors['errortype'];
-            $result['count']     = null;
+            $result['count'] = null;
             $result['fetchsize'] = null;
             $result['rows'] = null;
 
@@ -470,74 +476,71 @@ class Adapter
          *   $fmresultset->resultset[0]->record[0]->field[0]->data[0]
          */
         // loop over rows
-        $i=0;
-        foreach ($xml->resultset[0]->record as $row) { // handle rows
+        $i = 0;
+        foreach ($xml->resultset[0]->record as $row) {
+            $conditional_id = $this->rowsbyrecid === true ? (string)$row['record-id'] : (int)$i;
 
-            $conditional_id = $this->rowsbyrecid === true ? (string) $row['record-id'] : (int) $i;
+            $rows[$conditional_id]['index'] = (int)$i;
+            $rows[$conditional_id]['recid'] = (int)$row['record-id'];
+            $rows[$conditional_id]['modid'] = (int)$row['mod-id'];
 
-            $rows[$conditional_id]['index'] = (int) $i;
-            $rows[$conditional_id]['recid'] = (int) $row['record-id'];
-            $rows[$conditional_id]['modid'] = (int) $row['mod-id'];
-
-            foreach ($xml->resultset[0]->record[$i]->field as $field) { // handle fields
-
-                $fieldname = (string) $field['name'];
+            foreach ($xml->resultset[0]->record[$i]->field as $field) {
+                $fieldname = (string)$field['name'];
                 if (count($field) > 1) {
                     $fielddata = array();
                     foreach ($field->data as $data) {
-                        $fielddata[] = (string) $data;
+                        $fielddata[] = (string)$data;
                     }
                 } else {
-                    $fielddata = (string) $field->data;
+                    $fielddata = (string)$field->data;
                 }
 
                 // validate fieldnames on first row
-                $fieldnameIsValid = $i===0 ? self::fieldnameIsValid($fieldname) : true;
+                $fieldnameIsValid = $i === 0 ? self::fieldnameIsValid($fieldname) : true;
                 $rows[$conditional_id][$fieldname] = $fielddata;
 
             }
             // check if portals exist
             if (isset($xml->resultset[0]->record[0]->relatedset)) {
-
                 // the portal index
-                $ii=0;
+                $ii = 0;
                 // handle portals
                 foreach ($xml->resultset[0]->record[0]->relatedset as $portal) {
-                    $portalname = (string) $portal['table'];
+                    $portalname = (string)$portal['table'];
 
-                    $rows[$conditional_id][$portalname]['parentindex'] = (int) $i;
-                    $rows[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
-                    $rows[$conditional_id][$portalname]['portalindex'] = (int) $ii;
+                    $rows[$conditional_id][$portalname]['parentindex'] = (int)$i;
+                    $rows[$conditional_id][$portalname]['parentrecid'] = (int)$row['record-id'];
+                    $rows[$conditional_id][$portalname]['portalindex'] = (int)$ii;
                     /**
                      * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
                      * portals. Test for possible issues with $portalname being non-unique.
                      */
-                    $rows[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
+                    $rows[$conditional_id][$portalname]['portalrecordcount'] = (int)$portal['count'];
 
                     // the portal row index
-                    $iii=0;
+                    $iii = 0;
                     // handle portal rows
                     foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record as $portal_row) {
-                        $portal_conditional_id = $this->rowsbyrecid === true ? (int) $portal_row['record-id'] : $iii;
+                        $portal_conditional_id = $this->rowsbyrecid === true ? (int)$portal_row['record-id'] : $iii;
 
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int) $iii;
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int) $portal_row['mod-id'];
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int) $portal_row['record-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int)$iii;
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int)$portal_row['mod-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int)$portal_row['record-id'];
 
                         // handle portal fields
                         foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record[$iii]->field as $portal_field) {
-                            $portal_fieldname = (string) str_replace($portalname.'::', '', $portal_field['name']);
+                            $portal_fieldname = (string)str_replace($portalname . '::', '', $portal_field['name']);
                             if (count($portal_field) > 1) {
                                 $portal_fielddata = array();
                                 foreach ($portal_field->data as $data) {
-                                    $portal_fielddata[] = (string) $data;
+                                    $portal_fielddata[] = (string)$data;
                                 }
                             } else {
-                                $portal_fielddata = (string) $portal_field->data;
+                                $portal_fielddata = (string)$portal_field->data;
                             }
 
                             // validate fieldnames on first row
-                            $fieldnameIsValid = $iii===0 ? self::fieldnameIsValid($portal_fieldname) : true;
+                            $fieldnameIsValid = $iii === 0 ? self::fieldnameIsValid($portal_fieldname) : true;
                             $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
                         }
                         ++$iii;
@@ -548,13 +551,13 @@ class Adapter
             ++$i;
         }
 
-        $simplexmlerrors        = null;
-        $result['error']        = (int) $xml->error['code'];
-        $result['errortext']    = self::errorToEnglish($result['error']);
-        $result['errortype']    = 'FileMaker';
-        $result['count']        = (string) $xml->resultset['count'];
-        $result['fetchsize']    = (string) $xml->resultset['fetch-size'];
-        $result['rows']         = $rows;
+        $simplexmlerrors = null;
+        $result['error'] = (int)$xml->error['code'];
+        $result['errortext'] = self::errorToEnglish($result['error']);
+        $result['errortype'] = 'FileMaker';
+        $result['count'] = (string)$xml->resultset['count'];
+        $result['fetchsize'] = (string)$xml->resultset['fetch-size'];
+        $result['rows'] = $rows;
 
         return $result;
     }
@@ -566,65 +569,65 @@ class Adapter
      */
     protected function parseFmpXmlLayout($xml)
     {
-        $result     = array();
-        $result['url']  = $this->getCommandURLdebug();
+        $result = array();
+        $result['url'] = $this->getCommandURLdebug();
 
         // No xml to parse so return here
         if (empty($xml)) {
             $simplexmlerrors['xml'] = libxml_get_errors();
             $simplexmlerrors['php'] = error_get_last();
-            $phpErrors              = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
-            $result['error']        = $phpErrors['error'];
-            $result['errortext']    = $phpErrors['errortext'];
-            $result['errortype']    = $phpErrors['errortype'];
-            $result['product']      = null;
-            $result['layout']       = null;
-            $result['valuelists']   = null;
+            $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
+            $result['error'] = $phpErrors['error'];
+            $result['errortext'] = $phpErrors['errortext'];
+            $result['errortype'] = $phpErrors['errortype'];
+            $result['product'] = null;
+            $result['layout'] = null;
+            $result['valuelists'] = null;
             libxml_clear_errors();
             return $result;
         }
 
-        $fields     = array();
+        $fields = array();
         $valueLists = array();
 
-        $i=0;
+        $i = 0;
         // loop over LAYOUT fields
         foreach ($xml->LAYOUT[0]->FIELD as $field) {
-            $fieldname = (string) $field->attributes()->NAME;
+            $fieldname = (string)$field->attributes()->NAME;
             // throw an exception if name not valid:
             self::fieldnameIsValid($fieldname);
 
             $fields[$i]['name'] = $fieldname;
-            $fields[$i]['type'] =  (string) $field->STYLE->attributes()->TYPE;
-            $fields[$i]['valuelist'] =  (string) $field->STYLE->attributes()->VALUELIST;
+            $fields[$i]['type'] = (string)$field->STYLE->attributes()->TYPE;
+            $fields[$i]['valuelist'] = (string)$field->STYLE->attributes()->VALUELIST;
             ++$i;
         }
 
-        $j=0;
+        $j = 0;
         // loop over VALUELISTS
         foreach ($xml->VALUELISTS[0] as $valueList) {
-            $valueLists[$j]['name'] = (string) $valueList->attributes()->NAME;
+            $valueLists[$j]['name'] = (string)$valueList->attributes()->NAME;
             $valueLists[$j]['values'] = array();
             $jj = 0;
             foreach ($valueList->VALUE as $value) {
-                $valueLists[$j]['values'][$jj]['value']    = (string) $value[0];
-                $valueLists[$j]['values'][$jj]['display']  = (string) $value->attributes()->DISPLAY;
+                $valueLists[$j]['values'][$jj]['value'] = (string)$value[0];
+                $valueLists[$j]['values'][$jj]['display'] = (string)$value->attributes()->DISPLAY;
                 $jj++;
             }
             ++$j;
         }
 
-        $simplexmlerrors                = null;
-        $result['error']                = (int) $xml->ERRORCODE;
-        $result['errortext']            = self::errorToEnglish($result['error']);
-        $result['errortype']            = 'FileMaker';
-        $result['product']['build']     = (string) $xml->PRODUCT->attributes()->BUILD;
-        $result['product']['name']      = (string) $xml->PRODUCT->attributes()->NAME;
-        $result['product']['version']   = (string) $xml->PRODUCT->attributes()->VERSION;
-        $result['layout']['database']   = (string) $xml->LAYOUT->attributes()->DATABASE;
-        $result['layout']['name']       = (string) $xml->LAYOUT->attributes()->NAME;
-        $result['layout']['fields']     = $fields;
-        $result['valuelists']           = $valueLists;
+        $simplexmlerrors = null;
+        $result['error'] = (int)$xml->ERRORCODE;
+        $result['errortext'] = self::errorToEnglish($result['error']);
+        $result['errortype'] = 'FileMaker';
+        $result['product']['build'] = (string)$xml->PRODUCT->attributes()->BUILD;
+        $result['product']['name'] = (string)$xml->PRODUCT->attributes()->NAME;
+        $result['product']['version'] = (string)$xml->PRODUCT->attributes()->VERSION;
+        $result['layout']['database'] = (string)$xml->LAYOUT->attributes()->DATABASE;
+        $result['layout']['name'] = (string)$xml->LAYOUT->attributes()->NAME;
+        $result['layout']['fields'] = $fields;
+        $result['valuelists'] = $valueLists;
 
         return $result;
     }
@@ -636,12 +639,13 @@ class Adapter
      */
     protected function fieldnameIsValid($fieldname)
     {
-        $reservedNames = array('index','recid','modid');
+        $reservedNames = array('index', 'recid', 'modid');
         if (in_array($fieldname, $reservedNames)) {
             throw new ReservedWordException(
                 'SimpleFM Exception: "' . $fieldname .
                 '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.',
-                $fieldname);
+                $fieldname
+            );
         }
         return true;
     }
@@ -653,14 +657,14 @@ class Adapter
      */
     public function displayXmlError($error, $xml)
     {
-        $return  = $xml[$error->line - 1] . "\n";
+        $return = $xml[$error->line - 1] . "\n";
         $return .= str_repeat('-', $error->column) . "^\n";
 
         switch ($error->level) {
             case LIBXML_ERR_WARNING:
                 $return .= "Warning $error->code: ";
                 break;
-             case LIBXML_ERR_ERROR:
+            case LIBXML_ERR_ERROR:
                 $return .= "Error $error->code: ";
                 break;
             case LIBXML_ERR_FATAL:
@@ -669,8 +673,8 @@ class Adapter
         }
 
         $return .= trim($error->message) .
-                   "\n  Line: $error->line" .
-                   "\n  Column: $error->column";
+            "\n  Line: $error->line" .
+            "\n  Column: $error->column";
 
         if ($error->file) {
             $return .= "\n  File: $error->file";
@@ -696,19 +700,19 @@ class Adapter
             $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
             $result = explode(' ', $matches, 2);
             // normal case will yield an http error code in location 0 and a message in location 1
-            if ((int)$result[0]!=0) {
-                $return['error']     = (int)$result[0];
+            if ((int)$result[0] != 0) {
+                $return['error'] = (int)$result[0];
                 $return['errortext'] = (string)$result[1];
                 $return['errortype'] = 'HTTP';
             } else {
-                $return['error']     = null;
+                $return['error'] = null;
                 $return['errortext'] = $matches;
                 $return['errortype'] = 'HTTP';
             }
             return $return;
         } else {
             // example: file_get_contents throws an error if hostname does not resolve with dns
-            $return['error']     = 7;
+            $return['error'] = 7;
             $return['errortext'] = $string;
             $return['errortype'] = 'PHP';
             return $return;
@@ -719,7 +723,7 @@ class Adapter
      * @param int $errornum
      * @return string
      */
-    public static function errorToEnglish($errornum='-1')
+    public static function errorToEnglish($errornum = '-1')
     {
         $error = array(
             -1 => 'Unknown error',
@@ -1005,20 +1009,20 @@ class Adapter
      */
     protected function explodeNameValueString($string)
     {
-        $array=explode('&',$string);
-        if (count($array)<2) {
-            $nameValue=explode('=',$array[0],2);
-            if (count($nameValue)<2) {
+        $array = explode('&', $string);
+        if (count($array) < 2) {
+            $nameValue = explode('=', $array[0], 2);
+            if (count($nameValue) < 2) {
                 $resultArray = array($string);
             } else {
                 $resultArray = array($nameValue[0] => $nameValue[1]);
             }
         } else {
-        foreach ($array as $item) {
-            $nameValue          = explode('=',$item,2);
-            $name               = $nameValue[0];
-            $value              = @$nameValue[1];
-            $resultArray[$name] = $value;
+            foreach ($array as $item) {
+                $nameValue = explode('=', $item, 2);
+                $name = $nameValue[0];
+                $value = @$nameValue[1];
+                $resultArray[$name] = $value;
             }
         }
         return $resultArray;
@@ -1033,15 +1037,14 @@ class Adapter
         $amp = '';
         $commandstring = '';
         if (!empty($this->commandarray)) {
-            foreach ($this->commandarray as $name=>$value) {
+            foreach ($this->commandarray as $name => $value) {
                 if ($value instanceof \Datetime) {
                     $value = $value->format('m/d/Y H:i:s');
                 }
-                $commandstring .= ($value===null || $value == '') ? $amp.urlencode($name): $amp.urlencode($name).'='.urlencode($value);
+                $commandstring .= ($value === null || $value == '') ? $amp . urlencode($name) : $amp . urlencode($name) . '=' . urlencode($value);
                 $amp = '&';
             }
         }
         return $commandstring;
     }
-
 }

@@ -3,16 +3,14 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   Soliant\SimpleFM\ZF2
- * @copyright Copyright (c) 2007-2013 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
 namespace Soliant\SimpleFM\Loader;
 
-require_once('AbstractLoader.php');
-
-use Soliant\SimpleFM\Loader\AbstractLoader;
 use Soliant\SimpleFM\Adapter;
+use SimpleXMLElement;
 
 class Mock extends AbstractLoader
 {
@@ -22,7 +20,7 @@ class Mock extends AbstractLoader
     protected $testXml;
 
     /**
-     * @return the $testXml
+     * @return string
      */
     public function getTestXml()
     {
@@ -31,6 +29,7 @@ class Mock extends AbstractLoader
 
     /**
      * @param string $testXml
+     * @return $this
      */
     public function setTestXml($testXml)
     {
@@ -39,9 +38,11 @@ class Mock extends AbstractLoader
     }
 
     /**
+     * @param Adapter $adapter
+     * @param null $testXmlOverride
      * @return SimpleXMLElement
      */
-    public function load(Adapter $adapter, $testXmlOverride=null)
+    public function load(Adapter $adapter, $testXmlOverride = null)
     {
         $this->adapter = $adapter;
 
@@ -52,7 +53,5 @@ class Mock extends AbstractLoader
         libxml_use_internal_errors(true);
 
         return simplexml_load_string($testXml);
-
     }
-
 }

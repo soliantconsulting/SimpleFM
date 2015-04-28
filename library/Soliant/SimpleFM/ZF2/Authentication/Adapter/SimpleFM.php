@@ -9,7 +9,6 @@
 
 namespace Soliant\SimpleFM\ZF2\Authentication\Adapter;
 
-
 use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 use Soliant\SimpleFM\Adapter;
 use Zend\Authentication\Result;
@@ -247,9 +246,8 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      * @param $string
      * @return string
      */
-    static public function escapeStringForFileMakerSearch($string)
+    public static function escapeStringForFileMakerSearch($string)
     {
         return str_replace('@', '\@', $string);
     }
-
 }

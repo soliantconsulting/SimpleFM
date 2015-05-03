@@ -12,25 +12,30 @@ namespace Soliant\SimpleFM\ZF2\Entity;
 use Exception;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Zend\Stdlib\ArraySerializableInterface;
+use Zend\Form\Annotation;
 
 abstract class AbstractEntity implements ArraySerializableInterface
 {
     /**
+     * @Annotation\Exclude
      * @var int
      */
     protected $recid;
 
     /**
+     * @Annotation\Exclude
      * @var int
      */
     protected $modid;
 
     /**
+     * @Annotation\Exclude
      * @var array
      */
     protected $simpleFMAdapterRow;
 
     /**
+     * @Annotation\Exclude
      * @var array
      */
     protected $entityAsArray;
@@ -38,6 +43,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * This property is marked TRUE by the constructor and may be updated by unserializeField()
      * to allow serialization logic to avoid unintentional nullification of existing field values.
+     * @Annotation\Exclude
      * @var boolean
      */
     protected $isSerializable;

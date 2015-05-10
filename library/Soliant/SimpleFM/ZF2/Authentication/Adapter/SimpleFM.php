@@ -170,7 +170,6 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      */
     public function authenticate()
     {
-
         $this->simpleFmValidateAdapter->setLayoutname($this->identityLayout);
         $this->simpleFmValidateAdapter->setCredentials($this->credentials);
 
@@ -180,25 +179,33 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
         );
         $this->simpleFmValidateAdapter->setCommandarray($command);
 
-        $result = $this->simpleFmValidateAdapter->execute();
+        $sfmResult = $this->simpleFmValidateAdapter->execute();
 
-        $error = $result['error'];
-        $errortext = $result['errortext'];
-        $errortype = $result['errortype'];
+        return $this->handleAuthenticateResult($sfmResult);
+    }
+
+    /**
+     * @return \Zend\Authentication\Result
+     */
+    protected function handleAuthenticateResult($sfmResult)
+    {
+        $error = $sfmResult['error'];
+        $errortext = $sfmResult['errortext'];
+        $errortype = $sfmResult['errortype'];
+        $result = null;
 
         // Based on the status, return auth result
         switch ($error) {
             case '0':
-                // Return null as identity only for error 0
                 $identity = new Identity(
                     $this->username,
                     $this->password,
                     $this->rememberme,
                     $this->encryptionKey,
-                    $result['rows'][0]
+                    $sfmResult['rows'][0]
                 );
                 $identity->setIsLoggedIn(true);
-                return new Result(
+                $result = new Result(
                     Result::SUCCESS,
                     $identity
                 );
@@ -207,10 +214,13 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 // Return null identity plus reason as message array for HTTP 401
                 if ($errortype == 'HTTP') {
                     $identity = null;
-                    return new Result(
+                    $result = new Result(
                         Result::FAILURE,
                         $identity,
-                        array('reason' => 'Username and/or password not valid', 'sfm_auth_response' => $result)
+                        array(
+                            'reason' => 'Username and/or password not valid',
+                            'sfm_auth_response' => $sfmResult
+                        )
                     );
                 }
                 break;
@@ -218,28 +228,32 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 // there most likely was a error connecting to the host
                 if ($errortype == 'PHP') {
                     $identity = null;
-                    return new Result(
+                    $result = new Result(
                         Result::FAILURE,
                         $identity,
                         array(
-                            'reason' => 'There was a system error trying to make the request.  Please try again later.',
-                            'sfm_auth_response' => $result
+                            'reason' => 'There was a system error trying to make the request. Please try again later.',
+                            'sfm_auth_response' => $sfmResult
                         )
                     );
                 }
                 break;
-            default:
-                // Return empty identity plus reason as message array for every other result status
-                $identity = null;
-                return new Result(
-                    Result::FAILURE,
-                    $identity,
-                    array(
-                        'reason' => $errortype . ' error ' . $error . ': ' . $errortext,
-                        'sfm_auth_response' => $result
-                    )
-                );
         }
+
+        if (!$result instanceof Result) {
+            // Return empty identity plus reason as message array for every other result status
+            $identity = null;
+            $result = new Result(
+                Result::FAILURE,
+                $identity,
+                array(
+                    'reason' => $errortype . ' error ' . $error . ': ' . $errortext,
+                    'sfm_auth_response' => $sfmResult
+                )
+            );
+        }
+
+        return $result;
     }
 
     /**

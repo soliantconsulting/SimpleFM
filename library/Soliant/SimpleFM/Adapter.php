@@ -1041,7 +1041,7 @@ class Adapter
                 if ($value instanceof \Datetime) {
                     $value = $value->format('m/d/Y H:i:s');
                 }
-                $commandstring .= ($value === null || $value == '') ? $amp . urlencode($name) : $amp . urlencode($name) . '=' . urlencode($value);
+                $commandstring .= ($value === null || $value === '') ? $amp . urlencode($name) : $amp . urlencode($name) . '=' . urlencode($value);
                 $amp = '&';
             }
         }

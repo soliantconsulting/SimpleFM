@@ -349,7 +349,7 @@ class Adapter
     }
 
     /**
-     * @return current uri
+     * @return string
      */
     public function getUri()
     {
@@ -445,7 +445,7 @@ class Adapter
     }
 
     /**
-     * @param xml $xml
+     * @param $xml
      * @return array
      */
     protected function parseFmResultSet($xml)
@@ -564,7 +564,7 @@ class Adapter
 
 
     /**
-     * @param xml $xml
+     * @param $xml
      * @return array
      */
     protected function parseFmpXmlLayout($xml)
@@ -651,50 +651,50 @@ class Adapter
     }
 
     /**
-     * @param libxml_error $error
-     * @param xml $xml
+     * @param $libxmlError
+     * @param $xml
      * @return string
      */
-    public function displayXmlError($error, $xml)
+    public function displayXmlError($libxmlError, $xml)
     {
-        $return = $xml[$error->line - 1] . "\n";
-        $return .= str_repeat('-', $error->column) . "^\n";
+        $return = $xml[$libxmlError->line - 1] . "\n";
+        $return .= str_repeat('-', $libxmlError->column) . "^\n";
 
-        switch ($error->level) {
+        switch ($libxmlError->level) {
             case LIBXML_ERR_WARNING:
-                $return .= "Warning $error->code: ";
+                $return .= "Warning $libxmlError->code: ";
                 break;
             case LIBXML_ERR_ERROR:
-                $return .= "Error $error->code: ";
+                $return .= "Error $libxmlError->code: ";
                 break;
             case LIBXML_ERR_FATAL:
-                $return .= "Fatal Error $error->code: ";
+                $return .= "Fatal Error $libxmlError->code: ";
                 break;
         }
 
-        $return .= trim($error->message) .
-            "\n  Line: $error->line" .
-            "\n  Column: $error->column";
+        $return .= trim($libxmlError->message) .
+            "\n  Line: $libxmlError->line" .
+            "\n  Column: $libxmlError->column";
 
-        if ($error->file) {
-            $return .= "\n  File: $error->file";
+        if ($libxmlError->file) {
+            $return .= "\n  File: $libxmlError->file";
         }
 
         return "$return\n\n--------------------------------------------\n\n";
     }
 
     /**
-     * @param http_error $string
-     * @return string
+     * @param $httpErrorString
+     * @return mixed
      */
-    public static function extractErrorFromPhpMessage($string)
+    public static function extractErrorFromPhpMessage($httpErrorString)
     {
         $matches = array();
         // most common message to expect:
         // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
 
         // grab the error from the end (if there is one)
-        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $string, $matches);
+        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $httpErrorString, $matches);
         if (!empty($matches)) {
             // strip off the header prefix
             $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
@@ -713,7 +713,7 @@ class Adapter
         } else {
             // example: file_get_contents throws an error if hostname does not resolve with dns
             $return['error'] = 7;
-            $return['errortext'] = $string;
+            $return['errortext'] = $httpErrorString;
             $return['errortype'] = 'PHP';
             return $return;
         }
@@ -1004,12 +1004,13 @@ class Adapter
     /**
      * @todo verify if an SPL function can be used instead
      * Can't use native http_build_query because it drops args with empty values like &-find
-     * @param name_value $string
+     * @param $string
      * @return array
      */
     protected function explodeNameValueString($string)
     {
         $array = explode('&', $string);
+        $resultArray = [];
         if (count($array) < 2) {
             $nameValue = explode('=', $array[0], 2);
             if (count($nameValue) < 2) {

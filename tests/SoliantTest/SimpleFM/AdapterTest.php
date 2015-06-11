@@ -121,6 +121,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setDbname
      * @covers Soliant\SimpleFM\Adapter::getDbname
      */
     public function testGetSetDbname()
@@ -131,6 +132,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setLayoutname
      * @covers Soliant\SimpleFM\Adapter::getLayoutname
      */
     public function testGetSetLayoutname()
@@ -141,6 +143,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setCommandstring
      * @covers Soliant\SimpleFM\Adapter::getCommandstring
      */
     public function testGetSetCommandstring()
@@ -151,19 +154,28 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setCommandarray
      * @covers Soliant\SimpleFM\Adapter::getCommandarray
+     * @covers Soliant\SimpleFM\Adapter::getCommandstring
      */
     public function testGetSetCommandarray()
     {
-        $value = $this->object->setCommandstring('A=B&C=D');
+        $commandString = 'A=0&C=D';
+        $value = $this->object->setCommandstring($commandString);
         $this->assertTrue($value instanceof $this->object);
         $arr = $this->object->getCommandarray();
-        $arr1=array('A' => 'B',
+        $arr1=array('A' => 0,
                     'C' => 'D');
         $this->assertEquals($arr, $arr1);
+        $this->assertEquals($commandString, $this->object->getCommandstring());
+
+        // Thanks @garak for https://github.com/soliantconsulting/SimpleFM/pull/32
+        $this->object->setCommandarray($arr1);
+        $this->assertEquals($commandString, $this->object->getCommandstring());
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setProtocol
      * @covers Soliant\SimpleFM\Adapter::getProtocol
      */
     public function testGetSetProtocol()
@@ -174,6 +186,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setSslverifypeer
      * @covers Soliant\SimpleFM\Adapter::getSslverifypeer
      */
     public function testGetSetSslverifypeer()
@@ -185,6 +198,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setPort
      * @covers Soliant\SimpleFM\Adapter::getPort
      */
     public function testGetSetPort()
@@ -195,6 +209,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setRowsbyrecid
      * @covers Soliant\SimpleFM\Adapter::getRowsbyrecid
      */
     public function testGetSetRowsbyrecid()
@@ -205,6 +220,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Adapter::setSetCommandURLDebug
      * @covers Soliant\SimpleFM\Adapter::getSetCommandURLDebug
      */
     public function testGetSetCommandURLDebug()

@@ -1,4 +1,5 @@
 <?php
+// @codingStandardsIgnoreStart
 /**
  * Copied from Zend Framework (http://framework.zend.com/)
  *
@@ -133,3 +134,4 @@ class PHPInput
         return array();
     }
 }
+// @codingStandardsIgnoreEnd

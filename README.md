@@ -1,5 +1,8 @@
 # SimpleFM
 
+master [![Build Status](https://travis-ci.org/soliantconsulting/SimpleFM.svg?branch=master)](https://travis-ci.org/soliantconsulting/SimpleFM)
+develop [![Build Status](https://travis-ci.org/soliantconsulting/SimpleFM.svg?branch=develop)](https://travis-ci.org/soliantconsulting/SimpleFM)
+
 SimpleFM is a fast, convenient and free tool designed by [Soliant Consulting, Inc.][1] to facilitate connections between PHP web applications and FileMaker Server.
 
 SimpleFM is an ultra-lightweight PHP5 package that uses the [FileMaker Server][2] XML API. The FMS XML API is commonly referred to as Custom Web Publishing (CWP for short).

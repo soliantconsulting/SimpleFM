@@ -220,8 +220,8 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setSetCommandURLDebug
-     * @covers Soliant\SimpleFM\Adapter::getSetCommandURLDebug
+     * @covers Soliant\SimpleFM\Adapter::setCommandURLDebug
+     * @covers Soliant\SimpleFM\Adapter::getCommandURLDebug
      */
     public function testGetSetCommandURLDebug()
     {

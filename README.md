@@ -1,7 +1,12 @@
 # SimpleFM
 
-master [![Build Status](https://travis-ci.org/soliantconsulting/SimpleFM.svg?branch=master)](https://travis-ci.org/soliantconsulting/SimpleFM)
-develop [![Build Status](https://travis-ci.org/soliantconsulting/SimpleFM.svg?branch=develop)](https://travis-ci.org/soliantconsulting/SimpleFM)
+[![Build Status](https://travis-ci.org/soliantconsulting/SimpleFM.svg?branch=master)](https://travis-ci.org/soliantconsulting/SimpleFM)
+[![Code Climate](https://codeclimate.com/github/soliantconsulting/SimpleFM/badges/gpa.svg)](https://codeclimate.com/github/soliantconsulting/SimpleFM)
+[![Test Coverage](https://codeclimate.com/github/soliantconsulting/SimpleFM/badges/coverage.svg)](https://codeclimate.com/github/soliantconsulting/SimpleFM/coverage)
+[![Latest Stable Version](https://poser.pugx.org/soliantconsulting/simplefm/v/stable)](https://packagist.org/packages/soliantconsulting/simplefm)
+[![Latest Unstable Version](https://poser.pugx.org/soliantconsulting/simplefm/v/unstable)](https://packagist.org/packages/soliantconsulting/simplefm)
+[![Total Downloads](https://poser.pugx.org/soliantconsulting/simplefm/downloads)](https://packagist.org/packages/soliantconsulting/simplefm)
+[![License](https://poser.pugx.org/soliantconsulting/simplefm/license)](https://packagist.org/packages/soliantconsulting/simplefm)
 
 SimpleFM is a fast, convenient and free tool designed by [Soliant Consulting, Inc.][1] to facilitate connections between PHP web applications and FileMaker Server.
 

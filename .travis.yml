@@ -21,3 +21,8 @@ install:
   - travis_retry composer install --no-interaction --ignore-platform-reqs
 
 script: ant
+
+after_script:
+  - CODECLIMATE_REPO_TOKEN=a1fa5b53529cf77226b6231a9c0a3d8ce5c0cb9ecc570ac014c1cc60fa07d2df ./vendor/bin/test-reporter --stdout > codeclimate.json
+  - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
+  

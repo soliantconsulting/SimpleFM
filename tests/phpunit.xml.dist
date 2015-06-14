@@ -6,8 +6,12 @@
         <exclude>./SoliantTest/AllTests/</exclude>
     </testsuite>
     <filter>
-        <whitelist>
-            <directory suffix=".php">./src/</directory>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../library/</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-clover" target="../build/logs/clover.xml"/>
+        <log type="coverage-html" target="../build/logs/coverage.html"/>
+    </logging>
 </phpunit>

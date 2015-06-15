@@ -477,15 +477,15 @@ class Adapter
          *   $fmresultset->resultset[0]->record[0]->field[0]->data[0]
          */
         // loop over rows
-        $i = 0;
+        $counterI = 0;
         foreach ($xml->resultset[0]->record as $row) {
-            $conditional_id = $this->rowsbyrecid === true ? (string)$row['record-id'] : (int)$i;
+            $conditional_id = $this->rowsbyrecid === true ? (string)$row['record-id'] : (int)$counterI;
 
-            $rows[$conditional_id]['index'] = (int)$i;
+            $rows[$conditional_id]['index'] = (int)$counterI;
             $rows[$conditional_id]['recid'] = (int)$row['record-id'];
             $rows[$conditional_id]['modid'] = (int)$row['mod-id'];
 
-            foreach ($xml->resultset[0]->record[$i]->field as $field) {
+            foreach ($xml->resultset[0]->record[$counterI]->field as $field) {
                 $fieldname = (string)$field['name'];
                 if (count($field) > 1) {
                     $fielddata = array();
@@ -497,21 +497,21 @@ class Adapter
                 }
 
                 // validate fieldnames on first row
-                $fieldnameIsValid = $i === 0 ? self::fieldnameIsValid($fieldname) : true;
+                $fieldnameIsValid = $counterI === 0 ? self::fieldnameIsValid($fieldname) : true;
                 $rows[$conditional_id][$fieldname] = $fielddata;
 
             }
             // check if portals exist
             if (isset($xml->resultset[0]->record[0]->relatedset)) {
                 // the portal index
-                $ii = 0;
+                $counterIi = 0;
                 // handle portals
                 foreach ($xml->resultset[0]->record[0]->relatedset as $portal) {
                     $portalname = (string)$portal['table'];
 
-                    $rows[$conditional_id][$portalname]['parentindex'] = (int)$i;
+                    $rows[$conditional_id][$portalname]['parentindex'] = (int)$counterI;
                     $rows[$conditional_id][$portalname]['parentrecid'] = (int)$row['record-id'];
-                    $rows[$conditional_id][$portalname]['portalindex'] = (int)$ii;
+                    $rows[$conditional_id][$portalname]['portalindex'] = (int)$counterIi;
                     /**
                      * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
                      * portals. Test for possible issues with $portalname being non-unique.
@@ -519,17 +519,17 @@ class Adapter
                     $rows[$conditional_id][$portalname]['portalrecordcount'] = (int)$portal['count'];
 
                     // the portal row index
-                    $iii = 0;
+                    $counterIii = 0;
                     // handle portal rows
-                    foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record as $portal_row) {
-                        $portal_conditional_id = $this->rowsbyrecid === true ? (int)$portal_row['record-id'] : $iii;
+                    foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record as $portal_row) {
+                        $portal_conditional_id = $this->rowsbyrecid === true ? (int)$portal_row['record-id'] : $counterIii;
 
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int)$iii;
+                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int)$counterIii;
                         $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int)$portal_row['mod-id'];
                         $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int)$portal_row['record-id'];
 
                         // handle portal fields
-                        foreach ($xml->resultset[0]->record[$i]->relatedset[$ii]->record[$iii]->field as $portal_field) {
+                        foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record[$counterIii]->field as $portal_field) {
                             $portal_fieldname = (string)str_replace($portalname . '::', '', $portal_field['name']);
                             if (count($portal_field) > 1) {
                                 $portal_fielddata = array();
@@ -541,15 +541,15 @@ class Adapter
                             }
 
                             // validate fieldnames on first row
-                            $fieldnameIsValid = $iii === 0 ? self::fieldnameIsValid($portal_fieldname) : true;
+                            $fieldnameIsValid = $counterIii === 0 ? self::fieldnameIsValid($portal_fieldname) : true;
                             $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
                         }
-                        ++$iii;
+                        ++$counterIii;
                     }
-                    ++$ii;
+                    ++$counterIi;
                 }
             }
-            ++$i;
+            ++$counterI;
         }
 
         $simplexmlerrors = null;
@@ -591,31 +591,31 @@ class Adapter
         $fields = array();
         $valueLists = array();
 
-        $i = 0;
+        $counterI = 0;
         // loop over LAYOUT fields
         foreach ($xml->LAYOUT[0]->FIELD as $field) {
             $fieldname = (string)$field->attributes()->NAME;
             // throw an exception if name not valid:
             self::fieldnameIsValid($fieldname);
 
-            $fields[$i]['name'] = $fieldname;
-            $fields[$i]['type'] = (string)$field->STYLE->attributes()->TYPE;
-            $fields[$i]['valuelist'] = (string)$field->STYLE->attributes()->VALUELIST;
-            ++$i;
+            $fields[$counterI]['name'] = $fieldname;
+            $fields[$counterI]['type'] = (string)$field->STYLE->attributes()->TYPE;
+            $fields[$counterI]['valuelist'] = (string)$field->STYLE->attributes()->VALUELIST;
+            ++$counterI;
         }
 
-        $j = 0;
+        $counterJ = 0;
         // loop over VALUELISTS
         foreach ($xml->VALUELISTS[0] as $valueList) {
-            $valueLists[$j]['name'] = (string)$valueList->attributes()->NAME;
-            $valueLists[$j]['values'] = array();
-            $jj = 0;
+            $valueLists[$counterJ]['name'] = (string)$valueList->attributes()->NAME;
+            $valueLists[$counterJ]['values'] = array();
+            $counterJj = 0;
             foreach ($valueList->VALUE as $value) {
-                $valueLists[$j]['values'][$jj]['value'] = (string)$value[0];
-                $valueLists[$j]['values'][$jj]['display'] = (string)$value->attributes()->DISPLAY;
-                $jj++;
+                $valueLists[$counterJ]['values'][$counterJj]['value'] = (string)$value[0];
+                $valueLists[$counterJ]['values'][$counterJj]['display'] = (string)$value->attributes()->DISPLAY;
+                $counterJj++;
             }
-            ++$j;
+            ++$counterJ;
         }
 
         $simplexmlerrors = null;
@@ -722,7 +722,7 @@ class Adapter
 
     /**
      * @deprecated
-     * Use the FileMakerError class directly instead
+     * Use the StringUtils class directly instead
      * @param int $errorNum
      * @return string
      */

@@ -112,10 +112,10 @@ class Adapter
      */
     public function setHostParams($params = array())
     {
-        $this->hostname = @$params['hostname'];
-        $this->dbname = @$params['dbname'];
-        $this->username = @$params['username'];
-        $this->password = @$params['password'];
+        $this->hostname = isset($params['hostname']) ? $params['hostname'] : null;
+        $this->dbname = isset($params['dbname']) ? $params['dbname'] : null;
+        $this->username = isset($params['username']) ? $params['username'] : null;
+        $this->password = isset($params['password']) ? $params['password'] : null;
 
         if (isset($params['protocol'])) {
             $this->setProtocol($params['protocol']);
@@ -137,8 +137,8 @@ class Adapter
      */
     public function setCredentials($params = array())
     {
-        $this->username = @$params['username'];
-        $this->password = @$params['password'];
+        $this->username = isset($params['username']) ? $params['username'] : null;
+        $this->password = isset($params['password']) ? $params['password'] : null;
         return $this;
     }
 
@@ -149,8 +149,8 @@ class Adapter
      */
     public function setCallParams($params = array())
     {
-        $this->layoutname = @$params['layoutname'];
-        $this->commandstring = @$params['commandstring'];
+        $this->layoutname = isset($params['layoutname']) ? $params['layoutname'] : null;
+        $this->commandstring = isset($params['commandstring']) ? $params['commandstring'] : null;
         return $this;
     }
 
@@ -431,7 +431,12 @@ class Adapter
      */
     public function execute()
     {
-        @$xml = $this->loader->load($this);
+        /**
+         * SimpleXML does not throw errors
+         * It returns a SimpleXML object on success and false on error
+         * The xml parser methods have to be able to handle either case gracefully
+         */
+        $xml = $this->loader->load($this);
 
         $sfmresult = array();
         if ($this->uri == self::FMRESULTSET_URI) {
@@ -443,6 +448,11 @@ class Adapter
         return $sfmresult;
     }
 
+    /**
+     * SimpleXML does not throw errors
+     * It returns a SimpleXML object on success and false on error
+     * See http://www.php.net/manual/en/simplexml.examples-errors.php
+     */
     private function handleEmptyXml($result, $grammar)
     {
         $simpleXmlErrors['xml'] = libxml_get_errors();
@@ -477,7 +487,7 @@ class Adapter
         $result = array();
         $result['url'] = $this->getCommandURLdebug();
 
-        // No xml to parse so return here
+        // No xml to parse so return gracefully here
         if (empty($xml)) {
             return $this->handleEmptyXml($result, self::FMRESULTSET_URI);
         }
@@ -585,7 +595,7 @@ class Adapter
         $result = array();
         $result['url'] = $this->getCommandURLdebug();
 
-        // No xml to parse so return here
+        // No xml to parse so return gracefully here
         if (empty($xml)) {
             return $this->handleEmptyXml($result, self::FMPXMLLAYOUT_URI);
         }

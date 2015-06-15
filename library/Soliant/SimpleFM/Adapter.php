@@ -544,11 +544,11 @@ class Adapter
                     $counterIii = 0;
                     // handle portal rows
                     foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record as $portal_row) {
-                        $portal_conditional_id = $this->rowsbyrecid === true ? (int)$portal_row['record-id'] : $counterIii;
+                        $portal_cond_id = $this->rowsbyrecid === true ? (int)$portal_row['record-id'] : $counterIii;
 
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['index'] = (int)$counterIii;
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['modid'] = (int)$portal_row['mod-id'];
-                        $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id]['recid'] = (int)$portal_row['record-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['index'] = (int)$counterIii;
+                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['modid'] = (int)$portal_row['mod-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['recid'] = (int)$portal_row['record-id'];
 
                         // handle portal fields
                         foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record[$counterIii]->field as $portal_field) {
@@ -564,7 +564,7 @@ class Adapter
 
                             // validate fieldnames on first row
                             $fieldNameIsValid = $counterIii === 0 ? StringUtils::fieldnameIsValid($portal_fieldname) : true;
-                            $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
+                            $rows[$conditional_id][$portalname]['rows'][$portal_cond_id][$portal_fieldname] = $portal_fielddata;
                         }
                         ++$counterIii;
                     }

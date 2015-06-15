@@ -26,7 +26,7 @@ class StringUtils
             foreach ($array as $item) {
                 $nameValue = explode('=', $item, 2);
                 $name = $nameValue[0];
-                $value = @$nameValue[1];
+                $value = isset($nameValue[1]) ? $nameValue[1] : null;
                 $resultArray[$name] = $value;
             }
         }

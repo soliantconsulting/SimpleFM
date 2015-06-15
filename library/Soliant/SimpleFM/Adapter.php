@@ -12,7 +12,6 @@ namespace Soliant\SimpleFM;
 use Soliant\SimpleFM\Loader\AbstractLoader;
 use Soliant\SimpleFM\Loader\FilePostContents;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
-use Soliant\SimpleFM\Exception\ReservedWordException;
 use Soliant\SimpleFM\StringUtils;
 
 class Adapter
@@ -97,7 +96,7 @@ class Adapter
     public function __construct(array $hostParams = array(), $loader = null)
     {
         if (!empty($hostParams)) {
-            self::setHostParams($hostParams);
+            $this->setHostParams($hostParams);
         }
         if ($loader instanceof AbstractLoader) {
             $this->loader = $loader;
@@ -497,7 +496,7 @@ class Adapter
                 }
 
                 // validate fieldnames on first row
-                $fieldnameIsValid = $counterI === 0 ? self::fieldnameIsValid($fieldname) : true;
+                $fieldNameIsValid = $counterI === 0 ? StringUtils::fieldnameIsValid($fieldname) : true;
                 $rows[$conditional_id][$fieldname] = $fielddata;
 
             }
@@ -541,7 +540,7 @@ class Adapter
                             }
 
                             // validate fieldnames on first row
-                            $fieldnameIsValid = $counterIii === 0 ? self::fieldnameIsValid($portal_fieldname) : true;
+                            $fieldNameIsValid = $counterIii === 0 ? StringUtils::fieldnameIsValid($portal_fieldname) : true;
                             $rows[$conditional_id][$portalname]['rows'][$portal_conditional_id][$portal_fieldname] = $portal_fielddata;
                         }
                         ++$counterIii;
@@ -554,7 +553,7 @@ class Adapter
 
         $simplexmlerrors = null;
         $result['error'] = (int)$xml->error['code'];
-        $result['errortext'] = self::errorToEnglish($result['error']);
+        $result['errortext'] = StringUtils::errorToEnglish($result['error']);
         $result['errortype'] = 'FileMaker';
         $result['count'] = (string)$xml->resultset['count'];
         $result['fetchsize'] = (string)$xml->resultset['fetch-size'];
@@ -596,7 +595,7 @@ class Adapter
         foreach ($xml->LAYOUT[0]->FIELD as $field) {
             $fieldname = (string)$field->attributes()->NAME;
             // throw an exception if name not valid:
-            self::fieldnameIsValid($fieldname);
+            StringUtils::fieldnameIsValid($fieldname);
 
             $fields[$counterI]['name'] = $fieldname;
             $fields[$counterI]['type'] = (string)$field->STYLE->attributes()->TYPE;
@@ -620,7 +619,7 @@ class Adapter
 
         $simplexmlerrors = null;
         $result['error'] = (int)$xml->ERRORCODE;
-        $result['errortext'] = self::errorToEnglish($result['error']);
+        $result['errortext'] = StringUtils::errorToEnglish($result['error']);
         $result['errortype'] = 'FileMaker';
         $result['product']['build'] = (string)$xml->PRODUCT->attributes()->BUILD;
         $result['product']['name'] = (string)$xml->PRODUCT->attributes()->NAME;
@@ -634,95 +633,31 @@ class Adapter
     }
 
     /**
-     * @param string $fieldname
-     * @throws ReservedWordException
-     * @return boolean
-     */
-    protected function fieldnameIsValid($fieldname)
-    {
-        $reservedNames = array('index', 'recid', 'modid');
-        if (in_array($fieldname, $reservedNames)) {
-            throw new ReservedWordException(
-                'SimpleFM Exception: "' . $fieldname .
-                '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.',
-                $fieldname
-            );
-        }
-        return true;
-    }
-
-    /**
+     * @deprecated
+     * Use StringUtils::displayXmlError directly instead
      * @param $libxmlError
      * @param $xml
      * @return string
      */
-    public function displayXmlError($libxmlError, $xml)
+    public static function displayXmlError($libxmlError, $xml)
     {
-        $return = $xml[$libxmlError->line - 1] . "\n";
-        $return .= str_repeat('-', $libxmlError->column) . "^\n";
-
-        switch ($libxmlError->level) {
-            case LIBXML_ERR_WARNING:
-                $return .= "Warning $libxmlError->code: ";
-                break;
-            case LIBXML_ERR_ERROR:
-                $return .= "Error $libxmlError->code: ";
-                break;
-            case LIBXML_ERR_FATAL:
-                $return .= "Fatal Error $libxmlError->code: ";
-                break;
-        }
-
-        $return .= trim($libxmlError->message) .
-            "\n  Line: $libxmlError->line" .
-            "\n  Column: $libxmlError->column";
-
-        if ($libxmlError->file) {
-            $return .= "\n  File: $libxmlError->file";
-        }
-
-        return "$return\n\n--------------------------------------------\n\n";
-    }
-
-    /**
-     * @param $httpErrorString
-     * @return mixed
-     */
-    public static function extractErrorFromPhpMessage($httpErrorString)
-    {
-        $matches = array();
-        // most common message to expect:
-        // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
-
-        // grab the error from the end (if there is one)
-        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $httpErrorString, $matches);
-        if (!empty($matches)) {
-            // strip off the header prefix
-            $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
-            $result = explode(' ', $matches, 2);
-            // normal case will yield an http error code in location 0 and a message in location 1
-            if ((int)$result[0] != 0) {
-                $return['error'] = (int)$result[0];
-                $return['errortext'] = (string)$result[1];
-                $return['errortype'] = 'HTTP';
-            } else {
-                $return['error'] = null;
-                $return['errortext'] = $matches;
-                $return['errortype'] = 'HTTP';
-            }
-            return $return;
-        } else {
-            // example: file_get_contents throws an error if hostname does not resolve with dns
-            $return['error'] = 7;
-            $return['errortext'] = $httpErrorString;
-            $return['errortype'] = 'PHP';
-            return $return;
-        }
+        return StringUtils::displayXmlError($libxmlError, $xml);
     }
 
     /**
      * @deprecated
-     * Use the StringUtils class directly instead
+     * Use StringUtils::extractErrorFromPhpMessage directly instead
+     * @param string $httpErrorString
+     * @return mixed
+     */
+    public static function extractErrorFromPhpMessage($httpErrorString)
+    {
+        return StringUtils::extractErrorFromPhpMessage($httpErrorString);
+    }
+
+    /**
+     * @deprecated
+     * Use StringUtils::errorToEnglish directly instead
      * @param int $errorNum
      * @return string
      */

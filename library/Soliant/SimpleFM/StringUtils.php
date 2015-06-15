@@ -1,6 +1,8 @@
 <?php
 namespace Soliant\SimpleFM;
 
+use Soliant\SimpleFM\Exception\ReservedWordException;
+
 class StringUtils
 {
     /**
@@ -50,6 +52,93 @@ class StringUtils
             }
         }
         return $commandString;
+    }
+
+    /**
+     * @param string $fieldName
+     * @throws ReservedWordException
+     * @return boolean
+     */
+    public static function fieldNameIsValid($fieldName)
+    {
+        $reservedNames = array('index', 'recid', 'modid');
+        if (in_array($fieldName, $reservedNames)) {
+            throw new ReservedWordException(
+                'SimpleFM Exception: "' . $fieldName .
+                '" is a reserved word and cannot be used as a field name on any FileMaker layout used with SimpleFM.',
+                $fieldName
+            );
+        }
+        return true;
+    }
+
+    /**
+     * @param $libxmlError
+     * @param $xml
+     * @return string
+     */
+    public static function displayXmlError($libxmlError, $xml)
+    {
+        $return = $xml[$libxmlError->line - 1] . "\n";
+        $return .= str_repeat('-', $libxmlError->column) . "^\n";
+
+        switch ($libxmlError->level) {
+            case LIBXML_ERR_WARNING:
+                $return .= "Warning $libxmlError->code: ";
+                break;
+            case LIBXML_ERR_ERROR:
+                $return .= "Error $libxmlError->code: ";
+                break;
+            case LIBXML_ERR_FATAL:
+                $return .= "Fatal Error $libxmlError->code: ";
+                break;
+        }
+
+        $return .= trim($libxmlError->message) .
+            "\n  Line: $libxmlError->line" .
+            "\n  Column: $libxmlError->column";
+
+        if ($libxmlError->file) {
+            $return .= "\n  File: $libxmlError->file";
+        }
+
+        return "$return\n\n--------------------------------------------\n\n";
+    }
+
+    /**
+     * @param string $httpErrorString
+     * @return mixed
+     */
+    public static function extractErrorFromPhpMessage($httpErrorString)
+    {
+        $matches = array();
+        // most common message to expect:
+        // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
+
+        // grab the error from the end (if there is one)
+        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $httpErrorString, $matches);
+        if (!empty($matches)) {
+            // strip off the header prefix
+            $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
+            $result = explode(' ', $matches, 2);
+            // normal case will yield an http error code in location 0 and a message in location 1
+            if ((int)$result[0] != 0) {
+                $return['error'] = (int)$result[0];
+                $return['errortext'] = (string)$result[1];
+                $return['errortype'] = 'HTTP';
+            } else {
+                $return['error'] = null;
+                $return['errortext'] = $matches;
+                $return['errortype'] = 'HTTP';
+            }
+            return $return;
+        } else {
+            // example: file_get_contents throws an error if hostname does not resolve with dns
+            $return['error'] = 7;
+            $return['errortext'] = $httpErrorString;
+            $return['errortype'] = 'PHP';
+            return $return;
+        }
     }
 
     /**

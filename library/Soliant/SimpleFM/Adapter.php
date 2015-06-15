@@ -441,7 +441,31 @@ class Adapter
         }
 
         return $sfmresult;
+    }
 
+    private function handleEmptyXml($result, $grammar)
+    {
+        $simpleXmlErrors['xml'] = libxml_get_errors();
+        $simpleXmlErrors['php'] = error_get_last();
+        $phpErrors = StringUtils::extractErrorFromPhpMessage($simpleXmlErrors['php']['message']);
+        $result['error'] = $phpErrors['error'];
+        $result['errortext'] = $phpErrors['errortext'];
+        $result['errortype'] = $phpErrors['errortype'];
+
+        if (self::FMRESULTSET_URI == $grammar) {
+            $result['count'] = null;
+            $result['fetchsize'] = null;
+            $result['rows'] = null;
+        }
+
+        if (self::FMPXMLLAYOUT_URI == $grammar) {
+            $result['product'] = null;
+            $result['layout'] = null;
+            $result['valuelists'] = null;
+        }
+
+        libxml_clear_errors();
+        return $result;
     }
 
     /**
@@ -455,18 +479,7 @@ class Adapter
 
         // No xml to parse so return here
         if (empty($xml)) {
-            $simplexmlerrors['xml'] = libxml_get_errors();
-            $simplexmlerrors['php'] = error_get_last();
-            $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
-            $result['error'] = $phpErrors['error'];
-            $result['errortext'] = $phpErrors['errortext'];
-            $result['errortype'] = $phpErrors['errortype'];
-            $result['count'] = null;
-            $result['fetchsize'] = null;
-            $result['rows'] = null;
-
-            libxml_clear_errors();
-            return $result;
+            return $this->handleEmptyXml($result, self::FMRESULTSET_URI);
         }
 
         $rows = array();
@@ -574,17 +587,7 @@ class Adapter
 
         // No xml to parse so return here
         if (empty($xml)) {
-            $simplexmlerrors['xml'] = libxml_get_errors();
-            $simplexmlerrors['php'] = error_get_last();
-            $phpErrors = self::extractErrorFromPhpMessage($simplexmlerrors['php']['message']);
-            $result['error'] = $phpErrors['error'];
-            $result['errortext'] = $phpErrors['errortext'];
-            $result['errortype'] = $phpErrors['errortype'];
-            $result['product'] = null;
-            $result['layout'] = null;
-            $result['valuelists'] = null;
-            libxml_clear_errors();
-            return $result;
+            return $this->handleEmptyXml($result, self::FMPXMLLAYOUT_URI);
         }
 
         $fields = array();

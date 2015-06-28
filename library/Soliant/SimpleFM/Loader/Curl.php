@@ -23,9 +23,9 @@ class Curl extends AbstractLoader
      */
     protected function createPostURL()
     {
-        $protocol = $this->adapter->getProtocol();
-        $hostname = $this->adapter->getHostname();
-        $port = $this->adapter->getPort();
+        $protocol = $this->adapter->getHostConnection()->getProtocol();
+        $hostname = $this->adapter->getHostConnection()->getHostname();
+        $port = $this->adapter->getHostConnection()->getPort();
         $uri = $this->adapter->getUri();
 
         return "$protocol://$hostname:$port$uri";
@@ -49,7 +49,7 @@ class Curl extends AbstractLoader
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);
         curl_setopt($curlHandle, CURLOPT_POST, true);
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->args);
-        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getSslverifypeer());
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getHostConnection()->getSslverifypeer());
 
         ob_start();
 

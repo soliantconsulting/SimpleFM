@@ -14,89 +14,79 @@ ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
 
 require_once('../library/Soliant/SimpleFM/Adapter.php');
+require_once('../library/Soliant/SimpleFM/HostConnection.php');
 require_once('../library/Soliant/SimpleFM/Loader/FilePostContents.php');
 
 use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\HostConnection;
 
 /**
- * The hostname can either be an IP address or any valid network name you have configured and hosting the
- * FileMaker XML API. FMServer_Sample.fmp12 is included with FileMaker Server 12; the default username is
- * Admin with blank password. You should always leave off the file extension when configuring dbname.
+ * The hostName can either be an IP address or any valid network name you have configured and hosting the
+ * FileMaker XML API. FMServer_Sample.fmp12 is included with FileMaker Server 12; the default userName is
+ * Admin with blank password. You should always leave off the file extension when configuring dbName.
  */
-$hostParams = array(
-    'hostname' => 'localhost',
-    'dbname'   => 'FMServer_Sample',
-    'username' => 'Admin',
-    'password' => ''
+$hostConnection = new HostConnection(
+    'localhost',
+    'FMServer_Sample',
+    'Admin',
+    ''
 );
 
 /**
  * Initialize the adapter with the hostParams array for your environment.
  */
-$adapter = new Adapter($hostParams);
+$adapter = new Adapter($hostConnection);
 
 /**
- * At runtime, you can update hostParams on an adapter that has already been instantiated.
+ * At runtime, you can update HostConnection on an adapter that has already been instantiated via the HostConnection's
+ * fluent interface
  */
-$adapter->setHostParams(
-    array(
-        'hostname' => 'localhost',
-        'dbname'   => 'FMServer_Sample',
-        'username' => 'someusername',
-        'password' => 'somepassword'
-    )
-);
+$adapter->getHostConnection()
+    ->setHostName('localhost')
+    ->setDbName('FMServer_Sample')
+    ->setPassword('someUsername')
+    ->setUserName('somePassword');
 
 /**
- * After you have initialized a SimpleFMAdapter with valid credentials, there are a number of ways to make calls with it.
- * The simplest is to setCallParams with a layoutname and a commandstring. The commandstring follows the XML RPC
- * syntax for FileMaker Server 12. See /documentation/fms12_cwp_xml_en.pdf, Appendix A on page 43 for details.
+ * After you have initialized a SimpleFMAdapter with valid credentials, there are a number of ways to make calls with
+ * it. The simplest is to setCallParams with a layoutname and a commandstring. The commandstring follows the XML RPC
+ * syntax for FileMaker Server. See /documentation/fms12_cwp_xml_en.pdf, Appendix A on page 43 for details.
  */
 $adapter->setCallParams(
     array(
-        'layoutname'    => 'Tasks',
-        'commandstring' => '-max=10&-skip=5&-findall'
+        'layoutName'    => 'Tasks',
+        'commandString' => '-max=10&-skip=5&-findall'
     )
 );
 
 /**
- * You may also update an adapter's credentials at runtime, either by setCredentials with a new array
+ * You may also update just the credentials at runtime via the HostConnection's fluent interface
  */
-$adapter->setCredentials(
-    array(
-        'username' => 'someotherusername',
-        'password' => 'someotherpassword'
-    )
-);
-
-
-/**
- * ...or with the setUsername and setPassword methods.
- */
-$adapter->setUsername('Admin');
-$adapter->setPassword('');
+$adapter->getHostConnection()
+    ->setPassword('Admin')
+    ->setUserName('');
 
 /**
  * There are individual getters and settes for every property (except there is no getter for the password property)
  * Experiment with the getters and setters to modify the adapter and set new queries for execution
  */
-$adapter->setLayoutname('Projects');
+$adapter->setLayoutName('Projects');
 
 /**
  * As already mentioned, for basic usage, you can define commands using the FileMaker XML url api syntax.
  * See /documentation/fms12_cwp_xml_en.pdf
  */
-$adapter->setCommandstring('-findall');
+$adapter->setCommandString('-findall');
 
 /**
  * For more fine-grained control, you can also interact with the adapter's commandarray.
  * This is useful because it lets you modify existing commands on the adpater, and add new commands
  * without blowing away existing command properties. For example:
 
-    $commandarray = $adapter->getCommandarray();
-    $commandarray['-max']  = 40 ;             // change -max value
-    $commandarray['-skip'] = 10 ;             // add a -skip command
-    $adapter->setCommandarray($commandarray); // set it back on the adapter
+    $commandArray = $adapter->getCommandArray();
+    $commandArray['-max']  = 40 ;             // change -max value
+    $commandArray['-skip'] = 10 ;             // add a -skip command
+    $adapter->setCommandArray($commandArray); // set it back on the adapter
 
  *
  */
@@ -105,11 +95,11 @@ $adapter->setCommandstring('-findall');
  * Experiment with dumping out the command string and command array and notice that it doesn't matter
  * which method you use for setting commands. They both affect the same properties of the adapter. For example:
 
-    $commandarray  = $adapter->getCommandarray();
-    $commandstring = $adapter->getCommandstring();
+    $commandArray  = $adapter->getCommandArray();
+    $commandString = $adapter->getCommandString();
     echo '<pre>';
-    var_dump($commandarray);
-    echo($commandstring);
+    var_dump($commandArray);
+    echo($commandString);
     die();
 
  *
@@ -119,7 +109,7 @@ $adapter->setCommandstring('-findall');
  * SimpleFMAdapter also provides a Boolean rowsbyrecid property which makes the returned rows of data associative
  * by FileMaker recid instead of the default behavior which is rows as an arbitrarily indexed array.
  */
-$adapter->setRowsbyrecid(false);
+$adapter->setRowsByRecId(false);
 
 /**
  * Once your adapter is ready, use execute to make the host request.
@@ -131,10 +121,10 @@ $result = $adapter->execute();
  */
 $url       = $result['url'];           // string
 $error     = $result['error'];         // int
-$errortext = $result['errortext'];     // string
-$errortype = $result['errortype'];     // string
+$errorText = $result['errortext'];     // string
+$errorType = $result['errortype'];     // string
 $count     = $result['count'];         // int
-$fetchsize = $result['fetchsize'];     // int
+$fetchSize = $result['fetchsize'];     // int
 $rows      = $result['rows'];          // array
 
 
@@ -152,10 +142,10 @@ $rows      = $result['rows'];          // array
 echo "<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>";
 echo "Command URL: $url<br/>";
 echo "Error: $error <br/>";
-echo "Error Text: $errortext<br/>";
-echo "Error Type: $errortype <br/>";
+echo "Error Text: $errorText<br/>";
+echo "Error Type: $errorType <br/>";
 echo "Found Count: $count<br/>";
-echo "Fetch Size: $fetchsize<br/>";
+echo "Fetch Size: $fetchSize<br/>";
 echo "</div>";
 
 if ($error === 0) {
@@ -175,14 +165,14 @@ if ($error === 0) {
             if (is_array($value)) {
                 if (isset($value['parentindex'])) {
                     // portal
-                    $tempvalue = '';
+                    $tempValue = '';
                     foreach ($value as $k => $v) {
                         if (is_array($v)) {
                             continue;
                         }
-                        $tempvalue .= $k . ':&nbsp;' . $v . '<br>';
+                        $tempValue .= $k . ':&nbsp;' . $v . '<br>';
                     }
-                    $value = $tempvalue;
+                    $value = $tempValue;
                 } else {
                     // repeating field
                     $value = implode("<br>", $value);
@@ -207,14 +197,14 @@ if ($error === 0) {
             if (is_array($value)) {
                 if (isset($value['parentindex'])) {
                     // portal
-                    $tempvalue = '';
+                    $tempValue = '';
                     foreach ($value as $k => $v) {
                         if (is_array($v)) {
                             continue;
                         }
-                        $tempvalue .= $k . ':&nbsp;' . $v . '<br>';
+                        $tempValue .= $k . ':&nbsp;' . $v . '<br>';
                     }
-                    $value = $tempvalue;
+                    $value = $tempValue;
                 } else {
                     // repeating field
                     $value = implode("<br>", $value);

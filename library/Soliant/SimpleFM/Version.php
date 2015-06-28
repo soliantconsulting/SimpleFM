@@ -11,5 +11,5 @@ namespace Soliant\SimpleFM;
 
 final class Version
 {
-    const VERSION = '2.0.4';
+    const VERSION = '3.0.0-alpha';
 }

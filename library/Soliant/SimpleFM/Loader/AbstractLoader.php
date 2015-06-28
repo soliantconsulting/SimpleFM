@@ -36,8 +36,8 @@ abstract class AbstractLoader
      */
     protected function createCredentials()
     {
-        $username = $this->adapter->getUsername();
-        $password = $this->adapter->getPassword();
+        $username = $this->adapter->getHostConnection()->getUserName();
+        $password = $this->adapter->getHostConnection()->getPassword();
 
         $this->username = $username;
         $this->credentials = empty($username) ? '' : $username . ':' . $password;
@@ -49,11 +49,11 @@ abstract class AbstractLoader
      */
     protected function createArgs()
     {
-        $dbname = $this->adapter->getDbname();
-        $layoutname = $this->adapter->getLayoutname();
-        $commandstring = $this->adapter->getCommandstring();
+        $dbname = $this->adapter->getHostConnection()->getDbName();
+        $layoutName = $this->adapter->getLayoutName();
+        $commandString = $this->adapter->getCommandString();
 
-        $this->args = "-db=$dbname&-lay=$layoutname&$commandstring";
+        $this->args = "-db=$dbname&-lay=$layoutName&$commandString";
         return $this->args;
     }
 
@@ -65,9 +65,9 @@ abstract class AbstractLoader
         $credentials = $this->createCredentials();
         $args = $this->createArgs();
 
-        $protocol = $this->adapter->getProtocol();
-        $hostname = $this->adapter->getHostname();
-        $port = $this->adapter->getPort();
+        $protocol = $this->adapter->getHostConnection()->getProtocol();
+        $hostname = $this->adapter->getHostConnection()->getHostName();
+        $port = $this->adapter->getHostConnection()->getPort();
         $uri = $this->adapter->getUri();
 
         $this->commandURL = "$protocol://$credentials@$hostname:$port$uri?$args";
@@ -79,7 +79,7 @@ abstract class AbstractLoader
      */
     protected function setAdapterCommandURLdebug()
     {
-        $this->adapter->setCommandURLdebug(
+        $this->adapter->setCommandUrlDebug(
             empty($this->credentials) ? $this->commandURL : str_replace(
                 $this->credentials,
                 $this->username . ':[...]',

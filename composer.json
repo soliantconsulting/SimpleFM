@@ -12,12 +12,13 @@
         {"name": "Jeremiah Small", "email": "jsmall@soliantconsulting.com"}
     ],
     "require-dev": {
-        "phpunit/PHPUnit": "3.7.*",
-        "squizlabs/php_codesniffer": "~2@dev",
+        "phpunit/PHPUnit": "4.7.*",
+        "phpunit/phpunit-skeleton-generator": "*",
+        "squizlabs/php_codesniffer": "2.*",
         "codeclimate/php-test-reporter": "dev-master"
     },
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.5.0",
         "doctrine/common": ">=2.2.0"
     },
     "autoload": {
@@ -28,7 +29,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.1.x-dev"
+            "dev-develop": "3.0.x-dev"
         }
     }
 }

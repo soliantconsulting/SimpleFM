@@ -170,14 +170,14 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      */
     public function authenticate()
     {
-        $this->simpleFmValidateAdapter->setLayoutname($this->identityLayout);
+        $this->simpleFmValidateAdapter->setLayoutName($this->identityLayout);
         $this->simpleFmValidateAdapter->setCredentials($this->credentials);
 
         $command = array(
             $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
             '-find' => null,
         );
-        $this->simpleFmValidateAdapter->setCommandarray($command);
+        $this->simpleFmValidateAdapter->setCommandArray($command);
 
         $sfmResult = $this->simpleFmValidateAdapter->execute();
 

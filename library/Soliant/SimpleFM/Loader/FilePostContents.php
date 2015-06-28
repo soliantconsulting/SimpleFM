@@ -22,9 +22,9 @@ class FilePostContents extends AbstractLoader
      */
     protected function createPostURL()
     {
-        $protocol = $this->adapter->getProtocol();
-        $hostname = $this->adapter->getHostname();
-        $port = $this->adapter->getPort();
+        $protocol = $this->adapter->getHostConnection()->getProtocol();
+        $hostname = $this->adapter->getHostConnection()->getHostname();
+        $port = $this->adapter->getHostConnection()->getPort();
         $uri = $this->adapter->getUri();
 
         return "$protocol://$hostname:$port$uri";

@@ -32,9 +32,9 @@ SimpleFM is a single class with less than 1000 lines of code. While SimpleFM was
 
 ## System Requirements
 
-SimpleFM, the examples and this documentation are tailored for PHP 5.3 and FileMaker Sever 12
+SimpleFM, the examples and this documentation are tailored for PHP 5.5 and FileMaker Sever 12
 
-* PHP 5.3+
+* PHP 5.5+
 * FileMaker Server 12+
 
 With minimum effort, you could get them to work with PHP 5.0 (requires SimpleXML) and any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not maintained.
@@ -65,24 +65,24 @@ use Soliant\SimpleFM\Adapter;
 ### Basic adapter configuration
 
 ```
-$hostParams = array(
-    'hostname' => 'localhost',
-    'dbname'   => 'FMServer_Sample',
-    'username' => 'Admin',
-    'password' => ''
+$hostConnection = new HostConnection(
+    'localhost',
+    'FMServer_Sample',
+    'Admin',
+    ''
 );
 ```
 
 ### Instantiate the adapter
 
 ```
-$adapter = new Adapter($hostParams);
+$adapter = new Adapter($hostConnection);
 ```
 
 ### Set layout context
 
 ```
-$adapter->setLayoutname('Tasks');
+$adapter->setLayoutName('Tasks');
 ```
     
     
@@ -98,7 +98,7 @@ $adapter->setLayoutname('Tasks');
  * uses emdash, not hyphen characters. They look very similar, and this can be
  * very hard to troubleshoot if you are not careful.
  */
-$adapter->setCommandarray(
+$adapter->setCommandArray(
     array(
         '-max'     => 10,
         '-skip'    => 5,
@@ -191,7 +191,7 @@ If you leave off the repetition number when setting fields in your commandArray,
 Example:
 
 ```
-    $adapter->setCommandarray(
+    $adapter->setCommandArray(
         array(
             'myRepeatingField'    => 'Foo',
             'myRepeatingField(2)' => 'Bar',

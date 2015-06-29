@@ -23,6 +23,7 @@ abstract class AbstractResult
     {
         $array = [];
         $array['url'] = $this->getUrl();
+        $array['error'] = $this->getError();
         $array['errorText'] = $this->getErrorText();
         $array['errorType'] = $this->getErrorType();
         return $array;

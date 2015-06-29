@@ -108,6 +108,48 @@ Fatal Error 76: Opening and ending tag mismatch: titles line 4 and title
         foreach ($errors as $error) {
             $this->assertEquals(StringUtils::displayXmlError($error, $xml), $string);
         }
+
+        $string = '
+----------------------------------------------^
+Warning 76: Warning message
+  Line: 4
+  Column: 46
+  File: /path/to/invalid.xml
+
+--------------------------------------------
+
+';
+        $mockLibXMLErrorWarning = new \stdClass();
+
+        $mockLibXMLErrorWarning->level = LIBXML_ERR_WARNING;
+        $mockLibXMLErrorWarning->code = 76;
+        $mockLibXMLErrorWarning->column = 46;
+        $mockLibXMLErrorWarning->message = "Warning message";
+        $mockLibXMLErrorWarning->file = "/path/to/invalid.xml";
+        $mockLibXMLErrorWarning->line = 4;
+
+        $this->assertEquals(StringUtils::displayXmlError($mockLibXMLErrorWarning, $xml), $string);
+
+        $string = '
+----------------------------------------------^
+Error 76: Error message
+  Line: 4
+  Column: 46
+  File: /path/to/invalid.xml
+
+--------------------------------------------
+
+';
+        $mockLibXMLErrorError = new \stdClass();
+
+        $mockLibXMLErrorError->level = LIBXML_ERR_ERROR;
+        $mockLibXMLErrorError->code = 76;
+        $mockLibXMLErrorError->column = 46;
+        $mockLibXMLErrorError->message = "Error message";
+        $mockLibXMLErrorError->file = "/path/to/invalid.xml";
+        $mockLibXMLErrorError->line = 4;
+
+        $this->assertEquals(StringUtils::displayXmlError($mockLibXMLErrorError, $xml), $string);
     }
 
     /**

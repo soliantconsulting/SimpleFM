@@ -12,8 +12,10 @@
         {"name": "Jeremiah Small", "email": "jsmall@soliantconsulting.com"}
     ],
     "require-dev": {
+        "zendframework/zendframework": "2.4.*",
         "phpunit/PHPUnit": "4.7.*",
         "phpunit/phpunit-skeleton-generator": "*",
+        "mockery/mockery": "~0.9.4",
         "squizlabs/php_codesniffer": "2.*",
         "codeclimate/php-test-reporter": "dev-master"
     },

@@ -141,6 +141,9 @@ final class StringUtils
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private static $errorMap = [
         -1 => 'Unknown error',
         0 => 'No error',

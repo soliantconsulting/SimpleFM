@@ -17,7 +17,7 @@ class FmLayoutParser extends AbstractParser
 
         // No xml to parse so return gracefully here
         if (empty($xml)) {
-            return $this->handleEmptyXml(FmLayoutParser::class);
+            return $this->handleEmptyXml(FmLayout::class);
         }
 
         $fields = array();

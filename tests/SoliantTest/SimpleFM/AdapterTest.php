@@ -13,6 +13,8 @@ namespace SoliantTest\SimpleFM;
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\HostConnection;
 use Soliant\SimpleFM\Loader\Mock as MockLoader;
+use Soliant\SimpleFM\Parser\FmLayoutParser;
+use Soliant\SimpleFM\Parser\FmResultSetParser;
 use Soliant\SimpleFM\StringUtils;
 
 /**
@@ -65,6 +67,42 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $adapter1 = new Adapter($params);
         $adapter2 = new Adapter($hostConnection);
         $this->assertEquals($adapter1, $adapter2);
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::getUri
+     * @covers Soliant\SimpleFM\Adapter::useLayoutGrammar
+     * @covers Soliant\SimpleFM\Adapter::useResultSetGrammar
+     */
+    public function testUriMethods()
+    {
+        $this->adapterInstance->useLayoutGrammar();
+        $this->assertEquals(FmLayoutParser::GRAMMAR, $this->adapterInstance->getUri());
+        $this->adapterInstance->useResultSetGrammar();
+        $this->assertEquals(FmResultSetParser::GRAMMAR, $this->adapterInstance->getUri());
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::setHostConnection
+     * @covers Soliant\SimpleFM\Adapter::getHostConnection
+     */
+    public function testGetSetHostConnection()
+    {
+        $connection = new HostConnection('hostName', 'dbName', 'userName', 'password');
+        $this->adapterInstance->setHostConnection($connection);
+        $this->assertEquals($connection, $this->adapterInstance->getHostConnection());
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Adapter::setLoader
+     * @covers Soliant\SimpleFM\Adapter::getLoader
+     */
+    public function testGetSetLoader()
+    {
+        $loader = new MockLoader();
+        $loader->setTestXml(file_get_contents(__DIR__ . '/TestAssets/sample_fmresultset_empty.xml'));
+        $this->adapterInstance->setLoader($loader);
+        $this->assertEquals($loader, $this->adapterInstance->getLoader());
     }
 
     /**

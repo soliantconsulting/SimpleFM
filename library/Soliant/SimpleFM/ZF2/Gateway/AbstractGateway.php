@@ -58,8 +58,8 @@ abstract class AbstractGateway
         $this->setEntityLayout($entity->getDefaultWriteLayoutName());
 
         if (!empty($identity) && !empty($encryptionKey)) {
-            $this->simpleFMAdapter->setUsername($identity->getUsername());
-            $this->simpleFMAdapter->setPassword($identity->getPassword($encryptionKey));
+            $this->simpleFMAdapter->getHostConnection()->setUsername($identity->getUsername());
+            $this->simpleFMAdapter->getHostConnection()->setPassword($identity->getPassword($encryptionKey));
         }
 
     }
@@ -92,7 +92,7 @@ abstract class AbstractGateway
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = $this->rowToEntity($result['rows'][0]);
         return $entity;
     }
 
@@ -124,7 +124,7 @@ abstract class AbstractGateway
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
 
         if (isset($result['rows'][0]) and $result['rows'][0]) {
-            $entity = new $this->entityName($result['rows'][0]);
+            $entity = $this->rowToEntity($result['rows'][0]);
             return $entity;
         }
         return null;
@@ -206,7 +206,7 @@ abstract class AbstractGateway
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = $this->rowToEntity($result['rows'][0]);
         return $entity;
     }
 
@@ -232,8 +232,7 @@ abstract class AbstractGateway
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-
-        $entity = new $this->entityName($result['rows'][0]);
+        $entity = $this->rowToEntity($result['rows'][0]);
         return $entity;
     }
 
@@ -350,7 +349,7 @@ abstract class AbstractGateway
                 break;
             } // FileMaker API limited to max 9 fields
 
-            switch ($method) {
+            switch ((string)$method) {
                 case 'dsc':
                     $sortMethod = 'descend';
                     break;
@@ -367,9 +366,6 @@ abstract class AbstractGateway
                     $sortMethod = 'ascend';
                     break;
                 case '':
-                    $sortMethod = 'ascend';
-                    break;
-                case null:
                     $sortMethod = 'ascend';
                     break;
                 default:
@@ -395,7 +391,7 @@ abstract class AbstractGateway
         $collection = new ArrayCollection();
         if (!empty($rows)) {
             foreach ($rows as $row) {
-                $collection->add(new $this->entityName($row));
+                $collection->add($this->rowToEntity($row));
             }
         }
 
@@ -410,7 +406,7 @@ abstract class AbstractGateway
      * @throws HttpException
      * @throws XmlException
      */
-    protected function handleAdapterResult(array $simpleFMAdapterResult)
+    public function handleAdapterResult(array $simpleFMAdapterResult)
     {
         $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' .
             $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
@@ -436,5 +432,15 @@ abstract class AbstractGateway
         } else {
             throw new ErrorException($message, $simpleFMAdapterResult['error']);
         }
+    }
+
+    /**
+     * @param $row
+     * @return AbstractEntity
+     * @codeCoverageIgnore
+     */
+    protected function rowToEntity($row)
+    {
+        return new $this->entityName($row);
     }
 }

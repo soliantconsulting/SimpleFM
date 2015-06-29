@@ -40,7 +40,7 @@ class FmResultSetParser extends AbstractParser
 
         // No xml to parse so return gracefully here
         if (empty($xml)) {
-            return $this->handleEmptyXml(FmResultSetParser::class);
+            return $this->handleEmptyXml(FmResultSet::class);
         }
 
         $rows = array();

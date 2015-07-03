@@ -13,17 +13,25 @@ class InvalidConnectionParametersException extends RuntimeException implements E
 {
 
     /**
-     * @var int
+     * @var mixed
      */
-    protected $parameters;
+    protected $hostConnection;
+
+    /**
+     * @return mixed
+     */
+    public function getHostConnection()
+    {
+        return $this->hostConnection;
+    }
 
     /**
      * @param string $message
-     * @param int $parameters
+     * @param int $hostConnection
      */
-    public function __construct($message, $parameters)
+    public function __construct($message, $hostConnection)
     {
         parent::__construct($message);
-        $this->parameters = $parameters;
+        $this->hostConnection = $hostConnection;
     }
 }

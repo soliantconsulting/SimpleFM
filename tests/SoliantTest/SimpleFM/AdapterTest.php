@@ -34,7 +34,13 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $params=array('hostname'=>'localhost','dbname'=>'testdb','username'=>'Admin','password'=>'');
-        $this->adapterInstance = new Adapter($params, new MockLoader());
+        $hostConnection = new HostConnection(
+            $params['hostname'],
+            $params['dbname'],
+            $params['username'],
+            $params['password']
+        );
+        $this->adapterInstance = new Adapter($hostConnection, new MockLoader());
     }
 
     /**
@@ -48,7 +54,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Adapter::__construct
-     * @covers Soliant\SimpleFM\Adapter::setHostParams
      */
     public function testConstruct()
     {
@@ -60,11 +65,11 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
             $params['username'],
             $params['password']
         );
-        $adapter1 = new Adapter($params, $loader);
+        $adapter1 = new Adapter($hostConnection, $loader);
         $adapter2 = new Adapter($hostConnection, $loader);
         $this->assertEquals($adapter1, $adapter2);
 
-        $adapter1 = new Adapter($params);
+        $adapter1 = new Adapter($hostConnection);
         $adapter2 = new Adapter($hostConnection);
         $this->assertEquals($adapter1, $adapter2);
     }

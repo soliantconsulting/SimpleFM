@@ -36,6 +36,12 @@ abstract class AbstractParser
         $errorType = $phpErrors['errortype'];
         libxml_clear_errors();
 
+        if (!class_exists($resultClassName)) {
+            throw new RuntimeException(
+                '$resultClassName must create an instance of Soliant\SimpleFM\Result\AbstractResult'
+            );
+        }
+
         /** @var AbstractResult $result */
         $result = new $resultClassName(
             $this->commandUrlDebug,

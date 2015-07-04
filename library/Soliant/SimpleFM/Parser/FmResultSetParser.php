@@ -11,18 +11,15 @@ class FmResultSetParser extends AbstractParser
      */
     const GRAMMAR = '/fmi/xml/fmresultset.xml';
 
+    public function __construct($xml, $commandUrlDebug)
+    {
+        parent::__construct($xml, $commandUrlDebug, FmResultSet::class);
+    }
+
     /**
      * @var boolean
      */
     protected $rowsByRecId = false;
-
-    /**
-     * @return boolean
-     */
-    public function getRowsByRecId()
-    {
-        return (boolean)$this->rowsByRecId;
-    }
 
     /**
      * @param boolean $rowsByRecId
@@ -30,19 +27,18 @@ class FmResultSetParser extends AbstractParser
      */
     public function setRowsByRecId($rowsByRecId)
     {
-        $this->rowsByRecId = $rowsByRecId;
+        $this->rowsByRecId = (boolean)$rowsByRecId;
         return $this;
     }
 
     public function parse()
     {
-        $xml = $this->xml;
-
-        // No xml to parse so return gracefully here
-        if (empty($xml)) {
-            return $this->handleEmptyXml(FmResultSet::class);
+        if (empty($this->xml)) {
+            // No xml to parse so return gracefully here
+            return $this->emptyResult;
         }
 
+        $xml = $this->xml;
         $rows = array();
 
         /**

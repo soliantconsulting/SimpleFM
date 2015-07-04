@@ -1,6 +1,7 @@
 <?php
 namespace SoliantTest\SimpleFM\Parser;
 
+use SimpleXMLElement;
 use Soliant\SimpleFM\Parser\AbstractParser;
 use Soliant\SimpleFM\Result\FmResultSet;
 
@@ -9,7 +10,8 @@ use Soliant\SimpleFM\Result\FmResultSet;
  */
 class AbstractParserTest extends \PHPUnit_Framework_TestCase
 {
-    protected $mockParser;
+    protected $mockParserFromSimpleXMLElement;
+    protected $mockParserFromString;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -20,7 +22,16 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
         $xml = null;
         $commandUrlDebug = 'fakeUrl';
         $originalClassName = 'Soliant\SimpleFM\Parser\AbstractParser';
-        $arguments = [$xml, $commandUrlDebug];
+        $arguments1 = [
+            new SimpleXMLElement('<?xml version=\'1.0\' standalone=\'yes\'?><data/>'),
+            $commandUrlDebug,
+            FmResultSet::class
+        ];
+        $arguments2 = [
+            '<?xml version=\'1.0\' standalone=\'yes\'?><data/>',
+            $commandUrlDebug,
+            FmResultSet::class
+        ];
         $mockClassName = 'MockParser';
         $callOriginalConstructor = true;
         $callOriginalClone = true;
@@ -29,9 +40,10 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             'parse',
         ];
         $cloneArguments = false;
-        $this->mockParser = $this->getMockForAbstractClass(
+
+        $this->mockParserFromSimpleXMLElement = $this->getMockForAbstractClass(
             $originalClassName,
-            $arguments,
+            $arguments1,
             $mockClassName,
             $callOriginalConstructor,
             $callOriginalClone,
@@ -39,7 +51,21 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             $mockedMethods,
             $cloneArguments
         );
-        $this->mockParser->expects($this->any())
+        $this->mockParserFromSimpleXMLElement->expects($this->any())
+            ->method('parse')
+            ->will($this->returnValue('value'));
+
+        $this->mockParserFromString = $this->getMockForAbstractClass(
+            $originalClassName,
+            $arguments2,
+            $mockClassName,
+            $callOriginalConstructor,
+            $callOriginalClone,
+            $callAutoload,
+            $mockedMethods,
+            $cloneArguments
+        );
+        $this->mockParserFromString->expects($this->any())
             ->method('parse')
             ->will($this->returnValue('value'));
     }
@@ -62,7 +88,7 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             return $this->handleEmptyXml(FmResultSet::class);
         };
 
-        $mockParserFunction = $closure->bindTo($this->mockParser, $this->mockParser);
+        $mockParserFunction = $closure->bindTo($this->mockParserFromSimpleXMLElement, $this->mockParserFromSimpleXMLElement);
 
         $result = $mockParserFunction();
 
@@ -80,7 +106,7 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             return $this->handleEmptyXml(\stdClass::class);
         };
 
-        $mockParserFunction = $closure->bindTo($this->mockParser, $this->mockParser);
+        $mockParserFunction = $closure->bindTo($this->mockParserFromSimpleXMLElement, $this->mockParserFromSimpleXMLElement);
 
         $mockParserFunction();
     }
@@ -96,7 +122,7 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             return $this->handleEmptyXml('InvalidClassName');
         };
 
-        $mockParserFunction = $closure->bindTo($this->mockParser, $this->mockParser);
+        $mockParserFunction = $closure->bindTo($this->mockParserFromString, $this->mockParserFromString);
 
         $mockParserFunction();
     }

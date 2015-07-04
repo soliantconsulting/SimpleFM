@@ -1,6 +1,7 @@
 <?php
 namespace SoliantTest\SimpleFM\Result;
 
+use Soliant\SimpleFM\Parser\FmLayoutParser;
 use Soliant\SimpleFM\Result\FmLayout;
 
 /**
@@ -19,23 +20,11 @@ class FmLayoutTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $url = '';
-        $error = '';
-        $errorText = '';
-        $errorType = '';
-        $product = [];
-        $layout = [];
-        $valueLists = [];
+        $xml = file_get_contents(__DIR__ . '/../TestAssets/sample_fmpxmllayout.xml');
+        $commandDebugUrl = 'fakeCommandDebugUrl';
+        $parser = new FmLayoutParser($xml, $commandDebugUrl);
+        $this->object = $parser->parse();
 
-        $this->object = new FmLayout(
-            $url,
-            $error,
-            $errorText,
-            $errorType,
-            $product,
-            $layout,
-            $valueLists
-        );
     }
 
     /**
@@ -47,50 +36,24 @@ class FmLayoutTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Result\FmLayout::getProduct
-     * @todo   Implement testGetProduct().
-     */
-    public function testGetProduct()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Soliant\SimpleFM\Result\FmLayout::getLayout
-     * @todo   Implement testGetLayout().
-     */
-    public function testGetLayout()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Soliant\SimpleFM\Result\FmLayout::getValueLists
-     * @todo   Implement testGetValueLists().
-     */
-    public function testGetValueLists()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
+     * @covers Soliant\SimpleFM\Result\FmLayout::__construct
      * @covers Soliant\SimpleFM\Result\FmLayout::toArray
-     * @todo   Implement testToArray().
      */
     public function testToArray()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertInstanceOf(FmLayout::class, $this->object);
+        $this->assertArrayHasKey('valueLists', $this->object->toArray());
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Result\FmLayout::getProduct
+     * @covers Soliant\SimpleFM\Result\FmLayout::getLayout
+     * @covers Soliant\SimpleFM\Result\FmLayout::getValueLists
+     */
+    public function testGetters()
+    {
+        $this->assertArrayHasKey('name', $this->object->getProduct());
+        $this->assertArrayHasKey('name', $this->object->getLayout());
+        $this->assertEquals(3, count($this->object->getValueLists()));
     }
 }

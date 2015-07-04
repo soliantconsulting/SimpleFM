@@ -31,7 +31,7 @@ class AbstractLoaderTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createCredentials
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createArgs
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createCommandURL
-     * @covers Soliant\SimpleFM\Loader\AbstractLoader::setAdapterCommandURLdebug
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::setAdapterCommandUrlDebug
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::prepare
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
      */

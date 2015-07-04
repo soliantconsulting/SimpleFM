@@ -176,7 +176,7 @@ class HostConnectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\HostConnection::getSslVerifyPeer
      */
-    public function testGetSslverifypeer()
+    public function testGetSslVerifyPeer()
     {
         $this->assertEquals($this->hostConnectionInstance->getSslVerifyPeer(), true);
     }
@@ -184,7 +184,7 @@ class HostConnectionTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\HostConnection::setSslVerifyPeer
      */
-    public function testSetSslverifypeer()
+    public function testSetSslVerifyPeer()
     {
         $this->hostConnectionInstance->setSslVerifyPeer(0);
         $this->assertEquals($this->hostConnectionInstance->getSslVerifyPeer(), false);

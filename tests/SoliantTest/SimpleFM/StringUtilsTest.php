@@ -157,15 +157,15 @@ Error 76: Error message
      */
     public function testExtractErrorFromPhpMessage()
     {
-        $return = array('error' => '401' , 'errortext' => 'Unauthorized' , 'errortype' => 'HTTP');
+        $return = array('errorCode' => '401' , 'errorMessage' => 'Unauthorized' , 'errorType' => 'HTTP');
         $string = 'HTTP/1.1 401 Unauthorized';
         $this->assertEquals(StringUtils::extractErrorFromPhpMessage($string), $return);
 
-        $return = array('error' => null , 'errortext' => 'FooBar' , 'errortype' => 'HTTP');
+        $return = array('errorCode' => null , 'errorMessage' => 'FooBar' , 'errorType' => 'HTTP');
         $string = 'HTTP/1.1 FooBar';
         $this->assertEquals(StringUtils::extractErrorFromPhpMessage($string), $return);
 
-        $return = array('error' => 7 , 'errortext' => 'Some PHP Error' , 'errortype' => 'PHP');
+        $return = array('errorCode' => 7 , 'errorMessage' => 'Some PHP Error' , 'errorType' => 'PHP');
         $string = 'Some PHP Error';
         $this->assertEquals(StringUtils::extractErrorFromPhpMessage($string), $return);
     }

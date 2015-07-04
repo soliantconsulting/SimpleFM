@@ -189,13 +189,13 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      */
     protected function handleAuthenticateResult($sfmResult)
     {
-        $error = $sfmResult['error'];
-        $errortext = $sfmResult['errortext'];
-        $errortype = $sfmResult['errortype'];
+        $errorCode = $sfmResult['errorCode'];
+        $errorMessage = $sfmResult['errorMessage'];
+        $errorType = $sfmResult['errorType'];
         $result = null;
 
         // Based on the status, return auth result
-        switch ($error) {
+        switch ($errorCode) {
             case '0':
                 $identity = new Identity(
                     $this->username,
@@ -212,7 +212,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 break;
             case '401':
                 // Return null identity plus reason as message array for HTTP 401
-                if ($errortype == 'HTTP') {
+                if ($errorType == 'HTTP') {
                     $identity = null;
                     $result = new Result(
                         Result::FAILURE,
@@ -226,7 +226,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 break;
             case '7':
                 // there most likely was a error connecting to the host
-                if ($errortype == 'PHP') {
+                if ($errorType == 'PHP') {
                     $identity = null;
                     $result = new Result(
                         Result::FAILURE,
@@ -247,7 +247,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 Result::FAILURE,
                 $identity,
                 array(
-                    'reason' => $errortype . ' error ' . $error . ': ' . $errortext,
+                    'reason' => $errorType . ' error ' . $errorCode . ': ' . $errorMessage,
                     'sfm_auth_response' => $sfmResult
                 )
             );

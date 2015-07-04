@@ -22,7 +22,7 @@ class AbstractResultTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $xml = file_get_contents(__DIR__ . '/../TestAssets/sample_fmresultset.xml');
-        $commandDebugUrl = 'fakeCommandDebugUrl';
+        $commandDebugUrl = 'http://user:[...]@dionysus.soliantconsulting.com:80/fmi/xml/fmresultset.xml?-db=FMServer_Sample&-lay=Projects&-findany';
         $parser = new FmResultSetParser($xml, $commandDebugUrl);
         $this->object = $parser->parse();
     }
@@ -38,25 +38,24 @@ class AbstractResultTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Result\AbstractResult::__construct
      * @covers Soliant\SimpleFM\Result\AbstractResult::toArray
-     * @covers Soliant\SimpleFM\Result\AbstractResult::toArrayLc
      */
     public function testToArray()
     {
         $this->assertInstanceOf(AbstractResult::class, $this->object);
-        $this->assertArrayHasKey('rows', $this->object->toArrayLc());
+        $this->assertArrayHasKey('rows', $this->object->toArray());
     }
 
     /**
-     * @covers Soliant\SimpleFM\Result\AbstractResult::getUrl
-     * @covers Soliant\SimpleFM\Result\AbstractResult::getError
-     * @covers Soliant\SimpleFM\Result\AbstractResult::getErrorText
+     * @covers Soliant\SimpleFM\Result\AbstractResult::getDebugUrl
+     * @covers Soliant\SimpleFM\Result\AbstractResult::getErrorCode
+     * @covers Soliant\SimpleFM\Result\AbstractResult::getErrorMessage
      * @covers Soliant\SimpleFM\Result\AbstractResult::getErrorType
      */
     public function testGetters()
     {
-        $this->assertEquals('fakeCommandDebugUrl', $this->object->getUrl());
-        $this->assertEquals(0, $this->object->getError());
-        $this->assertEquals('No error', $this->object->getErrorText());
+        $this->assertEquals('http://user:[...]@dionysus.soliantconsulting.com:80/fmi/xml/fmresultset.xml?-db=FMServer_Sample&-lay=Projects&-findany', $this->object->getDebugUrl());
+        $this->assertEquals(0, $this->object->getErrorCode());
+        $this->assertEquals('No error', $this->object->getErrorMessage());
         $this->assertEquals('FileMaker', $this->object->getErrorType());
     }
 }

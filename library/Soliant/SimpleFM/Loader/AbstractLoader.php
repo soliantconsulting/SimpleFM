@@ -78,7 +78,7 @@ abstract class AbstractLoader
     /**
      * @return void
      */
-    protected function setAdapterCommandURLdebug()
+    protected function setAdapterCommandUrlDebug()
     {
         $this->adapter->setCommandUrlDebug(
             empty($this->credentials) ? $this->commandURL : str_replace(
@@ -97,7 +97,7 @@ abstract class AbstractLoader
         $this->createCredentials();
         $this->createArgs();
         $this->createCommandURL();
-        $this->setAdapterCommandURLdebug();
+        $this->setAdapterCommandUrlDebug();
     }
 
     /**

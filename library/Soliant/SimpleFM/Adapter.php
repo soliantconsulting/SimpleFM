@@ -233,20 +233,19 @@ class Adapter
     public function execute()
     {
         /**
-         * SimpleXML does not throw errors
-         * It returns a SimpleXML object on success and false on error
-         * The xml parser methods have to be able to handle either case gracefully
+         * SPL functions that Loaders and Parsers use do not throw errors
+         * The Loader and Parser methods have to be able to handle either case gracefully or throw an Exception in the
+         * case of an unhandled error.
          */
         $xml = $this->loader->load($this);
 
-        $sfmresult = array();
         if ($this->uri == FmResultSetParser::GRAMMAR) {
-            $sfmresult = $this->parseFmResultSet($xml);
+            return $this->parseFmResultSet($xml);
         } elseif ($this->uri == FmLayoutParser::GRAMMAR) {
-            $sfmresult = $this->parseFmpXmlLayout($xml);
+            return $this->parseFmpXmlLayout($xml);
         }
 
-        return $sfmresult;
+        return null;
     }
 
     /**
@@ -258,7 +257,7 @@ class Adapter
         $parser = new FmResultSetParser($xml, $this->getCommandUrlDebug());
         $parser->setRowsByRecId($this->getRowsByRecId());
         $result = $parser->parse();
-        return $result->toArrayLc();
+        return $result->toArray();
     }
 
     /**
@@ -269,6 +268,6 @@ class Adapter
     {
         $parser = new FmLayoutParser($xml, $this->getCommandUrlDebug());
         $result = $parser->parse();
-        return $result->toArrayLc();
+        return $result->toArray();
     }
 }

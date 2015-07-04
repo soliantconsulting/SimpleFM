@@ -37,14 +37,14 @@ class Curl extends AbstractLoader
     {
         $errorMessage = null;
         $this->adapter = $adapter;
-        self::prepare();
-        $url = self::createPostURL();
+        $this->prepare();
+        $url = $this->createPostURL();
         $curlHandle = curl_init($url);
 
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);
         curl_setopt($curlHandle, CURLOPT_POST, true);
         curl_setopt($curlHandle, CURLOPT_POSTFIELDS, $this->args);
-        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getHostConnection()->getSslverifypeer());
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getHostConnection()->getSslVerifyPeer());
 
         ob_start();
             curl_exec($curlHandle);

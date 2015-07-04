@@ -26,13 +26,13 @@ class FileGetContents extends AbstractLoader
     {
         $this->adapter = $adapter;
 
-        self::prepare();
+        $this->prepare();
 
         libxml_use_internal_errors(true);
         
         $opts = array(
             'ssl'=> array(
-                'verify_peer' => $this->adapter->getHostConnection()->getSslverifypeer(),
+                'verify_peer' => $this->adapter->getHostConnection()->getSslVerifyPeer(),
             ),
         );
         

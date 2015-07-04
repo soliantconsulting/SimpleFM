@@ -39,7 +39,7 @@ class FilePostContents extends AbstractLoader
     {
         $this->adapter = $adapter;
 
-        self::prepare();
+        $this->prepare();
 
         libxml_use_internal_errors(true);
         $authheader = empty($this->credentials) ? '' : 'Authorization: Basic ' . base64_encode($this->credentials) . PHP_EOL;
@@ -56,7 +56,7 @@ class FilePostContents extends AbstractLoader
                 'content' => $this->args,
             ),
 //             'ssl'=> array(
-//                 'verify_peer' => $this->adapter->getSslverifypeer(),
+//                 'verify_peer' => $this->adapter->getSslVerifyPeer(),
 //             ),
         );
 

@@ -168,7 +168,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\HostConnection::setSslVerifyPeer
      * @covers Soliant\SimpleFM\HostConnection::getSslVerifyPeer
      */
-    public function testGetSetSslverifypeer()
+    public function testGetSetSslVerifyPeer()
     {
         $this->adapterInstance->getHostConnection()->setSslVerifyPeer(true);
         $this->assertTrue($this->adapterInstance->getHostConnection()->getSslVerifyPeer());

@@ -43,9 +43,9 @@ abstract class AbstractParser
         $simpleXmlErrors['xml'] = libxml_get_errors();
         $simpleXmlErrors['php'] = error_get_last();
         $phpErrors = StringUtils::extractErrorFromPhpMessage($simpleXmlErrors['php']['message']);
-        $error = $phpErrors['error'];
-        $errorText = $phpErrors['errortext'];
-        $errorType = $phpErrors['errortype'];
+        $errorCode = $phpErrors['errorCode'];
+        $errorMessage = $phpErrors['errorMessage'];
+        $errorType = $phpErrors['errorType'];
         libxml_clear_errors();
 
         if (!class_exists($resultClassName)) {
@@ -57,8 +57,8 @@ abstract class AbstractParser
         /** @var AbstractResult $result */
         $result = new $resultClassName(
             $this->commandUrlDebug,
-            $error,
-            $errorText,
+            $errorCode,
+            $errorMessage,
             $errorType
         );
 

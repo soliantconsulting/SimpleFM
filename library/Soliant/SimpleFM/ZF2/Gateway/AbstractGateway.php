@@ -408,29 +408,29 @@ abstract class AbstractGateway
      */
     public function handleAdapterResult(array $simpleFMAdapterResult)
     {
-        $message = $simpleFMAdapterResult['errortype'] . ' Error ' . $simpleFMAdapterResult['error'] . ': ' .
-            $simpleFMAdapterResult['errortext'] . '. ' . $simpleFMAdapterResult['url'];
+        $message = $simpleFMAdapterResult['errorType'] . ' Error ' . $simpleFMAdapterResult['errorCode'] . ': ' .
+            $simpleFMAdapterResult['errorMessage'] . '. ' . $simpleFMAdapterResult['url'];
 
-        if ($simpleFMAdapterResult['error'] === 0) {
+        if ($simpleFMAdapterResult['errorCode'] === 0) {
             return $simpleFMAdapterResult;
 
-        } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker' && $simpleFMAdapterResult['error'] === 401) {
+        } elseif ($simpleFMAdapterResult['errorType'] == 'FileMaker' && $simpleFMAdapterResult['errorCode'] === 401) {
             /**
              * Don't throw an error for a FileMaker 401: "No records match the request"
              */
             return $simpleFMAdapterResult;
 
-        } elseif ($simpleFMAdapterResult['errortype'] == 'FileMaker') {
-            throw new FileMakerException($message, $simpleFMAdapterResult['error']);
+        } elseif ($simpleFMAdapterResult['errorType'] == 'FileMaker') {
+            throw new FileMakerException($message, $simpleFMAdapterResult['errorCode']);
 
-        } elseif ($simpleFMAdapterResult['errortype'] == 'HTTP') {
-            throw new HttpException($message, $simpleFMAdapterResult['error']);
+        } elseif ($simpleFMAdapterResult['errorType'] == 'HTTP') {
+            throw new HttpException($message, $simpleFMAdapterResult['errorCode']);
 
-        } elseif ($simpleFMAdapterResult['errortype'] == 'XML') {
-            throw new XmlException($message, $simpleFMAdapterResult['error']);
+        } elseif ($simpleFMAdapterResult['errorType'] == 'XML') {
+            throw new XmlException($message, $simpleFMAdapterResult['errorCode']);
 
         } else {
-            throw new ErrorException($message, $simpleFMAdapterResult['error']);
+            throw new ErrorException($message, $simpleFMAdapterResult['errorCode']);
         }
     }
 

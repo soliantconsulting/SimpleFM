@@ -40,7 +40,7 @@ class Mock extends AbstractLoader
 
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
 
-        self::prepare();
+        $this->prepare();
 
         return $this->handleReturn($testXml, null);
     }

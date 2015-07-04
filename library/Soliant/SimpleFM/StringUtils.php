@@ -106,37 +106,43 @@ final class StringUtils
     }
 
     /**
-     * @param string $httpErrorString
-     * @return mixed
+     * @param string|array $error
+     * @return array
      */
-    public static function extractErrorFromPhpMessage($httpErrorString)
+    public static function extractErrorFromPhpMessage($error)
     {
+        if (is_array($error) || isset($error['message'])) {
+            $errorString =  $error['message'];
+        } else {
+            $errorString = $error;
+        }
+
         $matches = array();
         // most common message to expect:
         // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
 
         // grab the error from the end (if there is one)
-        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $httpErrorString, $matches);
+        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $errorString, $matches);
         if (!empty($matches)) {
             // strip off the header prefix
             $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
             $result = explode(' ', $matches, 2);
             // normal case will yield an http error code in location 0 and a message in location 1
             if ((int)$result[0] != 0) {
-                $return['error'] = (int)$result[0];
-                $return['errortext'] = (string)$result[1];
-                $return['errortype'] = 'HTTP';
+                $return['errorCode'] = (int)$result[0];
+                $return['errorMessage'] = (string)$result[1];
+                $return['errorType'] = 'HTTP';
             } else {
-                $return['error'] = null;
-                $return['errortext'] = $matches;
-                $return['errortype'] = 'HTTP';
+                $return['errorCode'] = null;
+                $return['errorMessage'] = $matches;
+                $return['errorType'] = 'HTTP';
             }
             return $return;
         } else {
             // example: file_get_contents throws an error if hostname does not resolve with dns
-            $return['error'] = 7;
-            $return['errortext'] = $httpErrorString;
-            $return['errortype'] = 'PHP';
+            $return['errorCode'] = 7;
+            $return['errorMessage'] = $errorString;
+            $return['errorType'] = 'PHP';
             return $return;
         }
     }

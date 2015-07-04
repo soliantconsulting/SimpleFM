@@ -6,10 +6,7 @@
  * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
-
 namespace Soliant\SimpleFM\Loader;
-
-require_once('AbstractLoader.php');
 
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\Exception\LoaderException;
@@ -38,12 +35,10 @@ class Curl extends AbstractLoader
      */
     public function load(Adapter $adapter)
     {
+        $errorMessage = null;
         $this->adapter = $adapter;
-
         self::prepare();
-
         $url = self::createPostURL();
-
         $curlHandle = curl_init($url);
 
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);
@@ -52,21 +47,16 @@ class Curl extends AbstractLoader
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getHostConnection()->getSslverifypeer());
 
         ob_start();
-
-        if (!curl_exec($curlHandle)) {
-            ob_end_clean();
-            throw new LoaderException('cURL was unable to connect to ' . $url . '.');
-        }
-
-        curl_close($curlHandle);
-
-        $data = trim(ob_get_contents());
-
+            curl_exec($curlHandle);
+            curl_close($curlHandle);
+            $data = trim(ob_get_contents());
         ob_end_clean();
 
-        libxml_use_internal_errors(true);
+        if (!$data) {
+            $data = null;
+            $errorMessage = 'cURL was unable to connect to ' . $url . '.';
+        }
 
-        return simplexml_load_string($data);
-
+        return $this->handleReturn($data, $errorMessage);
     }
 }

@@ -11,6 +11,7 @@ namespace Soliant\SimpleFM\Loader;
 
 use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Exception\LoaderException;
 
 abstract class AbstractLoader
 {
@@ -97,5 +98,20 @@ abstract class AbstractLoader
         $this->createArgs();
         $this->createCommandURL();
         $this->setAdapterCommandURLdebug();
+    }
+
+    /**
+     * @param $data
+     * @param $errorMessage
+     * @return SimpleXMLElement
+     * @throws LoaderException
+     */
+    protected function handleReturn($data, $errorMessage)
+    {
+        if (!$data) {
+            throw new LoaderException($errorMessage);
+        }
+        libxml_use_internal_errors(true);
+        return simplexml_load_string($data);
     }
 }

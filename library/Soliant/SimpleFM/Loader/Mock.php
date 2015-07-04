@@ -20,14 +20,6 @@ class Mock extends AbstractLoader
     protected $testXml;
 
     /**
-     * @return string
-     */
-    public function getTestXml()
-    {
-        return $this->testXml;
-    }
-
-    /**
      * @param string $testXml
      * @return $this
      */
@@ -50,8 +42,6 @@ class Mock extends AbstractLoader
 
         self::prepare();
 
-        libxml_use_internal_errors(true);
-
-        return simplexml_load_string($testXml);
+        return $this->handleReturn($testXml, null);
     }
 }

@@ -13,6 +13,7 @@ require_once('AbstractLoader.php');
 
 use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Exception\LoaderException;
 
 class FilePostContents extends AbstractLoader
 {
@@ -60,8 +61,14 @@ class FilePostContents extends AbstractLoader
         );
 
         $context = stream_context_create($opts);
-
-        return simplexml_load_string(file_get_contents(self::createPostURL(), false, $context));
-
+        $errorLevel = error_reporting();
+        error_reporting(0);
+        $errorMessage = null;
+        if (!$data = file_get_contents(self::createPostURL(), false, $context)) {
+            $errorArray = error_get_last();
+            $errorMessage = $errorArray['message'];
+        }
+        error_reporting($errorLevel);
+        return $this->handleReturn($data, $errorMessage);
     }
 }

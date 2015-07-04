@@ -56,10 +56,29 @@ See `/documentation/simplefm_example.php` for a working PHP example that follows
 
 ## Quickstart
 
-### Import the adapter
+### Install
+
+#### Via Composer (recommended)
+
+```
+composer require soliantconsulting/simplefm
+```
+
+#### Manually
+
+Unpack the project in your project, and then require the classes in the classmap.
+
+```
+foreach (require(/path/to/library/autoload_classmap.php') as $classPath) {
+    require_once($classPath);
+}
+```
+
+### Import the Adapter
 
 ```
 use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\HostConnection;
 ```
     
 ### Basic adapter configuration
@@ -116,15 +135,43 @@ $result = $adapter->execute();
 ### Handle the result
 
 ```
-$url       = $result['url'];           // string
-$error     = $result['error'];         // int
-$errortext = $result['errortext'];     // string
-$errortype = $result['errortype'];     // string
-$count     = $result['count'];         // int
-$fetchsize = $result['fetchsize'];     // int
-$rows      = $result['rows'];          // array
+$url           = $result['url'];           // string
+$errorCode     = $result['errorCode'];     // int
+$errorMessage  = $result['errorMessage'];  // string
+$errorType     = $result['errorType'];     // string
+$count         = $result['count'];         // int
+$fetchSize     = $result['fetchSize'];     // int
+$rows          = $result['rows'];          // array
 ```
-    
+
+## Using the Example File
+
+The `simplefm_example.php` file assumes that FileMaker Server is on `localhost` and has the default FMServer_Sample
+file hosted. You may edit the hostname and other settings as needed if your FileMaker Server is hosted elsewhere.
+
+In terminal, `cd` to the documentation directory that comes with SimpleFM
+
+```
+cd /path/to/simplefm/documentation
+```
+
+Next, start the built-in PHP server on an available port. Assuming port 8080 is available, that looks like this.
+
+```
+php -S localhost:8080
+```
+
+Assuming that the server starts correctly, you should see a message like this in Terminal
+
+```
+PHP 5.5.20 Development Server started at Sat Jul  4 14:35:43 2015
+Listening on http://localhost:8080
+Document root is /path/to/simplefm/documentation
+Press Ctrl-C to quit.
+```
+
+You should now be able to load <http://localhost:8080/simplefm_example.php> in a browser and experiment with it.
+
 ## About FileMaker Portals
 
 Portals are returned as named child arrays to every record in the fetched set. Be careful about adding portals to your web layouts, as all associations are loaded eagerly, and this could bloat your result array. SimpleFM can't take advantage of techniques like lazy loading that help mitigate performance issues with large related data sets in ORMs like Doctrine, so it is up to the developer to tailor the web layouts appropriately for best performance.

@@ -59,52 +59,18 @@ class Adapter
     protected $loader;
 
     /**
-     * @param array|HostConnection $hostParams
+     * @param HostConnection $hostParams
      * @param null $loader
      */
-    public function __construct($hostParams = array(), $loader = null)
+    public function __construct(HostConnection $hostParams, $loader = null)
     {
-        if (!empty($hostParams)) {
-            if ($hostParams instanceof HostConnection) {
-                $this->hostConnection = $hostParams;
-            } else {
-                $this->setHostParams($hostParams);
-            }
-        }
+        $this->hostConnection = $hostParams;
+
         if ($loader instanceof AbstractLoader) {
             $this->loader = $loader;
         } else {
             $this->loader = new FilePostContents();
         }
-    }
-
-    /**
-     * @deprecated
-     * Create and update HostConnection class directly instead
-     * @param array ($hostname, $dbname, $username, $password, $protocol, $port, $sslverifypeer)
-     * @return $this
-     */
-    public function setHostParams($params = array())
-    {
-        $hostname = isset($params['hostname']) ? $params['hostname'] : null;
-        $dbname = isset($params['dbname']) ? $params['dbname'] : null;
-        $username = isset($params['username']) ? $params['username'] : null;
-        $password = isset($params['password']) ? $params['password'] : null;
-        $protocol = isset($params['protocol']) ? $params['protocol'] : null;
-        $port = isset($params['port']) ? $params['port'] : null;
-        $sslVerifyPeer = isset($params['sslverifypeer']) ? $params['sslverifypeer'] : true;
-
-        $this->hostConnection = new HostConnection(
-            $hostname,
-            $dbname,
-            $username,
-            $password,
-            $protocol,
-            $port,
-            $sslVerifyPeer
-        );
-
-        return $this;
     }
 
     /**

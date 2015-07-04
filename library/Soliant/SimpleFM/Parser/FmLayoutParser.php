@@ -11,20 +11,24 @@ class FmLayoutParser extends AbstractParser
      */
     const GRAMMAR = '/fmi/xml/FMPXMLLAYOUT.xml';
 
+    public function __construct($xml, $commandUrlDebug)
+    {
+        parent::__construct($xml, $commandUrlDebug, FmLayout::class);
+    }
+
     public function parse()
     {
-        $xml = $this->xml;
-
-        // No xml to parse so return gracefully here
-        if (empty($xml)) {
-            return $this->handleEmptyXml(FmLayout::class);
+        if (empty($this->xml)) {
+            // No xml to parse so return gracefully here
+            return $this->emptyResult;
         }
 
+        $xml = $this->xml;
         $fields = array();
         $valueLists = array();
 
-        $counterI = 0;
         // loop over LAYOUT fields
+        $counterI = 0;
         foreach ($xml->LAYOUT[0]->FIELD as $field) {
             $fieldname = (string)$field->attributes()->NAME;
             // throw an exception if name not valid:
@@ -36,8 +40,8 @@ class FmLayoutParser extends AbstractParser
             ++$counterI;
         }
 
-        $counterJ = 0;
         // loop over VALUELISTS
+        $counterJ = 0;
         foreach ($xml->VALUELISTS[0] as $valueList) {
             $valueLists[$counterJ]['name'] = (string)$valueList->attributes()->NAME;
             $valueLists[$counterJ]['values'] = array();

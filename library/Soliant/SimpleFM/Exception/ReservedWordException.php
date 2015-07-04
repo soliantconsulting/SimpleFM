@@ -18,6 +18,14 @@ class ReservedWordException extends RuntimeException implements ExceptionInterfa
     protected $reservedWord;
 
     /**
+     * @return string
+     */
+    public function getReservedWord()
+    {
+        return $this->reservedWord;
+    }
+
+    /**
      * @param string $message
      * @param string $reservedWord
      */

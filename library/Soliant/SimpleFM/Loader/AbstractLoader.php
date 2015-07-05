@@ -6,11 +6,12 @@
  * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
-
 namespace Soliant\SimpleFM\Loader;
 
-use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\StringUtils;
+use Soliant\SimpleFM\Exception\LoaderException;
 
 abstract class AbstractLoader
 {
@@ -22,14 +23,61 @@ abstract class AbstractLoader
     protected $credentials;
     protected $username;
     protected $args;
-    protected $commandURL;
+    protected $commandUrl;
+    protected $postUrl;
+    protected $throwErrors = false;
+    protected $lastError = [];
+
+    /**
+     * @return Adapter
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
+
+    /**
+     * @param Adapter $adapter
+     * @return AbstractLoader
+     */
+    public function setAdapter(Adapter $adapter)
+    {
+        $this->adapter = $adapter;
+        $this->prepare();
+        return $this;
+    }
 
     /**
      * @param array $simpleFMAdapterRow
      * @return SimpleXMLElement
      */
-    abstract public function load(Adapter $adapter);
+    abstract public function load();
 
+    /**
+     * @return array
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
+    }
+
+    /**
+     * @param bool $throwErrors
+     * @return bool
+     */
+    public function throwErrors($throwErrors = true)
+    {
+        $this->throwErrors = $throwErrors;
+        return $this->throwErrors;
+    }
+
+    protected function errorCapture()
+    {
+        $this->lastError = StringUtils::extractErrorFromPhpMessage(error_get_last());
+        if ($this->throwErrors) {
+            throw new LoaderException($this->getLastError()['errorMessage']);
+        }
+    }
 
     /**
      * @return string
@@ -70,22 +118,22 @@ abstract class AbstractLoader
         $port = $this->adapter->getHostConnection()->getPort();
         $uri = $this->adapter->getUri();
 
-        $this->commandURL = "$protocol://$credentials@$hostname:$port$uri?$args";
-        return $this->commandURL;
+        $this->commandUrl = "$protocol://$credentials@$hostname:$port$uri?$args";
+        $this->postUrl = "$protocol://$hostname:$port$uri";
+        return $this->commandUrl;
     }
 
     /**
-     * @return void
+     * @return string
      */
-    protected function setAdapterCommandURLdebug()
+    public function getCommandUrlDebug()
     {
-        $this->adapter->setCommandUrlDebug(
-            empty($this->credentials) ? $this->commandURL : str_replace(
-                $this->credentials,
-                $this->username . ':[...]',
-                $this->commandURL
-            )
-        );
+        $debugUrl = $this->commandUrl;
+        if (!empty($this->credentials)) {
+            // strip the password out of the credentials
+            $debugUrl = str_replace($this->credentials, $this->username . ':[...]', $this->commandUrl);
+        }
+        return (string)$debugUrl;
     }
 
     /**
@@ -96,6 +144,18 @@ abstract class AbstractLoader
         $this->createCredentials();
         $this->createArgs();
         $this->createCommandURL();
-        $this->setAdapterCommandURLdebug();
+    }
+
+    /**
+     * @param $data
+     * @return SimpleXMLElement
+     * @throws LoaderException
+     */
+    protected function handleReturn($data)
+    {
+        libxml_use_internal_errors(true);
+        $xml = simplexml_load_string($data);
+        $this->errorCapture();
+        return $xml;
     }
 }

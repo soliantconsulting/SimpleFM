@@ -3,20 +3,24 @@ namespace Soliant\SimpleFM\Result;
 
 class FmLayout extends AbstractResult
 {
+    protected $debugUrl;
+    protected $errorCode;
+    protected $errorMessage;
+    protected $errorType;
     protected $product;
     protected $layout;
     protected $valueLists;
 
     public function __construct(
-        $url,
-        $error,
-        $errorText,
+        $debugUrl,
+        $errorCode,
+        $errorMessage,
         $errorType,
         array $product = [],
         array $layout = [],
         array $valueLists = []
     ) {
-        parent::__construct($url, $error, $errorText, $errorType);
+        parent::__construct($debugUrl, $errorCode, $errorMessage, $errorType);
         $this->product = $product;
         $this->layout = $layout;
         $this->valueLists = $valueLists;

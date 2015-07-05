@@ -1,6 +1,7 @@
 <?php
 namespace SoliantTest\SimpleFM\Result;
 
+use Soliant\SimpleFM\Parser\FmResultSetParser;
 use Soliant\SimpleFM\Result\FmResultSet;
 
 /**
@@ -19,23 +20,10 @@ class FmResultSetTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $url = '';
-        $error = '';
-        $errorText = '';
-        $errorType = '';
-        $count = null;
-        $fetchSize = null;
-        $rows = [];
-
-        $this->object = new FmResultSet(
-            $url,
-            $error,
-            $errorText,
-            $errorType,
-            $count,
-            $fetchSize,
-            $rows
-        );
+        $xml = file_get_contents(__DIR__ . '/../TestAssets/sample_fmresultset.xml');
+        $commandDebugUrl = 'fakeCommandDebugUrl';
+        $parser = new FmResultSetParser($xml);
+        $this->object = $parser->parse($commandDebugUrl);
     }
 
     /**
@@ -47,50 +35,24 @@ class FmResultSetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Result\FmResultSet::getCount
-     * @todo   Implement testGetCount().
-     */
-    public function testGetCount()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Soliant\SimpleFM\Result\FmResultSet::getFetchSize
-     * @todo   Implement testGetFetchSize().
-     */
-    public function testGetFetchSize()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
-     * @covers Soliant\SimpleFM\Result\FmResultSet::getRows
-     * @todo   Implement testGetRows().
-     */
-    public function testGetRows()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
+     * @covers Soliant\SimpleFM\Result\FmResultSet::__construct
      * @covers Soliant\SimpleFM\Result\FmResultSet::toArray
-     * @todo   Implement testToArray().
      */
     public function testToArray()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->assertInstanceOf(FmResultSet::class, $this->object);
+        $this->assertArrayHasKey('rows', $this->object->toArray());
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\Result\FmResultSet::getCount
+     * @covers Soliant\SimpleFM\Result\FmResultSet::getFetchSize
+     * @covers Soliant\SimpleFM\Result\FmResultSet::getRows
+     */
+    public function testGetters()
+    {
+        $this->assertEquals(17, $this->object->getCount());
+        $this->assertEquals(17, $this->object->getFetchSize());
+        $this->assertEquals(17, count($this->object->getRows()));
     }
 }

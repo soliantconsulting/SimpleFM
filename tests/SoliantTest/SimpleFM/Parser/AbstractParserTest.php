@@ -20,17 +20,13 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $xml = null;
-        $commandUrlDebug = 'fakeUrl';
+        $commandUrlDebug = 'commandUrlDebug';
         $originalClassName = 'Soliant\SimpleFM\Parser\AbstractParser';
         $arguments1 = [
-            new SimpleXMLElement('<?xml version=\'1.0\' standalone=\'yes\'?><data/>'),
-            $commandUrlDebug,
-            FmResultSet::class
+            new SimpleXMLElement('<?xml version=\'1.0\' standalone=\'yes\'?><data/>')
         ];
         $arguments2 = [
-            '<?xml version=\'1.0\' standalone=\'yes\'?><data/>',
-            $commandUrlDebug,
-            FmResultSet::class
+            '<?xml version=\'1.0\' standalone=\'yes\'?><data/>'
         ];
         $mockClassName = 'MockParser';
         $callOriginalConstructor = true;
@@ -81,11 +77,12 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\AbstractParser::__construct
      * @covers Soliant\SimpleFM\Parser\AbstractParser::handleEmptyXml
+     * @covers Soliant\SimpleFM\StringUtils::createResult
      */
     public function testHandleEmptyXml()
     {
         $closure = function () {
-            return $this->handleEmptyXml(FmResultSet::class);
+            return $this->handleEmptyXml(FmResultSet::class, 'commandUrlDebug');
         };
 
         $mockParserFunction = $closure->bindTo($this->mockParserFromSimpleXMLElement, $this->mockParserFromSimpleXMLElement);
@@ -98,12 +95,13 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\AbstractParser::__construct
      * @covers Soliant\SimpleFM\Parser\AbstractParser::handleEmptyXml
+     * @covers Soliant\SimpleFM\StringUtils::createResult
      */
     public function testHandleEmptyXmlWrongClass()
     {
         $this->setExpectedException(\Soliant\SimpleFM\Exception\RuntimeException::class);
         $closure = function () {
-            return $this->handleEmptyXml(\stdClass::class);
+            return $this->handleEmptyXml(\stdClass::class, 'commandUrlDebug');
         };
 
         $mockParserFunction = $closure->bindTo($this->mockParserFromSimpleXMLElement, $this->mockParserFromSimpleXMLElement);
@@ -114,12 +112,13 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\AbstractParser::__construct
      * @covers Soliant\SimpleFM\Parser\AbstractParser::handleEmptyXml
+     * @covers Soliant\SimpleFM\StringUtils::createResult
      */
     public function testHandleEmptyXmlInvalidClass()
     {
         $this->setExpectedException(\Soliant\SimpleFM\Exception\RuntimeException::class);
         $closure = function () {
-            return $this->handleEmptyXml('InvalidClassName');
+            return $this->handleEmptyXml('InvalidClassName', 'commandUrlDebug');
         };
 
         $mockParserFunction = $closure->bindTo($this->mockParserFromString, $this->mockParserFromString);

@@ -28,7 +28,7 @@ See also, the [SimpleFM_FMServer_Sample][3] demo application which illustrates u
 
 ## Simplicity and Performance
 
-SimpleFM is a single class with less than 1000 lines of code. While SimpleFM was written with simplicity as the main guiding principle, it also perfoms well. We have informally benchmarked it, and obtained faster results for the same queries compared to the two most common CWP PHP alternatives.
+SimpleFM was written with simplicity as the main guiding principle. We have informally benchmarked it, and obtained faster results for the same queries compared to the two most common CWP PHP alternatives.
 
 ## System Requirements
 
@@ -37,7 +37,7 @@ SimpleFM, the examples and this documentation are tailored for PHP 5.5 and FileM
 * PHP 5.5+
 * FileMaker Server 12+
 
-With minimum effort, you could get them to work with PHP 5.0 (requires SimpleXML) and any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not maintained.
+With minimum effort, you could get them to work with any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not maintained.
 
 ## License
 
@@ -56,13 +56,34 @@ See `/documentation/simplefm_example.php` for a working PHP example that follows
 
 ## Quickstart
 
-### Import the adapter
+### Install
+
+#### Via Composer (recommended)
+
+```
+composer require soliantconsulting/simplefm
+```
+
+#### Manually
+
+Move the SimpleFM package in your project, and then require the classes in the classmap.
+
+```
+foreach (require(/path/to/library/autoload_classmap.php') as $classPath) {
+    require_once($classPath);
+}
+```
+
+### Import the Adapter
 
 ```
 use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\HostConnection;
 ```
     
-### Basic adapter configuration
+## Basic Adapter Configuration
+
+Create a new HostConnection object.
 
 ```
 $hostConnection = new HostConnection(
@@ -73,7 +94,7 @@ $hostConnection = new HostConnection(
 );
 ```
 
-### Instantiate the adapter
+### Instantiate the Adapter
 
 ```
 $adapter = new Adapter($hostConnection);
@@ -116,15 +137,43 @@ $result = $adapter->execute();
 ### Handle the result
 
 ```
-$url       = $result['url'];           // string
-$error     = $result['error'];         // int
-$errortext = $result['errortext'];     // string
-$errortype = $result['errortype'];     // string
-$count     = $result['count'];         // int
-$fetchsize = $result['fetchsize'];     // int
-$rows      = $result['rows'];          // array
+$url          = $result->getDebugUrl();
+$errorCode    = $result->getErrorCode();
+$errorMessage = $result->getErrorMessage();
+$errorType    = $result->getErrorType();
+$count        = $result->getCount();
+$fetchSize    = $result->getFetchSize();
+$rows         = $result->getRows();
 ```
-    
+
+## Using the Example File
+
+The `simplefm_example.php` file assumes that FileMaker Server is on `localhost` and has the default FMServer_Sample
+file hosted. You may edit the hostname and other settings as needed if your FileMaker Server is hosted elsewhere.
+
+In terminal, `cd` to the documentation directory that comes with SimpleFM
+
+```
+cd /path/to/simplefm/documentation
+```
+
+Next, start the built-in PHP server on an available port. Assuming port 8080 is available, run this command:
+
+```
+php -S localhost:8080
+```
+
+If the built in PHP server starts correctly, you should see a message like this in Terminal
+
+```
+PHP 5.5.20 Development Server started at Sat Jul  4 14:35:43 2015
+Listening on http://localhost:8080
+Document root is /path/to/simplefm/documentation
+Press Ctrl-C to quit.
+```
+
+You should now be able to load <http://localhost:8080/simplefm_example.php> in a browser and experiment with it.
+
 ## About FileMaker Portals
 
 Portals are returned as named child arrays to every record in the fetched set. Be careful about adding portals to your web layouts, as all associations are loaded eagerly, and this could bloat your result array. SimpleFM can't take advantage of techniques like lazy loading that help mitigate performance issues with large related data sets in ORMs like Doctrine, so it is up to the developer to tailor the web layouts appropriately for best performance.
@@ -201,30 +250,24 @@ Example:
     );
 ```
 
+## FileMaker Layouts
 
-ZF2 Abstract Gateway
---------------------
-Included in this library is a gateway adapter for ZF2.  This gateway includes
+Note that fields (and field repetitions) must be on the layout you specify in a command or else they will not be accessible.
 
-* findOneBy()
-* findBy()
+## FileMaker XML API Commands
 
-These functions take an array of commands.  Any command not prefixed with a hyphen is considered a search query.  _by default search queries are executed as a LIKE_.  If you want to search for an exact match prefix your criteria with ==.
+Please be sure to read the official API Documentation Appendix A (page 45), as it is somewhat unique. Don't assume that experience writing
+SQL will translate directly to this command API.
+
+For instance, _by default search queries are executed as a LIKE_. If you want to search for an exact match prefix your criteria with ==.
 
 Examples
 ```
-$gateway->findBy([
-    'field1' => '==value1',
-    'field2' => 'part'
-]);
+$commandArray = [
+    'field1' => '==value1', // exactly 'value1'
+    'field2' => 'value2'    // contains 'value2'
+];
 ```
-
-This query will search for field equal to ```value1``` and all values of ```field2``` which contain the string ```part```.
-
-
-See more details in the official API Documentation Appendix A (page 45):
-
-Note that to be accessible, fields (and field repetitions) must be on the layout you specify in the query.
 
 ## Best Practices
 

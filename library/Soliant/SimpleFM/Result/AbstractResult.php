@@ -3,16 +3,17 @@ namespace Soliant\SimpleFM\Result;
 
 abstract class AbstractResult
 {
-    protected $url;
-    protected $error;
-    protected $errorText;
+    protected $debugUrl;
+    protected $errorCode;
+    protected $errorMessage;
     protected $errorType;
 
-    public function __construct($url, $error, $errorText, $errorType)
+    public function __construct($debugUrl, $errorCode, $errorMessage, $errorType)
     {
-        $this->url = $url;
-        $this->error = $error;
-        $this->errorText = $errorText;
+        // debugUrl is formatted in AbstractLoader
+        $this->debugUrl = $debugUrl;
+        $this->errorCode = $errorCode;
+        $this->errorMessage = $errorMessage;
         $this->errorType = $errorType;
     }
 
@@ -22,45 +23,35 @@ abstract class AbstractResult
     public function toArray()
     {
         $array = [];
-        $array['url'] = $this->getUrl();
-        $array['error'] = $this->getError();
-        $array['errorText'] = $this->getErrorText();
+        $array['url'] = $this->getDebugUrl();
+        $array['errorCode'] = $this->getErrorCode();
+        $array['errorMessage'] = $this->getErrorMessage();
         $array['errorType'] = $this->getErrorType();
         return $array;
     }
 
-    public function toArrayLc()
+    /**
+     * @return mixed
+     */
+    public function getDebugUrl()
     {
-        $arrayLc = [];
-        $array = $this->toArray();
-        foreach ($array as $key => $value) {
-            $arrayLc[strtolower($key)] = $value;
-        }
-        return $arrayLc;
+        return $this->debugUrl;
     }
 
     /**
      * @return mixed
      */
-    public function getUrl()
+    public function getErrorCode()
     {
-        return $this->url;
+        return $this->errorCode;
     }
 
     /**
      * @return mixed
      */
-    public function getError()
+    public function getErrorMessage()
     {
-        return $this->error;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getErrorText()
-    {
-        return $this->errorText;
+        return $this->errorMessage;
     }
 
     /**

@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
-
 namespace Soliant\SimpleFM\Loader;
 
 use Soliant\SimpleFM\Adapter;
@@ -20,11 +19,13 @@ class Mock extends AbstractLoader
     protected $testXml;
 
     /**
-     * @return string
+     * @param null $testXml
      */
-    public function getTestXml()
+    public function __construct($testXml = null)
     {
-        return $this->testXml;
+        if ($testXml) {
+            $this->setTestXml($testXml);
+        }
     }
 
     /**
@@ -42,16 +43,11 @@ class Mock extends AbstractLoader
      * @param null $testXmlOverride
      * @return SimpleXMLElement
      */
-    public function load(Adapter $adapter, $testXmlOverride = null)
+    public function load($testXmlOverride = null)
     {
-        $this->adapter = $adapter;
-
+        $this->prepare();
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
-
-        self::prepare();
-
-        libxml_use_internal_errors(true);
-
-        return simplexml_load_string($testXml);
+        $this->errorCapture();
+        return $this->handleReturn($testXml);
     }
 }

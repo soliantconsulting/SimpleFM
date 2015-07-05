@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
@@ -13,12 +12,13 @@ ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
 
-require_once('../library/Soliant/SimpleFM/Adapter.php');
-require_once('../library/Soliant/SimpleFM/HostConnection.php');
-require_once('../library/Soliant/SimpleFM/Loader/FilePostContents.php');
+foreach (require(__DIR__ . '/../library/autoload_classmap.php') as $classPath) {
+    require_once($classPath);
+}
 
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\HostConnection;
+use Soliant\SimpleFM\Result\FmResultSet;
 
 /**
  * The hostName can either be an IP address or any valid network name you have configured and hosting the
@@ -38,37 +38,42 @@ $hostConnection = new HostConnection(
 $adapter = new Adapter($hostConnection);
 
 /**
+ * By default SimpleFM will use \Soliant\SimpleFM\Loader\FilePostContents to communicate with FileMaker Server.
+ * In most cases the default is the best option, and there is no need to specify a loader explicitly.
+ * If you need to use one of the alternative loaders, you instantiate is with the Adapter, and then add it with
+ * the Adapter::setLoader method.
+ */
+// $loader = new \Soliant\SimpleFM\Loader\Curl($adapter)
+// $loader = new \Soliant\SimpleFM\Loader\FileGetContents($adapter)
+// $adapter->setLoader($loader);
+
+/**
  * At runtime, you can update HostConnection on an adapter that has already been instantiated via the HostConnection's
  * fluent interface
  */
 $adapter->getHostConnection()
     ->setHostName('localhost')
     ->setDbName('FMServer_Sample')
-    ->setPassword('someUsername')
-    ->setUserName('somePassword');
+    ->setUserName('someUsername')
+    ->setPassword('somePassword');
 
 /**
  * After you have initialized a SimpleFMAdapter with valid credentials, there are a number of ways to make calls with
  * it. The simplest is to setCallParams with a layoutname and a commandstring. The commandstring follows the XML RPC
  * syntax for FileMaker Server. See /documentation/fms12_cwp_xml_en.pdf, Appendix A on page 43 for details.
  */
-$adapter->setCallParams(
-    array(
-        'layoutName'    => 'Tasks',
-        'commandString' => '-max=10&-skip=5&-findall'
-    )
-);
+$adapter->setLayoutName('Tasks')
+    ->setCommandString('-max=2&-skip=1&-findall');
 
 /**
  * You may also update just the credentials at runtime via the HostConnection's fluent interface
  */
 $adapter->getHostConnection()
-    ->setPassword('Admin')
-    ->setUserName('');
+    ->setUserName('Admin')
+    ->setPassword('');
 
 /**
- * There are individual getters and settes for every property (except there is no getter for the password property)
- * Experiment with the getters and setters to modify the adapter and set new queries for execution
+ * Experiment with the getters and setters to modify the Adapter and set new commands for execution
  */
 $adapter->setLayoutName('Projects');
 
@@ -84,8 +89,8 @@ $adapter->setCommandString('-findall');
  * without blowing away existing command properties. For example:
 
     $commandArray = $adapter->getCommandArray();
-    $commandArray['-max']  = 40 ;             // change -max value
-    $commandArray['-skip'] = 10 ;             // add a -skip command
+    $commandArray['-max']  = 1 ;             // change -max value
+    $commandArray['-skip'] = 3 ;             // add a -skip command
     $adapter->setCommandArray($commandArray); // set it back on the adapter
 
  *
@@ -106,60 +111,65 @@ $adapter->setCommandString('-findall');
  */
 
 /**
- * SimpleFMAdapter also provides a Boolean rowsbyrecid property which makes the returned rows of data associative
+ * SimpleFMAdapter also provides a Boolean rowsByRecid option which makes the returned rows of data associative
  * by FileMaker recid instead of the default behavior which is rows as an arbitrarily indexed array.
  */
-$adapter->setRowsByRecId(false);
+// $adapter->setRowsByRecId(true);
 
 /**
  * Once your adapter is ready, use execute to make the host request.
+ * @var FmResultSet $result
  */
 $result = $adapter->execute();
 
 /**
  * These are the elements simpleFM returns in the result array.
  */
-$url       = $result['url'];           // string
-$error     = $result['error'];         // int
-$errorText = $result['errortext'];     // string
-$errorType = $result['errortype'];     // string
-$count     = $result['count'];         // int
-$fetchSize = $result['fetchsize'];     // int
-$rows      = $result['rows'];          // array
+$url          = $result->getDebugUrl();
+$errorCode    = $result->getErrorCode();
+$errorMessage = $result->getErrorMessage();
+$errorType    = $result->getErrorType();
+$count        = $result->getCount();
+$fetchSize    = $result->getFetchSize();
+$rows         = $result->getRows();
 
-
- /**
+/**
  * Handle the result:
  *
- * Below are some very basic examples of what you can do with the query results. These examples are designed to be
- * a flexible way to view raw results, and are probably not the way you would normally handle results in an OOP
- * solution (see Best practices in the included README.md).
+ * IMPORTANT NOTE: The formatting code below is designed to demonstrate output from the above examples.
+ *
+ * While there is nothing wrong with is per se, the result formatting examples below are tailored for
+ * this formatting use case, and is more complicated than will be required in many normal use cases.
+ *
+ * See the Best Practices section of the included README.md for more information.
  */
 
 /**
  * Output some basic meta info about the request
  */
-echo "<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>";
-echo "Command URL: $url<br/>";
-echo "Error: $error <br/>";
-echo "Error Text: $errorText<br/>";
-echo "Error Type: $errorType <br/>";
-echo "Found Count: $count<br/>";
-echo "Fetch Size: $fetchSize<br/>";
-echo "</div>";
+echo <<<HEADER
+<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>
+    Command URL: $url<br/>
+    Error: $errorCode <br/>
+    Error Text: $errorMessage<br/>
+    Error Type: $errorType <br/>
+    Found Count: $count<br/>
+    Fetch Size: $fetchSize<br/>
+</div>
+HEADER;
 
-if ($error === 0) {
+if ($errorCode === 0) {
     /**
      * Format the result rows like a FileMaker Table View
      */
-    echo "<h2>Table View</h2><table border=1><tr>";
+    echo "<h2>Table View</h2><table border=1><tr><th>array key</th>";
         $indexed = array_values($rows);
     foreach ($indexed[0] as $key => $value) {
         echo "<th>$key</th>";
     }
         echo "</tr>";
-    foreach ($rows as $data) {
-        echo "<tr>";
+    foreach ($rows as $key => $data) {
+        echo "<tr><td>$key</td>";
         foreach ($data as $value) {
             $value = $value === "" ? "&nbsp;" : $value;
             if (is_array($value)) {
@@ -192,6 +202,7 @@ if ($error === 0) {
     echo "<h2>Form List View</h2>";
     foreach ($rows as $i => $data) {
         echo "<table border=1>";
+        echo "<tr><th>array key</th><td>$i</td></tr>";
         foreach ($data as $key => $value) {
             $value = $value === "" ? "&nbsp;" : $value;
             if (is_array($value)) {

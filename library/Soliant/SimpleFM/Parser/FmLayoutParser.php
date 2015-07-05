@@ -11,16 +11,11 @@ class FmLayoutParser extends AbstractParser
      */
     const GRAMMAR = '/fmi/xml/FMPXMLLAYOUT.xml';
 
-    public function __construct($xml, $commandUrlDebug)
-    {
-        parent::__construct($xml, $commandUrlDebug, FmLayout::class);
-    }
-
-    public function parse()
+    public function parse($commandUrlDebug)
     {
         if (empty($this->xml)) {
-            // No xml to parse so return gracefully here
-            return $this->emptyResult;
+            // No xml to parse so set a graceful return value here
+            return $this->handleEmptyXml(FmLayout::class, $commandUrlDebug);
         }
 
         $xml = $this->xml;
@@ -65,7 +60,7 @@ class FmLayoutParser extends AbstractParser
         $layout['fields'] = $fields;
 
         $result = new FmLayout(
-            $this->commandUrlDebug,
+            $commandUrlDebug,
             (int)$xml->ERRORCODE,
             StringUtils::errorToEnglish((int)$xml->ERRORCODE),
             'FileMaker',

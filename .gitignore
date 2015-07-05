@@ -1,3 +1,4 @@
 vendor
 composer.lock
 composer.phar
+error_log.txt

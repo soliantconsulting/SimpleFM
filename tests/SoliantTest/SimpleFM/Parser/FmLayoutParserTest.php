@@ -21,8 +21,8 @@ class FmLayoutParserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $xml = file_get_contents(__DIR__ . '/../TestAssets/sample_fmpxmllayout.xml');
-        $commandDebugUrl = 'fakeCommandDebugUrl';
-        $this->object = new FmLayoutParser($xml, $commandDebugUrl);
+        $commandDebugUrl = 'commandUrlDebug';
+        $this->object = new FmLayoutParser($xml);
     }
 
     /**
@@ -39,12 +39,12 @@ class FmLayoutParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParse()
     {
-        $result = $this->object->parse();
+        $result = $this->object->parse('commandUrlDebug');
         $this->assertInstanceOf(FmLayout::class, $result);
 
         // Empty result
-        $parser = new FmLayoutParser('', '');
-        $result = $parser->parse();
+        $parser = new FmLayoutParser('');
+        $result = $parser->parse('commandUrlDebug');
         $this->assertInstanceOf(FmLayout::class, $result);
     }
 }

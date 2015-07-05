@@ -3,20 +3,24 @@ namespace Soliant\SimpleFM\Result;
 
 class FmResultSet extends AbstractResult
 {
+    protected $debugUrl;
+    protected $errorCode;
+    protected $errorMessage;
+    protected $errorType;
     protected $count;
     protected $fetchSize;
     protected $rows;
 
     public function __construct(
-        $url,
-        $error,
-        $errorText,
+        $debugUrl,
+        $errorCode,
+        $errorMessage,
         $errorType,
         $count = null,
         $fetchSize = null,
         array $rows = []
     ) {
-        parent::__construct($url, $error, $errorText, $errorType);
+        parent::__construct($debugUrl, $errorCode, $errorMessage, $errorType);
         $this->count = $count;
         $this->fetchSize = $fetchSize;
         $this->rows = $rows;

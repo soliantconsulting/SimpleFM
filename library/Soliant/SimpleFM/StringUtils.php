@@ -2,6 +2,8 @@
 namespace Soliant\SimpleFM;
 
 use Soliant\SimpleFM\Exception\ReservedWordException;
+use Soliant\SimpleFM\Result\AbstractResult;
+use Soliant\SimpleFM\Exception\RuntimeException;
 
 final class StringUtils
 {
@@ -106,39 +108,107 @@ final class StringUtils
     }
 
     /**
-     * @param string $httpErrorString
-     * @return mixed
+     * @param string|array $error
+     * @return array
      */
-    public static function extractErrorFromPhpMessage($httpErrorString)
+    public static function extractErrorFromPhpMessage($error)
     {
+        if (is_array($error) || isset($error['message'])) {
+            $errorString = $error['message'];
+        } else {
+            $errorString = $error;
+        }
+
+        /**
+         * See self::errorClearLast method which puts last error in a known good state
+         */
+        if ($errorString === 'Undefined variable: error_clear_last') {
+            $return['errorCode'] = 0;
+            $return['errorMessage'] = 'No Error';
+            $return['errorType'] = null;
+            return $return;
+        }
+
         $matches = array();
         // most common message to expect:
         // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
 
         // grab the error from the end (if there is one)
-        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $httpErrorString, $matches);
+        $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $errorString, $matches);
         if (!empty($matches)) {
             // strip off the header prefix
             $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
             $result = explode(' ', $matches, 2);
             // normal case will yield an http error code in location 0 and a message in location 1
             if ((int)$result[0] != 0) {
-                $return['error'] = (int)$result[0];
-                $return['errortext'] = (string)$result[1];
-                $return['errortype'] = 'HTTP';
+                $return['errorCode'] = (int)$result[0];
+                $return['errorMessage'] = (string)$result[1];
+                $return['errorType'] = 'HTTP';
             } else {
-                $return['error'] = null;
-                $return['errortext'] = $matches;
-                $return['errortype'] = 'HTTP';
+                $return['errorCode'] = null;
+                $return['errorMessage'] = $matches;
+                $return['errorType'] = 'HTTP';
             }
             return $return;
         } else {
             // example: file_get_contents throws an error if hostname does not resolve with dns
-            $return['error'] = 7;
-            $return['errortext'] = $httpErrorString;
-            $return['errortype'] = 'PHP';
+            $return['errorCode'] = 7;
+            $return['errorMessage'] = $errorString;
+            $return['errorType'] = 'PHP';
             return $return;
         }
+    }
+
+    /**
+     * See http://php.net/manual/en/function.error-get-last.php
+     * See https://www.mail-archive.com/internals@lists.php.net/msg76560.html
+     */
+    public static function errorClearLast()
+    {
+        $dummyCallable = function () {
+            // nothing
+        };
+        set_error_handler($dummyCallable, 0);
+        @$error_clear_last;
+        restore_error_handler();
+    }
+
+    /**
+     * @param $resultClassName
+     * @param $urlDebug
+     * @param $errorCode
+     * @param $errorMessage
+     * @param $errorType
+     * @return AbstractResult
+     */
+    public static function createResult(
+        $resultClassName,
+        $urlDebug,
+        $errorCode,
+        $errorMessage,
+        $errorType
+    ) {
+        if (!class_exists($resultClassName)) {
+            throw new RuntimeException(
+                '$resultClassName must create an instance of Soliant\SimpleFM\Result\AbstractResult'
+            );
+        }
+
+        /** @var AbstractResult $result */
+        $result = new $resultClassName(
+            $urlDebug,
+            $errorCode,
+            $errorMessage,
+            $errorType
+        );
+
+        if (!$result instanceof AbstractResult) {
+            throw new RuntimeException(
+                '$resultClassName must create an instance of Soliant\SimpleFM\Result\AbstractResult'
+            );
+        }
+
+        return $result;
     }
 
     /**

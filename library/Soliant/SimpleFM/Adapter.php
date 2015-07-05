@@ -62,15 +62,12 @@ class Adapter
      * @param HostConnection $hostParams
      * @param null $loader
      */
-    public function __construct(HostConnection $hostParams, $loader = null)
+    public function __construct(HostConnection $hostParams)
     {
         $this->hostConnection = $hostParams;
 
-        if ($loader instanceof AbstractLoader) {
-            $this->loader = $loader;
-        } else {
-            $this->loader = new FilePostContents();
-        }
+        // Setup default Loader
+        $this->setLoader(new FilePostContents());
     }
 
     /**
@@ -178,17 +175,7 @@ class Adapter
      */
     public function getCommandUrlDebug()
     {
-        return $this->commandUrlDebug;
-    }
-
-    /**
-     * @param $commandUrlDebug
-     * @return $this
-     */
-    public function setCommandUrlDebug($commandUrlDebug)
-    {
-        $this->commandUrlDebug = $commandUrlDebug;
-        return $this;
+        return $this->getLoader()->getCommandUrlDebug();
     }
 
     /**
@@ -200,12 +187,13 @@ class Adapter
     }
 
     /**
-     * @param $loader
+     * @param AbstractLoader $loader
      * @return $this
      */
-    public function setLoader($loader)
+    public function setLoader(AbstractLoader $loader)
     {
         $this->loader = $loader;
+        $this->loader->setAdapter($this);
         return $this;
     }
 
@@ -233,20 +221,15 @@ class Adapter
     public function execute()
     {
         /**
-         * SimpleXML does not throw errors
-         * It returns a SimpleXML object on success and false on error
-         * The xml parser methods have to be able to handle either case gracefully
+         * SPL functions that Loaders and Parsers use do not throw errors. The Loader and Parser methods have to be
+         * able to handle either case gracefully or throw an Exception in the case of an unhandled error.
          */
-        $xml = $this->loader->load($this);
+        $xml = $this->loader->load();
 
-        $sfmresult = array();
-        if ($this->uri == FmResultSetParser::GRAMMAR) {
-            $sfmresult = $this->parseFmResultSet($xml);
-        } elseif ($this->uri == FmLayoutParser::GRAMMAR) {
-            $sfmresult = $this->parseFmpXmlLayout($xml);
+        if ($this->uri == FmLayoutParser::GRAMMAR) {
+            return $this->parseFmpXmlLayout($xml);
         }
-
-        return $sfmresult;
+        return $this->parseFmResultSet($xml);
     }
 
     /**
@@ -255,10 +238,9 @@ class Adapter
      */
     protected function parseFmResultSet($xml)
     {
-        $parser = new FmResultSetParser($xml, $this->getCommandUrlDebug());
+        $parser = new FmResultSetParser($xml);
         $parser->setRowsByRecId($this->getRowsByRecId());
-        $result = $parser->parse();
-        return $result->toArrayLc();
+        return $parser->parse($this->getCommandUrlDebug());
     }
 
     /**
@@ -267,8 +249,7 @@ class Adapter
      */
     protected function parseFmpXmlLayout($xml)
     {
-        $parser = new FmLayoutParser($xml, $this->getCommandUrlDebug());
-        $result = $parser->parse();
-        return $result->toArrayLc();
+        $parser = new FmLayoutParser($xml);
+        return $parser->parse($this->getCommandUrlDebug());
     }
 }

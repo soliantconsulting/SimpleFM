@@ -21,7 +21,7 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $xml = file_get_contents(__DIR__ . '/../TestAssets/projectsampledata.xml');
-        $commandDebugUrl = 'fakeCommandDebugUrl';
+        $commandDebugUrl = 'commandUrlDebug';
         $this->object = new FmResultSetParser($xml, $commandDebugUrl);
     }
 
@@ -40,7 +40,7 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     public function testParseWithRowsByRecId()
     {
         $this->object->setRowsByRecId(true);
-        $result = $this->object->parse();
+        $result = $this->object->parse('commandUrlDebug');
         $this->assertInstanceOf(FmResultSet::class, $result);
         $rows = $result->getRows();
 
@@ -54,7 +54,7 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseWithRowsByIndex()
     {
-        $result = $this->object->parse();
+        $result = $this->object->parse('commandUrlDebug');
         $this->assertInstanceOf(FmResultSet::class, $result);
         $rows = $result->getRows();
 
@@ -62,8 +62,8 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($rows[0], array_shift($rows));
 
         // Empty result
-        $parser = new FmResultSetParser('', '');
-        $result = $parser->parse();
+        $parser = new FmResultSetParser('');
+        $result = $parser->parse('commandUrlDebug');
         $this->assertInstanceOf(FmResultSet::class, $result);
     }
 

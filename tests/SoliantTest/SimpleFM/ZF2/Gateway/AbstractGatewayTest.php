@@ -3,6 +3,7 @@ namespace SoliantTest\SimpleFM\ZF2\Gateway;
 
 use Mockery;
 use Soliant\SimpleFM\HostConnection;
+use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\Loader\Mock as MockLoader;
 use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 use Soliant\SimpleFM\ZF2\Gateway\AbstractGateway;
@@ -20,6 +21,11 @@ use Soliant\SimpleFM\Result\FmResultSet;
  */
 class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Adapter
+     */
+    protected $mockAdapterInstance;
+
     /**
      * @var MockLoader
      */
@@ -42,11 +48,24 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         /***********************************************************************************************************
+         * Mock Adapter
+         */
+        $params=array('hostname'=>'localhost','dbname'=>'testdb','username'=>'Admin','password'=>'');
+        $hostConnection = new HostConnection(
+            $params['hostname'],
+            $params['dbname'],
+            $params['username'],
+            $params['password']
+        );
+        $this->mockAdapterInstance = new Adapter($hostConnection);
+
+        /***********************************************************************************************************
          * Mock Loader
          */
+
         $testXmlFile = file_get_contents(__DIR__ . '/../../TestAssets/sample_fmresultset.xml');
-        $this->mockLoaderInstance = new MockLoader();
-        $this->mockLoaderInstance->setTestXml($testXmlFile);
+        $this->mockLoaderInstance = new MockLoader($testXmlFile);
+        $this->mockAdapterInstance->setLoader($this->mockLoaderInstance);
 
         /***********************************************************************************************************
          * Mock Entity
@@ -106,15 +125,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
         $originalClassName = 'Soliant\SimpleFM\ZF2\Gateway\AbstractGateway';
         $arguments = [
             $this->mockEntityInstance,
-            new SimpleFMAdapter(
-                new HostConnection(
-                    'hostName',
-                    'dbName',
-                    'userName',
-                    'password'
-                ),
-                $this->mockLoaderInstance
-            ),
+            $this->mockAdapterInstance,
             new Identity(),
             'strongEncryptionKey'
         ];
@@ -166,9 +177,9 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
                 'dbName',
                 'userName',
                 'password'
-            ),
-            new MockLoader()
+            )
         );
+        $newAdapter->setLoader($this->mockLoaderInstance);
 
         $this->assertEquals($this->mockGatewayInstance->setSimpleFMAdapter($newAdapter), $this->mockGatewayInstance);
         $this->assertEquals($this->mockGatewayInstance->getSimpleFMAdapter(), $newAdapter);
@@ -334,7 +345,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
             ''
         );
         $this->setExpectedException(ErrorException::class);
-        $this->mockGatewayInstance->handleAdapterResult($result->toArrayLc());
+        $this->mockGatewayInstance->handleAdapterResult($result);
     }
 
     /**
@@ -349,7 +360,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
             'HTTP'
         );
         $this->setExpectedException(HttpException::class);
-        $this->mockGatewayInstance->handleAdapterResult($result->toArrayLc());
+        $this->mockGatewayInstance->handleAdapterResult($result);
     }
 
     /**
@@ -364,7 +375,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
             'XML'
         );
         $this->setExpectedException(XmlException::class);
-        $this->mockGatewayInstance->handleAdapterResult($result->toArrayLc());
+        $this->mockGatewayInstance->handleAdapterResult($result);
     }
 
     /**

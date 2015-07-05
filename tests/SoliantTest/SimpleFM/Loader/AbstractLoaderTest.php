@@ -28,11 +28,15 @@ class AbstractLoaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getAdapter
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::setAdapter
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createCredentials
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createArgs
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createCommandURL
-     * @covers Soliant\SimpleFM\Loader\AbstractLoader::setAdapterCommandURLdebug
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::prepare
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getLastError
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::errorCapture
      */
     public function testLoad()
     {
@@ -44,11 +48,14 @@ class AbstractLoaderTest extends \PHPUnit_Framework_TestCase
             $params['password']
         );
         $testXmlFile = file_get_contents(__DIR__ . '/../TestAssets/sample_fmresultset.xml');
+        $adapter = new Adapter($hostConnection);
         $loader = new MockLoader();
         $loader->setTestXml($testXmlFile);
-        $adapter = new Adapter($hostConnection, $loader);
-        $loader->load($adapter);
+        $adapter->setLoader($loader);
+        $result = $loader->load();
 
+        $this->assertArrayHasKey('errorCode', $loader->getLastError());
         $this->assertInstanceOf(AbstractLoader::class, $loader);
+        $this->assertInstanceOf(Adapter::class, $loader->getAdapter());
     }
 }

@@ -11,12 +11,12 @@ namespace Soliant\SimpleFM\ZF2\Gateway;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Soliant\SimpleFM\Adapter as SimpleFMAdapter;
-use Exception;
 use Soliant\SimpleFM\Exception\ErrorException;
 use Soliant\SimpleFM\Exception\FileMakerException;
 use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
-use Soliant\SimpleFM\Exception\InvalidArgumentException;
+use Soliant\SimpleFM\Result\AbstractResult;
+use Soliant\SimpleFM\Result\FmResultSet;
 use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 
@@ -91,8 +91,9 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
+        /** @var FmResultSet $result */
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = $this->rowToEntity($result['rows'][0]);
+        $entity = $this->rowToEntity($result->getRows()[0]);
         return $entity;
     }
 
@@ -121,10 +122,11 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
+        /** @var FmResultSet $result */
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
 
-        if (isset($result['rows'][0]) and $result['rows'][0]) {
-            $entity = $this->rowToEntity($result['rows'][0]);
+        if (isset($result->getRows()[0]) and $result->getRows()[0]) {
+            $entity = $this->rowToEntity($result->getRows()[0]);
             return $entity;
         }
         return null;
@@ -150,8 +152,9 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
+        /** @var FmResultSet $result */
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        return $this->rowsToArrayCollection($result['rows']);
+        return $this->rowsToArrayCollection($result->getRows());
     }
 
     /**
@@ -180,8 +183,9 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
+        /** @var FmResultSet $result */
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        return $this->rowsToArrayCollection($result['rows']);
+        return $this->rowsToArrayCollection($result->getRows());
     }
 
     /**
@@ -205,8 +209,9 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
+        /** @var FmResultSet $result */
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = $this->rowToEntity($result['rows'][0]);
+        $entity = $this->rowToEntity($result->getRows()[0]);
         return $entity;
     }
 
@@ -231,8 +236,9 @@ abstract class AbstractGateway
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
+        /** @var FmResultSet $result */
         $result = $this->handleAdapterResult($this->simpleFMAdapter->execute());
-        $entity = $this->rowToEntity($result['rows'][0]);
+        $entity = $this->rowToEntity($result->getRows()[0]);
         return $entity;
     }
 
@@ -406,31 +412,31 @@ abstract class AbstractGateway
      * @throws HttpException
      * @throws XmlException
      */
-    public function handleAdapterResult(array $simpleFMAdapterResult)
+    public function handleAdapterResult(AbstractResult $simpleFMAdapterResult)
     {
-        $message = $simpleFMAdapterResult['errorType'] . ' Error ' . $simpleFMAdapterResult['errorCode'] . ': ' .
-            $simpleFMAdapterResult['errorMessage'] . '. ' . $simpleFMAdapterResult['url'];
+        $message = $simpleFMAdapterResult->getErrorType() . ' Error ' . $simpleFMAdapterResult->getErrorCode() . ': ' .
+            $simpleFMAdapterResult->getErrorMessage() . '. ' . $simpleFMAdapterResult->getDebugUrl();
 
-        if ($simpleFMAdapterResult['errorCode'] === 0) {
+        if ($simpleFMAdapterResult->getErrorCode() === 0) {
             return $simpleFMAdapterResult;
 
-        } elseif ($simpleFMAdapterResult['errorType'] == 'FileMaker' && $simpleFMAdapterResult['errorCode'] === 401) {
+        } elseif ($simpleFMAdapterResult->getErrorType() == 'FileMaker' && $simpleFMAdapterResult->getErrorCode() === 401) {
             /**
              * Don't throw an error for a FileMaker 401: "No records match the request"
              */
             return $simpleFMAdapterResult;
 
-        } elseif ($simpleFMAdapterResult['errorType'] == 'FileMaker') {
-            throw new FileMakerException($message, $simpleFMAdapterResult['errorCode']);
+        } elseif ($simpleFMAdapterResult->getErrorType() == 'FileMaker') {
+            throw new FileMakerException($message, $simpleFMAdapterResult->getErrorCode());
 
-        } elseif ($simpleFMAdapterResult['errorType'] == 'HTTP') {
-            throw new HttpException($message, $simpleFMAdapterResult['errorCode']);
+        } elseif ($simpleFMAdapterResult->getErrorType() == 'HTTP') {
+            throw new HttpException($message, $simpleFMAdapterResult->getErrorCode());
 
-        } elseif ($simpleFMAdapterResult['errorType'] == 'XML') {
-            throw new XmlException($message, $simpleFMAdapterResult['errorCode']);
+        } elseif ($simpleFMAdapterResult->getErrorType() == 'XML') {
+            throw new XmlException($message, $simpleFMAdapterResult->getErrorCode());
 
         } else {
-            throw new ErrorException($message, $simpleFMAdapterResult['errorCode']);
+            throw new ErrorException($message, $simpleFMAdapterResult->getErrorCode());
         }
     }
 

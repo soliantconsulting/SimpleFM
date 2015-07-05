@@ -251,8 +251,7 @@ class Adapter
     {
         $parser = new FmResultSetParser($xml, $this->getCommandUrlDebug());
         $parser->setRowsByRecId($this->getRowsByRecId());
-        $result = $parser->parse();
-        return $result->toArray();
+        return $parser->parse();
     }
 
     /**
@@ -262,7 +261,6 @@ class Adapter
     protected function parseFmpXmlLayout($xml)
     {
         $parser = new FmLayoutParser($xml, $this->getCommandUrlDebug());
-        $result = $parser->parse();
-        return $result->toArray();
+        return $parser->parse();
     }
 }

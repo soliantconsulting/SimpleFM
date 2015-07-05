@@ -18,6 +18,7 @@ foreach (require(__DIR__ . '/../library/autoload_classmap.php') as $classPath) {
 
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\HostConnection;
+use Soliant\SimpleFM\Result\FmResultSet;
 
 /**
  * The hostName can either be an IP address or any valid network name you have configured and hosting the
@@ -115,20 +116,20 @@ $adapter->setCommandString('-findall');
 
 /**
  * Once your adapter is ready, use execute to make the host request.
+ * @var FmResultSet $result
  */
 $result = $adapter->execute();
 
 /**
  * These are the elements simpleFM returns in the result array.
  */
-$url          = $result['url'];           // string
-$errorCode    = $result['errorCode'];     // int
-$errorMessage = $result['errorMessage'];  // string
-$errorType    = $result['errorType'];     // string
-$count        = $result['count'];         // int
-$fetchSize    = $result['fetchSize'];     // int
-$rows         = $result['rows'];          // array
-
+$url          = $result->getDebugUrl();
+$errorCode    = $result->getErrorCode();
+$errorMessage = $result->getErrorMessage();
+$errorType    = $result->getErrorType();
+$count        = $result->getCount();
+$fetchSize    = $result->getFetchSize();
+$rows         = $result->getRows();
 
 /**
  * Handle the result:

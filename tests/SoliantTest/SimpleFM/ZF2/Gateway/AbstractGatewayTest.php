@@ -334,7 +334,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
             ''
         );
         $this->setExpectedException(ErrorException::class);
-        $this->mockGatewayInstance->handleAdapterResult($result->toArray());
+        $this->mockGatewayInstance->handleAdapterResult($result);
     }
 
     /**
@@ -349,7 +349,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
             'HTTP'
         );
         $this->setExpectedException(HttpException::class);
-        $this->mockGatewayInstance->handleAdapterResult($result->toArray());
+        $this->mockGatewayInstance->handleAdapterResult($result);
     }
 
     /**
@@ -364,7 +364,7 @@ class AbstractGatewayTest extends \PHPUnit_Framework_TestCase
             'XML'
         );
         $this->setExpectedException(XmlException::class);
-        $this->mockGatewayInstance->handleAdapterResult($result->toArray());
+        $this->mockGatewayInstance->handleAdapterResult($result);
     }
 
     /**

@@ -24,6 +24,7 @@ class Curl extends AbstractLoader
         $this->prepare();
         $url = $this->postUrl;
         $curlHandle = curl_init($url);
+        $curlError = [];
 
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);
         curl_setopt($curlHandle, CURLOPT_POST, true);
@@ -31,11 +32,17 @@ class Curl extends AbstractLoader
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getHostConnection()->getSslVerifyPeer());
 
         ob_start();
-            $success = curl_exec($curlHandle);
-            curl_close($curlHandle);
-            $data = trim(ob_get_contents());
+        $success = curl_exec($curlHandle);
+        if (!$success) {
+            $curlError['type'] = 'CURL';
+            $curlError['code'] = curl_errno($curlHandle);
+            $curlError['message'] = 'Curl error: ' . curl_strerror($curlError['code']);
+        }
+        curl_close($curlHandle);
+        $data = trim(ob_get_contents());
         ob_end_clean();
 
-        return $this->handleReturn($data);
+
+        return $this->handleReturn($data, $curlError);
     }
 }

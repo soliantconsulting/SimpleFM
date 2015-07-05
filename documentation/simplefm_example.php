@@ -43,8 +43,8 @@ $adapter = new Adapter($hostConnection);
  * If you need to use one of the alternative loaders, you instantiate is with the Adapter, and then add it with
  * the Adapter::setLoader method.
  */
-// $loader = new \Soliant\SimpleFM\Loader\Curl($adapter)
-// $loader = new \Soliant\SimpleFM\Loader\FileGetContents($adapter)
+// $loader = new \Soliant\SimpleFM\Loader\Curl();
+// $loader = new \Soliant\SimpleFM\Loader\FileGetContents();
 // $adapter->setLoader($loader);
 
 /**
@@ -129,9 +129,14 @@ $url          = $result->getDebugUrl();
 $errorCode    = $result->getErrorCode();
 $errorMessage = $result->getErrorMessage();
 $errorType    = $result->getErrorType();
-$count        = $result->getCount();
-$fetchSize    = $result->getFetchSize();
-$rows         = $result->getRows();
+$count        = null;
+$fetchSize    = null;
+$rows         = [];
+if ($result instanceof FmResultSet) {
+    $count        = $result->getCount();
+    $fetchSize    = $result->getFetchSize();
+    $rows         = $result->getRows();
+}
 
 /**
  * Handle the result:

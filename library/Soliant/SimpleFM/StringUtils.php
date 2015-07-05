@@ -129,11 +129,23 @@ final class StringUtils
             return $return;
         }
 
-        $matches = array();
-        // most common message to expect:
-        // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
+        /**
+         * Capture cURL error
+         */
+        if (is_array($error) && isset($error['type']) && strtoupper($error['type']) === 'CURL') {
+            $return['errorCode'] = $error['code'];
+            $return['errorMessage'] = $error['message'];
+            $return['errorType'] = 'PHP';
+            return $return;
+        }
 
-        // grab the error from the end (if there is one)
+        /**
+         * Capture HTTP error
+         * Most common HTTP error message to expect (line break added for clarity):
+                file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml)
+                    [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
+         */
+        $matches = array();
         $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $errorString, $matches);
         if (!empty($matches)) {
             // strip off the header prefix
@@ -150,13 +162,20 @@ final class StringUtils
                 $return['errorType'] = 'HTTP';
             }
             return $return;
-        } else {
-            // example: file_get_contents throws an error if hostname does not resolve with dns
-            $return['errorCode'] = 7;
-            $return['errorMessage'] = $errorString;
-            $return['errorType'] = 'PHP';
-            return $return;
         }
+
+        /**
+         * Default to PHP error and pass through the error string
+         * example: file_get_contents throws an error if hostname does not resolve with dns
+         * For lack of a better idea, we chose a cURL error code here.
+         * CURLE_COULDNT_CONNECT (7): Failed to connect() to host or proxy.
+         * See http://curl.haxx.se/libcurl/c/libcurl-errors.html
+         */
+        $return['errorCode'] = 7;
+        $return['errorMessage'] = $errorString;
+        $return['errorType'] = 'PHP';
+        return $return;
+
     }
 
     /**

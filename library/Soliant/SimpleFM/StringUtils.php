@@ -119,6 +119,16 @@ final class StringUtils
             $errorString = $error;
         }
 
+        /**
+         * See self::errorClearLast method which puts last error in a known good state
+         */
+        if ($errorString === 'Undefined variable: error_clear_last') {
+            $return['errorCode'] = 0;
+            $return['errorMessage'] = 'No Error';
+            $return['errorType'] = null;
+            return $return;
+        }
+
         $matches = array();
         // most common message to expect:
         // file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
@@ -149,6 +159,28 @@ final class StringUtils
         }
     }
 
+    /**
+     * See http://php.net/manual/en/function.error-get-last.php
+     * See https://www.mail-archive.com/internals@lists.php.net/msg76560.html
+     */
+    public static function errorClearLast()
+    {
+        $dummyCallable = function () {
+            // nothing
+        };
+        set_error_handler($dummyCallable, 0);
+        @$error_clear_last;
+        restore_error_handler();
+    }
+
+    /**
+     * @param $resultClassName
+     * @param $urlDebug
+     * @param $errorCode
+     * @param $errorMessage
+     * @param $errorType
+     * @return AbstractResult
+     */
     public static function createResult(
         $resultClassName,
         $urlDebug,

@@ -54,8 +54,8 @@ $adapter = new Adapter($hostConnection);
 $adapter->getHostConnection()
     ->setHostName('localhost')
     ->setDbName('FMServer_Sample')
-    ->setPassword('someUsername')
-    ->setUserName('somePassword');
+    ->setUserName('someUsername')
+    ->setPassword('somePassword');
 
 /**
  * After you have initialized a SimpleFMAdapter with valid credentials, there are a number of ways to make calls with
@@ -69,8 +69,8 @@ $adapter->setLayoutName('Tasks')
  * You may also update just the credentials at runtime via the HostConnection's fluent interface
  */
 $adapter->getHostConnection()
-    ->setPassword('Admin')
-    ->setUserName('');
+    ->setUserName('Admin')
+    ->setPassword('');
 
 /**
  * Experiment with the getters and setters to modify the Adapter and set new commands for execution

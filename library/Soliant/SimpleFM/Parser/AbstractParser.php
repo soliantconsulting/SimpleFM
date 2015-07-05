@@ -31,7 +31,7 @@ abstract class AbstractParser
     abstract public function parse();
 
     /**
-     * SimpleXML does not throw errors
+     * SimpleXML does not throw Exceptions
      * It returns a SimpleXML object on success and false on error
      * See http://www.php.net/manual/en/simplexml.examples-errors.php
      * @param $result
@@ -41,19 +41,19 @@ abstract class AbstractParser
     protected function handleEmptyXml($resultClassName)
     {
         $simpleXmlErrors['xml'] = libxml_get_errors();
-        $simpleXmlErrors['php'] = error_get_last();
-        $phpErrors = StringUtils::extractErrorFromPhpMessage($simpleXmlErrors['php']['message']);
-        $errorCode = $phpErrors['errorCode'];
-        $errorMessage = $phpErrors['errorMessage'];
-        $errorType = $phpErrors['errorType'];
         libxml_clear_errors();
+
+        $simpleXmlErrors['php'] = error_get_last();
+        StringUtils::errorClearLast();
+
+        $phpErrors = StringUtils::extractErrorFromPhpMessage($simpleXmlErrors['php']['message']);
 
         return StringUtils::createResult(
             $resultClassName,
             $this->commandUrlDebug,
-            $errorCode,
-            $errorMessage,
-            $errorType
+            $phpErrors['errorCode'],
+            $phpErrors['errorMessage'],
+            $phpErrors['errorType']
         );
     }
 }

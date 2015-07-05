@@ -154,6 +154,7 @@ Error 76: Error message
 
     /**
      * @covers Soliant\SimpleFM\StringUtils::extractErrorFromPhpMessage
+     * @covers Soliant\SimpleFM\StringUtils::errorClearLast
      */
     public function testExtractErrorFromPhpMessage()
     {
@@ -168,6 +169,10 @@ Error 76: Error message
         $return = array('errorCode' => 7 , 'errorMessage' => 'Some PHP Error' , 'errorType' => 'PHP');
         $string = 'Some PHP Error';
         $this->assertEquals(StringUtils::extractErrorFromPhpMessage($string), $return);
+
+        StringUtils::errorClearLast();
+        $return = ['errorCode' => 0, 'errorMessage' => 'No Error', 'errorType' => null];
+        $this->assertEquals(StringUtils::extractErrorFromPhpMessage(error_get_last()), $return);
     }
 
     /**

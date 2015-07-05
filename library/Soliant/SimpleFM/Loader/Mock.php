@@ -19,6 +19,16 @@ class Mock extends AbstractLoader
     protected $testXml;
 
     /**
+     * @param null $testXml
+     */
+    public function __construct($testXml = null)
+    {
+        if ($testXml) {
+            $this->setTestXml($testXml);
+        }
+    }
+
+    /**
      * @param string $testXml
      * @return $this
      */
@@ -33,13 +43,9 @@ class Mock extends AbstractLoader
      * @param null $testXmlOverride
      * @return SimpleXMLElement
      */
-    public function load(Adapter $adapter, $testXmlOverride = null)
+    public function load($testXmlOverride = null)
     {
-        $this->adapter = $adapter;
-
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
-
-        $this->prepare();
         $this->errorCapture();
         return $this->handleReturn($testXml);
     }

@@ -18,12 +18,8 @@ class FileGetContents extends AbstractLoader
      * @param Adapter $adapter
      * @return SimpleXMLElement
      */
-    public function load(Adapter $adapter)
+    public function load()
     {
-        $this->adapter = $adapter;
-
-        $this->prepare();
-
         libxml_use_internal_errors(true);
         
         $opts = array(

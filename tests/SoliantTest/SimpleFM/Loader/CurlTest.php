@@ -34,8 +34,9 @@ class CurlTest extends \PHPUnit_Framework_TestCase
             $params['username'],
             $params['password']
         );
+        $this->adapter = new Adapter($hostConnection);
         $this->loader = new Loader();
-        $this->adapter = new Adapter($hostConnection, $this->loader);
+        $this->adapter->setLoader($this->loader);
     }
 
     /**
@@ -58,6 +59,6 @@ class CurlTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException(LoaderException::class);
         $this->assertInstanceOf(Loader::class, $this->loader);
         $this->loader->throwErrors(true);
-        $this->loader->load($this->adapter);
+        $this->loader->load();
     }
 }

@@ -40,10 +40,12 @@ $adapter = new Adapter($hostConnection);
 /**
  * By default SimpleFM will use \Soliant\SimpleFM\Loader\FilePostContents to communicate with FileMaker Server.
  * In most cases the default is the best option, and there is no need to specify a loader explicitly.
- * If you need to use one of the alternative loaders, you can inject it as the second constructor argument.
+ * If you need to use one of the alternative loaders, you instantiate is with the Adapter, and then add it with
+ * the Adapter::setLoader method.
  */
-// $adapter = new Adapter($hostConnection, new \Soliant\SimpleFM\Loader\Curl());
-// $adapter = new Adapter($hostConnection, new \Soliant\SimpleFM\Loader\FileGetContents());
+// $loader = new \Soliant\SimpleFM\Loader\Curl($adapter)
+// $loader = new \Soliant\SimpleFM\Loader\FileGetContents($adapter)
+// $adapter->setLoader($loader);
 
 /**
  * At runtime, you can update HostConnection on an adapter that has already been instantiated via the HostConnection's

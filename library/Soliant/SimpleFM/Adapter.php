@@ -62,15 +62,12 @@ class Adapter
      * @param HostConnection $hostParams
      * @param null $loader
      */
-    public function __construct(HostConnection $hostParams, $loader = null)
+    public function __construct(HostConnection $hostParams)
     {
         $this->hostConnection = $hostParams;
 
-        if ($loader instanceof AbstractLoader) {
-            $this->loader = $loader;
-        } else {
-            $this->loader = new FilePostContents();
-        }
+        // Setup default Loader
+        $this->setLoader(new FilePostContents());
     }
 
     /**
@@ -200,12 +197,13 @@ class Adapter
     }
 
     /**
-     * @param $loader
+     * @param AbstractLoader $loader
      * @return $this
      */
-    public function setLoader($loader)
+    public function setLoader(AbstractLoader $loader)
     {
         $this->loader = $loader;
+        $this->loader->setAdapter($this);
         return $this;
     }
 
@@ -236,7 +234,8 @@ class Adapter
          * SPL functions that Loaders and Parsers use do not throw errors. The Loader and Parser methods have to be
          * able to handle either case gracefully or throw an Exception in the case of an unhandled error.
          */
-        $xml = $this->loader->load($this);
+        $xml = $this->loader->load();
+
         if ($this->uri == FmLayoutParser::GRAMMAR) {
             return $this->parseFmpXmlLayout($xml);
         }

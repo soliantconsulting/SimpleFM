@@ -28,10 +28,29 @@ abstract class AbstractLoader
     protected $lastError = [];
 
     /**
+     * @return Adapter
+     */
+    public function getAdapter()
+    {
+        return $this->adapter;
+    }
+
+    /**
+     * @param Adapter $adapter
+     * @return AbstractLoader
+     */
+    public function setAdapter(Adapter $adapter)
+    {
+        $this->adapter = $adapter;
+        $this->prepare();
+        return $this;
+    }
+
+    /**
      * @param array $simpleFMAdapterRow
      * @return SimpleXMLElement
      */
-    abstract public function load(Adapter $adapter);
+    abstract public function load();
 
     /**
      * @return array
@@ -99,6 +118,7 @@ abstract class AbstractLoader
         $uri = $this->adapter->getUri();
 
         $this->commandURL = "$protocol://$credentials@$hostname:$port$uri?$args";
+        $this->setAdapterCommandUrlDebug();
         return $this->commandURL;
     }
 
@@ -128,7 +148,6 @@ abstract class AbstractLoader
 
     /**
      * @param $data
-     * @param bool $isUnexpectedError
      * @return SimpleXMLElement
      * @throws LoaderException
      */

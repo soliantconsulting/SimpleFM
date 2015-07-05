@@ -13,7 +13,6 @@ use SimpleXMLElement;
 
 class FilePostContents extends AbstractLoader
 {
-
     /**
      * @return string
      */
@@ -31,12 +30,8 @@ class FilePostContents extends AbstractLoader
      * @param Adapter $adapter
      * @return SimpleXMLElement
      */
-    public function load(Adapter $adapter)
+    public function load()
     {
-        $this->adapter = $adapter;
-
-        $this->prepare();
-
         libxml_use_internal_errors(true);
         $authheader = empty($this->credentials) ? '' : 'Authorization: Basic ' . base64_encode($this->credentials) . PHP_EOL;
 

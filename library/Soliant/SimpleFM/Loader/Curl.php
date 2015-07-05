@@ -33,10 +33,8 @@ class Curl extends AbstractLoader
      * @return SimpleXMLElement
      * @throws LoaderException
      */
-    public function load(Adapter $adapter)
+    public function load()
     {
-        $this->adapter = $adapter;
-        $this->prepare();
         $url = $this->createPostURL();
         $curlHandle = curl_init($url);
 

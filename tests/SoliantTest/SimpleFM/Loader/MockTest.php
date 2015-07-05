@@ -34,9 +34,10 @@ class MockTest extends \PHPUnit_Framework_TestCase
             $params['password']
         );
         $testXmlFile = file_get_contents(__DIR__ . '/../TestAssets/sample_fmresultset.xml');
-        $this->loader = new Loader();
-        $this->loader->setTestXml($testXmlFile);
-        $this->adapter = new Adapter($hostConnection, $this->loader);
+
+        $this->adapter = new Adapter($hostConnection);
+        $this->loader = new Loader($testXmlFile);
+        $this->adapter->setLoader($this->loader);
     }
 
     /**
@@ -48,13 +49,14 @@ class MockTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Soliant\SimpleFM\Loader\Mock::__construct
      * @covers Soliant\SimpleFM\Loader\Mock::load
      * @covers Soliant\SimpleFM\Loader\Mock::setTestXml
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
      */
     public function testLoad()
     {
-        $this->loader->load($this->adapter);
+        $this->loader->load();
         $this->assertInstanceOf(Loader::class, $this->loader);
     }
 }

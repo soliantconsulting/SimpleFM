@@ -33,7 +33,9 @@ class AbstractLoaderTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::createCommandURL
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::setAdapterCommandUrlDebug
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::prepare
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getLastError
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::errorCapture
      */
     public function testLoad()
     {
@@ -48,8 +50,9 @@ class AbstractLoaderTest extends \PHPUnit_Framework_TestCase
         $loader = new MockLoader();
         $loader->setTestXml($testXmlFile);
         $adapter = new Adapter($hostConnection, $loader);
-        $loader->load($adapter);
+        $result = $loader->load($adapter);
 
+        $this->assertArrayHasKey('errorCode', $loader->getLastError());
         $this->assertInstanceOf(AbstractLoader::class, $loader);
     }
 }

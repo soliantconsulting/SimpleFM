@@ -159,7 +159,7 @@ Error 76: Error message
     {
         $return = array('errorCode' => '401' , 'errorMessage' => 'Unauthorized' , 'errorType' => 'HTTP');
         $string = 'HTTP/1.1 401 Unauthorized';
-        $this->assertEquals(StringUtils::extractErrorFromPhpMessage($string), $return);
+        $this->assertEquals(StringUtils::extractErrorFromPhpMessage(['message' => $string]), $return);
 
         $return = array('errorCode' => null , 'errorMessage' => 'FooBar' , 'errorType' => 'HTTP');
         $string = 'HTTP/1.1 FooBar';

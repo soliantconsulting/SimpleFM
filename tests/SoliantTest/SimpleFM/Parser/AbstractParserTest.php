@@ -81,6 +81,7 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\AbstractParser::__construct
      * @covers Soliant\SimpleFM\Parser\AbstractParser::handleEmptyXml
+     * @covers Soliant\SimpleFM\StringUtils::createResult
      */
     public function testHandleEmptyXml()
     {
@@ -98,6 +99,7 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\AbstractParser::__construct
      * @covers Soliant\SimpleFM\Parser\AbstractParser::handleEmptyXml
+     * @covers Soliant\SimpleFM\StringUtils::createResult
      */
     public function testHandleEmptyXmlWrongClass()
     {
@@ -114,6 +116,7 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\AbstractParser::__construct
      * @covers Soliant\SimpleFM\Parser\AbstractParser::handleEmptyXml
+     * @covers Soliant\SimpleFM\StringUtils::createResult
      */
     public function testHandleEmptyXmlInvalidClass()
     {

@@ -6,11 +6,11 @@
  * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
-
 namespace Soliant\SimpleFM\Loader;
 
-use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\StringUtils;
 use Soliant\SimpleFM\Exception\LoaderException;
 
 abstract class AbstractLoader
@@ -24,6 +24,8 @@ abstract class AbstractLoader
     protected $username;
     protected $args;
     protected $commandURL;
+    protected $throwErrors = false;
+    protected $lastError = [];
 
     /**
      * @param array $simpleFMAdapterRow
@@ -31,6 +33,31 @@ abstract class AbstractLoader
      */
     abstract public function load(Adapter $adapter);
 
+    /**
+     * @return array
+     */
+    public function getLastError()
+    {
+        return $this->lastError;
+    }
+
+    /**
+     * @param bool $throwErrors
+     * @return bool
+     */
+    public function throwErrors($throwErrors = true)
+    {
+        $this->throwErrors = $throwErrors;
+        return $this->throwErrors;
+    }
+
+    protected function errorCapture()
+    {
+        $this->lastError = StringUtils::extractErrorFromPhpMessage(error_get_last());
+        if ($this->throwErrors) {
+            throw new LoaderException($this->getLastError()['errorMessage']);
+        }
+    }
 
     /**
      * @return string
@@ -80,13 +107,12 @@ abstract class AbstractLoader
      */
     protected function setAdapterCommandUrlDebug()
     {
-        $this->adapter->setCommandUrlDebug(
-            empty($this->credentials) ? $this->commandURL : str_replace(
-                $this->credentials,
-                $this->username . ':[...]',
-                $this->commandURL
-            )
-        );
+        $debugUrl = $this->commandURL;
+        if (!empty($this->credentials)) {
+            // strip the password out of the credentials
+            $debugUrl = str_replace($this->credentials, $this->username . ':[...]', $this->commandURL);
+        }
+        $this->adapter->setCommandUrlDebug($debugUrl);
     }
 
     /**
@@ -102,16 +128,15 @@ abstract class AbstractLoader
 
     /**
      * @param $data
-     * @param $errorMessage
+     * @param bool $isUnexpectedError
      * @return SimpleXMLElement
      * @throws LoaderException
      */
-    protected function handleReturn($data, $errorMessage)
+    protected function handleReturn($data)
     {
-        if (!$data) {
-            throw new LoaderException($errorMessage);
-        }
         libxml_use_internal_errors(true);
-        return simplexml_load_string($data);
+        $xml = simplexml_load_string($data);
+        $this->errorCapture();
+        return $xml;
     }
 }

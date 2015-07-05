@@ -35,7 +35,6 @@ class Curl extends AbstractLoader
      */
     public function load(Adapter $adapter)
     {
-        $errorMessage = null;
         $this->adapter = $adapter;
         $this->prepare();
         $url = $this->createPostURL();
@@ -47,16 +46,11 @@ class Curl extends AbstractLoader
         curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, $this->adapter->getHostConnection()->getSslVerifyPeer());
 
         ob_start();
-            curl_exec($curlHandle);
+            $success = curl_exec($curlHandle);
             curl_close($curlHandle);
             $data = trim(ob_get_contents());
         ob_end_clean();
 
-        if (!$data) {
-            $data = null;
-            $errorMessage = 'cURL was unable to connect to ' . $url . '.';
-        }
-
-        return $this->handleReturn($data, $errorMessage);
+        return $this->handleReturn($data);
     }
 }

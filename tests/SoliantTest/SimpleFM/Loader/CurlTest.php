@@ -50,11 +50,14 @@ class CurlTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Loader\Curl::load
      * @covers Soliant\SimpleFM\Loader\Curl::createPostURL
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::errorCapture
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::throwErrors
      */
     public function testLoad()
     {
         $this->setExpectedException(LoaderException::class);
         $this->assertInstanceOf(Loader::class, $this->loader);
+        $this->loader->throwErrors(true);
         $this->loader->load($this->adapter);
     }
 }

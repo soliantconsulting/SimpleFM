@@ -6,7 +6,6 @@
  * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
-
 namespace Soliant\SimpleFM\Loader;
 
 use Soliant\SimpleFM\Adapter;
@@ -41,7 +40,7 @@ class Mock extends AbstractLoader
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
 
         $this->prepare();
-
-        return $this->handleReturn($testXml, null);
+        $this->errorCapture();
+        return $this->handleReturn($testXml);
     }
 }

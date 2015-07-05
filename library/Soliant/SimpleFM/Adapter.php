@@ -233,19 +233,14 @@ class Adapter
     public function execute()
     {
         /**
-         * SPL functions that Loaders and Parsers use do not throw errors
-         * The Loader and Parser methods have to be able to handle either case gracefully or throw an Exception in the
-         * case of an unhandled error.
+         * SPL functions that Loaders and Parsers use do not throw errors. The Loader and Parser methods have to be
+         * able to handle either case gracefully or throw an Exception in the case of an unhandled error.
          */
         $xml = $this->loader->load($this);
-
-        if ($this->uri == FmResultSetParser::GRAMMAR) {
-            return $this->parseFmResultSet($xml);
-        } elseif ($this->uri == FmLayoutParser::GRAMMAR) {
+        if ($this->uri == FmLayoutParser::GRAMMAR) {
             return $this->parseFmpXmlLayout($xml);
         }
-
-        return null;
+        return $this->parseFmResultSet($xml);
     }
 
     /**

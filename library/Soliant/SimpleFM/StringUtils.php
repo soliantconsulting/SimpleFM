@@ -2,6 +2,8 @@
 namespace Soliant\SimpleFM;
 
 use Soliant\SimpleFM\Exception\ReservedWordException;
+use Soliant\SimpleFM\Result\AbstractResult;
+use Soliant\SimpleFM\Exception\RuntimeException;
 
 final class StringUtils
 {
@@ -112,7 +114,7 @@ final class StringUtils
     public static function extractErrorFromPhpMessage($error)
     {
         if (is_array($error) || isset($error['message'])) {
-            $errorString =  $error['message'];
+            $errorString = $error['message'];
         } else {
             $errorString = $error;
         }
@@ -145,6 +147,36 @@ final class StringUtils
             $return['errorType'] = 'PHP';
             return $return;
         }
+    }
+
+    public static function createResult(
+        $resultClassName,
+        $urlDebug,
+        $errorCode,
+        $errorMessage,
+        $errorType
+    ) {
+        if (!class_exists($resultClassName)) {
+            throw new RuntimeException(
+                '$resultClassName must create an instance of Soliant\SimpleFM\Result\AbstractResult'
+            );
+        }
+
+        /** @var AbstractResult $result */
+        $result = new $resultClassName(
+            $urlDebug,
+            $errorCode,
+            $errorMessage,
+            $errorType
+        );
+
+        if (!$result instanceof AbstractResult) {
+            throw new RuntimeException(
+                '$resultClassName must create an instance of Soliant\SimpleFM\Result\AbstractResult'
+            );
+        }
+
+        return $result;
     }
 
     /**

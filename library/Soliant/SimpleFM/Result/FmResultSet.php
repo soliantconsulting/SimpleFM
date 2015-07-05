@@ -3,6 +3,10 @@ namespace Soliant\SimpleFM\Result;
 
 class FmResultSet extends AbstractResult
 {
+    protected $debugUrl;
+    protected $errorCode;
+    protected $errorMessage;
+    protected $errorType;
     protected $count;
     protected $fetchSize;
     protected $rows;

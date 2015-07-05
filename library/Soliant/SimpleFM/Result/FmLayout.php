@@ -3,6 +3,10 @@ namespace Soliant\SimpleFM\Result;
 
 class FmLayout extends AbstractResult
 {
+    protected $debugUrl;
+    protected $errorCode;
+    protected $errorMessage;
+    protected $errorType;
     protected $product;
     protected $layout;
     protected $valueLists;

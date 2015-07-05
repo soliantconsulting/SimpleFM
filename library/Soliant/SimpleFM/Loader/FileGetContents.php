@@ -6,14 +6,10 @@
  * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
-
 namespace Soliant\SimpleFM\Loader;
-
-require_once('AbstractLoader.php');
 
 use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
-use Soliant\SimpleFM\Exception\LoaderException;
 
 class FileGetContents extends AbstractLoader
 {
@@ -35,16 +31,15 @@ class FileGetContents extends AbstractLoader
                 'verify_peer' => $this->adapter->getHostConnection()->getSslVerifyPeer(),
             ),
         );
-        
+
+        /**
+         * Temporarily turn off error_reporting and capture any errors for handling later
+         */
         $context  = stream_context_create($opts);
         $errorLevel = error_reporting();
         error_reporting(0);
-        $errorMessage = null;
-        if (!$data = file_get_contents($this->commandURL, false, $context)) {
-            $errorArray = error_get_last();
-            $errorMessage = $errorArray['message'];
-        };
+        $data = file_get_contents($this->commandURL, false, $context);
         error_reporting($errorLevel);
-        return $this->handleReturn($data, $errorMessage);
+        return $this->handleReturn($data);
     }
 }

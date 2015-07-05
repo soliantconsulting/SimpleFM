@@ -12,6 +12,9 @@ use SimpleXMLElement;
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\StringUtils;
 use Soliant\SimpleFM\Exception\LoaderException;
+use Soliant\SimpleFM\Result\AbstractResult;
+use Soliant\SimpleFM\Result\FmResultSet;
+use Soliant\SimpleFM\Result\FmLayout;
 
 abstract class AbstractLoader
 {
@@ -54,11 +57,52 @@ abstract class AbstractLoader
     abstract public function load();
 
     /**
+     * @return bool
+     */
+    public function hasError()
+    {
+        if ($this->lastError && isset($this->lastError['errorCode']) && $this->lastError['errorCode']) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @return array
      */
     public function getLastError()
     {
         return $this->lastError;
+    }
+
+    /**
+     * @return FmResultSet
+     */
+    public function getLastErrorResultFmResultSet()
+    {
+        return $this->getLastErrorResult(FmResultSet::class);
+    }
+
+    /**
+     * @return FmLayout
+     */
+    public function getLastErrorResultFmLayout()
+    {
+        return $this->getLastErrorResult(FmLayout::class);
+    }
+
+    /**
+     * @return AbstractResult
+     */
+    public function getLastErrorResult($resultClassName)
+    {
+        return StringUtils::createResult(
+            $resultClassName,
+            $this->getCommandUrlDebug(),
+            $this->lastError['errorCode'],
+            $this->lastError['errorMessage'],
+            $this->lastError['errorType']
+        );
     }
 
     /**
@@ -71,12 +115,23 @@ abstract class AbstractLoader
         return $this->throwErrors;
     }
 
-    protected function errorCapture()
+    protected function errorCapture($error = null)
     {
-        $this->lastError = StringUtils::extractErrorFromPhpMessage(error_get_last());
-        if ($this->throwErrors) {
-            throw new LoaderException($this->getLastError()['errorMessage']);
+        if ($error) {
+            $this->lastError = StringUtils::extractErrorFromPhpMessage($error);
+        } else {
+            $this->lastError = StringUtils::extractErrorFromPhpMessage(error_get_last());
         }
+
+        $this->lastError['debugUrl'] = $this->getCommandUrlDebug();
+
+        if ($this->getLastError()['errorCode'] && $this->throwErrors) {
+            throw new LoaderException(
+                $this->getLastError()['errorMessage'],
+                $this->getLastError()['errorCode']
+            );
+        }
+
     }
 
     /**
@@ -141,6 +196,7 @@ abstract class AbstractLoader
      */
     protected function prepare()
     {
+        StringUtils::errorClearLast();
         $this->createCredentials();
         $this->createArgs();
         $this->createCommandURL();
@@ -151,11 +207,11 @@ abstract class AbstractLoader
      * @return SimpleXMLElement
      * @throws LoaderException
      */
-    protected function handleReturn($data)
+    protected function handleReturn($data, $error = null)
     {
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($data);
-        $this->errorCapture();
+        $this->errorCapture($error);
         return $xml;
     }
 }

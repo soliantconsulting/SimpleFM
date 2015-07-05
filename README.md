@@ -245,7 +245,7 @@ Example:
             'myRepeatingField'    => 'Foo',
             'myRepeatingField(2)' => 'Bar',
             'myRepeatingField(3)' => 'Baz',
-            '-new'                => NULL
+            '-new'                => null
         )
     );
 ```
@@ -264,7 +264,7 @@ For instance, _by default search queries are executed as a LIKE_. If you want to
 Examples
 ```
 $commandArray = [
-    'field1' => '==value1', // exactly 'value1'
+    'field1' => '==value1', // exactly  'value1'
     'field2' => 'value2'    // contains 'value2'
 ];
 ```

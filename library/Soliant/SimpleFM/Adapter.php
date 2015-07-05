@@ -227,7 +227,14 @@ class Adapter
         $xml = $this->loader->load();
 
         if ($this->uri == FmLayoutParser::GRAMMAR) {
+            if ($this->loader->hasError()) {
+                return $this->loader->getLastErrorResultFmLayout();
+            }
             return $this->parseFmpXmlLayout($xml);
+        }
+
+        if ($this->loader->hasError()) {
+            return $this->loader->getLastErrorResultFmResultSet();
         }
         return $this->parseFmResultSet($xml);
     }

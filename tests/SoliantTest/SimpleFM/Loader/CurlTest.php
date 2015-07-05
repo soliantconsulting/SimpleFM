@@ -52,6 +52,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::errorCapture
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::throwErrors
+     * @covers Soliant\SimpleFM\StringUtils::extractErrorFromPhpMessage
      */
     public function testLoad()
     {

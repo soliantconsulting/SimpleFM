@@ -53,6 +53,8 @@ class MockTest extends \PHPUnit_Framework_TestCase
      * @covers Soliant\SimpleFM\Loader\Mock::load
      * @covers Soliant\SimpleFM\Loader\Mock::setTestXml
      * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::errorCapture
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::hasError
      */
     public function testLoad()
     {

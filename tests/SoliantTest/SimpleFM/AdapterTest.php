@@ -11,6 +11,7 @@ namespace SoliantTest\SimpleFM;
 
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\HostConnection;
+use Soliant\SimpleFM\Loader\Curl;
 use Soliant\SimpleFM\Loader\Mock as MockLoader;
 use Soliant\SimpleFM\Parser\FmLayoutParser;
 use Soliant\SimpleFM\Parser\FmResultSetParser;
@@ -259,6 +260,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
      * @covers Soliant\SimpleFM\Adapter::parseFmResultSet
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::hasError
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getLastErrorResult
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getLastErrorResultFmResultSet
      */
     public function testExecuteWithParseFmResultSet()
     {
@@ -270,13 +274,20 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->adapterInstance->useResultSetGrammar();
         $result = $this->adapterInstance->execute();
-
         $this->assertEquals($result->getCount(), 17);
+
+        $this->adapterInstance->setLoader(new Curl());
+        $result = $this->adapterInstance->execute();
+        $this->assertEquals($result->getErrorType(), 'PHP');
+        $this->assertEquals($result->getCount(), null);
     }
 
     /**
      * @covers Soliant\SimpleFM\Adapter::execute
      * @covers Soliant\SimpleFM\Adapter::parseFmpXmlLayout
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::hasError
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getLastErrorResult
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getLastErrorResultFmLayout
      */
     public function testExecuteWithParseFmpXmlLayout()
     {
@@ -288,7 +299,11 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
 
         $this->adapterInstance->useLayoutGrammar();
         $result = $this->adapterInstance->execute();
-
         $this->assertEquals($result->getLayout()['name'], 'Projects | Web');
+
+        $this->adapterInstance->setLoader(new Curl());
+        $result = $this->adapterInstance->execute();
+        $this->assertEquals($result->getErrorType(), 'PHP');
+        $this->assertEquals($result->getLayout(), []);
     }
 }

@@ -47,7 +47,6 @@ class Mock extends AbstractLoader
     {
         $this->prepare();
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
-        $this->errorCapture();
         return $this->handleReturn($testXml);
     }
 }

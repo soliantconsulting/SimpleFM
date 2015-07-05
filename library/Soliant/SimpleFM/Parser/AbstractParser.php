@@ -9,26 +9,17 @@ use Soliant\SimpleFM\Result\AbstractResult;
 abstract class AbstractParser
 {
     protected $xml;
-    protected $commandUrlDebug;
-    protected $emptyResult;
 
-    public function __construct($xml, $commandUrlDebug, $resultClassName = null)
+    public function __construct($xml)
     {
         if ($xml instanceof SimpleXMLElement) {
             $this->xml = $xml;
         } else {
             $this->xml = simplexml_load_string($xml);
         }
-
-        // No xml to parse so set a graceful return value here
-        if (empty($this->xml)) {
-            $this->emptyResult = $this->handleEmptyXml($resultClassName);
-        }
-
-        $this->commandUrlDebug = $commandUrlDebug;
     }
 
-    abstract public function parse();
+    abstract public function parse($commandUrlDebug);
 
     /**
      * SimpleXML does not throw Exceptions
@@ -38,7 +29,7 @@ abstract class AbstractParser
      * @param $grammar
      * @return AbstractResult
      */
-    protected function handleEmptyXml($resultClassName)
+    protected function handleEmptyXml($resultClassName, $commandUrlDebug)
     {
         $simpleXmlErrors['xml'] = libxml_get_errors();
         libxml_clear_errors();
@@ -50,7 +41,7 @@ abstract class AbstractParser
 
         return StringUtils::createResult(
             $resultClassName,
-            $this->commandUrlDebug,
+            $commandUrlDebug,
             $phpErrors['errorCode'],
             $phpErrors['errorMessage'],
             $phpErrors['errorType']

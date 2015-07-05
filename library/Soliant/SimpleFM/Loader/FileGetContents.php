@@ -20,6 +20,7 @@ class FileGetContents extends AbstractLoader
      */
     public function load()
     {
+        $this->prepare();
         libxml_use_internal_errors(true);
         
         $opts = array(
@@ -34,7 +35,7 @@ class FileGetContents extends AbstractLoader
         $context  = stream_context_create($opts);
         $errorLevel = error_reporting();
         error_reporting(0);
-        $data = file_get_contents($this->commandURL, false, $context);
+        $data = file_get_contents($this->commandUrl, false, $context);
         error_reporting($errorLevel);
         return $this->handleReturn($data);
     }

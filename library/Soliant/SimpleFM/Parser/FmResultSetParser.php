@@ -11,11 +11,6 @@ class FmResultSetParser extends AbstractParser
      */
     const GRAMMAR = '/fmi/xml/fmresultset.xml';
 
-    public function __construct($xml, $commandUrlDebug)
-    {
-        parent::__construct($xml, $commandUrlDebug, FmResultSet::class);
-    }
-
     /**
      * @var boolean
      */
@@ -31,11 +26,11 @@ class FmResultSetParser extends AbstractParser
         return $this;
     }
 
-    public function parse()
+    public function parse($commandUrlDebug)
     {
         if (empty($this->xml)) {
-            // No xml to parse so return gracefully here
-            return $this->emptyResult;
+            // No xml to parse so set a graceful return value here
+            return $this->handleEmptyXml(FmResultSet::class, $commandUrlDebug);
         }
 
         $xml = $this->xml;
@@ -125,7 +120,7 @@ class FmResultSetParser extends AbstractParser
         $fetchSize = (int)$xml->resultset['fetch-size'];
 
         $result = new FmResultSet(
-            $this->commandUrlDebug,
+            $commandUrlDebug,
             (int)$xml->error['code'],
             StringUtils::errorToEnglish((int)$xml->error['code']),
             'FileMaker',

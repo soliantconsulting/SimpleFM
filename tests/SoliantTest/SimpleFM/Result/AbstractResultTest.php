@@ -23,8 +23,8 @@ class AbstractResultTest extends \PHPUnit_Framework_TestCase
     {
         $xml = file_get_contents(__DIR__ . '/../TestAssets/sample_fmresultset.xml');
         $commandDebugUrl = 'http://user:[...]@dionysus.soliantconsulting.com:80/fmi/xml/fmresultset.xml?-db=FMServer_Sample&-lay=Projects&-findany';
-        $parser = new FmResultSetParser($xml, $commandDebugUrl);
-        $this->object = $parser->parse();
+        $parser = new FmResultSetParser($xml);
+        $this->object = $parser->parse($commandDebugUrl);
     }
 
     /**
@@ -53,7 +53,10 @@ class AbstractResultTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetters()
     {
-        $this->assertEquals('http://user:[...]@dionysus.soliantconsulting.com:80/fmi/xml/fmresultset.xml?-db=FMServer_Sample&-lay=Projects&-findany', $this->object->getDebugUrl());
+        $this->assertEquals(
+            'http://user:[...]@dionysus.soliantconsulting.com:80/fmi/xml/fmresultset.xml?-db=FMServer_Sample&-lay=Projects&-findany',
+            $this->object->getDebugUrl()
+        );
         $this->assertEquals(0, $this->object->getErrorCode());
         $this->assertEquals('No error', $this->object->getErrorMessage());
         $this->assertEquals('FileMaker', $this->object->getErrorType());

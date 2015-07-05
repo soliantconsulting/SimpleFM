@@ -14,20 +14,6 @@ use SimpleXMLElement;
 
 class Curl extends AbstractLoader
 {
-
-    /**
-     * @return string
-     */
-    protected function createPostURL()
-    {
-        $protocol = $this->adapter->getHostConnection()->getProtocol();
-        $hostname = $this->adapter->getHostConnection()->getHostname();
-        $port = $this->adapter->getHostConnection()->getPort();
-        $uri = $this->adapter->getUri();
-
-        return "$protocol://$hostname:$port$uri";
-    }
-
     /**
      * @param Adapter $adapter
      * @return SimpleXMLElement
@@ -35,7 +21,8 @@ class Curl extends AbstractLoader
      */
     public function load()
     {
-        $url = $this->createPostURL();
+        $this->prepare();
+        $url = $this->postUrl;
         $curlHandle = curl_init($url);
 
         curl_setopt($curlHandle, CURLOPT_USERPWD, $this->credentials);

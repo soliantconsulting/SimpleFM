@@ -14,24 +14,13 @@ use SimpleXMLElement;
 class FilePostContents extends AbstractLoader
 {
     /**
-     * @return string
-     */
-    protected function createPostURL()
-    {
-        $protocol = $this->adapter->getHostConnection()->getProtocol();
-        $hostname = $this->adapter->getHostConnection()->getHostname();
-        $port = $this->adapter->getHostConnection()->getPort();
-        $uri = $this->adapter->getUri();
-
-        return "$protocol://$hostname:$port$uri";
-    }
-
-    /**
      * @param Adapter $adapter
      * @return SimpleXMLElement
      */
     public function load()
     {
+        $this->prepare();
+
         libxml_use_internal_errors(true);
         $authheader = empty($this->credentials) ? '' : 'Authorization: Basic ' . base64_encode($this->credentials) . PHP_EOL;
 
@@ -57,7 +46,7 @@ class FilePostContents extends AbstractLoader
         $context = stream_context_create($opts);
         $errorLevel = error_reporting();
         error_reporting(0);
-        $data = file_get_contents($this->createPostURL(), false, $context);
+        $data = file_get_contents($this->postUrl, false, $context);
         error_reporting($errorLevel);
 
         return $this->handleReturn($data);

@@ -23,7 +23,8 @@ abstract class AbstractLoader
     protected $credentials;
     protected $username;
     protected $args;
-    protected $commandURL;
+    protected $commandUrl;
+    protected $postUrl;
     protected $throwErrors = false;
     protected $lastError = [];
 
@@ -117,22 +118,22 @@ abstract class AbstractLoader
         $port = $this->adapter->getHostConnection()->getPort();
         $uri = $this->adapter->getUri();
 
-        $this->commandURL = "$protocol://$credentials@$hostname:$port$uri?$args";
-        $this->setAdapterCommandUrlDebug();
-        return $this->commandURL;
+        $this->commandUrl = "$protocol://$credentials@$hostname:$port$uri?$args";
+        $this->postUrl = "$protocol://$hostname:$port$uri";
+        return $this->commandUrl;
     }
 
     /**
-     * @return void
+     * @return string
      */
-    protected function setAdapterCommandUrlDebug()
+    public function getCommandUrlDebug()
     {
-        $debugUrl = $this->commandURL;
+        $debugUrl = $this->commandUrl;
         if (!empty($this->credentials)) {
             // strip the password out of the credentials
-            $debugUrl = str_replace($this->credentials, $this->username . ':[...]', $this->commandURL);
+            $debugUrl = str_replace($this->credentials, $this->username . ':[...]', $this->commandUrl);
         }
-        $this->adapter->setCommandUrlDebug($debugUrl);
+        return (string)$debugUrl;
     }
 
     /**
@@ -143,7 +144,6 @@ abstract class AbstractLoader
         $this->createCredentials();
         $this->createArgs();
         $this->createCommandURL();
-        $this->setAdapterCommandUrlDebug();
     }
 
     /**

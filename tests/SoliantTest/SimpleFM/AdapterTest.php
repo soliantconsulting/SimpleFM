@@ -194,15 +194,13 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\Adapter::setCommandUrlDebug
      * @covers Soliant\SimpleFM\Adapter::getCommandUrlDebug
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::getCommandUrlDebug
      */
     public function testGetSetCommandURLDebug()
     {
-         $commandURL = '$http://root@127.0.0.1:8080./abc/fmresult.xml?-db=testdb&-lay=tab&A=B&C=D&E=F';
-         $value = $this->adapterInstance->setCommandUrlDebug($commandURL);
-         $this->assertTrue($value instanceof $this->adapterInstance);
-         $this->assertEquals($this->adapterInstance->getCommandUrlDebug(), $commandURL);
+         $commandURL = 'http://Admin:[...]@localhost:80/fmi/xml/fmresultset.xml?-db=testdb&-lay=&-findany';
+         $this->assertEquals($commandURL, $this->adapterInstance->getCommandUrlDebug());
     }
 
     /**

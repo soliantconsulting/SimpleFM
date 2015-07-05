@@ -22,8 +22,8 @@ class FmResultSetTest extends \PHPUnit_Framework_TestCase
     {
         $xml = file_get_contents(__DIR__ . '/../TestAssets/sample_fmresultset.xml');
         $commandDebugUrl = 'fakeCommandDebugUrl';
-        $parser = new FmResultSetParser($xml, $commandDebugUrl);
-        $this->object = $parser->parse();
+        $parser = new FmResultSetParser($xml);
+        $this->object = $parser->parse($commandDebugUrl);
     }
 
     /**

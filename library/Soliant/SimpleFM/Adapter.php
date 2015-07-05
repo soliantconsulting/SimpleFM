@@ -175,17 +175,7 @@ class Adapter
      */
     public function getCommandUrlDebug()
     {
-        return $this->commandUrlDebug;
-    }
-
-    /**
-     * @param $commandUrlDebug
-     * @return $this
-     */
-    public function setCommandUrlDebug($commandUrlDebug)
-    {
-        $this->commandUrlDebug = $commandUrlDebug;
-        return $this;
+        return $this->getLoader()->getCommandUrlDebug();
     }
 
     /**
@@ -248,9 +238,9 @@ class Adapter
      */
     protected function parseFmResultSet($xml)
     {
-        $parser = new FmResultSetParser($xml, $this->getCommandUrlDebug());
+        $parser = new FmResultSetParser($xml);
         $parser->setRowsByRecId($this->getRowsByRecId());
-        return $parser->parse();
+        return $parser->parse($this->getCommandUrlDebug());
     }
 
     /**
@@ -259,7 +249,7 @@ class Adapter
      */
     protected function parseFmpXmlLayout($xml)
     {
-        $parser = new FmLayoutParser($xml, $this->getCommandUrlDebug());
-        return $parser->parse();
+        $parser = new FmLayoutParser($xml);
+        return $parser->parse($this->getCommandUrlDebug());
     }
 }

@@ -4,6 +4,7 @@
  * Composer autoloading is the recommended technique for dependency management. See README.md
  * This classmap is maintained to allow for non-composer use of SimpleFM such as in documentation/simplefm_example.php
  * All Soliant\SimpleFM\ZF2 classes are omitted, as those must be fully autoloaded to resolve Zend package dependencies
+ * @codeCoverageIgnore
  */
 return array(
     // Abstract classes and interfaces have been manually moved to top of list so they are loaded first

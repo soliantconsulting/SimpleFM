@@ -7,7 +7,7 @@
     </testsuite>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../library/</directory>
+            <directory suffix=".php">../library/Soliant/</directory>
         </whitelist>
     </filter>
     <logging>

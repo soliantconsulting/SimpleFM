@@ -41,7 +41,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     protected $entityAsArray;
 
     /**
-     * This property is marked TRUE by the constructor and may be updated by unserializeField()
+     * This property is marked true by the constructor and may be updated by unserializeField()
      * to allow serialization logic to avoid unintentional nullification of existing field values.
      * @Annotation\Exclude
      * @var boolean
@@ -106,24 +106,6 @@ abstract class AbstractEntity implements ArraySerializableInterface
     public function setModid($modid)
     {
         $this->modid = (int)$modid;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getIsSerializable()
-    {
-        return $this->isSerializable;
-    }
-
-    /**
-     * @param bool $isSerializable
-     * @return $this
-     */
-    public function setIsSerializable($isSerializable)
-    {
-        $this->isSerializable = $isSerializable;
         return $this;
     }
 

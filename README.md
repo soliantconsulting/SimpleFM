@@ -10,25 +10,35 @@
 
 SimpleFM is a fast, convenient and free tool designed by [Soliant Consulting, Inc.][1] to facilitate connections between PHP web applications and FileMaker Server.
 
-SimpleFM is an ultra-lightweight PHP5 package that uses the [FileMaker Server][2] XML API. The FMS XML API is commonly referred to as Custom Web Publishing (CWP for short).
+SimpleFM is a lightweight PHP package that uses the [FileMaker Server][2] XML API. The FMS XML API is commonly referred to as Custom Web Publishing (CWP for short).
 
-See also, the [SimpleFM_FMServer_Sample][3] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
+SimpleFM is [Composer][3] friendly, making it a snap to use with all [PHP-FIG][4] frameworks, including [Zend Framework][5], Symphony, Laravel, Slim, and many more.
+
+See also, the [SimpleFM_FMServer_Sample][6] demo application which illustrates use of SimpleFM in an MVC Zend Framework application.
 
 ## Features
 
 ### Easy to Integrate
 
-* Returns a PHP array. The result parser inside SimpleFMAdapter uses PHP5's SimpleXML.
-* Can be used on it's own or with any service class, such as Zend\Amf, Zend\Rest, and Zend\Soap.
+* PSR-0 autoloading ([Composer][3] ready).
+* Returns a PHP array. The result parser inside `Soliant\SimpleFM\Adapter` uses PHP5's `SimpleXML`.
+* Can be used on it's own or with any service or middleware, such as [Apigility][7] or Stratigility.
 
 ### CWP Debugger
 
 * Easily see the underlying API command formatted as a URL for easy troubleshooting
 * Use the convenient errorToEnglish function to interpret FMS error codes
 
+### Optional Zend Framework 2 Integration
+
+* The `Soliant\SimpleFM\ZF2` package provides excellent integration with Zend Framework
+* Full `Zend\Authentication\Adapter` implementation for robust authentication and session management.
+* The included `AbstractEntity` makes it simple to implement Object serialization and de-serialization
+* The included `AbstractGateway` provides a foundation for completely encapsulating the FileMaker XML API 
+
 ## Simplicity and Performance
 
-SimpleFM was written with simplicity as the main guiding principle. We have informally benchmarked it, and obtained faster results for the same queries compared to the two most common CWP PHP alternatives.
+SimpleFM was written with simplicity as the guiding principle. We have informally benchmarked it, and obtained faster results for the same queries compared to the two most common CWP PHP alternatives.
 
 ## System Requirements
 
@@ -37,7 +47,7 @@ SimpleFM, the examples and this documentation are tailored for PHP 5.5 and FileM
 * PHP 5.5+
 * FileMaker Server 12+
 
-With minimum effort, you could get them to work with any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not maintained.
+With minimum effort, it should theoretically work with any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not verified or maintained.
 
 ## License
 
@@ -275,4 +285,8 @@ See the [SimpleFM_FMServer_Sample][3] demo application which illustrates use of 
 
 [1]: http://www.soliantconsulting.com
 [2]: http://www.filemaker.com/products/filemaker-server/
-[3]: https://github.com/soliantconsulting/SimpleFM_FMServer_Sample
+[3]: https://getcomposer.org/doc/00-intro.md
+[4]: http://www.php-fig.org/
+[5]: http://framework.zend.com/
+[6]: https://github.com/soliantconsulting/SimpleFM_FMServer_Sample
+[7]: https://apigility.org/

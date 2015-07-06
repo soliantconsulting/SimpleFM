@@ -12,6 +12,8 @@ namespace Soliant\SimpleFM\ZF2;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\HostConnection;
+use Soliant\SimpleFM\Exception\InvalidArgumentException;
 
 class AdapterServiceFactory implements FactoryInterface
 {
@@ -24,6 +26,41 @@ class AdapterServiceFactory implements FactoryInterface
     public function createService(ServiceLocatorInterface $sm)
     {
         $config = $sm->get('config');
-        return new Adapter($config['simple_fm_host_params']);
+
+        if (!isset($config['simple_fm_host_params']) ||
+            !isset($config['simple_fm_host_params']['hostName']) ||
+            !isset($config['simple_fm_host_params']['dbName']) ||
+            !isset($config['simple_fm_host_params']['userName']) ||
+            !isset($config['simple_fm_host_params']['password'])
+        ) {
+            throw new InvalidArgumentException(
+                "'simple_fm_host_params' config is mandatory with 'hostName', 'dbName', 'userName', 'password'"
+            );
+        }
+
+        $hostParams = $config['simple_fm_host_params'];
+
+        // mandatory params
+        $hostName = $hostParams['hostName'];
+        $dbName   = $hostParams['dbName'];
+        $userName = $hostParams['userName'];
+        $password = $hostParams['password'];
+
+        // optional params
+        $protocol = isset($hostParams['protocol']) && $hostParams['protocol'] ? $hostParams['protocol'] : 'http';
+        $port = isset($hostParams['port']) ? $hostParams['port'] : 80;
+        $sslVerifyPeer = isset($hostParams['sslVerifyPeer']) ? $hostParams['sslVerifyPeer'] : true;
+
+        $hostConnection = new HostConnection(
+            $hostName,
+            $dbName,
+            $userName,
+            $password,
+            $protocol,
+            $port,
+            $sslVerifyPeer
+        );
+
+        return new Adapter($hostConnection);
     }
 }

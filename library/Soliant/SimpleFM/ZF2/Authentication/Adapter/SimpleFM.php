@@ -11,6 +11,7 @@ namespace Soliant\SimpleFM\ZF2\Authentication\Adapter;
 
 use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\Result\FmResultSet;
 use Zend\Authentication\Result;
 
 /**
@@ -171,7 +172,10 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     public function authenticate()
     {
         $this->simpleFmValidateAdapter->setLayoutName($this->identityLayout);
-        $this->simpleFmValidateAdapter->setCredentials($this->credentials);
+        $this->simpleFmValidateAdapter
+            ->getHostConnection()
+            ->setUserName($this->credentials['username'])
+            ->setPassword($this->credentials['password']);
 
         $command = array(
             $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
@@ -187,11 +191,11 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     /**
      * @return \Zend\Authentication\Result
      */
-    protected function handleAuthenticateResult($sfmResult)
+    protected function handleAuthenticateResult(FmResultSet $sfmResult)
     {
-        $errorCode = $sfmResult['errorCode'];
-        $errorMessage = $sfmResult['errorMessage'];
-        $errorType = $sfmResult['errorType'];
+        $errorCode = $sfmResult->getErrorCode();
+        $errorMessage = $sfmResult->getErrorMessage();
+        $errorType = $sfmResult->getErrorType();
         $result = null;
 
         // Based on the status, return auth result
@@ -202,7 +206,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                     $this->password,
                     $this->rememberme,
                     $this->encryptionKey,
-                    $sfmResult['rows'][0]
+                    $sfmResult->getRows()[0]
                 );
                 $identity->setIsLoggedIn(true);
                 $result = new Result(

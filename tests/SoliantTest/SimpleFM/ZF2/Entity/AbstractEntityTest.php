@@ -278,4 +278,18 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('newValue', $entity->propertyNameWriteable);
         $this->assertEquals('value2', $entity->propertyNameReadOnly);
     }
+
+    /**
+     * @covers Soliant\SimpleFM\ZF2\Entity\AbstractEntity::serializeField
+     * @covers Soliant\SimpleFM\ZF2\Entity\AbstractEntity::addPropertyToEntityAsArray
+     * @todo   Implement testExchangeArrayExceptions().
+     * Requires mcrypt PHP extension
+     */
+    public function testExchangeArrayExceptions()
+    {
+        // Remove the following lines when you implement this test.
+        $this->markTestIncomplete(
+            'This test has not been implemented yet.'
+        );
+    }
 }

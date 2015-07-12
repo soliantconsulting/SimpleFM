@@ -14,7 +14,7 @@ SimpleFM is a lightweight PHP package that uses the [FileMaker Server][2] XML AP
 
 SimpleFM is [Composer][3] friendly, making it a snap to use with all [PHP-FIG][4] frameworks, including [Zend Framework][5], Symphony, Laravel, Slim, and many more.
 
-See also, the [SimpleFM_FMServer_Sample][6] demo application which illustrates use of SimpleFM in an MVC Zend Framework application.
+See also, the [SimpleFM-skeleton][6] demo application which illustrates use of SimpleFM in an MVC Zend Framework application.
 
 ## Features
 
@@ -281,12 +281,12 @@ $commandArray = [
 
 ## Best Practices
 
-See the [SimpleFM_FMServer_Sample][6] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
+See the [SimpleFM-skeleton][6] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
 
 [1]: http://www.soliantconsulting.com
 [2]: http://www.filemaker.com/products/filemaker-server/
 [3]: https://getcomposer.org/doc/00-intro.md
 [4]: http://www.php-fig.org/
 [5]: http://framework.zend.com/
-[6]: https://github.com/soliantconsulting/SimpleFM_FMServer_Sample
+[6]: https://github.com/soliantconsulting/SimpleFM-skeleton
 [7]: https://apigility.org/

@@ -281,7 +281,7 @@ $commandArray = [
 
 ## Best Practices
 
-See the [SimpleFM_FMServer_Sample][3] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
+See the [SimpleFM_FMServer_Sample][6] demo application which illustrates use of SimpleFM in the model layer of an MVC Zend Framework 2 application.
 
 [1]: http://www.soliantconsulting.com
 [2]: http://www.filemaker.com/products/filemaker-server/

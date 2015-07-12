@@ -39,7 +39,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     /**
      * @var boolean
      */
-    protected $rememberme;
+    protected $rememberMe = false;
 
     /**
      * Adapter to be used for login validation
@@ -123,7 +123,6 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
             throw new Exception\InvalidArgumentException('Config key \'accountNameField\' is required');
         }
         $this->accountNameField = $config['accountNameField'];
-
     }
 
     /**
@@ -149,12 +148,12 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
-     * @var boolean $rememberme
+     * @var boolean $rememberMe
      * @return SimpleFM
      */
-    public function setRememberMe($rememberme)
+    public function setRememberMe($rememberMe)
     {
-        $this->rememberme = (boolean) $rememberme;
+        $this->rememberMe = (boolean)$rememberMe;
         return $this;
     }
 
@@ -177,10 +176,10 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
             ->setUserName($this->credentials['username'])
             ->setPassword($this->credentials['password']);
 
-        $command = array(
+        $command = [
             $this->accountNameField => "==" . self::escapeStringForFileMakerSearch($this->username),
             '-find' => null,
-        );
+        ];
         $this->simpleFmValidateAdapter->setCommandArray($command);
 
         $sfmResult = $this->simpleFmValidateAdapter->execute();
@@ -189,75 +188,107 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
     }
 
     /**
-     * @return \Zend\Authentication\Result
+     * @param FmResultSet $sfmResult
+     * @return Result
      */
     protected function handleAuthenticateResult(FmResultSet $sfmResult)
     {
-        $errorCode = $sfmResult->getErrorCode();
-        $errorMessage = $sfmResult->getErrorMessage();
-        $errorType = $sfmResult->getErrorType();
-        $result = null;
-
-        // Based on the status, return auth result
-        switch ($errorCode) {
-            case '0':
-                $identity = new Identity(
-                    $this->username,
-                    $this->password,
-                    $this->rememberme,
-                    $this->encryptionKey,
-                    $sfmResult->getRows()[0]
-                );
-                $identity->setIsLoggedIn(true);
-                $result = new Result(
-                    Result::SUCCESS,
-                    $identity
-                );
-                break;
-            case '401':
-                // Return null identity plus reason as message array for HTTP 401
-                if ($errorType == 'HTTP') {
-                    $identity = null;
-                    $result = new Result(
-                        Result::FAILURE,
-                        $identity,
-                        array(
-                            'reason' => 'Username and/or password not valid',
-                            'sfm_auth_response' => $sfmResult
-                        )
-                    );
-                }
-                break;
-            case '7':
-                // there most likely was a error connecting to the host
-                if ($errorType == 'PHP') {
-                    $identity = null;
-                    $result = new Result(
-                        Result::FAILURE,
-                        $identity,
-                        array(
-                            'reason' => 'There was a system error trying to make the request. Please try again later.',
-                            'sfm_auth_response' => $sfmResult
-                        )
-                    );
-                }
-                break;
+        if ($sfmResult->getErrorType() === 'FileMaker') {
+            return $this->handleErrorTypeFileMaker($sfmResult);
         }
 
-        if (!$result instanceof Result) {
-            // Return empty identity plus reason as message array for every other result status
-            $identity = null;
-            $result = new Result(
-                Result::FAILURE,
-                $identity,
-                array(
-                    'reason' => $errorType . ' error ' . $errorCode . ': ' . $errorMessage,
-                    'sfm_auth_response' => $sfmResult
-                )
+        if ($sfmResult->getErrorType() === 'HTTP') {
+            return $this->handleErrorTypeHttp($sfmResult);
+        }
+
+        if ($sfmResult->getErrorType() === 'PHP') {
+            return $this->handleErrorTypePhp($sfmResult);
+        }
+
+        return $this->handleUnexpectedError($sfmResult);
+    }
+
+    /**
+     * @param FmResultSet $sfmResult
+     * @return Result
+     */
+    protected function handleErrorTypeFileMaker(FmResultSet $sfmResult)
+    {
+        if ($sfmResult->getErrorCode() == 0) {
+            $identity = new Identity(
+                $this->username,
+                $this->password,
+                $this->rememberMe,
+                $this->encryptionKey,
+                $sfmResult->getRows()[0]
+            );
+            $identity->setIsLoggedIn(true);
+            return new Result(
+                Result::SUCCESS,
+                $identity
             );
         }
+        return $this->handleUnexpectedError($sfmResult);
+    }
 
-        return $result;
+    /**
+     * @param FmResultSet $sfmResult
+     * @return Result
+     */
+    protected function handleErrorTypeHttp(FmResultSet $sfmResult)
+    {
+        // Return null identity plus reason as message array for HTTP 401
+        if ($sfmResult->getErrorCode() == 401) {
+            $identity = null;
+            return new Result(
+                Result::FAILURE,
+                $identity,
+                [
+                    'reason' => 'Username and/or password not valid',
+                    'sfm_auth_response' => $sfmResult
+                ]
+            );
+        }
+        return $this->handleUnexpectedError($sfmResult);
+    }
+
+    /**
+     * @param FmResultSet $sfmResult
+     * @return Result
+     */
+    protected function handleErrorTypePhp(FmResultSet $sfmResult)
+    {
+        // there most likely was a error connecting to the host
+        $identity = null;
+        return new Result(
+            Result::FAILURE,
+            $identity,
+            [
+                'reason' => 'There was a system error trying to make the request. Please try again later.',
+                'sfm_auth_response' => $sfmResult
+            ]
+        );
+    }
+
+    /**
+     * @param FmResultSet $sfmResult
+     * @return Result
+     */
+    protected function handleUnexpectedError(FmResultSet $sfmResult)
+    {
+        // Return empty identity plus reason as message array for every other result status
+        $identity = null;
+        return new Result(
+            Result::FAILURE,
+            $identity,
+            [
+                'reason' =>
+                    $sfmResult->getErrorType() . ' error ' .
+                    $sfmResult->getErrorCode() . ': ' .
+                    $sfmResult->getErrorMessage(),
+                'sfm_auth_response' => $sfmResult
+            ]
+        );
     }
 
     /**

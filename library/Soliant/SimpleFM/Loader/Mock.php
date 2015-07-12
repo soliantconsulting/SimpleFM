@@ -19,6 +19,11 @@ class Mock extends AbstractLoader
     protected $testXml;
 
     /**
+     * @var string
+     */
+    protected $mockError;
+
+    /**
      * @param null $testXml
      */
     public function __construct($testXml = null)
@@ -39,6 +44,16 @@ class Mock extends AbstractLoader
     }
 
     /**
+     * @param string $mockError
+     * @return Mock
+     */
+    public function setMockError($mockError)
+    {
+        $this->mockError = $mockError;
+        return $this;
+    }
+
+    /**
      * @param Adapter $adapter
      * @param null $testXmlOverride
      * @return SimpleXMLElement
@@ -47,6 +62,9 @@ class Mock extends AbstractLoader
     {
         $this->prepare();
         $testXml = $testXmlOverride ? $testXmlOverride : $this->testXml;
+        if ($this->mockError) {
+            return $this->handleReturn($testXml, $this->mockError);
+        }
         return $this->handleReturn($testXml);
     }
 }

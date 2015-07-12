@@ -61,4 +61,25 @@ class MockTest extends \PHPUnit_Framework_TestCase
         $this->loader->load();
         $this->assertInstanceOf(Loader::class, $this->loader);
     }
+
+    /**
+     * @covers Soliant\SimpleFM\Loader\Mock::__construct
+     * @covers Soliant\SimpleFM\Loader\Mock::load
+     * @covers Soliant\SimpleFM\Loader\Mock::setMockError
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::handleReturn
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::errorCapture
+     * @covers Soliant\SimpleFM\Loader\AbstractLoader::hasError
+     */
+    public function testMockError()
+    {
+        $this->loader->setMockError(
+            'file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml) ' .
+            '[function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized'
+        );
+        $this->loader->load();
+        $this->assertInstanceOf(Loader::class, $this->loader);
+        $this->assertEquals('HTTP', $this->loader->getLastErrorResultFmResultSet()->getErrorType());
+        $this->assertEquals(401, $this->loader->getLastErrorResultFmResultSet()->getErrorCode());
+
+    }
 }

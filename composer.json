@@ -16,7 +16,7 @@
       "doctrine/common": ">=2.2.0"
     },
     "require-dev": {
-        "zendframework/zendframework": "2.4.*",
+        "zendframework/zendframework": "~2.5",
         "phpunit/PHPUnit": "4.7.*",
         "phpunit/phpunit-skeleton-generator": "*",
         "mockery/mockery": "~0.9.4",
@@ -34,7 +34,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "3.0.x-dev"
+            "dev-master": "3.1.x-dev"
         }
     }
 }

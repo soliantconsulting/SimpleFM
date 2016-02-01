@@ -263,14 +263,14 @@ abstract class AbstractEntity implements ArraySerializableInterface
         $getterName = 'get' . ucfirst($propertyName);
 
         if ($getterName == 'getRecid') {
-            $value = $this->getRecid();
-            if (!empty($value)) {
-                $this->simpleFMAdapterRow['-recid'] = $value;
+            $recid = $this->getRecid();
+            if ($recid !== '' && $recid !== null) {
+                $this->simpleFMAdapterRow['-recid'] = $recid;
             }
         } elseif ($getterName == 'getModid') {
             $recid = $this->getRecid();
             $modid = $this->getModid();
-            if (!empty($modid) && !empty($recid)) {
+            if ($modid !== '' && $recid !== '' && $modid !== null && $recid !== null) {
                 $this->simpleFMAdapterRow['-modid'] = $modid;
             }
         } else {

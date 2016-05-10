@@ -17,8 +17,8 @@ use Soliant\SimpleFM\Exception\HttpException;
 use Soliant\SimpleFM\Exception\XmlException;
 use Soliant\SimpleFM\Result\AbstractResult;
 use Soliant\SimpleFM\Result\FmResultSet;
-use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
+use Soliant\SimpleFM\ZF2\Entity\AbstractEntity;
 
 abstract class AbstractGateway
 {
@@ -26,12 +26,14 @@ abstract class AbstractGateway
     /**
      * The fully qualified class name for an object that implements
      * \Soliant\SimpleFM\ZF2\Entity\AbstractEntity
+     *
      * @var string
      */
     protected $entityName;
 
     /**
      * The FileMaker Layout assigned to the $entityPointerName
+     *
      * @var string
      */
     protected $entityLayout;
@@ -87,7 +89,7 @@ abstract class AbstractGateway
      */
     public function find($recid)
     {
-        $commandArray = array('-recid' => $recid, '-find' => null);
+        $commandArray = ['-recid' => $recid, '-find' => null];
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
@@ -113,10 +115,10 @@ abstract class AbstractGateway
 
         $commandArray = array_merge(
             $search,
-            array(
+            [
                 '-max' => '1',
-                '-find' => null
-            )
+                '-find' => null,
+            ]
         );
 
         $this->simpleFMAdapter
@@ -142,12 +144,12 @@ abstract class AbstractGateway
      * @throws HttpException
      * @throws XmlException
      */
-    public function findAll(array $sort = array(), $max = null, $skip = null)
+    public function findAll(array $sort = [], $max = null, $skip = null)
     {
         $commandArray = array_merge(
             $this->sortArrayToCommandArray($sort),
             $this->maxSkipToCommandArray($max, $skip),
-            array('-findall' => null)
+            ['-findall' => null]
         );
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
@@ -168,7 +170,7 @@ abstract class AbstractGateway
      * @throws HttpException
      * @throws XmlException
      */
-    public function findBy(array $search, array $sort = array(), $max = null, $skip = null)
+    public function findBy(array $search, array $sort = [], $max = null, $skip = null)
     {
         foreach ($search as $field => $value) {
             $search[$field] = str_replace('@', '\@', $value);
@@ -178,7 +180,7 @@ abstract class AbstractGateway
             $search,
             $this->sortArrayToCommandArray($sort),
             $this->maxSkipToCommandArray($max, $skip),
-            array('-find' => null)
+            ['-find' => null]
         );
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
@@ -204,7 +206,7 @@ abstract class AbstractGateway
         unset($serializedValues['-modid']);
         $commandArray = array_merge(
             $serializedValues,
-            array('-new' => null)
+            ['-new' => null]
         );
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
@@ -229,9 +231,9 @@ abstract class AbstractGateway
 
         $commandArray = array_merge(
             $serializedValues,
-            array(
+            [
                 '-edit' => null,
-            )
+            ]
         );
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
@@ -252,11 +254,11 @@ abstract class AbstractGateway
      */
     public function delete(AbstractEntity $entity)
     {
-        $commandArray = array(
+        $commandArray = [
             '-recid' => $entity->getRecid(),
             '-modid' => $entity->getModid(),
             '-delete' => null,
-        );
+        ];
         $this->simpleFMAdapter
             ->setCommandArray($commandArray)
             ->setLayoutName($this->getEntityLayout());
@@ -303,6 +305,7 @@ abstract class AbstractGateway
 
     /**
      * Example return: Application\Entity\Entity
+     *
      * @return string
      */
     public function getEntityName()
@@ -328,8 +331,8 @@ abstract class AbstractGateway
     protected function maxSkipToCommandArray($max = null, $skip = null)
     {
 
-        $maxCommand = empty($max) ? array() : array('-max' => $max);
-        $skipCommand = empty($skip) ? array() : array('-skip' => $skip);
+        $maxCommand = empty($max) ? [] : ['-max' => $max];
+        $skipCommand = empty($skip) ? [] : ['-skip' => $skip];
 
         return array_merge($maxCommand, $skipCommand);
     }
@@ -345,17 +348,17 @@ abstract class AbstractGateway
         // -sortorder.[1-9] = [ascend|descend|value-list-name]
 
         if (empty($sort)) {
-            return array();
+            return [];
         }
 
         $i = 1;
-        $command = array();
+        $command = [];
         foreach ($sort as $field => $method) {
             if ($i > 9) {
                 break;
             } // FileMaker API limited to max 9 fields
 
-            switch ((string)$method) {
+            switch ((string) $method) {
                 case 'dsc':
                     $sortMethod = 'descend';
                     break;

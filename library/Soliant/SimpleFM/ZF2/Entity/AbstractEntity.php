@@ -11,8 +11,8 @@ namespace Soliant\SimpleFM\ZF2\Entity;
 
 use Exception;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
-use Zend\Stdlib\ArraySerializableInterface;
 use Zend\Form\Annotation;
+use Zend\Stdlib\ArraySerializableInterface;
 
 abstract class AbstractEntity implements ArraySerializableInterface
 {
@@ -43,6 +43,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * This property is marked true by the constructor and may be updated by unserializeField()
      * to allow serialization logic to avoid unintentional nullification of existing field values.
+     *
      * @Annotation\Exclude
      * @var boolean
      */
@@ -51,7 +52,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * @param array $simpleFMAdapterRow
      */
-    public function __construct($simpleFMAdapterRow = array())
+    public function __construct($simpleFMAdapterRow = [])
     {
         $this->simpleFMAdapterRow = $simpleFMAdapterRow;
         $this->isSerializable = true;
@@ -66,7 +67,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     public function __toString()
     {
         if (method_exists($this, 'getName')) {
-            return (string)$this->getName();
+            return (string) $this->getName();
         } else {
             return '<toString is unconfigured>';
         }
@@ -74,11 +75,12 @@ abstract class AbstractEntity implements ArraySerializableInterface
 
     /**
      * FileMaker internal recid
+     *
      * @return string
      */
     public function getRecid()
     {
-        return (string)$this->recid;
+        return (string) $this->recid;
     }
 
     /**
@@ -87,17 +89,18 @@ abstract class AbstractEntity implements ArraySerializableInterface
      */
     public function setRecid($recid)
     {
-        $this->recid = (int)$recid;
+        $this->recid = (int) $recid;
         return $this;
     }
 
     /**
      * FileMaker internal modid
+     *
      * @return string
      */
     public function getModid()
     {
-        return (string)$this->modid;
+        return (string) $this->modid;
     }
 
     /**
@@ -105,7 +108,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
      */
     public function setModid($modid)
     {
-        $this->modid = (int)$modid;
+        $this->modid = (int) $modid;
         return $this;
     }
 
@@ -114,6 +117,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
      * List fields in this map which the web app can modify, such as text and number fields. Normally
      * it will be most convenient to define the array directly in the method implementation.
      * Example: return array ('myEntityName' => 'My Entity Name', 'status' => 'SomeTableOccurance::Status');
+     *
      * @return array
      */
     abstract public function getFieldMapWriteable();
@@ -123,12 +127,14 @@ abstract class AbstractEntity implements ArraySerializableInterface
      * in this map which cannot be updated by the web app, such a s primary keys and calc fields.
      * Normally it will be most convenient to define the array directly in the method implementation.
      * Example: return array ('id' => 'PrimaryKey', 'total' => 'Total');
+     *
      * @return array
      */
     abstract public function getFieldMapReadonly();
 
     /**
      * Utility function combines both field maps into a single map.
+     *
      * @return array
      */
     public function getFieldMapMerged()
@@ -139,6 +145,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * Default FileMaker layout for the Entity. This layout should usually at least include all the
      * writable fields, but it may also include readonly fields and portals/associations.
+     *
      * @return string|null
      */
     abstract public function getDefaultWriteLayoutName();
@@ -146,12 +153,14 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * The route segment for the entity controller.
      * Example: MyEntity route segment is normally my-entity
+     *
      * @return string|null
      */
     abstract public function getDefaultControllerRouteSegment();
 
     /**
      * Maps a SimpleFM\Adapter row onto the Entity.
+     *
      * @see $this->unserializeField()
      * @return void
      */
@@ -172,13 +181,14 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * Maps the Entity onto a SimpleFM\Adapter row. The array association should be a
      * fully qualified field name, with the exception of pseudo-fields recid and modid.
+     *
      * @see $this->serializeField()
      * @return array
      * @throws Exception
      */
     public function serialize()
     {
-        $this->simpleFMAdapterRow = array();
+        $this->simpleFMAdapterRow = [];
 
         $this->serializeField('-recid', 'recid');
         $this->serializeField('-modid', 'modid');
@@ -233,6 +243,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * For unserialize, optimized layouts are permitted to omit fields defined by the entity.
      * If a required field is omitted, $this->isSerializable is marked false
+     *
      * @param string $propertyName
      * @param string $fileMakerFieldName
      * @param bool $isWritable
@@ -253,6 +264,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
     /**
      * For serialize, all isRequired fields are required except the pseudo-fields recid and modid
      * which are always optional to handle force edit (blank modid) and new (blank recid).
+     *
      * @param string $fileMakerFieldName
      * @param string $propertyName
      * @throws InvalidArgumentException
@@ -288,6 +300,7 @@ abstract class AbstractEntity implements ArraySerializableInterface
 
     /**
      * For getArrayCopy, all fields should be mapped
+     *
      * @param string $propertyName
      * @throws InvalidArgumentException
      * @throws Exception

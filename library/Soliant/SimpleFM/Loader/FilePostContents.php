@@ -8,8 +8,8 @@
  */
 namespace Soliant\SimpleFM\Loader;
 
-use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Adapter;
 
 class FilePostContents extends AbstractLoader
 {
@@ -24,8 +24,8 @@ class FilePostContents extends AbstractLoader
         libxml_use_internal_errors(true);
         $authheader = empty($this->credentials) ? '' : 'Authorization: Basic ' . base64_encode($this->credentials) . PHP_EOL;
 
-        $opts = array(
-            'http' => array(
+        $opts = [
+            'http' => [
                 'method' => 'POST',
                 'header' => 'User-Agent: SimpleFM' . PHP_EOL .
                     $authheader .
@@ -34,11 +34,11 @@ class FilePostContents extends AbstractLoader
                     'Content-length: ' . strlen($this->args) . PHP_EOL .
                     PHP_EOL,
                 'content' => $this->args,
-            ),
+            ],
             'ssl' => [
                 'verify_peer' => $this->adapter->getHostConnection()->getSslVerifyPeer(),
             ],
-        );
+        ];
 
         /**
          * Temporarily turn off error_reporting and capture any errors for handling later

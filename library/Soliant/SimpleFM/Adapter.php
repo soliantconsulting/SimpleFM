@@ -11,10 +11,8 @@ namespace Soliant\SimpleFM;
 
 use Soliant\SimpleFM\Loader\AbstractLoader;
 use Soliant\SimpleFM\Loader\FilePostContents;
-use Soliant\SimpleFM\HostConnection;
-use Soliant\SimpleFM\StringUtils;
-use Soliant\SimpleFM\Parser\FmResultSetParser;
 use Soliant\SimpleFM\Parser\FmLayoutParser;
+use Soliant\SimpleFM\Parser\FmResultSetParser;
 
 class Adapter
 {
@@ -36,7 +34,7 @@ class Adapter
     /**
      * @var array
      */
-    protected $commandArray = array('-findany' => '');
+    protected $commandArray = ['-findany' => ''];
 
     /**
      * @var string
@@ -157,7 +155,7 @@ class Adapter
      */
     public function getRowsByRecId()
     {
-        return (boolean)$this->rowsByRecId;
+        return (boolean) $this->rowsByRecId;
     }
 
     /**
@@ -166,7 +164,7 @@ class Adapter
      */
     public function setRowsByRecId($rowsByRecId = false)
     {
-        $this->rowsByRecId = (boolean)$rowsByRecId;
+        $this->rowsByRecId = (boolean) $rowsByRecId;
         return $this;
     }
 

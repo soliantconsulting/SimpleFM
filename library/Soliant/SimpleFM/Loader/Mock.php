@@ -8,8 +8,8 @@
  */
 namespace Soliant\SimpleFM\Loader;
 
-use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Adapter;
 
 class Mock extends AbstractLoader
 {

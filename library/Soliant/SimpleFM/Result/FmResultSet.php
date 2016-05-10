@@ -56,8 +56,8 @@ class FmResultSet extends AbstractResult
     public function toArray()
     {
         $array = parent::toArray();
-        $array['count'] = (int)$this->getCount();
-        $array['fetchSize'] = (int)$this->getFetchSize();
+        $array['count'] = (int) $this->getCount();
+        $array['fetchSize'] = (int) $this->getFetchSize();
         $array['rows'] = $this->getRows();
         return $array;
     }

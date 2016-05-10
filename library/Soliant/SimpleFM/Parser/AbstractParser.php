@@ -2,9 +2,8 @@
 namespace Soliant\SimpleFM\Parser;
 
 use SimpleXMLElement;
-use Soliant\SimpleFM\StringUtils;
-use Soliant\SimpleFM\Exception\RuntimeException;
 use Soliant\SimpleFM\Result\AbstractResult;
+use Soliant\SimpleFM\StringUtils;
 
 abstract class AbstractParser
 {
@@ -25,6 +24,7 @@ abstract class AbstractParser
      * SimpleXML does not throw Exceptions
      * It returns a SimpleXML object on success and false on error
      * See http://www.php.net/manual/en/simplexml.examples-errors.php
+     *
      * @param $result
      * @param $grammar
      * @return AbstractResult

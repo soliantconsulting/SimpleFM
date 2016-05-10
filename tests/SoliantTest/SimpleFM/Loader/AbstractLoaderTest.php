@@ -1,8 +1,8 @@
 <?php
 namespace SoliantTest\SimpleFM\Loader;
 
-use Soliant\SimpleFM\HostConnection;
 use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\HostConnection;
 use Soliant\SimpleFM\Loader\AbstractLoader;
 use Soliant\SimpleFM\Loader\Mock as MockLoader;
 
@@ -40,7 +40,7 @@ class AbstractLoaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoad()
     {
-        $params=array('hostname'=>'localhost','dbname'=>'testdb','username'=>'Admin','password'=>'');
+        $params = ['hostname' => 'localhost', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
         $hostConnection = new HostConnection(
             $params['hostname'],
             $params['dbname'],

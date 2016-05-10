@@ -2,7 +2,6 @@
 namespace SoliantTest\SimpleFM\Parser;
 
 use SimpleXMLElement;
-use Soliant\SimpleFM\Parser\AbstractParser;
 use Soliant\SimpleFM\Result\FmResultSet;
 
 /**
@@ -85,7 +84,10 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             return $this->handleEmptyXml(FmResultSet::class, 'commandUrlDebug');
         };
 
-        $mockParserFunction = $closure->bindTo($this->mockParserFromSimpleXMLElement, $this->mockParserFromSimpleXMLElement);
+        $mockParserFunction = $closure->bindTo(
+            $this->mockParserFromSimpleXMLElement,
+            $this->mockParserFromSimpleXMLElement
+        );
 
         $result = $mockParserFunction();
 
@@ -104,7 +106,10 @@ class AbstractParserTest extends \PHPUnit_Framework_TestCase
             return $this->handleEmptyXml(\stdClass::class, 'commandUrlDebug');
         };
 
-        $mockParserFunction = $closure->bindTo($this->mockParserFromSimpleXMLElement, $this->mockParserFromSimpleXMLElement);
+        $mockParserFunction = $closure->bindTo(
+            $this->mockParserFromSimpleXMLElement,
+            $this->mockParserFromSimpleXMLElement
+        );
 
         $mockParserFunction();
     }

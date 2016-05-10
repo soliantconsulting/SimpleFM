@@ -1,8 +1,8 @@
 <?php
 namespace Soliant\SimpleFM\Parser;
 
-use Soliant\SimpleFM\StringUtils;
 use Soliant\SimpleFM\Result\FmResultSet;
+use Soliant\SimpleFM\StringUtils;
 
 class FmResultSetParser extends AbstractParser
 {
@@ -22,7 +22,7 @@ class FmResultSetParser extends AbstractParser
      */
     public function setRowsByRecId($rowsByRecId)
     {
-        $this->rowsByRecId = (boolean)$rowsByRecId;
+        $this->rowsByRecId = (boolean) $rowsByRecId;
         return $this;
     }
 
@@ -34,7 +34,7 @@ class FmResultSetParser extends AbstractParser
         }
 
         $xml = $this->xml;
-        $rows = array();
+        $rows = [];
 
         /**
          *   simplexml fmresultset path reference:
@@ -43,21 +43,21 @@ class FmResultSetParser extends AbstractParser
         // loop over rows
         $counterI = 0;
         foreach ($xml->resultset[0]->record as $row) {
-            $conditional_id = $this->rowsByRecId === true ? (string)$row['record-id'] : (int)$counterI;
+            $conditional_id = $this->rowsByRecId === true ? (string) $row['record-id'] : (int) $counterI;
 
-            $rows[$conditional_id]['index'] = (int)$counterI;
-            $rows[$conditional_id]['recid'] = (int)$row['record-id'];
-            $rows[$conditional_id]['modid'] = (int)$row['mod-id'];
+            $rows[$conditional_id]['index'] = (int) $counterI;
+            $rows[$conditional_id]['recid'] = (int) $row['record-id'];
+            $rows[$conditional_id]['modid'] = (int) $row['mod-id'];
 
             foreach ($xml->resultset[0]->record[$counterI]->field as $field) {
-                $fieldname = (string)$field['name'];
+                $fieldname = (string) $field['name'];
                 if (count($field) > 1) {
-                    $fielddata = array();
+                    $fielddata = [];
                     foreach ($field->data as $data) {
-                        $fielddata[] = (string)$data;
+                        $fielddata[] = (string) $data;
                     }
                 } else {
-                    $fielddata = (string)$field->data;
+                    $fielddata = (string) $field->data;
                 }
 
                 // validate fieldnames on first row
@@ -71,37 +71,37 @@ class FmResultSetParser extends AbstractParser
                 $counterIi = 0;
                 // handle portals
                 foreach ($xml->resultset[0]->record[0]->relatedset as $portal) {
-                    $portalname = (string)$portal['table'];
+                    $portalname = (string) $portal['table'];
 
-                    $rows[$conditional_id][$portalname]['parentindex'] = (int)$counterI;
-                    $rows[$conditional_id][$portalname]['parentrecid'] = (int)$row['record-id'];
-                    $rows[$conditional_id][$portalname]['portalindex'] = (int)$counterIi;
+                    $rows[$conditional_id][$portalname]['parentindex'] = (int) $counterI;
+                    $rows[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
+                    $rows[$conditional_id][$portalname]['portalindex'] = (int) $counterIi;
                     /**
                      * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
                      * portals. Test for possible issues with $portalname being non-unique.
                      */
-                    $rows[$conditional_id][$portalname]['portalrecordcount'] = (int)$portal['count'];
+                    $rows[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
 
                     // the portal row index
                     $counterIii = 0;
                     // handle portal rows
                     foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record as $portal_row) {
-                        $portal_cond_id = $this->rowsByRecId === true ? (int)$portal_row['record-id'] : $counterIii;
+                        $portal_cond_id = $this->rowsByRecId === true ? (int) $portal_row['record-id'] : $counterIii;
 
-                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['index'] = (int)$counterIii;
-                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['modid'] = (int)$portal_row['mod-id'];
-                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['recid'] = (int)$portal_row['record-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['index'] = (int) $counterIii;
+                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['modid'] = (int) $portal_row['mod-id'];
+                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['recid'] = (int) $portal_row['record-id'];
 
                         // handle portal fields
                         foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record[$counterIii]->field as $portal_field) {
-                            $portal_fieldname = (string)str_replace($portalname . '::', '', $portal_field['name']);
+                            $portal_fieldname = (string) str_replace($portalname . '::', '', $portal_field['name']);
                             if (count($portal_field) > 1) {
-                                $portal_fielddata = array();
+                                $portal_fielddata = [];
                                 foreach ($portal_field->data as $data) {
-                                    $portal_fielddata[] = (string)$data;
+                                    $portal_fielddata[] = (string) $data;
                                 }
                             } else {
-                                $portal_fielddata = (string)$portal_field->data;
+                                $portal_fielddata = (string) $portal_field->data;
                             }
 
                             // validate fieldnames on first row
@@ -116,13 +116,13 @@ class FmResultSetParser extends AbstractParser
             ++$counterI;
         }
 
-        $count = (int)$xml->resultset['count'];
-        $fetchSize = (int)$xml->resultset['fetch-size'];
+        $count = (int) $xml->resultset['count'];
+        $fetchSize = (int) $xml->resultset['fetch-size'];
 
         $result = new FmResultSet(
             $commandUrlDebug,
-            (int)$xml->error['code'],
-            StringUtils::errorToEnglish((int)$xml->error['code']),
+            (int) $xml->error['code'],
+            StringUtils::errorToEnglish((int) $xml->error['code']),
             'FileMaker',
             $count,
             $fetchSize,

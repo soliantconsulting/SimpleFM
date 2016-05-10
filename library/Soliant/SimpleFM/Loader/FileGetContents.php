@@ -8,8 +8,8 @@
  */
 namespace Soliant\SimpleFM\Loader;
 
-use Soliant\SimpleFM\Adapter;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Adapter;
 
 class FileGetContents extends AbstractLoader
 {
@@ -22,17 +22,17 @@ class FileGetContents extends AbstractLoader
     {
         $this->prepare();
         libxml_use_internal_errors(true);
-        
-        $opts = array(
-            'ssl'=> array(
+
+        $opts = [
+            'ssl' => [
                 'verify_peer' => $this->adapter->getHostConnection()->getSslVerifyPeer(),
-            ),
-        );
+            ],
+        ];
 
         /**
          * Temporarily turn off error_reporting and capture any errors for handling later
          */
-        $context  = stream_context_create($opts);
+        $context = stream_context_create($opts);
         $errorLevel = error_reporting();
         error_reporting(0);
         $data = file_get_contents($this->commandUrl, false, $context);

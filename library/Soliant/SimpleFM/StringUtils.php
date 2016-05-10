@@ -2,8 +2,8 @@
 namespace Soliant\SimpleFM;
 
 use Soliant\SimpleFM\Exception\ReservedWordException;
-use Soliant\SimpleFM\Result\AbstractResult;
 use Soliant\SimpleFM\Exception\RuntimeException;
+use Soliant\SimpleFM\Result\AbstractResult;
 
 final class StringUtils
 {
@@ -20,9 +20,9 @@ final class StringUtils
         if (count($array) < 2) {
             $nameValue = explode('=', $array[0], 2);
             if (count($nameValue) < 2) {
-                $resultArray = array($string => null);
+                $resultArray = [$string => null];
             } else {
-                $resultArray = array($nameValue[0] => $nameValue[1]);
+                $resultArray = [$nameValue[0] => $nameValue[1]];
             }
         } else {
             foreach ($array as $item) {
@@ -37,6 +37,7 @@ final class StringUtils
 
     /**
      * Can't use native http_build_query because it drops args with empty values like &-find
+     *
      * @param array $commandArray
      * @return string
      */
@@ -63,7 +64,7 @@ final class StringUtils
      */
     public static function fieldNameIsValid($fieldName)
     {
-        $reservedNames = array('index', 'recid', 'modid');
+        $reservedNames = ['index', 'recid', 'modid'];
         if (in_array($fieldName, $reservedNames)) {
             throw new ReservedWordException(
                 'SimpleFM Exception: "' . $fieldName .
@@ -142,19 +143,19 @@ final class StringUtils
         /**
          * Capture HTTP error
          * Most common HTTP error message to expect (line break added for clarity):
-                file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml)
-                    [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
+         * file_get_contents(http://10.0.0.13:80/fmi/xml/fmresultset.xml)
+         * [function.file-get-contents]: failed to open stream: HTTP request failed! HTTP/1.1 401 Unauthorized
          */
-        $matches = array();
+        $matches = [];
         $message = preg_match('/HTTP\/[A-Za-z0-9\s\.]+/', $errorString, $matches);
         if (!empty($matches)) {
             // strip off the header prefix
             $matches = trim(str_replace('HTTP/1.1 ', '', $matches[0]));
             $result = explode(' ', $matches, 2);
             // normal case will yield an http error code in location 0 and a message in location 1
-            if ((int)$result[0] != 0) {
-                $return['errorCode'] = (int)$result[0];
-                $return['errorMessage'] = (string)$result[1];
+            if ((int) $result[0] != 0) {
+                $return['errorCode'] = (int) $result[0];
+                $return['errorMessage'] = (string) $result[1];
                 $return['errorType'] = 'HTTP';
             } else {
                 $return['errorCode'] = null;

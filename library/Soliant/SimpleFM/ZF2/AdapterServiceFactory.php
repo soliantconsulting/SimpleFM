@@ -9,11 +9,11 @@
 
 namespace Soliant\SimpleFM\ZF2;
 
+use Soliant\SimpleFM\Adapter;
+use Soliant\SimpleFM\Exception\InvalidArgumentException;
+use Soliant\SimpleFM\HostConnection;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-use Soliant\SimpleFM\Adapter;
-use Soliant\SimpleFM\HostConnection;
-use Soliant\SimpleFM\Exception\InvalidArgumentException;
 
 class AdapterServiceFactory implements FactoryInterface
 {
@@ -42,7 +42,7 @@ class AdapterServiceFactory implements FactoryInterface
 
         // mandatory params
         $hostName = $hostParams['hostName'];
-        $dbName   = $hostParams['dbName'];
+        $dbName = $hostParams['dbName'];
         $userName = $hostParams['userName'];
         $password = $hostParams['password'];
 

@@ -49,10 +49,10 @@ class HostConnection
         $port = 80,
         $sslVerifyPeer = true
     ) {
-        $this->hostName = $hostName ? : null;
-        $this->dbName = $dbName ? : null;
-        $this->userName = $userName ? : null;
-        $this->password = $password ? : null;
+        $this->hostName = $hostName ?: null;
+        $this->dbName = $dbName ?: null;
+        $this->userName = $userName ?: null;
+        $this->password = $password ?: null;
 
         if ($protocol) {
             $this->setProtocol($protocol);
@@ -61,7 +61,7 @@ class HostConnection
             $this->setPort($port);
         }
 
-        $this->setSslVerifyPeer((boolean)$sslVerifyPeer);
+        $this->setSslVerifyPeer((boolean) $sslVerifyPeer);
     }
 
     /**
@@ -150,7 +150,7 @@ class HostConnection
      */
     public function setProtocol($protocol)
     {
-        if (in_array($protocol, array('http', 'https'))) {
+        if (in_array($protocol, ['http', 'https'])) {
             $this->protocol = $protocol;
         } else {
             throw new InvalidArgumentException('setProtocol() accepts only "http" or "https" as an argument.');
@@ -163,7 +163,7 @@ class HostConnection
      */
     public function getSslVerifyPeer()
     {
-        return (boolean)$this->sslVerifyPeer;
+        return (boolean) $this->sslVerifyPeer;
     }
 
     /**
@@ -172,7 +172,7 @@ class HostConnection
      */
     public function setSslVerifyPeer($sslVerifyPeer)
     {
-        $this->sslVerifyPeer = (boolean)$sslVerifyPeer;
+        $this->sslVerifyPeer = (boolean) $sslVerifyPeer;
         return $this;
     }
 

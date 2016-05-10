@@ -8,9 +8,9 @@
  */
 namespace Soliant\SimpleFM\Loader;
 
+use SimpleXMLElement;
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\Exception\LoaderException;
-use SimpleXMLElement;
 
 class Curl extends AbstractLoader
 {

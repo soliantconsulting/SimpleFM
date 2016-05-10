@@ -1,9 +1,9 @@
 <?php
 namespace SoliantTest\SimpleFM;
 
-use Soliant\SimpleFM\HostConnection;
 use Soliant\SimpleFM\Exception\InvalidConnectionParametersException;
 use Soliant\SimpleFM\Exception\ReservedWordException;
+use Soliant\SimpleFM\HostConnection;
 
 class ExceptionTest extends \PHPUnit_Framework_TestCase
 {

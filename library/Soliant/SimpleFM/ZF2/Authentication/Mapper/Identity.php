@@ -97,6 +97,7 @@ class Identity
      * Keep the provided syntax for the property name, but also create one that is only alphanumeric
      * in case the field comes with spaces or special characters, so you don't have to do this every
      * time you want to use a property: $identity->{'My Table::My Field'}
+     *
      * @param $field
      * @param $value
      * @return Identity
@@ -162,7 +163,7 @@ class Identity
             return null;
         }
 
-        $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
+        $blockCipher = BlockCipher::factory('mcrypt', ['algo' => 'aes']);
         $blockCipher->setKey($encryptionKey);
         return $blockCipher->decrypt($this->password);
     }
@@ -185,7 +186,7 @@ class Identity
             throw new Exception\InvalidArgumentException('The encryptionKey must not be empty');
         }
 
-        $blockCipher = BlockCipher::factory('mcrypt', array('algo' => 'aes'));
+        $blockCipher = BlockCipher::factory('mcrypt', ['algo' => 'aes']);
         $blockCipher->setKey($encryptionKey);
         $this->password = $blockCipher->encrypt($password);
 

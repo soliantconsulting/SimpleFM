@@ -34,7 +34,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $params=array('hostname'=>'localhost','dbname'=>'testdb','username'=>'Admin','password'=>'');
+        $params = ['hostname' => 'localhost', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
         $hostConnection = new HostConnection(
             $params['hostname'],
             $params['dbname'],
@@ -59,7 +59,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $params = array('hostname'=>'localhost','dbname'=>'testdb','username'=>'Admin','password'=>'');
+        $params = ['hostname' => 'localhost', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
         $hostConnection = new HostConnection(
             $params['hostname'],
             $params['dbname'],
@@ -139,8 +139,10 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $value = $this->adapterInstance->setCommandString($commandString);
         $this->assertTrue($value instanceof $this->adapterInstance);
         $arr = $this->adapterInstance->getCommandArray();
-        $arr1=array('A' => 0,
-                    'C' => 'D');
+        $arr1 = [
+            'A' => 0,
+            'C' => 'D',
+        ];
         $this->assertEquals($arr, $arr1);
         $this->assertEquals($commandString, $this->adapterInstance->getCommandString());
 
@@ -155,9 +157,9 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetProtocol()
     {
-         $value = $this->adapterInstance->getHostConnection()->setProtocol('https');
+        $value = $this->adapterInstance->getHostConnection()->setProtocol('https');
 //         $this->assertTrue($value instanceof $this->adapterInstance);
-         $this->assertEquals($this->adapterInstance->getHostConnection()->getProtocol(), 'https');
+        $this->assertEquals($this->adapterInstance->getHostConnection()->getProtocol(), 'https');
     }
 
     /**
@@ -178,7 +180,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetPort()
     {
-        $value=$this->adapterInstance->getHostConnection()->setPort('8080');
+        $value = $this->adapterInstance->getHostConnection()->setPort('8080');
 //        $this->assertTrue($value instanceof $this->adapterInstance);
         $this->assertEquals($this->adapterInstance->getHostConnection()->getPort(), '8080');
     }
@@ -200,8 +202,8 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetCommandURLDebug()
     {
-         $commandURL = 'http://Admin:[...]@localhost:80/fmi/xml/fmresultset.xml?-db=testdb&-lay=&-findany';
-         $this->assertEquals($commandURL, $this->adapterInstance->getCommandUrlDebug());
+        $commandURL = 'http://Admin:[...]@localhost:80/fmi/xml/fmresultset.xml?-db=testdb&-lay=&-findany';
+        $this->assertEquals($commandURL, $this->adapterInstance->getCommandUrlDebug());
     }
 
     /**

@@ -9,13 +9,14 @@
 
 namespace Soliant\SimpleFM\ZF2\Authentication\Adapter;
 
-use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\Result\FmResultSet;
+use Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity;
 use Zend\Authentication\Result;
 
 /**
  * Class SimpleFM
+ *
  * @package Soliant\SimpleFM\ZF2\Authentication\Adapter
  */
 class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
@@ -153,7 +154,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
      */
     public function setRememberMe($rememberMe)
     {
-        $this->rememberMe = (boolean)$rememberMe;
+        $this->rememberMe = (boolean) $rememberMe;
         return $this;
     }
 
@@ -245,7 +246,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                 $identity,
                 [
                     'reason' => 'Username and/or password not valid',
-                    'sfm_auth_response' => $sfmResult
+                    'sfm_auth_response' => $sfmResult,
                 ]
             );
         }
@@ -265,7 +266,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
             $identity,
             [
                 'reason' => 'There was a system error trying to make the request. Please try again later.',
-                'sfm_auth_response' => $sfmResult
+                'sfm_auth_response' => $sfmResult,
             ]
         );
     }
@@ -286,7 +287,7 @@ class SimpleFM implements \Zend\Authentication\Adapter\AdapterInterface
                     $sfmResult->getErrorType() . ' error ' .
                     $sfmResult->getErrorCode() . ': ' .
                     $sfmResult->getErrorMessage(),
-                'sfm_auth_response' => $sfmResult
+                'sfm_auth_response' => $sfmResult,
             ]
         );
     }

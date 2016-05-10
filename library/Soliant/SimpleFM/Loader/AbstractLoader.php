@@ -10,11 +10,11 @@ namespace Soliant\SimpleFM\Loader;
 
 use SimpleXMLElement;
 use Soliant\SimpleFM\Adapter;
-use Soliant\SimpleFM\StringUtils;
 use Soliant\SimpleFM\Exception\LoaderException;
 use Soliant\SimpleFM\Result\AbstractResult;
-use Soliant\SimpleFM\Result\FmResultSet;
 use Soliant\SimpleFM\Result\FmLayout;
+use Soliant\SimpleFM\Result\FmResultSet;
+use Soliant\SimpleFM\StringUtils;
 
 abstract class AbstractLoader
 {
@@ -188,7 +188,7 @@ abstract class AbstractLoader
             // strip the password out of the credentials
             $debugUrl = str_replace($this->credentials, $this->username . ':[...]', $this->commandUrl);
         }
-        return (string)$debugUrl;
+        return (string) $debugUrl;
     }
 
     /**

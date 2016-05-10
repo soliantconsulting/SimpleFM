@@ -63,8 +63,8 @@ class FmResultSetParser extends AbstractParser
                 // validate fieldnames on first row
                 $fieldNameIsValid = $counterI === 0 ? StringUtils::fieldnameIsValid($fieldname) : true;
                 $rows[$conditional_id][$fieldname] = $fielddata;
-
             }
+
             // check if portals exist
             if (isset($xml->resultset[0]->record[0]->relatedset)) {
                 // the portal index

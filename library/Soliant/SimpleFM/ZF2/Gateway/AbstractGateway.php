@@ -419,22 +419,15 @@ abstract class AbstractGateway
 
         if ($simpleFMAdapterResult->getErrorCode() === 0) {
             return $simpleFMAdapterResult;
-
         } elseif ($simpleFMAdapterResult->getErrorType() == 'FileMaker' && $simpleFMAdapterResult->getErrorCode() === 401) {
-            /**
-             * Don't throw an error for a FileMaker 401: "No records match the request"
-             */
+            //Don't throw an error for a FileMaker 401: "No records match the request"
             return $simpleFMAdapterResult;
-
         } elseif ($simpleFMAdapterResult->getErrorType() == 'FileMaker') {
             throw new FileMakerException($message, $simpleFMAdapterResult->getErrorCode());
-
         } elseif ($simpleFMAdapterResult->getErrorType() == 'HTTP') {
             throw new HttpException($message, $simpleFMAdapterResult->getErrorCode());
-
         } elseif ($simpleFMAdapterResult->getErrorType() == 'XML') {
             throw new XmlException($message, $simpleFMAdapterResult->getErrorCode());
-
         } else {
             throw new ErrorException($message, $simpleFMAdapterResult->getErrorCode());
         }

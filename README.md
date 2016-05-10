@@ -91,17 +91,53 @@ use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\HostConnection;
 ```
     
-## Basic Adapter Configuration
+## Adapter Configuration
 
-Create a new HostConnection object.
+Create a new `HostConnection` object.
+
+The `HostConnection` constructor looks like this:
+
+```
+public function __construct(
+    $hostName,
+    $dbName,
+    $userName,
+    $password,
+    $protocol = 'http',
+    $port = 80,
+    $sslVerifyPeer = true
+)
+```
+
+The `Adapter` constructor looks like this:
+
+```
+public function __construct(HostConnection $hostParams)
+```
+
+Minimum-required configuration example:
 
 ```
 $hostConnection = new HostConnection(
     'localhost',
     'FMServer_Sample',
-    'Admin',
-    ''
+    'WebUser',
+    'ArwR9zqbmAzSwpk5'
 );
+```
+
+Optional `Soliant\SimpleFM\ZF2\AdapterServiceFactory` configuration example:
+
+```
+'simple_fm_host_params' => [
+    'hostName' => 'localhost',
+    'dbName' => 'FMServer_Sample',
+    'userName' => 'WebUser',
+    'password' => 'ArwR9zqbmAzSwpk5',
+    'protocol' => 'https',
+    'port' => '443',
+    'sslVerifyPeer' => false,
+],
 ```
 
 ### Instantiate the Adapter

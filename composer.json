@@ -12,16 +12,16 @@
         {"name": "Jeremiah Small", "email": "jsmall@soliantconsulting.com"}
     ],
     "require": {
-      "php": ">=5.5.0",
-      "doctrine/common": ">=2.2.0"
+        "php": "^5.5 || ^7.0",
+        "doctrine/common": "^2.2.0"
     },
     "require-dev": {
-        "zendframework/zendframework": "~2.5",
-        "phpunit/PHPUnit": "4.7.*",
-        "phpunit/phpunit-skeleton-generator": "*",
-        "mockery/mockery": "~0.9.4",
-        "squizlabs/php_codesniffer": "2.*",
-        "codeclimate/php-test-reporter": "dev-master"
+        "zendframework/zendframework": "^2.5",
+        "phpunit/PHPUnit": "^4.7",
+        "phpunit/phpunit-skeleton-generator": "^2.0",
+        "mockery/mockery": "^0.9.4",
+        "squizlabs/php_codesniffer": "^2.6",
+        "codeclimate/php-test-reporter": "^0.3"
     },
     "suggest": {
         "zendframework/zendframework": "Required if you plan on using SimpleFM/ZF2 components."

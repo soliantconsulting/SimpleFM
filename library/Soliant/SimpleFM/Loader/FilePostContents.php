@@ -35,9 +35,9 @@ class FilePostContents extends AbstractLoader
                     PHP_EOL,
                 'content' => $this->args,
             ),
-//             'ssl'=> array(
-//                 'verify_peer' => $this->adapter->getSslVerifyPeer(),
-//             ),
+            'ssl' => [
+                'verify_peer' => $this->adapter->getHostConnection()->getSslVerifyPeer(),
+            ],
         );
 
         /**

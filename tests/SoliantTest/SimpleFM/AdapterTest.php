@@ -34,7 +34,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $params = ['hostname' => 'localhost', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
+        $params = ['hostname' => 'fake.local', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
         $hostConnection = new HostConnection(
             $params['hostname'],
             $params['dbname'],
@@ -59,7 +59,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testConstruct()
     {
-        $params = ['hostname' => 'localhost', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
+        $params = ['hostname' => 'fake.local', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
         $hostConnection = new HostConnection(
             $params['hostname'],
             $params['dbname'],
@@ -202,7 +202,7 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSetCommandURLDebug()
     {
-        $commandURL = 'http://Admin:[...]@localhost:80/fmi/xml/fmresultset.xml?-db=testdb&-lay=&-findany';
+        $commandURL = 'http://Admin:[...]@fake.local:80/fmi/xml/fmresultset.xml?-db=testdb&-lay=&-findany';
         $this->assertEquals($commandURL, $this->adapterInstance->getCommandUrlDebug());
     }
 

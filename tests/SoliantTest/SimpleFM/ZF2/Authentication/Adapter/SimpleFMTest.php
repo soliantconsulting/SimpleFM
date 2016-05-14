@@ -3,6 +3,7 @@ namespace SoliantTest\SimpleFM\ZF2\Authentication\Adapter;
 
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\HostConnection;
+use Soliant\SimpleFM\Loader\Curl;
 use Soliant\SimpleFM\Loader\Mock as MockLoader;
 use Soliant\SimpleFM\ZF2\Authentication\Adapter\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\ZF2\Authentication\Adapter\SimpleFM;
@@ -203,6 +204,9 @@ class SimpleFMTest extends \PHPUnit_Framework_TestCase
     public function testAuthenticatePhpError()
     {
         $simpleFmAdapter = new Adapter($this->hostConnection);
+        $loader = new MockLoader();
+        $loader->setMockError('PHP');
+        $simpleFmAdapter->setLoader($loader);
         $authAdapterPhpError = new SimpleFM($this->authAdapterConfig, $simpleFmAdapter);
         $this->assertInstanceOf(Result::class, $authAdapterPhpError->authenticate());
     }

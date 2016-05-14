@@ -1,6 +1,7 @@
 <?php
 namespace SoliantTest\SimpleFM\Parser;
 
+use Soliant\SimpleFM\Exception\ReservedWordException;
 use Soliant\SimpleFM\Parser\FmResultSetParser;
 use Soliant\SimpleFM\Result\FmResultSet;
 
@@ -12,7 +13,17 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @var FmResultSetParser
      */
-    protected $object;
+    protected $fmResultSetParser1;
+
+    /**
+     * @var FmResultSetParser
+     */
+    protected $fmResultSetParser2;
+
+    /**
+     * @var FmResultSetParser
+     */
+    protected $fmResultSetParser3;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -21,8 +32,13 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $xml = file_get_contents(__DIR__ . '/../TestAssets/projectsampledata.xml');
-        $commandDebugUrl = 'commandUrlDebug';
-        $this->object = new FmResultSetParser($xml, $commandDebugUrl);
+        $this->fmResultSetParser1 = new FmResultSetParser($xml);
+
+        $xml = file_get_contents(__DIR__ . '/../TestAssets/duplicateportals.xml');
+        $this->fmResultSetParser2 = new FmResultSetParser($xml);
+
+        $xml = file_get_contents(__DIR__ . '/../TestAssets/reservedfieldname.xml');
+        $this->fmResultSetParser3 = new FmResultSetParser($xml);
     }
 
     /**
@@ -36,11 +52,18 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::setRowsByRecId
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      */
     public function testParseWithRowsByRecId()
     {
-        $this->object->setRowsByRecId(true);
-        $result = $this->object->parse('commandUrlDebug');
+        $this->fmResultSetParser1->setRowsByRecId(true);
+        $result = $this->fmResultSetParser1->parse('commandUrlDebug');
         $this->assertInstanceOf(FmResultSet::class, $result);
         $rows = $result->getRows();
 
@@ -51,10 +74,17 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::__construct
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      */
     public function testParseWithRowsByIndex()
     {
-        $result = $this->object->parse('commandUrlDebug');
+        $result = $this->fmResultSetParser1->parse('commandUrlDebug');
         $this->assertInstanceOf(FmResultSet::class, $result);
         $rows = $result->getRows();
 
@@ -69,23 +99,38 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      * @todo test parse execution with 2 identical portals on the same layout
      */
     public function testParseWithNonUniquePortalsOnSameLayout()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $result = $this->fmResultSetParser2->parse('commandUrlDebug');
+        $this->assertInstanceOf(FmResultSet::class, $result);
+        $rows = $result->getRows();
+        $this->assertEquals($rows[0]['log_ASC__Associate']['portalrecordcount'], 1);
+        $this->assertEquals($rows[0]['log_LOG__related']['portalrecordcount'], 2);
     }
 
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      * @todo test parse execution with invalid field names
      */
     public function testParseWithInvalidFieldName()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->setExpectedException(ReservedWordException::class);
+        $this->fmResultSetParser3->parse('commandUrlDebug');
     }
 }

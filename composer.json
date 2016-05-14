@@ -24,7 +24,8 @@
         "codeclimate/php-test-reporter": "^0.3"
     },
     "suggest": {
-        "zendframework/zendframework": "Required if you plan on using SimpleFM/ZF2 components."
+        "zendframework/zendframework": "Required if you plan on using SimpleFM/ZF2 components.",
+        "ext-mcrypt": "Required for SimpleFM/ZF2/Authentication if you plan on enabling password retrieval."
     },
     "autoload": {
         "psr-0": {

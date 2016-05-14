@@ -33,6 +33,7 @@ class Curl extends AbstractLoader
 
         ob_start();
         $success = curl_exec($curlHandle);
+
         if (!$success) {
             $curlError['type'] = 'CURL';
             $curlError['code'] = curl_errno($curlHandle);
@@ -41,7 +42,6 @@ class Curl extends AbstractLoader
         curl_close($curlHandle);
         $data = trim(ob_get_contents());
         ob_end_clean();
-
 
         return $this->handleReturn($data, $curlError);
     }

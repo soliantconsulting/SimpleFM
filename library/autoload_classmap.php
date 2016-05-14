@@ -16,6 +16,7 @@ return [
     'Soliant\SimpleFM\Result\AbstractResult'                                         => __DIR__ . '/Soliant/SimpleFM/Result/AbstractResult.php',
 
     'Soliant\SimpleFM\Adapter'                                                       => __DIR__ . '/Soliant/SimpleFM/Adapter.php',
+    'Soliant\SimpleFM\ErrorCodes'                                                    => __DIR__ . '/Soliant/SimpleFM/ErrorCodes.php',
     'Soliant\SimpleFM\Exception\ErrorException'                                      => __DIR__ . '/Soliant/SimpleFM/Exception/ErrorException.php',
     'Soliant\SimpleFM\Exception\FileMakerException'                                  => __DIR__ . '/Soliant/SimpleFM/Exception/FileMakerException.php',
     'Soliant\SimpleFM\Exception\HttpException'                                       => __DIR__ . '/Soliant/SimpleFM/Exception/HttpException.php',
@@ -36,7 +37,6 @@ return [
     'Soliant\SimpleFM\Result\FmResultSet'                                            => __DIR__ . '/Soliant/SimpleFM/Result/FmResultSet.php',
     'Soliant\SimpleFM\StringUtils'                                                   => __DIR__ . '/Soliant/SimpleFM/StringUtils.php',
     'Soliant\SimpleFM\Version'                                                       => __DIR__ . '/Soliant/SimpleFM/Version.php',
-);
 ];
 /**
 cd library

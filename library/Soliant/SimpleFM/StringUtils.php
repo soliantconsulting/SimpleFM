@@ -167,7 +167,6 @@ final class StringUtils
          * See http://curl.haxx.se/libcurl/c/libcurl-errors.html
          */
         return self::buildErrorArray(7, $errorString, 'PHP');
-
     }
 
     /**
@@ -183,7 +182,6 @@ final class StringUtils
         $return['errorType'] = $errorType;
         return $return;
     }
-
 
     /**
      * See http://php.net/manual/en/function.error-get-last.php

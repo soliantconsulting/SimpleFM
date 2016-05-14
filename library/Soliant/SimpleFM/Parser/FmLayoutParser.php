@@ -1,6 +1,7 @@
 <?php
 namespace Soliant\SimpleFM\Parser;
 
+use Soliant\SimpleFM\ErrorCodes;
 use Soliant\SimpleFM\Result\FmLayout;
 use Soliant\SimpleFM\StringUtils;
 
@@ -62,7 +63,7 @@ class FmLayoutParser extends AbstractParser
         $result = new FmLayout(
             $commandUrlDebug,
             (int) $xml->ERRORCODE,
-            StringUtils::errorToEnglish((int) $xml->ERRORCODE),
+            ErrorCodes::errorToEnglish((int) $xml->ERRORCODE),
             'FileMaker',
             $product,
             $layout,

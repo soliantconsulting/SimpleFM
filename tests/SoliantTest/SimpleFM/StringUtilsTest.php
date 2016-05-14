@@ -1,6 +1,7 @@
 <?php
 namespace SoliantTest\SimpleFM;
 
+use Soliant\SimpleFM\ErrorCodes;
 use Soliant\SimpleFM\StringUtils;
 
 /**
@@ -32,6 +33,7 @@ class StringUtilsTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\StringUtils::explodeNameValueString
+     * @covers Soliant\SimpleFM\StringUtils::buildCommandNameValue
      */
     public function testExplodeNameValueString()
     {
@@ -50,7 +52,6 @@ class StringUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $array);
         $this->assertEquals($array['name'], 'value');
         $this->assertEquals($array['-find'], null);
-
     }
 
     /**
@@ -153,6 +154,7 @@ Error 76: Error message
 
     /**
      * @covers Soliant\SimpleFM\StringUtils::extractErrorFromPhpMessage
+     * @covers Soliant\SimpleFM\StringUtils::buildErrorArray
      * @covers Soliant\SimpleFM\StringUtils::errorClearLast
      */
     public function testExtractErrorFromPhpMessage()
@@ -175,12 +177,12 @@ Error 76: Error message
     }
 
     /**
-     * @covers Soliant\SimpleFM\StringUtils::errorToEnglish
+     * @covers Soliant\SimpleFM\ErrorCodes::errorToEnglish
      */
     public function testErrorToEnglish()
     {
         $error = [0 => 'No Error', 10 => 'Requested data is missing'];
-        $this->assertEquals(StringUtils::errorToEnglish(10), 'Requested data is missing');
-        $this->assertEquals(StringUtils::errorToEnglish('fake value'), 'Undefined');
+        $this->assertEquals(ErrorCodes::errorToEnglish(10), 'Requested data is missing');
+        $this->assertEquals(ErrorCodes::errorToEnglish('fake value'), 'Undefined');
     }
 }

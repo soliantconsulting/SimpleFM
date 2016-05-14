@@ -2,7 +2,7 @@
 namespace Soliant\SimpleFM\Parser;
 
 use SimpleXMLElement;
-use Soliant\SimpleFM\Exception\UnexpectedValueException;
+use Soliant\SimpleFM\ErrorCodes;
 use Soliant\SimpleFM\Result\FmResultSet;
 use Soliant\SimpleFM\StringUtils;
 
@@ -73,7 +73,7 @@ class FmResultSetParser extends AbstractParser
         $result = new FmResultSet(
             $commandUrlDebug,
             (int) $this->xml->error['code'],
-            StringUtils::errorToEnglish((int) $this->xml->error['code']),
+            ErrorCodes::errorToEnglish((int) $this->xml->error['code']),
             'FileMaker',
             $count,
             $fetchSize,

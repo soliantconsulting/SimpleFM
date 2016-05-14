@@ -36,6 +36,13 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::setRowsByRecId
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      */
     public function testParseWithRowsByRecId()
     {
@@ -51,6 +58,13 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::__construct
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      */
     public function testParseWithRowsByIndex()
     {
@@ -69,6 +83,13 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      * @todo test parse execution with 2 identical portals on the same layout
      */
     public function testParseWithNonUniquePortalsOnSameLayout()
@@ -80,6 +101,13 @@ class FmResultSetParserTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parse
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parseRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortal
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::parsePortalRow
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::getPortalConditionalId
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldName
+     * @covers Soliant\SimpleFM\Parser\FmResultSetParser::extractFieldData
      * @todo test parse execution with invalid field names
      */
     public function testParseWithInvalidFieldName()

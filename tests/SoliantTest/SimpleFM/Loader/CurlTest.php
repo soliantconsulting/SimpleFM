@@ -27,7 +27,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $params = ['hostname' => 'localhost', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
+        $params = ['hostname' => 'fake.local', 'dbname' => 'testdb', 'username' => 'Admin', 'password' => ''];
         $hostConnection = new HostConnection(
             $params['hostname'],
             $params['dbname'],

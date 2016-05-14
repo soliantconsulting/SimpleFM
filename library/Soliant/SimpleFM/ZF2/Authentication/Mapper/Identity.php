@@ -67,7 +67,7 @@ class Identity
     public function __construct(
         $username = null,
         $password = null,
-        $rememberme = false,
+        $rememberMe = false,
         $encryptionKey = null,
         array $simpleFMAdapterRow = []
     ) {
@@ -84,7 +84,7 @@ class Identity
             }
         }
 
-        $this->rememberme = (boolean) $rememberme;
+        $this->rememberme = (boolean) $rememberMe;
 
         if (!empty($simpleFMAdapterRow)) {
             foreach ($simpleFMAdapterRow as $field => $value) {

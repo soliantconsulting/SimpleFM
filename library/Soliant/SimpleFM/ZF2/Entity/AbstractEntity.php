@@ -286,15 +286,10 @@ abstract class AbstractEntity implements ArraySerializableInterface
                 $this->simpleFMAdapterRow['-modid'] = $modid;
             }
         } else {
-            try {
-                $this->simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
-            } catch (\Exception $e) {
-                if (!is_callable($this, $getterName)) {
-                    throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
-                } else {
-                    throw $e;
-                }
+            if (!method_exists($this, $getterName)) {
+                throw new InvalidArgumentException($getterName . ' is not a valid getter.');
             }
+            $this->simpleFMAdapterRow[$fileMakerFieldName] = $this->$getterName();
         }
     }
 
@@ -309,15 +304,9 @@ abstract class AbstractEntity implements ArraySerializableInterface
     {
         $getterName = 'get' . ucfirst($propertyName);
 
-        try {
-            $this->entityAsArray[$propertyName] = $this->$getterName();
-        } catch (\Exception $e) {
-            if (!is_callable($this, $getterName)) {
-                throw new InvalidArgumentException($getterName . ' is not a valid getter.', '', $e);
-            } else {
-                throw $e;
-            }
+        if (!method_exists($this, $getterName)) {
+            throw new InvalidArgumentException($getterName . ' is not a valid getter.');
         }
-
+        $this->entityAsArray[$propertyName] = $this->$getterName();
     }
 }

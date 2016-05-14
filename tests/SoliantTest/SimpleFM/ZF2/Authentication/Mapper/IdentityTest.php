@@ -12,7 +12,12 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
     /**
      * @var Identity
      */
-    protected $object;
+    protected $identity1;
+
+    /**
+     * @var Identity
+     */
+    protected $identity2;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -20,11 +25,19 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-        $this->object = new Identity(
+        $this->identity1 = new Identity(
             'username',
             'password',
             true,
             null,
+            ['simpleFMAdapterRowKey' => 'simpleFMAdapterRowValue']
+        );
+
+        $this->identity2 = new Identity(
+            'username',
+            'password',
+            false,
+            'encryptionKey',
             ['simpleFMAdapterRowKey' => 'simpleFMAdapterRowValue']
         );
     }
@@ -47,9 +60,10 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetsSets()
     {
-        $this->object->setIsLoggedIn(true);
-        $this->assertEquals(true, $this->object->getIsLoggedIn());
-        $this->assertEquals('username', $this->object->getUsername());
+        $this->identity1->setIsLoggedIn(true);
+        $this->assertEquals(true, $this->identity1->getIsLoggedIn());
+        $this->assertEquals('username', $this->identity1->getUsername());
+        $this->assertEquals('password', $this->identity2->getPassword('encryptionKey'));
     }
 
     /**
@@ -57,8 +71,8 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetPassword()
     {
-        $this->assertEquals(null, $this->object->getPassword(''));
-        $this->assertEquals(null, $this->object->getPassword('fakeEncryptionKey'));
+        $this->assertEquals(null, $this->identity1->getPassword(''));
+        $this->assertEquals(null, $this->identity1->getPassword('fakeEncryptionKey'));
     }
 
     /**
@@ -67,7 +81,7 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
     public function testSetPasswordBadEncryptionKey()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->object->setPassword('password', []);
+        $this->identity1->setPassword('password', []);
     }
 
     /**
@@ -76,20 +90,19 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
     public function testSetPasswordBadPassword()
     {
         $this->setExpectedException(InvalidArgumentException::class);
-        $this->object->setPassword([], []);
+        $this->identity1->setPassword([], []);
     }
 
     /**
      * @covers Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity::setPassword
      * @covers Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity::getPassword
-     * @todo   Implement testSetAndGetPasswordGood().
-     * Requires mcrypt PHP extension
+     * Requires ext-mcrypt (PHP extension)
      */
     public function testSetAndGetPasswordGood()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->identity1->setPassword('password', 'encryptionKey');
+        $this->assertEquals('password', $this->identity1->getPassword('encryptionKey'));
+        $this->identity1->setPassword('password', 'encryptionKey');
+        $this->assertNotSame('password', $this->identity1->getPassword('wrongEncryptionKey'));
     }
 }

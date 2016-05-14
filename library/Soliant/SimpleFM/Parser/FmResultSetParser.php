@@ -125,11 +125,6 @@ class FmResultSetParser extends AbstractParser
         $this->rows[$conditionalId][$portalName]['parentindex'] = (int) $this->counterI;
         $this->rows[$conditionalId][$portalName]['parentrecid'] = (int) $row['record-id'];
         $this->rows[$conditionalId][$portalName]['portalindex'] = (int) $this->counterIi;
-
-        /**
-         * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
-         * portals. Test for possible issues with $portalName being non-unique.
-         */
         $this->rows[$conditionalId][$portalName]['portalrecordcount'] = (int) $portal['count'];
 
         // the portal row index

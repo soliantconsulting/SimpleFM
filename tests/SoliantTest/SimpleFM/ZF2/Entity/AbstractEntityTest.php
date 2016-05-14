@@ -34,6 +34,11 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
     protected $mockEntityInstance;
 
     /**
+     * @var AbstractEntity
+     */
+    protected $mockEntityInstanceBad;
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
@@ -63,7 +68,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $result = $this->mockAdapterInstance->execute();
         $rows = $result->getRows();
 
-        /***********************************************************************************************************
+        /** *********************************************************************************************************
          * Mock Entity 1
          */
 
@@ -95,12 +100,10 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $this->mockEntityInstanceEmpty->expects($this->any())
             ->method('getPropertyNameWriteable')
             ->will($this->returnValue('value'));
-//        $this->mockEntityInstanceEmpty->propertyNameWriteable = 'value';
 
         $this->mockEntityInstanceEmpty->expects($this->any())
             ->method('getPropertyNameReadOnly')
             ->will($this->returnValue('value2'));
-//        $this->mockEntityInstanceEmpty->propertyNameReadOnly = 'value2';
 
         $this->mockEntityInstanceEmpty->expects($this->any())
             ->method('getFieldMapWriteable')
@@ -120,7 +123,7 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 
         $this->mockEntityInstanceEmpty->__construct();
 
-        /***********************************************************************************************************
+        /** *********************************************************************************************************
          * Mock Entity 2
          */
         $mockClassName = 'MockEntity2';
@@ -166,6 +169,33 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('route-segment'));
 
         $this->mockEntityInstance->__construct($rows[0]);
+
+        /** *********************************************************************************************************
+         * Mock Entity 3
+         */
+        $mockClassName = 'MockEntity3';
+        $mockedMethods = [
+            'getFieldMapWriteable',
+            'getFieldMapMerged',
+        ];
+        $this->mockEntityInstanceBad = $this->getMockForAbstractClass(
+            $originalClassName,
+            $arguments,
+            $mockClassName,
+            $callOriginalConstructor,
+            $callOriginalClone,
+            $callAutoload,
+            $mockedMethods,
+            $cloneArguments
+        );
+        $this->mockEntityInstanceBad->expects($this->any())
+            ->method('getFieldMapWriteable')
+            ->will($this->returnValue(['propertyNameNonExistent' => 'fieldNameNonExistent']));
+        $this->mockEntityInstanceBad->expects($this->any())
+            ->method('getFieldMapMerged')
+            ->will($this->returnValue(['propertyNameNonExistent' => 'fieldNameNonExistent']));
+
+        $this->mockEntityInstanceBad->__construct();
     }
 
     /**
@@ -281,15 +311,19 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Soliant\SimpleFM\ZF2\Entity\AbstractEntity::serializeField
-     * @covers Soliant\SimpleFM\ZF2\Entity\AbstractEntity::addPropertyToEntityAsArray
-     * @todo   Implement testExchangeArrayExceptions().
-     * Requires mcrypt PHP extension
      */
-    public function testExchangeArrayExceptions()
+    public function testSerializeExceptions()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->mockEntityInstanceBad->serialize();
+    }
+
+    /**
+     * @covers Soliant\SimpleFM\ZF2\Entity\AbstractEntity::addPropertyToEntityAsArray
+     */
+    public function testGetArrayCopyExceptions()
+    {
+        $this->setExpectedException(InvalidArgumentException::class);
+        $this->mockEntityInstanceBad->getArrayCopy();
     }
 }

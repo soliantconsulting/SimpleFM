@@ -96,15 +96,7 @@ class FmResultSetParser extends AbstractParser
 
         foreach ($this->xml->resultset[0]->record[$this->counterI]->field as $field) {
             $fieldName = $this->extractFieldName($field);
-            if ($field->count() > 1) {
-                $fieldData = [];
-                foreach ($field->data as $data) {
-                    $fieldData[] = (string) $data;
-                }
-            } else {
-                $fieldData = (string) $field->data;
-            }
-
+            $fieldData = $this->extractFieldData($field);
             $this->rows[$conditionalId][$fieldName] = $fieldData;
         }
 
@@ -166,14 +158,7 @@ class FmResultSetParser extends AbstractParser
         // handle portal fields
         foreach ($this->xml->resultset[0]->record[$this->counterI]->relatedset[$this->counterIi]->record[$this->counterIii]->field as $portalField) {
             $portalFieldName = $this->extractFieldName($portalField, $portalName);
-            if ($portalField->count() > 1) {
-                $portalFieldData = [];
-                foreach ($portalField->data as $data) {
-                    $portalFieldData[] = (string) $data;
-                }
-            } else {
-                $portalFieldData = (string) $portalField->data;
-            }
+            $portalFieldData = $this->extractFieldData($portalField);
             $this->rows[$conditionalId][$portalName]['rows'][$portalConditionalId][$portalFieldName] = $portalFieldData;
         }
         ++$this->counterIii;
@@ -217,5 +202,18 @@ class FmResultSetParser extends AbstractParser
         }
 
         return $fieldName;
+    }
+
+    private function extractFieldData(SimpleXMLElement $field)
+    {
+        if ($field->count() > 1) {
+            $fieldData = [];
+            foreach ($field->data as $data) {
+                $fieldData[] = (string) $data;
+            }
+        } else {
+            $fieldData = (string) $field->data;
+        }
+        return $fieldData;
     }
 }

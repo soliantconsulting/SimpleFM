@@ -1,11 +1,33 @@
 <?php
 namespace Soliant\SimpleFM\Parser;
 
+use SimpleXMLElement;
+use Soliant\SimpleFM\Exception\UnexpectedValueException;
 use Soliant\SimpleFM\Result\FmResultSet;
 use Soliant\SimpleFM\StringUtils;
 
 class FmResultSetParser extends AbstractParser
 {
+    /**
+     * @var int
+     */
+    private $counterI;
+
+    /**
+     * @var int
+     */
+    private $counterIi;
+
+    /**
+     * @var int
+     */
+    private $counterIii;
+
+    /**
+     * @var array
+     */
+    private $rows;
+
     /**
      * fmi/xml grammar
      */
@@ -33,102 +55,167 @@ class FmResultSetParser extends AbstractParser
             return $this->handleEmptyXml(FmResultSet::class, $commandUrlDebug);
         }
 
-        $xml = $this->xml;
-        $rows = [];
+        $this->rows = [];
 
         /**
          *   simplexml fmresultset path reference:
          *   $fmresultset->resultset[0]->record[0]->field[0]->data[0]
          */
         // loop over rows
-        $counterI = 0;
-        foreach ($xml->resultset[0]->record as $row) {
-            $conditional_id = $this->rowsByRecId === true ? (string) $row['record-id'] : (int) $counterI;
-
-            $rows[$conditional_id]['index'] = (int) $counterI;
-            $rows[$conditional_id]['recid'] = (int) $row['record-id'];
-            $rows[$conditional_id]['modid'] = (int) $row['mod-id'];
-
-            foreach ($xml->resultset[0]->record[$counterI]->field as $field) {
-                $fieldname = (string) $field['name'];
-                if (count($field) > 1) {
-                    $fielddata = [];
-                    foreach ($field->data as $data) {
-                        $fielddata[] = (string) $data;
-                    }
-                } else {
-                    $fielddata = (string) $field->data;
-                }
-
-                // validate fieldnames on first row
-                $fieldNameIsValid = $counterI === 0 ? StringUtils::fieldnameIsValid($fieldname) : true;
-                $rows[$conditional_id][$fieldname] = $fielddata;
-            }
-
-            // check if portals exist
-            if (isset($xml->resultset[0]->record[0]->relatedset)) {
-                // the portal index
-                $counterIi = 0;
-                // handle portals
-                foreach ($xml->resultset[0]->record[0]->relatedset as $portal) {
-                    $portalname = (string) $portal['table'];
-
-                    $rows[$conditional_id][$portalname]['parentindex'] = (int) $counterI;
-                    $rows[$conditional_id][$portalname]['parentrecid'] = (int) $row['record-id'];
-                    $rows[$conditional_id][$portalname]['portalindex'] = (int) $counterIi;
-                    /**
-                     * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
-                     * portals. Test for possible issues with $portalname being non-unique.
-                     */
-                    $rows[$conditional_id][$portalname]['portalrecordcount'] = (int) $portal['count'];
-
-                    // the portal row index
-                    $counterIii = 0;
-                    // handle portal rows
-                    foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record as $portal_row) {
-                        $portal_cond_id = $this->rowsByRecId === true ? (int) $portal_row['record-id'] : $counterIii;
-
-                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['index'] = (int) $counterIii;
-                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['modid'] = (int) $portal_row['mod-id'];
-                        $rows[$conditional_id][$portalname]['rows'][$portal_cond_id]['recid'] = (int) $portal_row['record-id'];
-
-                        // handle portal fields
-                        foreach ($xml->resultset[0]->record[$counterI]->relatedset[$counterIi]->record[$counterIii]->field as $portal_field) {
-                            $portal_fieldname = (string) str_replace($portalname . '::', '', $portal_field['name']);
-                            if (count($portal_field) > 1) {
-                                $portal_fielddata = [];
-                                foreach ($portal_field->data as $data) {
-                                    $portal_fielddata[] = (string) $data;
-                                }
-                            } else {
-                                $portal_fielddata = (string) $portal_field->data;
-                            }
-
-                            // validate fieldnames on first row
-                            $fieldNameIsValid = $counterIii === 0 ? StringUtils::fieldnameIsValid($portal_fieldname) : true;
-                            $rows[$conditional_id][$portalname]['rows'][$portal_cond_id][$portal_fieldname] = $portal_fielddata;
-                        }
-                        ++$counterIii;
-                    }
-                    ++$counterIi;
-                }
-            }
-            ++$counterI;
+        $this->counterI = 0;
+        foreach ($this->xml->resultset[0]->record as $row) {
+            $this->parseRow($row);
         }
 
-        $count = (int) $xml->resultset['count'];
-        $fetchSize = (int) $xml->resultset['fetch-size'];
+        $count = (int) $this->xml->resultset['count'];
+        $fetchSize = (int) $this->xml->resultset['fetch-size'];
 
         $result = new FmResultSet(
             $commandUrlDebug,
-            (int) $xml->error['code'],
-            StringUtils::errorToEnglish((int) $xml->error['code']),
+            (int) $this->xml->error['code'],
+            StringUtils::errorToEnglish((int) $this->xml->error['code']),
             'FileMaker',
             $count,
             $fetchSize,
-            $rows
+            $this->rows
         );
 
         return $result;
+    }
+
+    /**
+     * @param $row
+     */
+    private function parseRow($row)
+    {
+        $conditionalId = $this->getConditionalId($row);
+
+        $this->rows[$conditionalId]['index'] = (int) $this->counterI;
+        $this->rows[$conditionalId]['recid'] = (int) $row['record-id'];
+        $this->rows[$conditionalId]['modid'] = (int) $row['mod-id'];
+
+        foreach ($this->xml->resultset[0]->record[$this->counterI]->field as $field) {
+            $fieldName = $this->extractFieldName($field);
+            if ($field->count() > 1) {
+                $fieldData = [];
+                foreach ($field->data as $data) {
+                    $fieldData[] = (string) $data;
+                }
+            } else {
+                $fieldData = (string) $field->data;
+            }
+
+            $this->rows[$conditionalId][$fieldName] = $fieldData;
+        }
+
+        // check if portals exist
+        if (isset($this->xml->resultset[0]->record[0]->relatedset)) {
+            // the portal index
+            $this->counterIi = 0;
+            // handle portals
+            foreach ($this->xml->resultset[0]->record[0]->relatedset as $portal) {
+                $this->parsePortal($row, $portal);
+            }
+        }
+        ++$this->counterI;
+    }
+
+    /**
+     * @param $row
+     * @param $portal
+     * @param $conditionalId
+     */
+    private function parsePortal($row, $portal)
+    {
+        $conditionalId = $this->getConditionalId($row);
+        $portalName = (string) $portal['table'];
+
+        $this->rows[$conditionalId][$portalName]['parentindex'] = (int) $this->counterI;
+        $this->rows[$conditionalId][$portalName]['parentrecid'] = (int) $row['record-id'];
+        $this->rows[$conditionalId][$portalName]['portalindex'] = (int) $this->counterIi;
+
+        /**
+         * @TODO Verify if next line is a bug where portalrecordcount may be returning same value for all
+         * portals. Test for possible issues with $portalName being non-unique.
+         */
+        $this->rows[$conditionalId][$portalName]['portalrecordcount'] = (int) $portal['count'];
+
+        // the portal row index
+        $this->counterIii = 0;
+        // handle portal rows
+        foreach ($this->xml->resultset[0]->record[$this->counterI]->relatedset[$this->counterIi]->record as $portalRow) {
+            $this->parsePortalRow($row, $portalRow, $portalName);
+        }
+        ++$this->counterIi;
+    }
+
+    /**
+     * @param $portalRow
+     * @param $conditionalId
+     * @param $portalName
+     * @param $portalConditionalId
+     */
+    private function parsePortalRow($row, $portalRow, $portalName)
+    {
+        $conditionalId = $this->getConditionalId($row);
+        $portalConditionalId = $this->getPortalConditionalId($portalRow);
+        $this->rows[$conditionalId][$portalName]['rows'][$portalConditionalId]['index'] = (int) $this->counterIii;
+        $this->rows[$conditionalId][$portalName]['rows'][$portalConditionalId]['modid'] = (int) $portalRow['mod-id'];
+        $this->rows[$conditionalId][$portalName]['rows'][$portalConditionalId]['recid'] = (int) $portalRow['record-id'];
+
+        // handle portal fields
+        foreach ($this->xml->resultset[0]->record[$this->counterI]->relatedset[$this->counterIi]->record[$this->counterIii]->field as $portalField) {
+            $portalFieldName = $this->extractFieldName($portalField, $portalName);
+            if ($portalField->count() > 1) {
+                $portalFieldData = [];
+                foreach ($portalField->data as $data) {
+                    $portalFieldData[] = (string) $data;
+                }
+            } else {
+                $portalFieldData = (string) $portalField->data;
+            }
+            $this->rows[$conditionalId][$portalName]['rows'][$portalConditionalId][$portalFieldName] = $portalFieldData;
+        }
+        ++$this->counterIii;
+    }
+
+    /**
+     * @param $row
+     * @return int
+     */
+    private function getConditionalId($row)
+    {
+        return $this->rowsByRecId === true ? (int) $row['record-id'] : (int) $this->counterI;
+    }
+
+    /**
+     * @param $portalRow
+     * @return int
+     */
+    private function getPortalConditionalId($portalRow)
+    {
+        return $this->rowsByRecId === true ? (int) $portalRow['record-id'] : (int) $this->counterIii;
+    }
+
+    /**
+     * @param array $field
+     * @param null|string $portalName
+     * @return string
+     */
+    private function extractFieldName(SimpleXMLElement $field, $portalName = null)
+    {
+        if ($portalName) {
+            $fieldName = str_replace($portalName . '::', '', (string) $field['name']);
+            if ($this->counterIii === 0) {
+                StringUtils::fieldNameIsValid($fieldName);
+            }
+        } else {
+            $fieldName = (string) $field['name'];
+            if ($this->counterI === 0) {
+                StringUtils::fieldNameIsValid($fieldName);
+            }
+        }
+
+        return $fieldName;
     }
 }

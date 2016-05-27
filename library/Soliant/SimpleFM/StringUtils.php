@@ -10,7 +10,7 @@ final class StringUtils
 {
     /**
      * Can't use native http_build_query because it drops args with empty values like &-find
-     * 
+     *
      * @param $string
      * @return array
      */
@@ -56,7 +56,9 @@ final class StringUtils
                 if ($value instanceof DateTime) {
                     $value = $value->format('m/d/Y H:i:s');
                 }
-                $commandString .= ($value === null || $value === '') ? $amp . urlencode($name) : $amp . urlencode($name) . '=' . urlencode($value);
+                $commandString .= ($value === null || $value === '')
+                    ? $amp . urlencode($name)
+                    : $amp . urlencode($name) . '=' . urlencode($value);
                 $amp = '&';
             }
         }

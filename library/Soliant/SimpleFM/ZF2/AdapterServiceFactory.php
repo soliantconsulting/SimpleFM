@@ -9,21 +9,14 @@
 
 namespace Soliant\SimpleFM\ZF2;
 
+use Interop\Container\ContainerInterface;
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
 use Soliant\SimpleFM\HostConnection;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-class AdapterServiceFactory implements FactoryInterface
+class AdapterServiceFactory
 {
-    /**
-     * Create db adapter service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @return Adapter
-     */
-    public function createService(ServiceLocatorInterface $sm)
+    public function __invoke(ContainerInterface $sm)
     {
         $config = $sm->get('config');
 

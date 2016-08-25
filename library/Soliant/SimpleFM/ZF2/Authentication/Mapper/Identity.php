@@ -13,7 +13,7 @@ use Zend\Crypt\BlockCipher;
 use Zend\Form\Annotation;
 
 /**
- * @Annotation\Hydrator("Zend\Stdlib\Hydrator\ObjectProperty")
+ * @Annotation\Hydrator("Zend\Hydrator\ObjectProperty")
  * @Annotation\Name("login_form")
  */
 class Identity
@@ -163,7 +163,7 @@ class Identity
             return null;
         }
 
-        $blockCipher = BlockCipher::factory('mcrypt', ['algo' => 'aes']);
+        $blockCipher = BlockCipher::factory('openssl', ['algo' => 'aes']);
         $blockCipher->setKey($encryptionKey);
         return $blockCipher->decrypt($this->password);
     }
@@ -186,7 +186,7 @@ class Identity
             throw new Exception\InvalidArgumentException('The encryptionKey must not be empty');
         }
 
-        $blockCipher = BlockCipher::factory('mcrypt', ['algo' => 'aes']);
+        $blockCipher = BlockCipher::factory('openssl', ['algo' => 'aes']);
         $blockCipher->setKey($encryptionKey);
         $this->password = $blockCipher->encrypt($password);
 

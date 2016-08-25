@@ -141,13 +141,13 @@ class AdapterServiceFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayNotHasKey('sslVerifyPeer', $this->serviceManager2->get('config')['simple_fm_host_params']);
         $this->assertArrayNotHasKey('hostName', $this->serviceManager3->get('config')['simple_fm_host_params']);
 
-        $adapter = $this->object->createService($this->serviceManager1);
+        $adapter = $this->object->__invoke($this->serviceManager1);
         $this->assertInstanceOf(Adapter::class, $adapter);
 
-        $adapter = $this->object->createService($this->serviceManager2);
+        $adapter = $this->object->__invoke($this->serviceManager2);
         $this->assertInstanceOf(Adapter::class, $adapter);
 
         $this->setExpectedException(InvalidArgumentException::class);
-        $adapter = $this->object->createService($this->serviceManager3);
+        $adapter = $this->object->__invoke($this->serviceManager3);
     }
 }

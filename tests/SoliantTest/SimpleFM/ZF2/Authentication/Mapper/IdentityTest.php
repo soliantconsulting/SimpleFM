@@ -96,7 +96,7 @@ class IdentityTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity::setPassword
      * @covers Soliant\SimpleFM\ZF2\Authentication\Mapper\Identity::getPassword
-     * Requires ext-mcrypt (PHP extension)
+     * Requires ext-openssl PHP extension)
      */
     public function testSetAndGetPasswordGood()
     {

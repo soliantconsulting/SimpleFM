@@ -205,7 +205,8 @@ abstract class AbstractLoader
     }
 
     /**
-     * @param $data
+     * @param string $data
+     * @param null $error
      * @return SimpleXMLElement
      * @throws LoaderException
      */
@@ -213,6 +214,7 @@ abstract class AbstractLoader
     {
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($data);
+
         $this->errorCapture($error);
         return $xml;
     }

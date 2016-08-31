@@ -8,6 +8,8 @@ use Soliant\SimpleFM\Result\AbstractResult;
 
 final class StringUtils
 {
+    const KNOWN_ERROR_STATE = 'Undefined variable: error_clear_last';
+
     /**
      * Can't use native http_build_query because it drops args with empty values like &-find
      *
@@ -122,16 +124,16 @@ final class StringUtils
      */
     public static function extractErrorFromPhpMessage($error)
     {
-        if (is_array($error) || isset($error['message'])) {
+        if (is_array($error) && isset($error['message'])) {
             $errorString = $error['message'];
         } else {
             $errorString = $error;
         }
 
         /**
-         * See self::errorClearLast method which puts last error in a known good state
+         * See self::errorClearLast method which puts last error in a known error state
          */
-        if ($errorString === 'Undefined variable: error_clear_last') {
+        if (null === $errorString || self::KNOWN_ERROR_STATE === $errorString) {
             return self::buildErrorArray(0, 'No Error', null);
         }
 
@@ -194,8 +196,14 @@ final class StringUtils
         $dummyCallable = function () {
             // nothing
         };
+
+        // set a temporary error handler that does nothing
         set_error_handler($dummyCallable, 0);
+
+        // put last error in a known state by calling an undefined variable which will return self::KNOWN_ERROR_STATE
         @$error_clear_last;
+
+        // restore the previous error handler
         restore_error_handler();
     }
 

@@ -1,8 +1,9 @@
 <?php
-namespace Soliant\SimpleFM\ZF2;
+namespace SoliantTest\SimpleFM\ZF2;
 
 use Soliant\SimpleFM\Adapter;
 use Soliant\SimpleFM\Exception\InvalidArgumentException;
+use Soliant\SimpleFM\ZF2\AdapterServiceFactory;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
@@ -133,7 +134,7 @@ class AdapterServiceFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Soliant\SimpleFM\ZF2\AdapterServiceFactory::createService
+     * @covers Soliant\SimpleFM\ZF2\AdapterServiceFactory::__invoke
      */
     public function testCreateService()
     {

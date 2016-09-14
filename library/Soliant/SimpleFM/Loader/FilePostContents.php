@@ -14,7 +14,6 @@ use Soliant\SimpleFM\Adapter;
 class FilePostContents extends AbstractLoader
 {
     /**
-     * @param Adapter $adapter
      * @return SimpleXMLElement
      */
     public function load()
@@ -22,13 +21,13 @@ class FilePostContents extends AbstractLoader
         $this->prepare();
 
         libxml_use_internal_errors(true);
-        $authheader = empty($this->credentials) ? '' : 'Authorization: Basic ' . base64_encode($this->credentials) . PHP_EOL;
+        $authHeader = empty($this->credentials) ? '' : 'Authorization: Basic ' . base64_encode($this->credentials) . PHP_EOL;
 
         $opts = [
             'http' => [
                 'method' => 'POST',
                 'header' => 'User-Agent: SimpleFM' . PHP_EOL .
-                    $authheader .
+                    $authHeader .
                     'Accept: text/xml,text/html,text/plain' . PHP_EOL .
                     'Content-type: application/x-www-form-urlencoded' . PHP_EOL .
                     'Content-length: ' . strlen($this->args) . PHP_EOL .

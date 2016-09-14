@@ -63,7 +63,6 @@ abstract class AbstractGateway
             $this->simpleFMAdapter->getHostConnection()->setUsername($identity->getUsername());
             $this->simpleFMAdapter->getHostConnection()->setPassword($identity->getPassword($encryptionKey));
         }
-
     }
 
     /**
@@ -388,7 +387,6 @@ abstract class AbstractGateway
         }
 
         return $command;
-
     }
 
     /**

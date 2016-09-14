@@ -73,7 +73,6 @@ class HostConnectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($hostConnection1->getProtocol(), 'https');
         $this->assertEquals($hostConnection1->getPort(), 5000);
         $this->assertFalse($hostConnection1->getSslVerifyPeer());
-
     }
 
     /**

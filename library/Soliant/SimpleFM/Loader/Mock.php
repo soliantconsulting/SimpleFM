@@ -54,7 +54,6 @@ class Mock extends AbstractLoader
     }
 
     /**
-     * @param Adapter $adapter
      * @param null $testXmlOverride
      * @return SimpleXMLElement
      */

@@ -15,7 +15,6 @@ use Soliant\SimpleFM\Exception\LoaderException;
 class Curl extends AbstractLoader
 {
     /**
-     * @param Adapter $adapter
      * @return SimpleXMLElement
      * @throws LoaderException
      */

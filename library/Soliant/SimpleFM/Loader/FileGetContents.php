@@ -15,7 +15,6 @@ class FileGetContents extends AbstractLoader
 {
 
     /**
-     * @param Adapter $adapter
      * @return SimpleXMLElement
      */
     public function load()

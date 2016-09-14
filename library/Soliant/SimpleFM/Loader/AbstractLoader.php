@@ -51,7 +51,6 @@ abstract class AbstractLoader
     }
 
     /**
-     * @param array $simpleFMAdapterRow
      * @return SimpleXMLElement
      */
     abstract public function load();
@@ -115,6 +114,10 @@ abstract class AbstractLoader
         return $this->throwErrors;
     }
 
+    /**
+     * @param string|null $error
+     * @throws LoaderException
+     */
     protected function errorCapture($error = null)
     {
         if ($error) {
@@ -131,7 +134,6 @@ abstract class AbstractLoader
                 $this->getLastError()['errorCode']
             );
         }
-
     }
 
     /**
@@ -203,7 +205,8 @@ abstract class AbstractLoader
     }
 
     /**
-     * @param $data
+     * @param string $data
+     * @param null $error
      * @return SimpleXMLElement
      * @throws LoaderException
      */
@@ -211,6 +214,7 @@ abstract class AbstractLoader
     {
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($data);
+
         $this->errorCapture($error);
         return $xml;
     }

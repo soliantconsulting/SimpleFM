@@ -166,7 +166,6 @@ class SimpleFMTest extends \PHPUnit_Framework_TestCase
         $simpleFmAdapter->setLoader($loader);
         $authAdapterFileMakerError4 = new SimpleFM($this->authAdapterConfig, $simpleFmAdapter);
         $this->assertInstanceOf(Result::class, $authAdapterFileMakerError4->authenticate());
-
     }
 
     /**

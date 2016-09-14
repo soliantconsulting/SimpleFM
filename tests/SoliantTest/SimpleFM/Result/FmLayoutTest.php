@@ -24,7 +24,6 @@ class FmLayoutTest extends \PHPUnit_Framework_TestCase
         $commandDebugUrl = 'fakeCommandDebugUrl';
         $parser = new FmLayoutParser($xml);
         $this->object = $parser->parse($commandDebugUrl);
-
     }
 
     /**

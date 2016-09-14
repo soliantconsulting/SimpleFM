@@ -51,7 +51,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-
     }
 
     /**
@@ -256,7 +255,6 @@ class AdapterTest extends \PHPUnit_Framework_TestCase
         $taskRepeatingField = $rows[1]['Tasks']['rows'][2]['Repeating Field'];
         $this->assertInternalType('array', $taskRepeatingField);
         $this->assertNotInternalType('string', $taskRepeatingField);
-
     }
 
     /**

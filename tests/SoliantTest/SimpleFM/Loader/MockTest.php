@@ -80,6 +80,5 @@ class MockTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(Loader::class, $this->loader);
         $this->assertEquals('HTTP', $this->loader->getLastErrorResultFmResultSet()->getErrorType());
         $this->assertEquals(401, $this->loader->getLastErrorResultFmResultSet()->getErrorCode());
-
     }
 }

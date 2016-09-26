@@ -9,6 +9,6 @@ final class EmptyQueryException extends DomainException implements ExceptionInte
 {
     public static function fromEmptyQueryArray() : self
     {
-       return new self('Find query requires at least one query');
+        return new self('Find query requires at least one query');
     }
 }

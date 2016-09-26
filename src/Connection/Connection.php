@@ -64,7 +64,7 @@ final class Connection implements ConnectionInterface
         $body->rewind();
 
         $request = (new Request($uri->withUserInfo(''), 'POST'))
-            ->withAddedHeader('User-Agent', 'SimpleFM')
+            ->withAddedHeader('User-agent', 'SimpleFM')
             ->withAddedHeader('Content-type', 'application/x-www-form-urlencoded')
             ->withAddedHeader('Content-length', (string) strlen($parameters))
             ->withBody($body);

@@ -6,17 +6,17 @@ namespace Soliant\SimpleFM\Repository;
 use Assert\Assertion;
 use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
-use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
+use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
 use Soliant\SimpleFM\Repository\Exception\InvalidResultException;
 use Soliant\SimpleFM\Repository\Query\FindQuery;
 use SplObjectStorage;
 
-final class Repository
+final class Repository implements RepositoryInterface
 {
     /**
-     * @var ResultSetClient
+     * @var ResultSetClientInterface
      */
     private $resultSetClient;
 
@@ -51,7 +51,7 @@ final class Repository
     private $managedEntities;
 
     public function __construct(
-        ResultSetClient $resultSetClient,
+        ResultSetClientInterface $resultSetClient,
         string $layout,
         HydrationInterface $hydration,
         ExtractionInterface $extraction,
@@ -65,13 +65,13 @@ final class Repository
         $this->managedEntities = new SplObjectStorage();
     }
 
-    public function withIdentity(Identity $identity) : self
+    public function withIdentity(Identity $identity) : RepositoryInterface
     {
         if (null === $this->identityHandler) {
             throw DomainException::fromMissingIdentityHandler();
         }
 
-        $gateway = new self();
+        $gateway = clone $this;
         $gateway->identity = $identity;
 
         return $gateway;
@@ -239,7 +239,7 @@ final class Repository
         $searchParameters = [];
 
         foreach ($search as $field => $value) {
-            $searchParameters[$field] = $this->quoteString($value);
+            $searchParameters[$field] = $this->quoteString((string) $value);
         }
 
         return $searchParameters;

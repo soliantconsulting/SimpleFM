@@ -15,7 +15,7 @@ use Soliant\SimpleFM\Client\ResultSet\Transformer\TimeTransformer;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 
-final class ResultSetClient
+final class ResultSetClient implements ResultSetClientInterface
 {
     const GRAMMAR_PATH = '/fmi/xml/fmresultset.xml';
 
@@ -61,7 +61,7 @@ final class ResultSetClient
     {
         return strtr($string, [
             '\\' => '\\\\',
-            '=' => '\\',
+            '=' => '\\=',
             '!' => '\\!',
             '<' => '\\<',
             '≤' => '\\≤',
@@ -74,7 +74,7 @@ final class ResultSetClient
             '#' => '\\#',
             '*' => '\\*',
             '"' => '\\"',
-            '~' => '\\~'
+            '~' => '\\~',
         ]);
     }
 

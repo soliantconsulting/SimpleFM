@@ -5,23 +5,41 @@ language: php
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.local
+    - vendor
 
 matrix:
   fast_finish: true
   include:
-    - php: 5.5
-    - php: 5.6
     - php: 7
+      env:
+        - EXECUTE_CS_CHECK=true
+        - EXECUTE_TEST_COVERALLS=true
+        - EXECUTE_TEST_CODECLIMATE=true
+        - PATH="$HOME/.local/bin:$PATH"
+    - php: nightly
     - php: hhvm
   allow_failures:
+    - php: nightly
     - php: hhvm
 
-install:
-  - travis_retry composer install --no-interaction --ignore-platform-reqs
+before_install:
+  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]] && [[ $EXECUTE_TEST_CODECLIMATE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
+  - composer self-update
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer require --dev --no-update satooshi/php-coveralls:^1.0.0 ; fi
+  - if [[ $EXECUTE_TEST_CODECLIMATE == 'true' ]]; then composer require --dev --no-update codeclimate/php-test-reporter:^0.3.2 ; fi
 
-script: ant
+install:
+  - travis_retry composer install --no-interaction
+  - composer info -i
+
+script:
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]] || [[ $EXECUTE_TEST_CODECLIMATE == 'true' ]]; then composer test-coverage ; fi
+  - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then composer test ; fi
+  - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then composer cs ; fi
 
 after_script:
-  - CODECLIMATE_REPO_TOKEN=a1fa5b53529cf77226b6231a9c0a3d8ce5c0cb9ecc570ac014c1cc60fa07d2df ./vendor/bin/test-reporter --stdout > codeclimate.json
-  - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
+  - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer coveralls ; fi
+  - if [[ $EXECUTE_TEST_CODECLIMATE == 'true' ]]; then CODECLIMATE_REPO_TOKEN=a1fa5b53529cf77226b6231a9c0a3d8ce5c0cb9ecc570ac014c1cc60fa07d2df ./vendor/bin/test-reporter --coverage-report=clover.xml --stdout > codeclimate.json ; fi
+  - "if [[ $EXECUTE_TEST_CODECLIMATE == 'true' ]]; then curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports ; fi"
   

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Soliant\SimpleFM\Repository\Query;
 
 use Soliant\SimpleFM\Repository\Query\Exception\EmptyQueryException;
-use Zend\Stdlib\Exception\InvalidArgumentException;
+use Soliant\SimpleFM\Repository\Query\Exception\InvalidArgumentException;
 
 final class FindQuery
 {

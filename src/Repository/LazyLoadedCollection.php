@@ -13,7 +13,7 @@ use Traversable;
 final class LazyLoadedCollection implements IteratorAggregate, Countable
 {
     /**
-     * @var Repository
+     * @var RepositoryInterface
      */
     private $repository;
 
@@ -27,7 +27,7 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
      */
     private $iterator;
 
-    public function __construct(Repository $repository, array $recordIds)
+    public function __construct(RepositoryInterface $repository, array $recordIds)
     {
         $this->repository = $repository;
         $this->recordIds = $recordIds;
@@ -49,7 +49,8 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
 
     public function first()
     {
-        return reset($this->getIterator());
+        $iterator = $this->getIterator();
+        return reset($iterator);
     }
 
     public function count() : int

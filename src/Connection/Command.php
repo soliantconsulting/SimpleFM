@@ -5,6 +5,7 @@ namespace Soliant\SimpleFM\Connection;
 
 use Assert\Assertion;
 use DateTimeInterface;
+use Litipk\BigNumbers\Decimal;
 use Soliant\SimpleFM\Connection\Exception\DomainException;
 
 final class Command
@@ -35,7 +36,11 @@ final class Command
         }
 
         foreach ($parameters as $value) {
-            if (!$value instanceof DateTimeInterface && !is_scalar($value) && null !== $value) {
+            if (!$value instanceof DateTimeInterface
+                && !$value instanceof Decimal
+                && !is_scalar($value)
+                && null !== $value
+            ) {
                 throw DomainException::fromInvalidValue($value);
             }
         }
@@ -81,6 +86,10 @@ final class Command
         foreach ($this->parameters as $name => $value) {
             if ($value instanceof DateTimeInterface) {
                 $value = $value->format('m/d/Y H:i:s');
+            }
+
+            if ($value instanceof Decimal) {
+                $value = (string) $value;
             }
 
             if (null === $value || '' === $value) {

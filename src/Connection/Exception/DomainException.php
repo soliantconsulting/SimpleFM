@@ -15,7 +15,7 @@ final class DomainException extends PhpDomainException implements ExceptionInter
     public static function fromInvalidValue($value) : self
     {
         return new self(sprintf(
-            'Parameter values must either be scalar, null or implement DateTimeInterface, received %s',
+            'Parameter values must either be scalar, null, Decimal or implement DateTimeInterface, received %s',
             is_object($value) ? get_class($value) : gettype($value)
         ));
     }

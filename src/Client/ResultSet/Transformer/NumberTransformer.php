@@ -13,6 +13,10 @@ final class NumberTransformer
             return null;
         }
 
+        if (0 === strpos($value, '.')) {
+            $value = '0' . $value;
+        }
+
         return Decimal::fromString($value);
     }
 }

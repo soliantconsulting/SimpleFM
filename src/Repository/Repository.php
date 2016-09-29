@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository;
 
@@ -86,7 +86,7 @@ final class Repository implements RepositoryInterface
     {
         $resultSet = $this->execute(new Command(
             $this->layout,
-            $this->createSearchParameters($search) + ['-find' =>  null, '-max' => 1]
+            $this->createSearchParameters($search) + ['-find' => null, '-max' => 1]
         ));
 
         if (empty($resultSet)) {
@@ -100,7 +100,7 @@ final class Repository implements RepositoryInterface
     {
         $resultSet = $this->execute(new Command(
             $this->layout,
-            $query->toParameters() + ['-findquery' =>  null, '-max' => 1]
+            $query->toParameters() + ['-findquery' => null, '-max' => 1]
         ));
 
         if (empty($resultSet)) {
@@ -117,7 +117,7 @@ final class Repository implements RepositoryInterface
             (
                 $this->createSortParameters($sort)
                 + $this->createLimitAndOffsetParameters($limit, $offset)
-                +  ['-findall' => null]
+                + ['-findall' => null]
             )
         ));
 
@@ -132,7 +132,7 @@ final class Repository implements RepositoryInterface
                 $this->createSearchParameters($search)
                 + $this->createSortParameters($sort)
                 + $this->createLimitAndOffsetParameters($limit, $offset)
-                +  ['-find' => null]
+                + ['-find' => null]
             )
         ));
 
@@ -147,7 +147,7 @@ final class Repository implements RepositoryInterface
                 $findQuery->toParameters()
                 + $this->createSortParameters($sort)
                 + $this->createLimitAndOffsetParameters($limit, $offset)
-                +  ['-findquery' => null]
+                + ['-findquery' => null]
             )
         ));
 
@@ -182,7 +182,7 @@ final class Repository implements RepositoryInterface
             [
                 '-recid' => $this->managedEntities[$entity]['record-id'],
                 '-modid' => $this->managedEntities[$entity]['mod-id'],
-                '-delete' => null
+                '-delete' => null,
             ]
         ));
         unset($this->managedEntities[$entity]);

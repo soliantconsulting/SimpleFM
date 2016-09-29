@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository;
 
@@ -10,6 +10,7 @@ use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
+use Soliant\SimpleFM\Repository\Exception\InvalidResultException;
 use Soliant\SimpleFM\Repository\ExtractionInterface;
 use Soliant\SimpleFM\Repository\HydrationInterface;
 use Soliant\SimpleFM\Repository\Query\FindQuery;
@@ -283,7 +284,7 @@ final class RepositoryTest extends TestCase
         $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
             $this->assertSame([
                 '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&foo=bar&-recid=1&-modid=1&-edit'
+                '-lay=foo&foo=bar&-recid=1&-modid=1&-edit',
             ][++$index], (string) $command);
             return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
         }, $hydration->reveal(), $extraction->reveal());
@@ -313,7 +314,7 @@ final class RepositoryTest extends TestCase
         $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
             $this->assertSame([
                 '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&-recid=1&-modid=1&-delete'
+                '-lay=foo&-recid=1&-modid=1&-delete',
             ][++$index], (string) $command);
             return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
         }, $hydration->reveal(), $extraction->reveal());
@@ -329,6 +330,50 @@ final class RepositoryTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('is not managed');
         $repository->delete(new stdClass());
+    }
+
+    public function testFindAllWithTooManySortArgs()
+    {
+        $repository = $this->createAssertiveRepository();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('There cannot be more than 9 sort parameters, 10 supplied');
+        $repository->findAll(
+            [
+                'field1' => 'asc',
+                'field2' => 'asc',
+                'field3' => 'asc',
+                'field4' => 'asc',
+                'field5' => 'asc',
+                'field6' => 'asc',
+                'field7' => 'asc',
+                'field8' => 'asc',
+                'field9' => 'asc',
+                'field10' => 'asc',
+            ]
+        );
+    }
+
+    public function testInsertWithEmptyResult()
+    {
+        $entity = new stdClass();
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateExistingEntity(
+            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
+            $entity
+        )->willReturn($entity);
+        $extraction = $this->prophesize(ExtractionInterface::class);
+        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
+
+        $repository = $this->createAssertiveRepository(function (Command $command) {
+            $this->assertSame('-lay=foo&foo=bar&-new', (string) $command);
+            return [];
+        }, $hydration->reveal(), $extraction->reveal());
+
+        $this->expectException(InvalidResultException::class);
+        $this->expectExceptionMessage('Empty result set received');
+
+        $repository->insert($entity);
     }
 
     private function createAssertiveRepository(

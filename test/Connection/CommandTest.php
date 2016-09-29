@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Connection;
 
@@ -68,39 +68,39 @@ final class CommandTest extends TestCase
         return [
             'no-parameters' => [
                 [],
-                '-lay=foo'
+                '-lay=foo',
             ],
             'empty-parameter' => [
                 ['foo' => ''],
-                '-lay=foo&foo'
+                '-lay=foo&foo',
             ],
             'null-parameter' => [
                 ['foo' => null],
-                '-lay=foo&foo'
+                '-lay=foo&foo',
             ],
             'string-parameter' => [
                 ['foo' => 'bar'],
-                '-lay=foo&foo=bar'
+                '-lay=foo&foo=bar',
             ],
             'integer-parameter' => [
                 ['foo' => 3],
-                '-lay=foo&foo=3'
+                '-lay=foo&foo=3',
             ],
             'float-parameter' => [
                 ['foo' => 3.3],
-                '-lay=foo&foo=3.3'
+                '-lay=foo&foo=3.3',
             ],
             'boolean-parameter' => [
                 ['foo' => true],
-                '-lay=foo&foo=1'
+                '-lay=foo&foo=1',
             ],
             'datetime-parameter' => [
                 ['foo' => new \DateTimeImmutable('2016-01-01 00:00:00 UTC')],
-                '-lay=foo&foo=01%2F01%2F2016+00%3A00%3A00'
+                '-lay=foo&foo=01%2F01%2F2016+00%3A00%3A00',
             ],
             'decimal-parameter' => [
                 ['foo' => \Litipk\BigNumbers\Decimal::fromString('12.499734362638823')],
-                '-lay=foo&foo=12.499734362638823'
+                '-lay=foo&foo=12.499734362638823',
             ],
         ];
     }

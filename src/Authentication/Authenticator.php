@@ -1,17 +1,17 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Authentication;
 
 use Soliant\SimpleFM\Authentication\Exception\InvalidResultException;
-use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
+use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\Exception\InvalidResponseException;
 
 final class Authenticator
 {
     /**
-     * @var ResultSetClient
+     * @var ResultSetClientInterface
      */
     private $resultSetClient;
 
@@ -31,7 +31,7 @@ final class Authenticator
     private $usernameField;
 
     public function __construct(
-        ResultSetClient $resultSetClient,
+        ResultSetClientInterface $resultSetClient,
         IdentityHandlerInterface $identityHandler,
         string $identityLayout,
         string $usernameField

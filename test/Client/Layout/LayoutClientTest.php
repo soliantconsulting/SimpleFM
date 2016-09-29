@@ -1,10 +1,11 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Client\Layout;
 
 use Assert\InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
+use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\Layout\LayoutClient;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
@@ -51,7 +52,7 @@ final class LayoutClientTest extends TestCase
         $connection->execute($command, '/fmi/xml/FMPXMLLAYOUT.xml')->willReturn($xml);
         $client = new LayoutClient($connection->reveal());
 
-        $this->expectException(\Soliant\SimpleFM\Client\Exception\FileMakerException::class);
+        $this->expectException(FileMakerException::class);
         $this->expectExceptionMessage('User canceled action');
         $this->expectExceptionCode(1);
         $client->execute($command);

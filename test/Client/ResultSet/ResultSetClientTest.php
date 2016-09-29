@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Client\ResultSet;
 
@@ -7,7 +7,11 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Litipk\BigNumbers\Decimal;
 use PHPUnit_Framework_TestCase as TestCase;
+use Soliant\SimpleFM\Client\Exception\FileMakerException;
+use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
+use Soliant\SimpleFM\Client\ResultSet\Transformer\Exception\DateTimeException;
+use Soliant\SimpleFM\Client\ResultSet\Transformer\Exception\DecimalException;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 
@@ -100,26 +104,13 @@ final class ResultSetClientTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validXmlProvider
-     */
-    public function testValidXml(string $xmlPath, array $expectedResult)
+    public static function allFieldTypesProvider() : array
     {
-        $command = new Command('foo', []);
-        $client = $this->createClient($command, $xmlPath);
-
-        $this->assertEquals($expectedResult, $client->execute($command));
-    }
-
-    public function testErrorXml()
-    {
-        $command = new Command('foo', []);
-        $client = $this->createClient($command, 'sample_fmresultset_fmerror4.xml');
-
-        $this->expectException(\Soliant\SimpleFM\Client\Exception\FileMakerException::class);
-        $this->expectExceptionMessage('Command is unknown');
-        $this->expectExceptionCode(4);
-        $client->execute($command);
+        return [
+            'base-sample-data' => [
+                'ParentChildAssociations/Base-recid1-id2.xml',
+            ],
+        ];
     }
 
     public function specialCharacterProvider() : array
@@ -143,6 +134,123 @@ final class ResultSetClientTest extends TestCase
             ['*""', '\\*\\"\\"'],
             ['~', '\\~'],
         ];
+    }
+
+    /**
+     * @dataProvider validXmlProvider
+     */
+    public function testValidXml(string $xmlPath, array $expectedResult)
+    {
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, $xmlPath);
+
+        $this->assertEquals($expectedResult, $client->execute($command));
+    }
+
+    public function testErrorXml()
+    {
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'sample_fmresultset_fmerror4.xml');
+
+        $this->expectException(FileMakerException::class);
+        $this->expectExceptionMessage('Command is unknown');
+        $this->expectExceptionCode(4);
+        $client->execute($command);
+    }
+
+    public function testInvalidFileMakerExceptionCode()
+    {
+        $this->expectException(FileMakerException::class);
+        $this->expectExceptionMessage('Unknown error');
+        $this->expectExceptionCode(-100);
+
+        throw FileMakerException::fromErrorCode(-100);
+    }
+
+    /**
+     * @dataProvider allFieldTypesProvider
+     */
+    public function testAllFieldTransformerTypes(string $xmlPath)
+    {
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, $xmlPath);
+        $firstBaseRecord = $client->execute($command)[0];
+
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['id']);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['id_Parent']);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Number Field']);
+        $this->assertInternalType('string', $firstBaseRecord['Text Field']);
+        $this->assertInstanceOf(DateTimeImmutable::class, $firstBaseRecord['Time Field']);
+        $this->assertInstanceOf(DateTimeImmutable::class, $firstBaseRecord['Timestamp Field']);
+        $this->assertInternalType('string', $firstBaseRecord['Container Field']);
+        $this->assertInternalType('string', $firstBaseRecord['Calculation Text Field']);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Summary Number Field']);
+        $this->assertInternalType('array', $firstBaseRecord['Repeating Number Field']);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Repeating Number Field'][0]);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Repeating Number Field'][9]);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Parent::id']);
+        $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Parent::Number Field']);
+        $this->assertInternalType('string', $firstBaseRecord['Parent::Text Field']);
+        $this->assertInternalType('array', $firstBaseRecord['Child']);
+        $this->assertInternalType('array', $firstBaseRecord['Parent']);
+    }
+
+    public function testInvalidFieldTransformerTypeFake()
+    {
+        $this->expectException(ParseException::class);
+        $this->expectExceptionMessage('Invalid field type "fake" discovered');
+
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'invalidFieldTypeFake.xml');
+        $client->execute($command);
+    }
+
+    public function testInvalidFieldTransformerTypeRepeatingNumber()
+    {
+        $this->expectException(DecimalException::class);
+        $this->expectExceptionMessage(
+            '"non-number string" must be a string that represents uniquely a float point number.'
+        );
+
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'invalidFieldTypeRepeatingNumber.xml');
+        $client->execute($command);
+    }
+
+    public function testInvalidFieldTransformerTypeTimestamp()
+    {
+        $this->expectException(DateTimeException::class);
+        $this->expectExceptionMessage(
+            'Could not parse "invalid timestamp value", reason: A two digit month could not be found'
+        );
+
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'invalidFieldTypeTimestamp.xml');
+        $client->execute($command);
+    }
+
+    public function testInvalidFieldTransformerTypeTime()
+    {
+        $this->expectException(DateTimeException::class);
+        $this->expectExceptionMessage(
+            'Could not parse "invalid time value", reason: A two digit hour could not be found'
+        );
+
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'invalidFieldTypeTime.xml');
+        $client->execute($command);
+    }
+
+    public function testInvalidFieldTransformerTypeDate()
+    {
+        $this->expectException(DateTimeException::class);
+        $this->expectExceptionMessage(
+            'Could not parse "invalid date value", reason: A two digit month could not be found'
+        );
+
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'invalidFieldTypeDate.xml');
+        $client->execute($command);
     }
 
     /**

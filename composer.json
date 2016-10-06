@@ -21,7 +21,6 @@
     },
     "require-dev": {
         "zendframework/zend-crypt": "^3.1",
-        "zendframework/zend-debug": "2.5.*",
         "phpunit/PHPUnit": "^5.5",
         "squizlabs/php_codesniffer": "^2.6"
     },

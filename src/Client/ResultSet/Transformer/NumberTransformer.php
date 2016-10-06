@@ -19,15 +19,10 @@ final class NumberTransformer
             $value = '0' . $value;
         }
 
-        /**
-         * Litipk\Exceptions\InvalidArgumentTypeException is a subclass of InvalidArgumentException, but for some
-         * reason, they might throw both. We're catching the superclass, and throwing our own DecimalException.
-         */
         try {
-            $return = Decimal::fromString($value);
+            return Decimal::fromString($value);
         } catch (InvalidArgumentException $e) {
             throw DecimalException::fromInvalidString($value);
         }
-        return $return;
     }
 }

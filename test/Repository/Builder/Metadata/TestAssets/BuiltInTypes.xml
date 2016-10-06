@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity
+    xmlns="uri:soliantconsulting.com:simplefm:entity-metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="uri:soliantconsulting.com:simplefm:entity-metadata
+        https://soliantconsulting.github.io/SimpleFM/xsd/entity-metadata-5-0.xml"
+    class-name="BuiltInTypes"
+    layout="build-in-types-layout"
+>
+    <field name="date-time" property="date-time" type="date-time"/>
+    <field name="decimal" property="decimal" type="decimal"/>
+    <field name="float" property="float" type="float"/>
+    <field name="integer" property="integer" type="integer"/>
+    <field name="string" property="string" type="string"/>
+</entity>

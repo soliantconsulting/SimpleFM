@@ -54,11 +54,23 @@ final class LazyLoadedCollectionTest extends TestCase
         $this->assertSame($third, $entities[2]);
     }
 
+    public function testEmptyCollection()
+    {
+        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), []);
+        $this->assertNull($collection->first());
+    }
+
+    public function testIteratorCaching()
+    {
+        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), []);
+        $this->assertSame($collection->getIterator(), $collection->getIterator());
+    }
+
     public function testFirst()
     {
         $first = new stdClass();
         $repository = $this->prophesize(RepositoryInterface::class);
-        $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($first) {
+        $repository->findByQuery(Argument::any())->will(function () use ($first) {
             return [
                 $first,
                 new stdClass(),

@@ -35,22 +35,26 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
 
     public function getIterator() : Traversable
     {
-        if (null === $this->iterator) {
-            $findQuery = new FindQuery();
-            $findQuery->addOrQueries(...array_map(function (int $recordId) {
-                return new Query('record-id', (string) $recordId);
-            }, $this->recordIds));
-
-            $this->iterator = new ArrayIterator($this->repository->findByQuery($findQuery));
+        if (null !== $this->iterator) {
+            return $this->iterator;
         }
 
-        return $this->iterator;
+        if (empty($this->recordIds)) {
+            return $this->iterator = new ArrayIterator();
+        }
+
+        $findQuery = new FindQuery();
+        $findQuery->addOrQueries(...array_map(function (int $recordId) {
+            return new Query('record-id', (string) $recordId);
+        }, $this->recordIds));
+
+        return $this->iterator = new ArrayIterator($this->repository->findByQuery($findQuery));
     }
 
     public function first()
     {
         $iterator = $this->getIterator();
-        return reset($iterator);
+        return reset($iterator) ?: null;
     }
 
     public function count() : int

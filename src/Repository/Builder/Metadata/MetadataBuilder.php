@@ -8,6 +8,7 @@ use DOMDocument;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
+use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
@@ -29,6 +30,11 @@ final class MetadataBuilder implements MetadataBuilderInterface
      */
     private $types;
 
+    /**
+     * @var Entity[]
+     */
+    private $metadata = [];
+
     public function __construct(string $xmlFolder, array $additionalTypes = [])
     {
         if (!empty($additionalTypes)) {
@@ -43,18 +49,23 @@ final class MetadataBuilder implements MetadataBuilderInterface
 
     public function getMetadata(string $entityClassName) : Entity
     {
+        if (array_key_exists($entityClassName, $this->metadata)) {
+            return $this->metadata[$entityClassName];
+        }
+
         $xmlPath = sprintf('%s/%s', $this->xmlFolder, $this->buildFilename($entityClassName));
 
         if (!file_exists($xmlPath)) {
             throw InvalidFileException::fromNonExistentFile($xmlPath, $entityClassName);
         }
 
-        return $this->buildMetadata($xmlPath);
+        return ($this->metadata[$entityClassName] = $this->buildMetadata($xmlPath));
     }
 
     private function createBuiltInTypes() : array
     {
         return [
+            'boolean' => new BooleanType(),
             'date-time' => new DateTimeType(),
             'decimal' => new DecimalType(),
             'float' => new FloatType(),
@@ -67,9 +78,11 @@ final class MetadataBuilder implements MetadataBuilderInterface
     {
         $xml = $this->loadValidatedXml($xmlPath);
         $fields = [];
+        $embeddables = [];
         $oneToMany = [];
         $manyToOne = [];
         $oneToOne = [];
+        $recordId = null;
 
         if (isset($xml->field)) {
             foreach ($xml->field as $field) {
@@ -83,7 +96,18 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $field['name'],
                     (string) $field['property'],
                     $this->types[$type],
-                    (isset($field['repeatable']) && (string) $field['repeatable'] === 'true')
+                    (isset($field['repeatable']) && (string) $field['repeatable'] === 'true'),
+                    (isset($field['read-only']) && (string) $field['read-only'] === 'true')
+                );
+            }
+        }
+
+        if (isset($xml->embeddable)) {
+            foreach ($xml->embeddable as $embeddable) {
+                $embeddables[] = new Embeddable(
+                    (string) $field['name'],
+                    (string) $field['field-name-prefix'],
+                    $this->getMetadata((string) $embeddable['class-name'])
                 );
             }
         }
@@ -132,13 +156,18 @@ final class MetadataBuilder implements MetadataBuilderInterface
             }
         }
 
+        if (isset($xml->{'record-id'})) {
+            $recordId = new RecordId($xml->{'record-id'}['property-name']);
+        }
+
         return new Entity(
             (string) $xml['layout'],
             (string) $xml['class-name'],
             $fields,
             $oneToMany,
             $manyToOne,
-            $oneToOne
+            $oneToOne,
+            $recordId
         );
     }
 

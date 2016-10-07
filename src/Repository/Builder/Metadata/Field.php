@@ -27,12 +27,23 @@ final class Field
      */
     private $repeatable;
 
-    public function __construct(string $fieldName, string $propertyName, TypeInterface $type, bool $repeatable)
-    {
+    /**
+     * @var bool
+     */
+    private $readOnly;
+
+    public function __construct(
+        string $fieldName,
+        string $propertyName,
+        TypeInterface $type,
+        bool $repeatable,
+        bool $readOnly
+    ) {
         $this->fieldName = $fieldName;
         $this->propertyName = $propertyName;
         $this->type = $type;
         $this->repeatable = $repeatable;
+        $this->readOnly = $readOnly;
     }
 
     public function getFieldName() : string
@@ -53,5 +64,10 @@ final class Field
     public function isRepeatable() : bool
     {
         return $this->repeatable;
+    }
+
+    public function isReadOnly() : bool
+    {
+        return $this->readOnly;
     }
 }

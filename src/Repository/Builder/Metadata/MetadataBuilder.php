@@ -157,7 +157,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
         }
 
         if (isset($xml->{'record-id'})) {
-            $recordId = new RecordId($xml->{'record-id'}['property-name']);
+            $recordId = new RecordId((string) $xml->{'record-id'}['property']);
         }
 
         return new Entity(

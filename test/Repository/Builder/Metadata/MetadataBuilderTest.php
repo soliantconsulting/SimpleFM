@@ -69,6 +69,12 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('empty-layout', $metadata->getLayout());
     }
 
+    public function testMetadataCaching()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $this->assertSame($builder->getMetadata('Empty'), $builder->getMetadata('Empty'));
+    }
+
     public function testBuiltInTypes()
     {
         $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
@@ -123,6 +129,14 @@ final class MetadataBuilderTest extends TestCase
         $this->assertFalse($metadata->getFields()[0]->isReadOnly());
         $this->assertTrue($metadata->getFields()[1]->isReadOnly());
         $this->assertFalse($metadata->getFields()[2]->isReadOnly());
+    }
+
+    public function testRecordId()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('RecordId');
+
+        $this->assertSame('recordId', $metadata->getRecordId()->getPropertyName());
     }
 
     public function testEmbeddable()

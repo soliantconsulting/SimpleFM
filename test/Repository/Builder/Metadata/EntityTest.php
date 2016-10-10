@@ -11,6 +11,7 @@ use Soliant\SimpleFM\Repository\Builder\Metadata\Field;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToMany;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
+use Soliant\SimpleFM\Repository\Builder\Metadata\RecordId;
 use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
 final class EntityTest extends TestCase
@@ -31,6 +32,22 @@ final class EntityTest extends TestCase
         $this->assertSame($oneToMany, $metadata->getOneToMany());
         $this->assertSame($manyToOne, $metadata->getManyToOne());
         $this->assertSame($oneToOne, $metadata->getOneToOne());
+    }
+
+    public function testOptionalRecordId()
+    {
+        $recordId = new RecordId('foo');
+        $metadata = new Entity('', '', [], [], [], [], [], $recordId);
+        $this->assertTrue($metadata->hasRecordId());
+        $this->assertSame($recordId, $metadata->getRecordId());
+    }
+
+    public function testMissingRecordId()
+    {
+        $metadata = new Entity('', '', [], [], [], [], []);
+        $this->assertFalse($metadata->hasRecordId());
+        $this->expectException(InvalidArgumentException::class);
+        $metadata->getRecordId();
     }
 
     public function testInvalidField()

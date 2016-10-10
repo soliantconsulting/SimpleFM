@@ -8,7 +8,7 @@ final class Embeddable
     /**
      * @var string
      */
-    private $property;
+    private $propertyName;
 
     /**
      * @var string
@@ -21,18 +21,18 @@ final class Embeddable
     private $metadata;
 
     public function __construct(
-        string $property,
+        string $propertyName,
         string $fieldNamePrefix,
         Entity $metadata
     ) {
-        $this->property = $property;
+        $this->propertyName = $propertyName;
         $this->fieldNamePrefix = $fieldNamePrefix;
         $this->metadata = $metadata;
     }
 
-    public function getProperty() : string
+    public function getPropertyName() : string
     {
-        return $this->property;
+        return $this->propertyName;
     }
 
     public function getFieldNamePrefix() : string

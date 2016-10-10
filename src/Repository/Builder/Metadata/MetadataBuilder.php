@@ -105,8 +105,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
         if (isset($xml->embeddable)) {
             foreach ($xml->embeddable as $embeddable) {
                 $embeddables[] = new Embeddable(
-                    (string) $field['name'],
-                    (string) $field['field-name-prefix'],
+                    (string) $embeddable['property'],
+                    (string) $embeddable['field-name-prefix'],
                     $this->getMetadata((string) $embeddable['class-name'])
                 );
             }

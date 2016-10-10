@@ -115,6 +115,27 @@ final class MetadataBuilderTest extends TestCase
         $this->assertFalse($metadata->getFields()[2]->isRepeatable());
     }
 
+    public function testReadOnly()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('ReadOnly');
+
+        $this->assertFalse($metadata->getFields()[0]->isReadOnly());
+        $this->assertTrue($metadata->getFields()[1]->isReadOnly());
+        $this->assertFalse($metadata->getFields()[2]->isReadOnly());
+    }
+
+    public function testEmbeddable()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('Embeddable');
+        $embeddable = $metadata->getEmbeddables()[0];
+
+        $this->assertSame('foo', $embeddable->getPropertyName());
+        $this->assertSame('bar', $embeddable->getFieldNamePrefix());
+        $this->assertSame('EmbeddedEntity', $embeddable->getMetadata()->getClassName());
+    }
+
     public function testOneToMany()
     {
         $builder = new MetadataBuilder(__DIR__ . '/TestAssets');

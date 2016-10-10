@@ -80,25 +80,7 @@ final class ResultSetClient implements ResultSetClientInterface
 
     private function parseRecord(SimpleXMLElement $recordData, array $metadata) : array
     {
-        $record = [
-            'record-id' => (int) $recordData['record-id'],
-            'mod-id' => (int) $recordData['mod-id'],
-        ];
-
-        foreach ($recordData->field as $fieldData) {
-            $fieldName = (string) $fieldData['name'];
-
-            if (!$metadata[$fieldName]['repeatable']) {
-                $record[$fieldName] = $metadata[$fieldName]['transformer']((string) $fieldData->data);
-                continue;
-            }
-
-            $record[$fieldName] = [];
-
-            foreach ($fieldData->data as $data) {
-                $record[$fieldName][] = $metadata[$fieldName]['transformer']((string) $data);
-            }
-        }
+        $record = $this->createRecord($recordData, $metadata);
 
         if (isset($recordData->relatedset)) {
             foreach ($recordData->relatedset as $relatedSetData) {
@@ -106,8 +88,38 @@ final class ResultSetClient implements ResultSetClientInterface
                 $record[$relatedSetName] = [];
 
                 foreach ($relatedSetData->record as $relatedSetRecordData) {
-                    $record[$relatedSetName][] = (int) $relatedSetRecordData['record-id'];
+                    $record[$relatedSetName][] = $this->createRecord(
+                        $relatedSetRecordData,
+                        $metadata,
+                        strlen($relatedSetName) + 2
+                    );
                 }
+            }
+        }
+
+        return $record;
+    }
+
+    private function createRecord(SimpleXMLElement $recordData, array $metadata, int $prefixLength = 0) : array
+    {
+        $record = [
+            'record-id' => (int) $recordData['record-id'],
+            'mod-id' => (int) $recordData['mod-id'],
+        ];
+
+        foreach ($recordData->field as $fieldData) {
+            $fieldName = (string) $fieldData['name'];
+            $localName = substr($fieldName, $prefixLength);
+
+            if (!$metadata[$fieldName]['repeatable']) {
+                $record[$localName] = $metadata[$fieldName]['transformer']((string) $fieldData->data);
+                continue;
+            }
+
+            $record[$localName] = [];
+
+            foreach ($fieldData->data as $data) {
+                $record[$localName][] = $metadata[$fieldName]['transformer']((string) $data);
             }
         }
 
@@ -123,6 +135,10 @@ final class ResultSetClient implements ResultSetClientInterface
                 'repeatable' => ((int) $fieldDefinition['max-repeat']) > 1,
                 'transformer' => $this->getFieldTransformer($fieldDefinition),
             ];
+        }
+
+        foreach ($xml->{'relatedset-definition'} as $relatedSetDefinition) {
+            $metadata += $this->parseMetadata($relatedSetDefinition);
         }
 
         return $metadata;

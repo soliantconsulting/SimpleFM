@@ -184,7 +184,7 @@ final class MetadataHydrationTest extends TestCase
             $repositoryBuilder->reveal(),
             $entityMetadata
         );
-        $entity = $hydration->hydrateNewEntity(['bar' => [5]]);
+        $entity = $hydration->hydrateNewEntity(['bar' => [['ID' => 5]]]);
         $this->assertSame('child-entity', $entity->baz);
     }
 
@@ -237,7 +237,7 @@ final class MetadataHydrationTest extends TestCase
             $repositoryBuilder->reveal(),
             $entityMetadata
         );
-        $entity = $hydration->hydrateNewEntity(['bar' => [5]]);
+        $entity = $hydration->hydrateNewEntity(['bar' => [['ID' => 5]]]);
         $this->assertSame('child-entity', $entity->baz);
     }
 
@@ -290,7 +290,7 @@ final class MetadataHydrationTest extends TestCase
             $repositoryBuilder->reveal(),
             $entityMetadata
         );
-        $entity = $hydration->hydrateNewEntity(['bar' => [5]]);
+        $entity = $hydration->hydrateNewEntity(['bar' => [['ID' => 5]]]);
         $this->assertSame('parent-entity', $entity->baz);
     }
 
@@ -344,7 +344,7 @@ final class MetadataHydrationTest extends TestCase
             $repositoryBuilder->reveal(),
             $entityMetadata
         );
-        $entity = $hydration->hydrateNewEntity(['baz' => [5, 6]]);
+        $entity = $hydration->hydrateNewEntity(['baz' => [['ID' => 5], ['ID' => 6]]]);
         $this->assertSame(['child-entity-1', 'child-entity-2'], iterator_to_array($entity->bar));
     }
 }

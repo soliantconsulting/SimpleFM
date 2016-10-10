@@ -3,26 +3,36 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Client\ResultSet\Transformer;
 
-use InvalidArgumentException;
 use Litipk\BigNumbers\Decimal;
-use Soliant\SimpleFM\Client\ResultSet\Transformer\Exception\DecimalException;
 
 final class NumberTransformer
 {
     public function __invoke(string $value)
     {
-        if ('' === $value) {
+        $cleanedValue = preg_replace_callback(
+            '(^[^\d-.](-?)([^.]*)(.?)(.*)$)',
+            function (array $match) : string {
+                return
+                    $match[1]
+                    . preg_replace('([^\d]+)', '', $match[2])
+                    . $match[3]
+                    . preg_replace('([^\d]+)', '', $match[4]);
+            },
+            $value
+        );
+
+        if ('' === $cleanedValue) {
             return null;
         }
 
-        if (0 === strpos($value, '.')) {
-            $value = '0' . $value;
+        if ('-' === $cleanedValue) {
+            $cleanedValue = '0';
         }
 
-        try {
-            return Decimal::fromString($value);
-        } catch (InvalidArgumentException $e) {
-            throw DecimalException::fromInvalidString($value);
+        if (0 === strpos($cleanedValue, '.')) {
+            $cleanedValue = '0' . $cleanedValue;
         }
+
+        return Decimal::fromString($cleanedValue);
     }
 }

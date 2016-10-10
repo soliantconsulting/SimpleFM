@@ -159,6 +159,7 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('bar', $relation->getPropertyName());
         $this->assertSame('baz', $relation->getTargetTable());
         $this->assertSame('bat', $relation->getTargetEntity());
+        $this->assertSame('bau', $relation->getTargetFieldName());
     }
 
     public function testManyToOne()
@@ -172,6 +173,7 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('baz', $relation->getTargetTable());
         $this->assertSame('bat', $relation->getTargetEntity());
         $this->assertSame('bau', $relation->getTargetPropertyName());
+        $this->assertSame('bai', $relation->getTargetFieldName());
     }
 
     public function testOneToOneOwning()
@@ -184,6 +186,7 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('bar', $relation->getPropertyName());
         $this->assertSame('baz', $relation->getTargetTable());
         $this->assertSame('bat', $relation->getTargetEntity());
+        $this->assertSame('bai', $relation->getTargetFieldName());
         $this->assertTrue($relation->isOwningSide());
         $this->assertSame('bau', $relation->getTargetPropertyName());
     }
@@ -197,6 +200,7 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('bar', $relation->getPropertyName());
         $this->assertSame('baz', $relation->getTargetTable());
         $this->assertSame('bat', $relation->getTargetEntity());
+        $this->assertSame('bau', $relation->getTargetFieldName());
         $this->assertFalse($relation->isOwningSide());
     }
 }

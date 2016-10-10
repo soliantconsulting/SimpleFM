@@ -17,6 +17,11 @@ final class DateTimeTypeTest extends TestCase
         $this->assertSame($value, $type->fromFileMakerValue($value));
     }
 
+    public function testNullConversionFromFileMaker()
+    {
+        $this->assertNull((new DateTimeType())->fromFileMakerValue(null));
+    }
+
     public function testUnsuccessfulConversionFromFileMaker()
     {
         $type = new DateTimeType();
@@ -29,6 +34,11 @@ final class DateTimeTypeTest extends TestCase
         $type = new DateTimeType();
         $value = new DateTimeImmutable();
         $this->assertSame($value, $type->toFileMakerValue($value));
+    }
+
+    public function testNullConversionToFileMaker()
+    {
+        $this->assertNull((new DateTimeType())->toFileMakerValue(null));
     }
 
     public function testUnsuccessfulConversionToFileMaker()

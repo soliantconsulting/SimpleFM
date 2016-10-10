@@ -17,6 +17,11 @@ final class IntegerTypeTest extends TestCase
         $this->assertSame(1, $type->fromFileMakerValue($value));
     }
 
+    public function testNullConversionFromFileMaker()
+    {
+        $this->assertNull((new IntegerType())->fromFileMakerValue(null));
+    }
+
     public function testUnsuccessfulConversionFromFileMaker()
     {
         $type = new IntegerType();
@@ -28,6 +33,11 @@ final class IntegerTypeTest extends TestCase
     {
         $type = new IntegerType();
         $this->assertSame(1, $type->toFileMakerValue(1)->asInteger());
+    }
+
+    public function testNullConversionToFileMaker()
+    {
+        $this->assertNull((new IntegerType())->toFileMakerValue(null));
     }
 
     public function testUnsuccessfulConversionToFileMaker()

@@ -17,6 +17,11 @@ final class DecimalTypeTest extends TestCase
         $this->assertSame($value, $type->fromFileMakerValue($value));
     }
 
+    public function testNullConversionFromFileMaker()
+    {
+        $this->assertNull((new DecimalType())->fromFileMakerValue(null));
+    }
+
     public function testUnsuccessfulConversionFromFileMaker()
     {
         $type = new DecimalType();
@@ -29,6 +34,11 @@ final class DecimalTypeTest extends TestCase
         $type = new DecimalType();
         $value = Decimal::fromInteger(1);
         $this->assertSame($value, $type->toFileMakerValue($value));
+    }
+
+    public function testNullConversionToFileMaker()
+    {
+        $this->assertNull((new DecimalType())->toFileMakerValue(null));
     }
 
     public function testUnsuccessfulConversionToFileMaker()

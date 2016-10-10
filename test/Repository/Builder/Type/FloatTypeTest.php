@@ -17,6 +17,11 @@ final class FloatTypeTest extends TestCase
         $this->assertSame(1.1, $type->fromFileMakerValue($value));
     }
 
+    public function testNullConversionFromFileMaker()
+    {
+        $this->assertNull((new FloatType())->fromFileMakerValue(null));
+    }
+
     public function testUnsuccessfulConversionFromFileMaker()
     {
         $type = new FloatType();
@@ -28,6 +33,11 @@ final class FloatTypeTest extends TestCase
     {
         $type = new FloatType();
         $this->assertSame(1.1, $type->toFileMakerValue(1.1)->asFloat());
+    }
+
+    public function testNullConversionToFileMaker()
+    {
+        $this->assertNull((new FloatType())->toFileMakerValue(null));
     }
 
     public function testUnsuccessfulConversionToFileMaker()

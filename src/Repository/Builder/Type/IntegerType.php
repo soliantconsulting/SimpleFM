@@ -10,12 +10,20 @@ final class IntegerType implements TypeInterface
 {
     public function fromFileMakerValue($value)
     {
+        if (null === $value) {
+            return null;
+        }
+
         Assertion::isInstanceOf($value, Decimal::class);
         return $value->asInteger();
     }
 
     public function toFileMakerValue($value)
     {
+        if (null === $value) {
+            return null;
+        }
+
         Assertion::integer($value);
         return Decimal::fromInteger($value);
     }

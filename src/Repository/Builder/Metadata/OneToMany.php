@@ -8,33 +8,33 @@ final class OneToMany
     /**
      * @var string
      */
-    private $fieldName;
+    private $propertyName;
 
     /**
      * @var string
      */
-    private $propertyName;
+    private $targetTable;
 
     /**
      * @var string
      */
     private $targetEntity;
 
-    public function __construct(string $fieldName, string $propertyName, string $targetEntity)
+    public function __construct(string $propertyName, string $targetTable, string $targetEntity)
     {
-        $this->fieldName = $fieldName;
         $this->propertyName = $propertyName;
+        $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
-    }
-
-    public function getFieldName() : string
-    {
-        return $this->fieldName;
     }
 
     public function getPropertyName() : string
     {
         return $this->propertyName;
+    }
+
+    public function getTargetTable() : string
+    {
+        return $this->targetTable;
     }
 
     public function getTargetEntity() : string

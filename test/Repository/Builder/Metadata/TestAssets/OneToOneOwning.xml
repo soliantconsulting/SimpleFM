@@ -7,5 +7,5 @@
     class-name="OneToOneOwning"
     layout="one-to-one-owning-layout"
 >
-    <one-to-one-owning name="foo" property="bar" target-entity="baz" target-property-name="bat"/>
+    <one-to-one-owning name="foo" property="bar" target-table="baz" target-entity="bat" target-property-name="bau"/>
 </entity>

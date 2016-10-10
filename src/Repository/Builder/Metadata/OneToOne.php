@@ -10,12 +10,12 @@ final class OneToOne
     /**
      * @var string
      */
-    private $fieldName;
+    private $propertyName;
 
     /**
      * @var string
      */
-    private $propertyName;
+    private $targetTable;
 
     /**
      * @var string
@@ -30,34 +30,42 @@ final class OneToOne
     /**
      * @var string
      */
+    private $fieldName;
+
+    /**
+     * @var string
+     */
     private $targetPropertyName;
 
     public function __construct(
-        string $fieldName,
         string $propertyName,
+        string $targetTable,
         string $targetEntity,
         bool $isOwningSide,
+        string $fieldName = null,
         string $targetPropertyName = null
     ) {
         if ($isOwningSide) {
+            Assertion::notNull($fieldName);
             Assertion::notNull($targetPropertyName);
         }
 
-        $this->fieldName = $fieldName;
         $this->propertyName = $propertyName;
+        $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
         $this->isOwningSide = $isOwningSide;
+        $this->fieldName = $isOwningSide ? $fieldName : null;
         $this->targetPropertyName = $isOwningSide ? $targetPropertyName : null;
-    }
-
-    public function getFieldName() : string
-    {
-        return $this->fieldName;
     }
 
     public function getPropertyName() : string
     {
         return $this->propertyName;
+    }
+
+    public function getTargetTable() : string
+    {
+        return $this->targetTable;
     }
 
     public function getTargetEntity() : string
@@ -68,6 +76,12 @@ final class OneToOne
     public function isOwningSide() : bool
     {
         return $this->isOwningSide;
+    }
+
+    public function getFieldName() : string
+    {
+        Assertion::notNull($this->fieldName);
+        return $this->fieldName;
     }
 
     public function getTargetPropertyName() : string

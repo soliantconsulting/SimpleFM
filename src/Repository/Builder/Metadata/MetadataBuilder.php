@@ -117,7 +117,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                 $oneToMany[] = new OneToMany(
                     (string) $relation['property'],
                     (string) $relation['target-table'],
-                    (string) $relation['target-entity']
+                    (string) $relation['target-entity'],
+                    (string) $relation['target-field-name']
                 );
             }
         }
@@ -129,7 +130,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['property'],
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
-                    (string) $relation['target-property-name']
+                    (string) $relation['target-property-name'],
+                    (string) $relation['target-field-name']
                 );
             }
         }
@@ -140,6 +142,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['property'],
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
+                    (string) $relation['target-field-name'],
                     true,
                     (string) $relation['name'],
                     (string) $relation['target-property-name']
@@ -153,6 +156,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['property'],
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
+                    (string) $relation['target-field-name'],
                     false
                 );
             }

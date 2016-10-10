@@ -20,11 +20,21 @@ final class OneToMany
      */
     private $targetEntity;
 
-    public function __construct(string $propertyName, string $targetTable, string $targetEntity)
-    {
+    /**
+     * @var string
+     */
+    private $targetFieldName;
+
+    public function __construct(
+        string $propertyName,
+        string $targetTable,
+        string $targetEntity,
+        string $targetFieldName
+    ) {
         $this->propertyName = $propertyName;
         $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
+        $this->targetFieldName = $targetFieldName;
     }
 
     public function getPropertyName() : string
@@ -40,5 +50,10 @@ final class OneToMany
     public function getTargetEntity() : string
     {
         return $this->targetEntity;
+    }
+
+    public function getTargetFieldName() : string
+    {
+        return $this->targetFieldName;
     }
 }

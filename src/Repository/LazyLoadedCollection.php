@@ -18,19 +18,25 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
     private $repository;
 
     /**
+     * @var string
+     */
+    private $idFieldName;
+
+    /**
      * @var array
      */
-    private $recordIds;
+    private $ids;
 
     /**
      * @var ArrayIterator
      */
     private $iterator;
 
-    public function __construct(RepositoryInterface $repository, array $recordIds)
+    public function __construct(RepositoryInterface $repository, string $idFieldName, array $ids)
     {
         $this->repository = $repository;
-        $this->recordIds = $recordIds;
+        $this->idFieldName = $idFieldName;
+        $this->ids = $ids;
     }
 
     public function getIterator() : Traversable
@@ -39,14 +45,14 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
             return $this->iterator;
         }
 
-        if (empty($this->recordIds)) {
+        if (empty($this->ids)) {
             return $this->iterator = new ArrayIterator();
         }
 
         $findQuery = new FindQuery();
-        $findQuery->addOrQueries(...array_map(function (int $recordId) {
-            return new Query('record-id', (string) $recordId);
-        }, $this->recordIds));
+        $findQuery->addOrQueries(...array_map(function ($id) {
+            return new Query($this->idFieldName, (string) $id);
+        }, $this->ids));
 
         return $this->iterator = new ArrayIterator($this->repository->findByQuery($findQuery));
     }
@@ -59,6 +65,6 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
 
     public function count() : int
     {
-        return count($this->recordIds);
+        return count($this->ids);
     }
 }

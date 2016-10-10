@@ -37,10 +37,16 @@ final class OneToOne
      */
     private $targetPropertyName;
 
+    /**
+     * @var string
+     */
+    private $targetFieldName;
+
     public function __construct(
         string $propertyName,
         string $targetTable,
         string $targetEntity,
+        string $targetFieldName,
         bool $isOwningSide,
         string $fieldName = null,
         string $targetPropertyName = null
@@ -53,6 +59,7 @@ final class OneToOne
         $this->propertyName = $propertyName;
         $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
+        $this->targetFieldName = $targetFieldName;
         $this->isOwningSide = $isOwningSide;
         $this->fieldName = $isOwningSide ? $fieldName : null;
         $this->targetPropertyName = $isOwningSide ? $targetPropertyName : null;
@@ -71,6 +78,11 @@ final class OneToOne
     public function getTargetEntity() : string
     {
         return $this->targetEntity;
+    }
+
+    public function getTargetFieldName() : string
+    {
+        return $this->targetFieldName;
     }
 
     public function isOwningSide() : bool

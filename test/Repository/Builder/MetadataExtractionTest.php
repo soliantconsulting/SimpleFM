@@ -105,7 +105,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id'),
+            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID'),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -121,7 +121,7 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id'),
+            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID'),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -139,7 +139,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), true, 'bat', 'id'),
+            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, 'bat', 'id'),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -155,7 +155,7 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), true, 'bat', 'id'),
+            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, 'bat', 'id'),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -173,7 +173,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), false, 'bat', 'id'),
+            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', false, 'bat', 'id'),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -191,7 +191,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = [$childEntity];
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [
-            new OneToMany('bar', 'baz', get_class($childEntity)),
+            new OneToMany('bar', 'baz', get_class($childEntity), 'ID'),
         ], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);

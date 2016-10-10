@@ -30,18 +30,25 @@ final class ManyToOne
      */
     private $targetPropertyName;
 
+    /**
+     * @var string
+     */
+    private $targetFieldName;
+
     public function __construct(
         string $fieldName,
         string $propertyName,
         string $targetTable,
         string $targetEntity,
-        string $targetPropertyName
+        string $targetPropertyName,
+        string $targetFieldName
     ) {
         $this->fieldName = $fieldName;
         $this->propertyName = $propertyName;
         $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
         $this->targetPropertyName = $targetPropertyName;
+        $this->targetFieldName = $targetFieldName;
     }
 
     public function getFieldName() : string
@@ -67,5 +74,10 @@ final class ManyToOne
     public function getTargetPropertyName() : string
     {
         return $this->targetPropertyName;
+    }
+
+    public function getTargetFieldName() : string
+    {
+        return $this->targetFieldName;
     }
 }

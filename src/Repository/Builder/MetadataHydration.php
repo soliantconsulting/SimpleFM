@@ -103,6 +103,7 @@ final class MetadataHydration implements HydrationInterface
                 $relationMetadata->getPropertyName(),
                 new LazyLoadedCollection(
                     $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity()),
+                    $relationMetadata->getTargetFieldName(),
                     $data[$relationMetadata->getTargetTable()]
                 )
             );
@@ -117,6 +118,7 @@ final class MetadataHydration implements HydrationInterface
                 $relationMetadata->getPropertyName(),
                 (new LazyLoadedCollection(
                     $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity()),
+                    $relationMetadata->getTargetFieldName(),
                     $data[$relationMetadata->getTargetTable()]
                 ))->first()
             );

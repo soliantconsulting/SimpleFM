@@ -23,6 +23,11 @@ final class Entity
     private $fields;
 
     /**
+     * @var Embeddable[]
+     */
+    private $embeddables;
+
+    /**
      * @var OneToMany[]
      */
     private $oneToMany;
@@ -37,15 +42,23 @@ final class Entity
      */
     private $oneToOne;
 
+    /**
+     * @var RecordId|null
+     */
+    private $recordId;
+
     public function __construct(
         string $layout,
         string $className,
         array $fields,
+        array $embeddables,
         array $oneToMany,
         array $manyToOne,
-        array $oneToOne
+        array $oneToOne,
+        RecordId $recordId = null
     ) {
         $this->validateArray($fields, Field::class);
+        $this->validateArray($embeddables, Embeddable::class);
         $this->validateArray($oneToMany, OneToMany::class);
         $this->validateArray($manyToOne, ManyToOne::class);
         $this->validateArray($oneToOne, OneToOne::class);
@@ -53,9 +66,11 @@ final class Entity
         $this->layout = $layout;
         $this->className = $className;
         $this->fields = $fields;
+        $this->embeddables = $embeddables;
         $this->oneToMany = $oneToMany;
         $this->manyToOne = $manyToOne;
         $this->oneToOne = $oneToOne;
+        $this->recordId = $recordId;
     }
 
     public function getLayout() : string
@@ -74,6 +89,14 @@ final class Entity
     public function getFields() : array
     {
         return $this->fields;
+    }
+
+    /**
+     * @return Embeddable[]
+     */
+    public function getEmbeddables() : array
+    {
+        return $this->embeddables;
     }
 
     /**
@@ -98,6 +121,17 @@ final class Entity
     public function getOneToOne() : array
     {
         return $this->oneToOne;
+    }
+
+    public function hasRecordId() : bool
+    {
+        return null !== $this->recordId;
+    }
+
+    public function getRecordId() : RecordId
+    {
+        Assertion::notNull($this->recordId);
+        return $this->recordId;
     }
 
     private function validateArray(array $array, string $expectedClassName)

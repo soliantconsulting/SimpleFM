@@ -6,11 +6,13 @@ namespace SoliantTest\SimpleFM\Repository\Builder;
 use Assert\InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Embeddable;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Field;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToMany;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
+use Soliant\SimpleFM\Repository\Builder\Metadata\RecordId;
 use Soliant\SimpleFM\Repository\Builder\MetadataHydration;
 use Soliant\SimpleFM\Repository\Builder\RepositoryBuilderInterface;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
@@ -26,8 +28,8 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [
-            new Field('bar', 'baz', new StringType(), false)
-        ], [], [], []);
+            new Field('bar', 'baz', new StringType(), false, false),
+        ], [], [], [], []);
 
         $hydration = new MetadataHydration(
             $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
@@ -44,8 +46,8 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [
-            new Field('bar', 'baz', new StringType(), true)
-        ], [], [], []);
+            new Field('bar', 'baz', new StringType(), true, false),
+        ], [], [], [], []);
 
         $hydration = new MetadataHydration(
             $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
@@ -62,8 +64,8 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [
-            new Field('bar', 'baz', new StringType(), true)
-        ], [], [], []);
+            new Field('bar', 'baz', new StringType(), true, false),
+        ], [], [], [], []);
 
         $hydration = new MetadataHydration(
             $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
@@ -74,14 +76,96 @@ final class MetadataHydrationTest extends TestCase
         $hydration->hydrateNewEntity(['bar' => 'bat']);
     }
 
+    public function testReadOnlyFieldHydration()
+    {
+        $entityPrototype = new class {
+            public $baz;
+        };
+
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [
+            new Field('bar', 'baz', new StringType(), false, true),
+        ], [], [], [], []);
+
+        $hydration = new MetadataHydration(
+            $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
+            $entityMetadata
+        );
+        $entity = $hydration->hydrateNewEntity(['bar' => 'bat']);
+        $this->assertSame('bat', $entity->baz);
+    }
+
+    public function testRecordIdHydration()
+    {
+        $entityPrototype = new class {
+            public $baz;
+        };
+
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [], new RecordId('baz'));
+
+        $hydration = new MetadataHydration(
+            $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
+            $entityMetadata
+        );
+        $entity = $hydration->hydrateNewEntity(['record-id' => 1]);
+        $this->assertSame(1, $entity->baz);
+    }
+
+    public function testEmbeddableHydrationWithoutPrefix()
+    {
+        $embeddablePrototype = new class {
+            public $foo;
+        };
+        $entityPrototype = new class {
+            public $baz;
+        };
+
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [
+            new Embeddable('baz', '', new Entity('', get_class($embeddablePrototype), [
+                new Field('fooField', 'foo', new StringType(), false, false),
+            ], [], [], [], [])),
+        ], [], [], []);
+
+        $hydration = new MetadataHydration(
+            $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
+            $entityMetadata
+        );
+        $entity = $hydration->hydrateNewEntity(['fooField' => 'bar']);
+        $this->assertInstanceOf(get_class($embeddablePrototype), $entity->baz);
+        $this->assertSame('bar', $entity->baz->foo);
+    }
+
+    public function testEmbeddableHydrationWithPrefix()
+    {
+        $embeddablePrototype = new class {
+            public $foo;
+        };
+        $entityPrototype = new class {
+            public $baz;
+        };
+
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [
+            new Embeddable('baz', 'bazPrefix', new Entity('', get_class($embeddablePrototype), [
+                new Field('fooField', 'foo', new StringType(), false, false),
+            ], [], [], [], [])),
+        ], [], [], []);
+
+        $hydration = new MetadataHydration(
+            $this->prophesize(RepositoryBuilderInterface::class)->reveal(),
+            $entityMetadata
+        );
+        $entity = $hydration->hydrateNewEntity(['bazPrefixfooField' => 'bar', 'fooField' => 'bat']);
+        $this->assertInstanceOf(get_class($embeddablePrototype), $entity->baz);
+        $this->assertSame('bar', $entity->baz->foo);
+    }
+
     public function testManyToOneOwningHydrationWithChild()
     {
         $entityPrototype = new class {
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [
-            new ManyToOne('bar', 'baz', 'child', 'id')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
+            new ManyToOne('bar', 'baz', 'child', 'id'),
         ], []);
 
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -110,8 +194,8 @@ final class MetadataHydrationTest extends TestCase
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [
-            new ManyToOne('bar', 'baz', 'child', 'id')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
+            new ManyToOne('bar', 'baz', 'child', 'id'),
         ], []);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -133,8 +217,8 @@ final class MetadataHydrationTest extends TestCase
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new OneToOne('bar', 'baz', 'child', true, 'id')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
+            new OneToOne('bar', 'baz', 'child', true, 'id'),
         ]);
 
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -163,8 +247,8 @@ final class MetadataHydrationTest extends TestCase
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new OneToOne('bar', 'baz', 'child', true, 'id')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
+            new OneToOne('bar', 'baz', 'child', true, 'id'),
         ]);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -186,8 +270,8 @@ final class MetadataHydrationTest extends TestCase
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new OneToOne('bar', 'baz', 'parent', false, 'id')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
+            new OneToOne('bar', 'baz', 'parent', false, 'id'),
         ]);
 
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -216,8 +300,8 @@ final class MetadataHydrationTest extends TestCase
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new OneToOne('bar', 'baz', 'parent', false, 'id')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
+            new OneToOne('bar', 'baz', 'parent', false, 'id'),
         ]);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -239,8 +323,8 @@ final class MetadataHydrationTest extends TestCase
             public $baz;
         };
 
-        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [
-            new OneToMany('bar', 'baz', 'child')
+        $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [
+            new OneToMany('bar', 'baz', 'child'),
         ], [], []);
 
         $repository = $this->prophesize(RepositoryInterface::class);

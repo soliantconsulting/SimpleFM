@@ -35,10 +35,15 @@ final class MetadataHydration implements HydrationInterface
 
     public function hydrateExistingEntity(array $data, $entity)
     {
-        Assertion::isInstanceOf($entity, $this->entityMetadata->getClassName());
+        return $this->hydrateWithMetadata($data, $entity, $this->entityMetadata);
+    }
+
+    private function hydrateWithMetadata(array $data, $entity, Entity $metadata)
+    {
+        Assertion::isInstanceOf($entity, $metadata->getClassName());
         $reflectionClass = new ReflectionClass($entity);
 
-        foreach ($this->entityMetadata->getFields() as $fieldMetadata) {
+        foreach ($metadata->getFields() as $fieldMetadata) {
             $type = $fieldMetadata->getType();
             $value = $data[$fieldMetadata->getFieldName()];
 
@@ -59,7 +64,39 @@ final class MetadataHydration implements HydrationInterface
             );
         }
 
-        foreach ($this->entityMetadata->getOneToMany() as $relationMetadata) {
+        foreach ($metadata->getEmbeddables() as $embeddableMetadata) {
+            $prefix = $embeddableMetadata->getFieldNamePrefix();
+
+            if ('' === $prefix) {
+                $embeddableData = $data;
+            } else {
+                $prefixLength = strlen($prefix);
+
+                foreach ($data as $key => $value) {
+                    if (0 !== strpos($key, $prefix)) {
+                        continue;
+                    }
+
+                    $embeddableData[substr($key, $prefixLength)] = $value;
+                }
+            }
+
+            $reflectionProperty = $reflectionClass->getProperty($embeddableMetadata->getPropertyName());
+            $reflectionProperty->setAccessible(true);
+            $embeddable = $reflectionProperty->getValue($entity);
+
+            if (null === $embeddable) {
+                $embeddable = (new ReflectionClass($embeddableMetadata->getMetadata()->getClassName()))
+                    ->newInstanceWithoutConstructor();
+            }
+
+            $reflectionProperty->setValue(
+                $entity,
+                $this->hydrateWithMetadata($embeddableData, $embeddable, $embeddableMetadata->getMetadata())
+            );
+        }
+
+        foreach ($metadata->getOneToMany() as $relationMetadata) {
             $this->setProperty(
                 $reflectionClass,
                 $entity,
@@ -71,7 +108,7 @@ final class MetadataHydration implements HydrationInterface
             );
         }
 
-        $toOne = $this->entityMetadata->getManyToOne() + $this->entityMetadata->getOneToOne();
+        $toOne = $metadata->getManyToOne() + $metadata->getOneToOne();
 
         foreach ($toOne as $relationMetadata) {
             $this->setProperty(
@@ -83,6 +120,11 @@ final class MetadataHydration implements HydrationInterface
                     $data[$relationMetadata->getFieldName()]
                 ))->first()
             );
+        }
+
+        if ($metadata->hasRecordId()) {
+            $recordIdMetadata = $metadata->getRecordId();
+            $this->setProperty($reflectionClass, $entity, $recordIdMetadata->getPropertyName(), $data['record-id']);
         }
 
         return $entity;

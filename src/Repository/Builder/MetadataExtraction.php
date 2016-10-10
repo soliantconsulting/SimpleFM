@@ -23,12 +23,21 @@ final class MetadataExtraction implements ExtractionInterface
 
     public function extract($entity) : array
     {
-        Assertion::isInstanceOf($entity, $this->entityMetadata->getClassName());
+        return $this->extractWithMetadata($entity, $this->entityMetadata);
+    }
+
+    private function extractWithMetadata($entity, Entity $metadata) : array
+    {
+        Assertion::isInstanceOf($entity, $metadata->getClassName());
 
         $data = [];
         $reflectionClass = new ReflectionClass($entity);
 
-        foreach ($this->entityMetadata->getFields() as $fieldMetadata) {
+        foreach ($metadata->getFields() as $fieldMetadata) {
+            if ($fieldMetadata->isReadOnly()) {
+                continue;
+            }
+
             $type = $fieldMetadata->getType();
             $value = $this->getProperty(
                 $reflectionClass,
@@ -47,8 +56,20 @@ final class MetadataExtraction implements ExtractionInterface
             }, $value);
         }
 
-        $toOne = $this->entityMetadata->getManyToOne() + array_filter(
-            $this->entityMetadata->getOneToOne(),
+        foreach ($metadata->getEmbeddables() as $embeddableMetadata) {
+            $prefix = $embeddableMetadata->getFieldNamePrefix();
+            $embeddableData = $this->extractWithMetadata(
+                $this->getProperty($reflectionClass, $entity, $embeddableMetadata->getPropertyName()),
+                $embeddableMetadata->getMetadata()
+            );
+
+            foreach ($embeddableData as $key => $value) {
+                $data[$prefix . $key] = $value;
+            }
+        }
+
+        $toOne = $metadata->getManyToOne() + array_filter(
+            $metadata->getOneToOne(),
             function (OneToOne $oneToOneMetadata) {
                 return $oneToOneMetadata->isOwningSide();
             }

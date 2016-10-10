@@ -7,6 +7,7 @@
     class-name="BuiltInTypes"
     layout="build-in-types-layout"
 >
+    <field name="boolean" property="boolean" type="boolean"/>
     <field name="date-time" property="date-time" type="date-time"/>
     <field name="decimal" property="decimal" type="decimal"/>
     <field name="float" property="float" type="float"/>

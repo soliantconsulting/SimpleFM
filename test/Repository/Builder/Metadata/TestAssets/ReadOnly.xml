@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity
+    xmlns="uri:soliantconsulting.com:simplefm:entity-metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="uri:soliantconsulting.com:simplefm:entity-metadata
+        https://soliantconsulting.github.io/SimpleFM/xsd/entity-metadata-5-0.xml"
+    class-name="ReadOnly"
+    layout="read-only-layout"
+>
+    <field name="default" property="default" type="string"/>
+    <field name="true" property="true" type="string" read-only="true"/>
+    <field name="false" property="false" type="string" read-only="false"/>
+</entity>

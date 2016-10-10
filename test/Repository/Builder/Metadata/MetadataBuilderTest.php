@@ -8,6 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilder;
+use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
@@ -68,6 +69,12 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('empty-layout', $metadata->getLayout());
     }
 
+    public function testMetadataCaching()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $this->assertSame($builder->getMetadata('Empty'), $builder->getMetadata('Empty'));
+    }
+
     public function testBuiltInTypes()
     {
         $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
@@ -78,6 +85,7 @@ final class MetadataBuilderTest extends TestCase
             $fieldTypes[$field->getFieldName()] = $field->getType();
         }
 
+        $this->assertInstanceOf(BooleanType::class, $fieldTypes['boolean']);
         $this->assertInstanceOf(DateTimeType::class, $fieldTypes['date-time']);
         $this->assertInstanceOf(DecimalType::class, $fieldTypes['decimal']);
         $this->assertInstanceOf(FloatType::class, $fieldTypes['float']);
@@ -111,6 +119,35 @@ final class MetadataBuilderTest extends TestCase
         $this->assertFalse($metadata->getFields()[0]->isRepeatable());
         $this->assertTrue($metadata->getFields()[1]->isRepeatable());
         $this->assertFalse($metadata->getFields()[2]->isRepeatable());
+    }
+
+    public function testReadOnly()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('ReadOnly');
+
+        $this->assertFalse($metadata->getFields()[0]->isReadOnly());
+        $this->assertTrue($metadata->getFields()[1]->isReadOnly());
+        $this->assertFalse($metadata->getFields()[2]->isReadOnly());
+    }
+
+    public function testRecordId()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('RecordId');
+
+        $this->assertSame('recordId', $metadata->getRecordId()->getPropertyName());
+    }
+
+    public function testEmbeddable()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('Embeddable');
+        $embeddable = $metadata->getEmbeddables()[0];
+
+        $this->assertSame('foo', $embeddable->getPropertyName());
+        $this->assertSame('bar', $embeddable->getFieldNamePrefix());
+        $this->assertSame('EmbeddedEntity', $embeddable->getMetadata()->getClassName());
     }
 
     public function testOneToMany()

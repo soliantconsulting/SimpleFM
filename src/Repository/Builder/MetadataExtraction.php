@@ -60,7 +60,7 @@ final class MetadataExtraction implements ExtractionInterface
             $prefix = $embeddableMetadata->getFieldNamePrefix();
             $embeddableData = $this->extractWithMetadata(
                 $this->getProperty($reflectionClass, $entity, $embeddableMetadata->getPropertyName()),
-                $entity, $embeddableMetadata->getMetadata()
+                $embeddableMetadata->getMetadata()
             );
 
             foreach ($embeddableData as $key => $value) {

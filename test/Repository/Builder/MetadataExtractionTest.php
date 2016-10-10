@@ -5,6 +5,7 @@ namespace SoliantTest\SimpleFM\Repository\Builder;
 
 use Assert\InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Embeddable;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Field;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
@@ -22,7 +23,7 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [
-            new Field('bar', 'baz', new StringType(), false, false)
+            new Field('bar', 'baz', new StringType(), false, false),
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -36,11 +37,25 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [
-            new Field('bar', 'baz', new StringType(), true, false)
+            new Field('bar', 'baz', new StringType(), true, false),
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
         $this->assertSame(['bar' => ['bat1', 'bat2']], $extraction->extract($entity));
+    }
+
+    public function testReadOnlyFieldExtraction()
+    {
+        $entity = new class {
+            private $baz = 'bat';
+        };
+
+        $entityMetadata = new Entity('foo', get_class($entity), [
+            new Field('bar', 'baz', new StringType(), false, true),
+        ], [], [], [], []);
+
+        $extraction = new MetadataExtraction($entityMetadata);
+        $this->assertSame([], $extraction->extract($entity));
     }
 
     public function testRepeatableFieldExtractionWithoutArray()
@@ -50,13 +65,33 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [
-            new Field('bar', 'baz', new StringType(), true, false)
+            new Field('bar', 'baz', new StringType(), true, false),
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('is not an array');
         $extraction->extract($entity);
+    }
+
+    public function testEmbeddableExtraction()
+    {
+        $embeddable = new class {
+            private $foo = 'bar';
+        };
+        $entity = new class {
+            public $baz;
+        };
+        $entity->baz = $embeddable;
+
+        $entityMetadata = new Entity('foo', get_class($entity), [], [
+            new Embeddable('baz', 'bazPrefix', new Entity('', get_class($embeddable), [
+                new Field('fooField', 'foo', new StringType(), false, false),
+            ], [], [], [], [])),
+        ], [], [], []);
+
+        $extraction = new MetadataExtraction($entityMetadata);
+        $this->assertSame(['bazPrefixfooField' => 'bar'], $extraction->extract($entity));
     }
 
     public function testManyToOneOwningExtractionWithEntity()
@@ -70,7 +105,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bar', 'baz', get_class($childEntity), 'id')
+            new ManyToOne('bar', 'baz', get_class($childEntity), 'id'),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -86,7 +121,7 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bar', 'baz', get_class($childEntity), 'id')
+            new ManyToOne('bar', 'baz', get_class($childEntity), 'id'),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -104,7 +139,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('bar', 'baz', get_class($childEntity), true, 'id')
+            new OneToOne('bar', 'baz', get_class($childEntity), true, 'id'),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -120,7 +155,7 @@ final class MetadataExtractionTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('bar', 'baz', get_class($childEntity), true, 'id')
+            new OneToOne('bar', 'baz', get_class($childEntity), true, 'id'),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -138,7 +173,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('bar', 'baz', get_class($childEntity), false, 'id')
+            new OneToOne('bar', 'baz', get_class($childEntity), false, 'id'),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -156,7 +191,7 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = [$childEntity];
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [
-            new OneToMany('bar', 'baz', get_class($childEntity))
+            new OneToMany('bar', 'baz', get_class($childEntity)),
         ], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);

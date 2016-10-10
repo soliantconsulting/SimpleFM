@@ -11,7 +11,14 @@ final class OneToOneTest extends TestCase
 {
     public function testGenericGetters()
     {
-        $metadata = new OneToOne('propertyName', 'targetTable', 'targetEntity', true, 'fieldName', 'targetPropertyName');
+        $metadata = new OneToOne(
+            'propertyName',
+            'targetTable',
+            'targetEntity',
+            true,
+            'fieldName',
+            'targetPropertyName'
+        );
         $this->assertSame('propertyName', $metadata->getPropertyName());
         $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());

@@ -43,10 +43,10 @@ final class FindQueryTest extends TestCase
         $findQuery->addAndQueries(new Query('foo', 'bar'), new Query('baz', 'bat', true));
         $this->assertSame([
             '-query' => '(q1,!q2)',
-            'q1' => 'foo',
-            'q1.value' => 'bar',
-            'q2' => 'baz',
-            'q2.value' => 'bat',
+            '-q1' => 'foo',
+            '-q1.value' => 'bar',
+            '-q2' => 'baz',
+            '-q2.value' => 'bat',
         ], $findQuery->toParameters());
     }
 
@@ -56,10 +56,10 @@ final class FindQueryTest extends TestCase
         $findQuery->addOrQueries(new Query('foo', 'bar'), new Query('baz', 'bat', true));
         $this->assertSame([
             '-query' => '(q1);(!q2)',
-            'q1' => 'foo',
-            'q1.value' => 'bar',
-            'q2' => 'baz',
-            'q2.value' => 'bat',
+            '-q1' => 'foo',
+            '-q1.value' => 'bar',
+            '-q2' => 'baz',
+            '-q2.value' => 'bat',
         ], $findQuery->toParameters());
     }
 }

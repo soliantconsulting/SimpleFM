@@ -8,6 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilder;
+use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
@@ -78,6 +79,7 @@ final class MetadataBuilderTest extends TestCase
             $fieldTypes[$field->getFieldName()] = $field->getType();
         }
 
+        $this->assertInstanceOf(BooleanType::class, $fieldTypes['boolean']);
         $this->assertInstanceOf(DateTimeType::class, $fieldTypes['date-time']);
         $this->assertInstanceOf(DecimalType::class, $fieldTypes['decimal']);
         $this->assertInstanceOf(FloatType::class, $fieldTypes['float']);

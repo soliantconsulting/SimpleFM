@@ -13,10 +13,11 @@ final class FieldTest extends TestCase
     {
         $type = $this->prophesize(TypeInterface::class)->reveal();
 
-        $metadata = new Field('fieldName', 'propertyName', $type, true);
+        $metadata = new Field('fieldName', 'propertyName', $type, true, true);
         $this->assertSame('fieldName', $metadata->getFieldName());
         $this->assertSame('propertyName', $metadata->getPropertyName());
         $this->assertSame($type, $metadata->getType());
         $this->assertTrue($metadata->isRepeatable());
+        $this->assertTrue($metadata->isReadOnly());
     }
 }

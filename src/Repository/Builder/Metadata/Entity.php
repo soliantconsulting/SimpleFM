@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
+use Assert\Assertion;
+
 final class Entity
 {
     /**
@@ -128,7 +130,7 @@ final class Entity
 
     public function getRecordId() : RecordId
     {
-        Assert\Assertion::notNull($this->recordId);
+        Assertion::notNull($this->recordId);
         return $this->recordId;
     }
 

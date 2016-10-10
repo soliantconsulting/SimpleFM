@@ -16,7 +16,7 @@ final class RepositoryBuilderTest extends TestCase
     public function testRepositoryCaching()
     {
         $metadataBuilder = $this->prophesize(MetadataBuilderInterface::class);
-        $metadataBuilder->getMetadata('foo')->willReturn(new Entity('bar', 'foo', [], [], [], []));
+        $metadataBuilder->getMetadata('foo')->willReturn(new Entity('bar', 'foo', [], [], [], [], []));
 
         $builder = new RepositoryBuilder(
             $this->prophesize(ResultSetClientInterface::class)->reveal(),
@@ -28,7 +28,7 @@ final class RepositoryBuilderTest extends TestCase
 
     public function testMetadataInjection()
     {
-        $metadata = new Entity('bar', 'foo', [], [], [], []);
+        $metadata = new Entity('bar', 'foo', [], [], [], [], []);
 
         $metadataBuilder = $this->prophesize(MetadataBuilderInterface::class);
         $metadataBuilder->getMetadata('foo')->willReturn($metadata);

@@ -164,6 +164,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
             (string) $xml['layout'],
             (string) $xml['class-name'],
             $fields,
+            $embeddables,
             $oneToMany,
             $manyToOne,
             $oneToOne,

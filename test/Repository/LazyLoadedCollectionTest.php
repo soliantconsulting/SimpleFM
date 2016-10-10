@@ -42,7 +42,11 @@ final class LazyLoadedCollectionTest extends TestCase
             ];
         });
 
-        $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [1, 2, 3]);
+        $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [
+            ['foo' => 1],
+            ['foo' => 2],
+            ['foo' => 3],
+        ]);
         $entities = [];
 
         foreach ($collection as $entity) {
@@ -78,7 +82,11 @@ final class LazyLoadedCollectionTest extends TestCase
             ];
         });
 
-        $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [1, 2, 3]);
+        $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [
+            ['foo' => 1],
+            ['foo' => 2],
+            ['foo' => 3],
+        ]);
         $this->assertSame($first, $collection->first());
     }
 
@@ -87,7 +95,11 @@ final class LazyLoadedCollectionTest extends TestCase
         $collection = new LazyLoadedCollection(
             $this->prophesize(RepositoryInterface::class)->reveal(),
             'foo',
-            [1, 2, 3]
+            [
+                ['foo' => 1],
+                ['foo' => 2],
+                ['foo' => 3],
+            ]
         );
         $this->assertSame(3, count($collection));
     }

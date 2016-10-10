@@ -45,7 +45,63 @@ final class ResultSetClientTest extends TestCase
                         'Start Date Project Completion' => new DateTimeImmutable('2011-04-13 00:00:00 UTC'),
                         'Due Date Project Completion' => new DateTimeImmutable('2012-05-02 00:00:00 UTC'),
                         'Repeating Field' => ['A1', 'B2', 'C3', 'D4', 'E5', 'F6', 'G7', 'H8', 'I9'],
-                        'Tasks' => [14999, 15000, 15001, 15002, 15003],
+                        'Tasks' => [
+                            [
+                                'record-id' => 14999,
+                                'mod-id' => 1,
+                                'Task Name' => 'Site map sketch',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(2),
+                                'Repeating Field' => [
+                                    Decimal::fromInteger(1),
+                                    Decimal::fromInteger(2),
+                                    Decimal::fromInteger(3),
+                                ],
+                            ],
+                            [
+                                'record-id' => 15000,
+                                'mod-id' => 1,
+                                'Task Name' => 'Send art to vendor',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(4),
+                                'Repeating Field' => [
+                                    Decimal::fromInteger(4),
+                                    Decimal::fromInteger(5),
+                                    Decimal::fromInteger(6),
+                                ],
+                            ],
+                            [
+                                'record-id' => 15001,
+                                'mod-id' => 1,
+                                'Task Name' => 'Review mock ups',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(5),
+                                'Repeating Field' => [
+                                    Decimal::fromInteger(7),
+                                    Decimal::fromInteger(8),
+                                    Decimal::fromInteger(9),
+                                ],
+                            ],
+                            [
+                                'record-id' => 15002,
+                                'mod-id' => 0,
+                                'Task Name' => 'Write page text',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(6),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15003,
+                                'mod-id' => 0,
+                                'Task Name' => 'New logo art',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(3),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                        ],
                     ],
                     [
                         'record-id' => 7677,
@@ -69,7 +125,63 @@ final class ResultSetClientTest extends TestCase
                         'Start Date Project Completion' => new DateTimeImmutable('2012-02-09 00:00:00 UTC'),
                         'Due Date Project Completion' => new DateTimeImmutable('2012-02-17 00:00:00 UTC'),
                         'Repeating Field' => ['*1', '-2', '+3', '.4', '/5', '=6', '=7', '-8', '`9'],
-                        'Tasks' => [15005, 15006, 15007, 15014, 15015],
+                        'Tasks' => [
+                            [
+                                'record-id' => 15005,
+                                'mod-id' => 1,
+                                'Task Name' => 'Build prototype',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(9),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15006,
+                                'mod-id' => 1,
+                                'Task Name' => 'Review sketches',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(8),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15007,
+                                'mod-id' => 1,
+                                'Task Name' => 'Complete sketches',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(7),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15014,
+                                'mod-id' => 0,
+                                'Task Name' => 'Draft requirements',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(16),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15015,
+                                'mod-id' => 0,
+                                'Task Name' => 'Review requirements',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(17),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                        ],
                     ],
                     [
                         'record-id' => 7678,
@@ -93,7 +205,85 @@ final class ResultSetClientTest extends TestCase
                         'Start Date Project Completion' => new DateTimeImmutable('2012-01-02 00:00:00 UTC'),
                         'Due Date Project Completion' => new DateTimeImmutable('2012-03-22 00:00:00 UTC'),
                         'Repeating Field' => ['a1', 'b2', 'c3', 'd4', 'e5', 'f6', 'g7', 'h8', 'i9'],
-                        'Tasks' => [15004, 15008, 15009, 15010, 15011, 15012, 15013],
+                        'Tasks' => [
+                            [
+                                'record-id' => 15004,
+                                'mod-id' => 1,
+                                'Task Name' => 'Gather requirements',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(1),
+                                'Repeating Field' => [
+                                    null,
+                                    Decimal::fromInteger(0),
+                                    null
+                                ],
+                            ],
+                            [
+                                'record-id' => 15008,
+                                'mod-id' => 1,
+                                'Task Name' => 'Investor meeting',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(13),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    Decimal::fromInteger(0),
+                                ],
+                            ],
+                            [
+                                'record-id' => 15009,
+                                'mod-id' => 1,
+                                'Task Name' => 'Final draft of slides',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(12),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15010,
+                                'mod-id' => 0,
+                                'Task Name' => 'Complete business plan',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(10),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15011,
+                                'mod-id' => 0,
+                                'Task Name' => 'First draft of slides',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(11),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15012,
+                                'mod-id' => 0,
+                                'Task Name' => 'Market research',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(14),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                            [
+                                'record-id' => 15013,
+                                'mod-id' => 0,
+                                'Task Name' => 'Competitive analysis',
+                                'TASK ID MATCH FIELD' => Decimal::fromInteger(15),
+                                'Repeating Field' => [
+                                    null,
+                                    null,
+                                    null,
+                                ],
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -202,18 +392,6 @@ final class ResultSetClientTest extends TestCase
 
         $command = new Command('foo', []);
         $client = $this->createClient($command, 'invalidFieldTypeFake.xml');
-        $client->execute($command);
-    }
-
-    public function testInvalidFieldTransformerTypeRepeatingNumber()
-    {
-        $this->expectException(DecimalException::class);
-        $this->expectExceptionMessage(
-            '"non-number string" must be a string that represents uniquely a float point number.'
-        );
-
-        $command = new Command('foo', []);
-        $client = $this->createClient($command, 'invalidFieldTypeRepeatingNumber.xml');
         $client->execute($command);
     }
 

@@ -115,8 +115,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
         if (isset($xml->{'one-to-many'})) {
             foreach ($xml->{'one-to-many'} as $relation) {
                 $oneToMany[] = new OneToMany(
-                    (string) $relation['name'],
                     (string) $relation['property'],
+                    (string) $relation['target-table'],
                     (string) $relation['target-entity']
                 );
             }
@@ -127,6 +127,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
                 $manyToOne[] = new ManyToOne(
                     (string) $relation['name'],
                     (string) $relation['property'],
+                    (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     (string) $relation['target-property-name']
                 );
@@ -136,10 +137,11 @@ final class MetadataBuilder implements MetadataBuilderInterface
         if (isset($xml->{'one-to-one-owning'})) {
             foreach ($xml->{'one-to-one-owning'} as $relation) {
                 $oneToOne[] = new OneToOne(
-                    (string) $relation['name'],
                     (string) $relation['property'],
+                    (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     true,
+                    (string) $relation['name'],
                     (string) $relation['target-property-name']
                 );
             }
@@ -148,8 +150,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
         if (isset($xml->{'one-to-one-inverse'})) {
             foreach ($xml->{'one-to-one-inverse'} as $relation) {
                 $oneToOne[] = new OneToOne(
-                    (string) $relation['name'],
                     (string) $relation['property'],
+                    (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     false
                 );

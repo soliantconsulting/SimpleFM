@@ -11,24 +11,28 @@ final class OneToOneTest extends TestCase
 {
     public function testGenericGetters()
     {
-        $metadata = new OneToOne('fieldName', 'propertyName', 'targetEntity', true, 'targetPropertyName');
-        $this->assertSame('fieldName', $metadata->getFieldName());
+        $metadata = new OneToOne('propertyName', 'targetTable', 'targetEntity', true, 'fieldName', 'targetPropertyName');
         $this->assertSame('propertyName', $metadata->getPropertyName());
+        $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
+        $this->assertSame('fieldName', $metadata->getFieldName());
         $this->assertSame('targetPropertyName', $metadata->getTargetPropertyName());
     }
 
-    public function testExceptionOnMissingJoinFieldName()
+    public function testExceptionOnMissingProperties()
     {
         $this->expectException(InvalidArgumentException::class);
-        new OneToOne('fieldName', 'propertyName', 'targetEntity', true);
+        new OneToOne('propertyName', 'targetTable', 'targetEntity', true);
     }
 
-    public function testTargetPropertyNameIsSetToNullOnInverseSide()
+    public function testOptionalPropertiesAreSetToNullOnInverseSide()
     {
-        $metadata = new OneToOne('fieldName', 'propertyName', 'targetEntity', false, 'foo');
+        $metadata = new OneToOne('propertyName', 'targetTable', 'targetEntity', false, 'foo', 'bar');
 
         $this->expectException(InvalidArgumentException::class);
         $metadata->getTargetPropertyName();
+
+        $this->expectException(InvalidArgumentException::class);
+        $metadata->getPropertyName();
     }
 }

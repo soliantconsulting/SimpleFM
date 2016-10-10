@@ -156,9 +156,9 @@ final class MetadataBuilderTest extends TestCase
         $metadata = $builder->getMetadata('OneToMany');
         $relation = $metadata->getOneToMany()[0];
 
-        $this->assertSame('foo', $relation->getFieldName());
         $this->assertSame('bar', $relation->getPropertyName());
-        $this->assertSame('baz', $relation->getTargetEntity());
+        $this->assertSame('baz', $relation->getTargetTable());
+        $this->assertSame('bat', $relation->getTargetEntity());
     }
 
     public function testManyToOne()
@@ -169,8 +169,9 @@ final class MetadataBuilderTest extends TestCase
 
         $this->assertSame('foo', $relation->getFieldName());
         $this->assertSame('bar', $relation->getPropertyName());
-        $this->assertSame('baz', $relation->getTargetEntity());
-        $this->assertSame('bat', $relation->getTargetPropertyName());
+        $this->assertSame('baz', $relation->getTargetTable());
+        $this->assertSame('bat', $relation->getTargetEntity());
+        $this->assertSame('bau', $relation->getTargetPropertyName());
     }
 
     public function testOneToOneOwning()
@@ -181,9 +182,10 @@ final class MetadataBuilderTest extends TestCase
 
         $this->assertSame('foo', $relation->getFieldName());
         $this->assertSame('bar', $relation->getPropertyName());
-        $this->assertSame('baz', $relation->getTargetEntity());
+        $this->assertSame('baz', $relation->getTargetTable());
+        $this->assertSame('bat', $relation->getTargetEntity());
         $this->assertTrue($relation->isOwningSide());
-        $this->assertSame('bat', $relation->getTargetPropertyName());
+        $this->assertSame('bau', $relation->getTargetPropertyName());
     }
 
     public function testOneToOneInverse()
@@ -192,9 +194,9 @@ final class MetadataBuilderTest extends TestCase
         $metadata = $builder->getMetadata('OneToOneInverse');
         $relation = $metadata->getOneToOne()[0];
 
-        $this->assertSame('foo', $relation->getFieldName());
         $this->assertSame('bar', $relation->getPropertyName());
-        $this->assertSame('baz', $relation->getTargetEntity());
+        $this->assertSame('baz', $relation->getTargetTable());
+        $this->assertSame('bat', $relation->getTargetEntity());
         $this->assertFalse($relation->isOwningSide());
     }
 }

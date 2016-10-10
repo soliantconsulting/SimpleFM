@@ -66,15 +66,19 @@ final class MetadataHydration implements HydrationInterface
 
         foreach ($metadata->getEmbeddables() as $embeddableMetadata) {
             $prefix = $embeddableMetadata->getFieldNamePrefix();
-            $prefixLength = strlen($prefix);
-            $embeddableData = [];
 
-            foreach ($data as $key => $value) {
-                if ('' !== $prefix && 0 !== strpos($key, $prefix)) {
-                    continue;
+            if ('' === $prefix) {
+                $embeddableData = $data;
+            } else {
+                $prefixLength = strlen($prefix);
+
+                foreach ($data as $key => $value) {
+                    if (0 !== strpos($key, $prefix)) {
+                        continue;
+                    }
+
+                    $embeddableData[substr($key, $prefixLength)] = $value;
                 }
-
-                $embeddableData[substr($key, $prefixLength)] = $value;
             }
 
             $reflectionProperty = $reflectionClass->getProperty($embeddableMetadata->getPropertyName());

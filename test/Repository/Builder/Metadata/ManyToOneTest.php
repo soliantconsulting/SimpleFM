@@ -10,11 +10,19 @@ final class ManyToOneTest extends TestCase
 {
     public function testGenericGetters()
     {
-        $metadata = new ManyToOne('fieldName', 'propertyName', 'targetTable', 'targetEntity', 'targetPropertyName');
+        $metadata = new ManyToOne(
+            'fieldName',
+            'propertyName',
+            'targetTable',
+            'targetEntity',
+            'targetPropertyName',
+            'targetFieldName'
+        );
         $this->assertSame('fieldName', $metadata->getFieldName());
         $this->assertSame('propertyName', $metadata->getPropertyName());
         $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
         $this->assertSame('targetPropertyName', $metadata->getTargetPropertyName());
+        $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
     }
 }

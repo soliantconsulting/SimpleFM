@@ -10,9 +10,10 @@ final class OneToManyTest extends TestCase
 {
     public function testGenericGetters()
     {
-        $metadata = new OneToMany('propertyName', 'targetTable', 'targetEntity');
+        $metadata = new OneToMany('propertyName', 'targetTable', 'targetEntity', 'targetFieldName');
         $this->assertSame('propertyName', $metadata->getPropertyName());
         $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
+        $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
     }
 }

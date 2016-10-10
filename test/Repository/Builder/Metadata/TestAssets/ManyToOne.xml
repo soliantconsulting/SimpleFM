@@ -7,5 +7,12 @@
     class-name="ManyToOne"
     layout="many-to-one-layout"
 >
-    <many-to-one name="foo" property="bar" target-table="baz" target-entity="bat" target-property-name="bau"/>
+    <many-to-one
+        name="foo"
+        property="bar"
+        target-table="baz"
+        target-entity="bat"
+        target-property-name="bau"
+        target-field-name="bai"
+    />
 </entity>

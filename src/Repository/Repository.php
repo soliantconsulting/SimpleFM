@@ -50,6 +50,11 @@ final class Repository implements RepositoryInterface
      */
     private $managedEntities;
 
+    /**
+     * @var array
+     */
+    private $entitiesByRecordId = [];
+
     public function __construct(
         ResultSetClientInterface $resultSetClient,
         string $layout,
@@ -214,6 +219,7 @@ final class Repository implements RepositoryInterface
             'record-id' => $recordId,
             'mod-id' => $modId,
         ];
+        $this->entitiesByRecordId[$recordId] = $entity;
     }
 
     private function createCollection(array $resultSet) : array
@@ -229,7 +235,12 @@ final class Repository implements RepositoryInterface
 
     private function createEntity(array $record)
     {
-        $entity = $this->hydration->hydrateNewEntity($record);
+        if (array_key_exists($record['record-id'], $this->entitiesByRecordId)) {
+            $entity = $this->entitiesByRecordId[$record['record-id']];
+        } else {
+            $entity = $this->hydration->hydrateNewEntity($record);
+        }
+
         $this->addOrUpdateManagedEntity($record['record-id'], $record['mod-id'], $entity);
         return $entity;
     }

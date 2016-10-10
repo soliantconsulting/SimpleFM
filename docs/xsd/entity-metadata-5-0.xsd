@@ -45,6 +45,7 @@
         <xs:attribute name="property" use="required" type="xs:string"/>
         <xs:attribute name="target-table" use="required" type="xs:string"/>
         <xs:attribute name="target-entity" use="required" type="xs:string"/>
+        <xs:attribute name="target-field-name" use="required" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="many-to-one-type">
@@ -53,6 +54,7 @@
         <xs:attribute name="target-table" use="required" type="xs:string"/>
         <xs:attribute name="target-entity" use="required" type="xs:string"/>
         <xs:attribute name="target-property-name" use="required" type="xs:string"/>
+        <xs:attribute name="target-field-name" use="required" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="one-to-one-owning-type">
@@ -61,11 +63,13 @@
         <xs:attribute name="target-table" use="required" type="xs:string"/>
         <xs:attribute name="target-entity" use="required" type="xs:string"/>
         <xs:attribute name="target-property-name" use="optional" type="xs:string"/>
+        <xs:attribute name="target-field-name" use="required" type="xs:string"/>
     </xs:complexType>
 
     <xs:complexType name="one-to-one-inverse-type">
         <xs:attribute name="property" use="required" type="xs:string"/>
         <xs:attribute name="target-table" use="required" type="xs:string"/>
         <xs:attribute name="target-entity" use="required" type="xs:string"/>
+        <xs:attribute name="target-field-name" use="required" type="xs:string"/>
     </xs:complexType>
 </xs:schema>

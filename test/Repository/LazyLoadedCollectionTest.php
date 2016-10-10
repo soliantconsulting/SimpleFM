@@ -27,11 +27,11 @@ final class LazyLoadedCollectionTest extends TestCase
         ) {
             $testCase->assertSame([
                 '-query' => '(q1);(q2);(q3)',
-                '-q1' => 'record-id',
+                '-q1' => 'foo',
                 '-q1.value' => '1',
-                '-q2' => 'record-id',
+                '-q2' => 'foo',
                 '-q2.value' => '2',
-                '-q3' => 'record-id',
+                '-q3' => 'foo',
                 '-q3.value' => '3',
             ], $parameters[0]->toParameters());
 
@@ -42,7 +42,7 @@ final class LazyLoadedCollectionTest extends TestCase
             ];
         });
 
-        $collection = new LazyLoadedCollection($repository->reveal(), [1, 2, 3]);
+        $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [1, 2, 3]);
         $entities = [];
 
         foreach ($collection as $entity) {
@@ -56,13 +56,13 @@ final class LazyLoadedCollectionTest extends TestCase
 
     public function testEmptyCollection()
     {
-        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), []);
+        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), 'foo', []);
         $this->assertNull($collection->first());
     }
 
     public function testIteratorCaching()
     {
-        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), []);
+        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), 'foo', []);
         $this->assertSame($collection->getIterator(), $collection->getIterator());
     }
 
@@ -78,13 +78,17 @@ final class LazyLoadedCollectionTest extends TestCase
             ];
         });
 
-        $collection = new LazyLoadedCollection($repository->reveal(), [1, 2, 3]);
+        $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [1, 2, 3]);
         $this->assertSame($first, $collection->first());
     }
 
     public function testCount()
     {
-        $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), [1, 2, 3]);
+        $collection = new LazyLoadedCollection(
+            $this->prophesize(RepositoryInterface::class)->reveal(),
+            'foo',
+            [1, 2, 3]
+        );
         $this->assertSame(3, count($collection));
     }
 }

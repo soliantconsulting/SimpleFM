@@ -100,6 +100,20 @@ final class RepositoryTest extends TestCase
         $this->assertNull($repository->find(1));
     }
 
+    public function testEntityCaching()
+    {
+        $entity = new stdClass();
+
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+
+        $repository = $this->createAssertiveRepository(function (Command $command) {
+            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+        }, $hydration->reveal());
+
+        $this->assertSame($repository->find(1), $repository->find(1));
+    }
+
     public function testFindOneByWithResult()
     {
         $entity = new stdClass();

@@ -171,7 +171,7 @@ final class MetadataHydrationTest extends TestCase
         $repository = $this->prophesize(RepositoryInterface::class);
         $testCase = $this;
         $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) : array {
-            $testCase->assertSame('5', $parameters[0]->toParameters()['q1.value']);
+            $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
             return ['child-entity'];
         });
 
@@ -224,7 +224,7 @@ final class MetadataHydrationTest extends TestCase
         $repository = $this->prophesize(RepositoryInterface::class);
         $testCase = $this;
         $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) : array {
-            $testCase->assertSame('5', $parameters[0]->toParameters()['q1.value']);
+            $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
             return ['child-entity'];
         });
 
@@ -277,7 +277,7 @@ final class MetadataHydrationTest extends TestCase
         $repository = $this->prophesize(RepositoryInterface::class);
         $testCase = $this;
         $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) : array {
-            $testCase->assertSame('5', $parameters[0]->toParameters()['q1.value']);
+            $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
             return ['parent-entity'];
         });
 
@@ -330,8 +330,8 @@ final class MetadataHydrationTest extends TestCase
         $repository = $this->prophesize(RepositoryInterface::class);
         $testCase = $this;
         $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) : array {
-            $testCase->assertSame('5', $parameters[0]->toParameters()['q1.value']);
-            $testCase->assertSame('6', $parameters[0]->toParameters()['q2.value']);
+            $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
+            $testCase->assertSame('6', $parameters[0]->toParameters()['-q2.value']);
             return ['child-entity-1', 'child-entity-2'];
         });
 

@@ -45,14 +45,14 @@ final class FindQuery
 
         foreach ($this->queries as $query) {
             if ($query instanceof Query) {
-                $parameters[sprintf('q%d', ++$index)] = $query->getFieldName();
-                $parameters[sprintf('q%d.value', $index)] = $query->getValue();
+                $parameters[sprintf('-q%d', ++$index)] = $query->getFieldName();
+                $parameters[sprintf('-q%d.value', $index)] = $query->getValue();
                 continue;
             }
 
             foreach ($query as $andQuery) {
-                $parameters[sprintf('q%d', ++$index)] = $andQuery->getFieldName();
-                $parameters[sprintf('q%d.value', $index)] = $andQuery->getValue();
+                $parameters[sprintf('-q%d', ++$index)] = $andQuery->getFieldName();
+                $parameters[sprintf('-q%d.value', $index)] = $andQuery->getValue();
                 continue;
             }
         }

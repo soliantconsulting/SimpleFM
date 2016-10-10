@@ -27,12 +27,12 @@ final class LazyLoadedCollectionTest extends TestCase
         ) {
             $testCase->assertSame([
                 '-query' => '(q1);(q2);(q3)',
-                'q1' => 'record-id',
-                'q1.value' => '1',
-                'q2' => 'record-id',
-                'q2.value' => '2',
-                'q3' => 'record-id',
-                'q3.value' => '3',
+                '-q1' => 'record-id',
+                '-q1.value' => '1',
+                '-q2' => 'record-id',
+                '-q2.value' => '2',
+                '-q3' => 'record-id',
+                '-q3.value' => '3',
             ], $parameters[0]->toParameters());
 
             return [

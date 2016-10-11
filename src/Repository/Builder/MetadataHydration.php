@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Soliant\SimpleFM\Repository\Builder;
 
 use Assert\Assertion;
+use Exception;
 use ReflectionClass;
+use Soliant\SimpleFM\Repository\Builder\Exception\HydrationException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\HydrationInterface;
 use Soliant\SimpleFM\Repository\LazyLoadedCollection;
@@ -44,24 +46,28 @@ final class MetadataHydration implements HydrationInterface
         $reflectionClass = new ReflectionClass($entity);
 
         foreach ($metadata->getFields() as $fieldMetadata) {
-            $type = $fieldMetadata->getType();
-            $value = $data[$fieldMetadata->getFieldName()];
+            try {
+                $type = $fieldMetadata->getType();
+                $value = $data[$fieldMetadata->getFieldName()];
 
-            if ($fieldMetadata->isRepeatable()) {
-                Assertion::isArray($value);
-                $value = array_map(function ($value) use ($type) {
-                    return $type->fromFileMakerValue($value);
-                }, $value);
-            } else {
-                $value = $type->fromFileMakerValue($value);
+                if ($fieldMetadata->isRepeatable()) {
+                    Assertion::isArray($value);
+                    $value = array_map(function ($value) use ($type) {
+                        return $type->fromFileMakerValue($value);
+                    }, $value);
+                } else {
+                    $value = $type->fromFileMakerValue($value);
+                }
+
+                $this->setProperty(
+                    $reflectionClass,
+                    $entity,
+                    $fieldMetadata->getPropertyName(),
+                    $value
+                );
+            } catch (Exception $e) {
+                throw HydrationException::fromInvalidField($metadata, $fieldMetadata, $e);
             }
-
-            $this->setProperty(
-                $reflectionClass,
-                $entity,
-                $fieldMetadata->getPropertyName(),
-                $value
-            );
         }
 
         foreach ($metadata->getEmbeddables() as $embeddableMetadata) {

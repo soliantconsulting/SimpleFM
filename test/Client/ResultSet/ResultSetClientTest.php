@@ -11,7 +11,6 @@ use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\Exception\DateTimeException;
-use Soliant\SimpleFM\Client\ResultSet\Transformer\Exception\DecimalException;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 
@@ -388,7 +387,7 @@ final class ResultSetClientTest extends TestCase
     public function testInvalidFieldTransformerTypeFake()
     {
         $this->expectException(ParseException::class);
-        $this->expectExceptionMessage('Invalid field type "fake" discovered');
+        $this->expectExceptionMessage('Invalid field type "fake" for field "id" discovered');
 
         $command = new Command('foo', []);
         $client = $this->createClient($command, 'invalidFieldTypeFake.xml');
@@ -397,7 +396,7 @@ final class ResultSetClientTest extends TestCase
 
     public function testInvalidFieldTransformerTypeTimestamp()
     {
-        $this->expectException(DateTimeException::class);
+        $this->expectException(ParseException::class);
         $this->expectExceptionMessage(
             'Could not parse "invalid timestamp value", reason: A two digit month could not be found'
         );
@@ -409,7 +408,7 @@ final class ResultSetClientTest extends TestCase
 
     public function testInvalidFieldTransformerTypeTime()
     {
-        $this->expectException(DateTimeException::class);
+        $this->expectException(ParseException::class);
         $this->expectExceptionMessage(
             'Could not parse "invalid time value", reason: A two digit hour could not be found'
         );
@@ -421,13 +420,25 @@ final class ResultSetClientTest extends TestCase
 
     public function testInvalidFieldTransformerTypeDate()
     {
-        $this->expectException(DateTimeException::class);
+        $this->expectException(ParseException::class);
         $this->expectExceptionMessage(
             'Could not parse "invalid date value", reason: A two digit month could not be found'
         );
 
         $command = new Command('foo', []);
         $client = $this->createClient($command, 'invalidFieldTypeDate.xml');
+        $client->execute($command);
+    }
+
+    public function testDeletedField()
+    {
+        $this->expectException(ParseException::class);
+        $this->expectExceptionMessage(
+            'A field has been deleted from the table, but remained in the layout'
+        );
+
+        $command = new Command('foo', []);
+        $client = $this->createClient($command, 'deleted-field.xml');
         $client->execute($command);
     }
 

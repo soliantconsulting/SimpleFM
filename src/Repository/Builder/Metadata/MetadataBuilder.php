@@ -131,7 +131,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     (string) $relation['target-property-name'],
-                    (string) $relation['target-field-name']
+                    (string) $relation['target-field-name'],
+                    (isset($relation['read-only']) && (string) $relation['read-only'] === 'true')
                 );
             }
         }
@@ -144,6 +145,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-entity'],
                     (string) $relation['target-field-name'],
                     true,
+                    (isset($relation['read-only']) && (string) $relation['read-only'] === 'true'),
                     (string) $relation['name'],
                     (string) $relation['target-property-name']
                 );
@@ -157,6 +159,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     (string) $relation['target-field-name'],
+                    false,
                     false
                 );
             }

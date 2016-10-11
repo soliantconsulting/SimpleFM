@@ -164,32 +164,34 @@ final class Repository implements RepositoryInterface
         $this->persist($entity, '-new');
     }
 
-    public function update($entity)
+    public function update($entity, bool $force = false)
     {
         if (!isset($this->managedEntities[$entity])) {
             throw DomainException::fromUnmanagedEntity($entity);
         }
 
-        $this->persist($entity, '-edit', [
-            '-recid' => $this->managedEntities[$entity]['record-id'],
-            '-modid' => $this->managedEntities[$entity]['mod-id'],
-        ]);
+        $parameters = ['-recid' => $this->managedEntities[$entity]['record-id']];
+
+        if (!$force) {
+            $parameters['-modid'] = $this->managedEntities[$entity]['mod-id'];
+        }
+
+        $this->persist($entity, '-edit', $parameters);
     }
 
-    public function delete($entity)
+    public function delete($entity, bool $force = false)
     {
         if (!isset($this->managedEntities[$entity])) {
             throw DomainException::fromUnmanagedEntity($entity);
         }
 
-        $this->execute(new Command(
-            $this->layout,
-            [
-                '-recid' => $this->managedEntities[$entity]['record-id'],
-                '-modid' => $this->managedEntities[$entity]['mod-id'],
-                '-delete' => null,
-            ]
-        ));
+        $parameters = ['-recid' => $this->managedEntities[$entity]['record-id'], '-delete' => null];
+
+        if (!$force) {
+            $parameters['-modid'] = $this->managedEntities[$entity]['mod-id'];
+        }
+
+        $this->execute(new Command($this->layout, $parameters));
         unset($this->managedEntities[$entity]);
     }
 

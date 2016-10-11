@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Client\ResultSet;
 
+use Exception;
 use DateTimeZone;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Client\Exception\FileMakerException;
@@ -47,11 +48,22 @@ final class ResultSetClient implements ResultSetClientInterface
             throw FileMakerException::fromErrorCode($errorCode);
         }
 
-        $metadata = $this->parseMetadata($xml->metadata[0]);
-        $records = [];
+        try {
+            $metadata = $this->parseMetadata($xml->metadata[0]);
+            $records = [];
 
-        foreach ($xml->resultset[0]->record as $record) {
-            $records[] = $this->parseRecord($record, $metadata);
+            foreach ($xml->resultset[0]->record as $record) {
+                $records[] = $this->parseRecord($record, $metadata);
+            }
+        } catch (Exception $e) {
+            $dataSource = $xml->datasource;
+
+            throw ParseException::fromConcreteException(
+                (string) $dataSource['database'],
+                (string) $dataSource['table'],
+                (string) $dataSource['layout'],
+                $e
+            );
         }
 
         return $records;
@@ -164,8 +176,14 @@ final class ResultSetClient implements ResultSetClientInterface
 
             case 'container':
                 return new TextTransformer();
+
+            case 'unknown':
+                throw ParseException::fromDeletedField();
         }
 
-        throw ParseException::fromInvalidFieldType((string) $fieldDefinition['result']);
+        throw ParseException::fromInvalidFieldType(
+            (string) $fieldDefinition['name'],
+            (string) $fieldDefinition['result']
+        );
     }
 }

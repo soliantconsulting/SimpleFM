@@ -1,0 +1,16 @@
+<?xml version ="1.0" encoding="UTF-8" standalone="no"?>
+<fmresultset xmlns="http://www.filemaker.com/xml/fmresultset" version="1.0">
+    <error code="0"></error>
+    <product build="04/07/2016" name="FileMaker Web Publishing Engine" version="15.0.1.137"></product>
+    <datasource database="XmlSchemaDemo" date-format="MM/dd/yyyy" layout="Child" table="Child" time-format="HH:mm:ss" timestamp-format="MM/dd/yyyy HH:mm:ss" total-count="3"></datasource>
+    <metadata>
+        <field-definition auto-enter="no" four-digit-year="no" global="no" max-repeat="1" name="" not-empty="no" numeric-only="no" result="unknown" time-of-day="no" type="normal"></field-definition>
+    </metadata>
+    <resultset count="1" fetch-size="1">
+        <record mod-id="14" record-id="1">
+            <field name="">
+                <data></data>
+            </field>
+        </record>
+    </resultset>
+</fmresultset>

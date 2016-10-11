@@ -6,6 +6,8 @@ namespace Soliant\SimpleFM\Connection;
 use Http\Client\HttpClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Connection\Exception\InvalidResponseException;
 use Zend\Diactoros\Request;
@@ -28,11 +30,21 @@ final class Connection implements ConnectionInterface
      */
     private $database;
 
-    public function __construct(HttpClient $httpClient, UriInterface $uri, string $database)
-    {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        HttpClient $httpClient,
+        UriInterface $uri,
+        string $database,
+        LoggerInterface $logger = null
+    ) {
         $this->httpClient = $httpClient;
         $this->uri = $uri;
         $this->database = $database;
+        $this->logger = $logger ?: new NullLogger();
     }
 
     public function execute(Command $command, string $grammarPath) : SimpleXMLElement
@@ -74,6 +86,8 @@ final class Connection implements ConnectionInterface
         if ($command->hasCredentials()) {
             $credentials = sprintf('%s:%s', $command->getUsername(), $command->getPassword());
         }
+
+        $this->logger->info(sprintf('%s?%s', (string) $uri->withUserInfo(''), $parameters));
 
         if ('' === $credentials) {
             return $request;

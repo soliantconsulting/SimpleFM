@@ -307,6 +307,31 @@ final class RepositoryTest extends TestCase
         $repository->update($foundEntity);
     }
 
+    public function testForceUpdateWithManagedEntity()
+    {
+        $entity = new stdClass();
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+        $hydration->hydrateExistingEntity(
+            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
+            $entity
+        )->willReturn($entity);
+        $extraction = $this->prophesize(ExtractionInterface::class);
+        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
+
+        $index = -1;
+        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
+            $this->assertSame([
+                '-lay=foo&-recid=1&-find&-max=1',
+                '-lay=foo&foo=bar&-recid=1&-edit',
+            ][++$index], (string) $command);
+            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+        }, $hydration->reveal(), $extraction->reveal());
+
+        $foundEntity = $repository->find(1);
+        $repository->update($foundEntity, true);
+    }
+
     public function testUpdateWithUnmanagedEntity()
     {
         $repository = $this->createAssertiveRepository();
@@ -328,13 +353,34 @@ final class RepositoryTest extends TestCase
         $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
             $this->assertSame([
                 '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&-recid=1&-modid=1&-delete',
+                '-lay=foo&-recid=1&-delete&-modid=1',
             ][++$index], (string) $command);
             return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
         $repository->delete($foundEntity);
+    }
+
+    public function testForceDeleteWithManagedEntity()
+    {
+        $entity = new stdClass();
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+        $extraction = $this->prophesize(ExtractionInterface::class);
+        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
+
+        $index = -1;
+        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
+            $this->assertSame([
+                '-lay=foo&-recid=1&-find&-max=1',
+                '-lay=foo&-recid=1&-delete',
+            ][++$index], (string) $command);
+            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+        }, $hydration->reveal(), $extraction->reveal());
+
+        $foundEntity = $repository->find(1);
+        $repository->delete($foundEntity, true);
     }
 
     public function testDeleteWithUnmanagedEntity()

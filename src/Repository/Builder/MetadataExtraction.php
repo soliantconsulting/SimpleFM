@@ -4,8 +4,11 @@ declare(strict_types=1);
 namespace Soliant\SimpleFM\Repository\Builder;
 
 use Assert\Assertion;
+use Exception;
 use ReflectionClass;
+use Soliant\SimpleFM\Repository\Builder\Exception\ExtractionException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
+use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
 use Soliant\SimpleFM\Repository\ExtractionInterface;
 
@@ -38,22 +41,26 @@ final class MetadataExtraction implements ExtractionInterface
                 continue;
             }
 
-            $type = $fieldMetadata->getType();
-            $value = $this->getProperty(
-                $reflectionClass,
-                $entity,
-                $fieldMetadata->getPropertyName()
-            );
+            try {
+                $type = $fieldMetadata->getType();
+                $value = $this->getProperty(
+                    $reflectionClass,
+                    $entity,
+                    $fieldMetadata->getPropertyName()
+                );
 
-            if (!$fieldMetadata->isRepeatable()) {
-                $data[$fieldMetadata->getFieldName()] = $type->toFileMakerValue($value);
-                continue;
+                if (!$fieldMetadata->isRepeatable()) {
+                    $data[$fieldMetadata->getFieldName()] = $type->toFileMakerValue($value);
+                    continue;
+                }
+
+                Assertion::isArray($value);
+                $data[$fieldMetadata->getFieldName()] = array_map(function ($value) use ($type) {
+                    return $type->toFileMakerValue($value);
+                }, $value);
+            } catch (Exception $e) {
+                throw ExtractionException::fromInvalidField($metadata, $fieldMetadata, $e);
             }
-
-            Assertion::isArray($value);
-            $data[$fieldMetadata->getFieldName()] = array_map(function ($value) use ($type) {
-                return $type->toFileMakerValue($value);
-            }, $value);
         }
 
         foreach ($metadata->getEmbeddables() as $embeddableMetadata) {
@@ -68,10 +75,15 @@ final class MetadataExtraction implements ExtractionInterface
             }
         }
 
-        $toOne = $metadata->getManyToOne() + array_filter(
+        $toOne = array_filter(
+            $metadata->getManyToOne(),
+            function (ManyToOne $manyToOneMetadata) {
+                return !$manyToOneMetadata->isReadOnly();
+            }
+        ) + array_filter(
             $metadata->getOneToOne(),
             function (OneToOne $oneToOneMetadata) {
-                return $oneToOneMetadata->isOwningSide();
+                return $oneToOneMetadata->isOwningSide() && !$oneToOneMetadata->isReadOnly();
             }
         );
 

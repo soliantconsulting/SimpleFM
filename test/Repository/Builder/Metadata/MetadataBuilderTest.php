@@ -121,7 +121,7 @@ final class MetadataBuilderTest extends TestCase
         $this->assertFalse($metadata->getFields()[2]->isRepeatable());
     }
 
-    public function testReadOnly()
+    public function testReadOnlyFields()
     {
         $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
         $metadata = $builder->getMetadata('ReadOnly');
@@ -129,6 +129,26 @@ final class MetadataBuilderTest extends TestCase
         $this->assertFalse($metadata->getFields()[0]->isReadOnly());
         $this->assertTrue($metadata->getFields()[1]->isReadOnly());
         $this->assertFalse($metadata->getFields()[2]->isReadOnly());
+    }
+
+    public function testReadOnlyManyToOne()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('ReadOnly');
+
+        $this->assertFalse($metadata->getManyToOne()[0]->isReadOnly());
+        $this->assertTrue($metadata->getManyToOne()[1]->isReadOnly());
+        $this->assertFalse($metadata->getManyToOne()[2]->isReadOnly());
+    }
+
+    public function testReadOnlyOneToOne()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('ReadOnly');
+
+        $this->assertFalse($metadata->getOneToOne()[0]->isReadOnly());
+        $this->assertTrue($metadata->getOneToOne()[1]->isReadOnly());
+        $this->assertFalse($metadata->getOneToOne()[2]->isReadOnly());
     }
 
     public function testRecordId()

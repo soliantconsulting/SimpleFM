@@ -8,6 +8,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\Connection;
 use Soliant\SimpleFM\Connection\Exception\InvalidResponseException;
@@ -112,6 +113,24 @@ final class ConnectionTest extends TestCase
         );
 
         $connection->execute((new Command('', []))->withCredentials('baz', 'bat'), '/foo');
+    }
+
+    public function testRequestLogging()
+    {
+        $httpClient = $this->prophesize(HttpClient::class);
+        $httpClient->sendRequest(Argument::any())->willReturn(new TextResponse('<foo/>'));
+
+        $logger = $this->prophesize(LoggerInterface::class);
+        $logger->info('https://example.com/grammar.xml?-db=foo&-lay')->shouldBeCalled();
+
+        $connection = new Connection(
+            $httpClient->reveal(),
+            new Uri('https://example.com'),
+            'foo',
+            $logger->reveal()
+        );
+
+        $connection->execute(new Command('', []), '/grammar.xml');
     }
 
     private function createAssertiveHttpClient(callable $assertion) : HttpClient

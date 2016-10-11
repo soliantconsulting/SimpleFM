@@ -17,12 +17,15 @@ final class OneToOneTest extends TestCase
             'targetEntity',
             'targetFieldName',
             true,
+            true,
             'fieldName',
             'targetPropertyName'
         );
         $this->assertSame('propertyName', $metadata->getPropertyName());
         $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
+        $this->assertTrue($metadata->isOwningSide());
+        $this->assertTrue($metadata->isReadOnly());
         $this->assertSame('fieldName', $metadata->getFieldName());
         $this->assertSame('targetPropertyName', $metadata->getTargetPropertyName());
         $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
@@ -31,12 +34,23 @@ final class OneToOneTest extends TestCase
     public function testExceptionOnMissingProperties()
     {
         $this->expectException(InvalidArgumentException::class);
-        new OneToOne('propertyName', 'targetTable', 'targetEntity', 'targetFieldName', true);
+        new OneToOne('propertyName', 'targetTable', 'targetEntity', 'targetFieldName', true, false);
     }
 
     public function testOptionalPropertiesAreSetToNullOnInverseSide()
     {
-        $metadata = new OneToOne('propertyName', 'targetTable', 'targetEntity', 'targetFieldName', false, 'foo', 'bar');
+        $metadata = new OneToOne(
+            'propertyName',
+            'targetTable',
+            'targetEntity',
+            'targetFieldName',
+            false,
+            false,
+            'foo',
+            'bar'
+        );
+
+        $this->assertTrue($metadata->isReadOnly());
 
         $this->expectException(InvalidArgumentException::class);
         $metadata->getTargetPropertyName();

@@ -21,8 +21,8 @@ final class EntityTest extends TestCase
         $fields = [new Field('', '', $this->prophesize(TypeInterface::class)->reveal(), false, false)];
         $embeddables = [new Embeddable('', '', new Entity('', '', [], [], [], [], []))];
         $oneToMany = [new OneToMany('', '', '', '')];
-        $manyToOne = [new ManyToOne('', '', '', '', '', '')];
-        $oneToOne = [new OneToOne('', '', '', '', false)];
+        $manyToOne = [new ManyToOne('', '', '', '', '', '', false)];
+        $oneToOne = [new OneToOne('', '', '', '', false, false)];
 
         $metadata = new Entity('layout', 'className', $fields, $embeddables, $oneToMany, $manyToOne, $oneToOne);
         $this->assertSame('layout', $metadata->getLayout());

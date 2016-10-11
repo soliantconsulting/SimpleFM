@@ -10,4 +10,58 @@
     <field name="default" property="default" type="string"/>
     <field name="true" property="true" type="string" read-only="true"/>
     <field name="false" property="false" type="string" read-only="false"/>
+
+    <many-to-one
+        name="mto-default"
+        property=""
+        target-table=""
+        target-entity=""
+        target-property-name=""
+        target-field-name=""
+    />
+    <many-to-one
+        name="mto-true"
+        property=""
+        target-table=""
+        target-entity=""
+        target-property-name=""
+        target-field-name=""
+        read-only="true"
+    />
+    <many-to-one
+        name="mto-false"
+        property=""
+        target-table=""
+        target-entity=""
+        target-property-name=""
+        target-field-name=""
+        read-only="false"
+    />
+
+    <one-to-one-owning
+        name="oto-default"
+        property=""
+        target-table=""
+        target-entity=""
+        target-property-name=""
+        target-field-name=""
+    />
+    <one-to-one-owning
+        name="oto-true"
+        property=""
+        target-table=""
+        target-entity=""
+        target-property-name=""
+        target-field-name=""
+        read-only="true"
+    />
+    <one-to-one-owning
+        name="oto-false"
+        property=""
+        target-table=""
+        target-entity=""
+        target-property-name=""
+        target-field-name=""
+        read-only="false"
+    />
 </entity>

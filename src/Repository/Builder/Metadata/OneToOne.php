@@ -28,6 +28,11 @@ final class OneToOne
     private $isOwningSide;
 
     /**
+     * @var bool
+     */
+    private $readOnly;
+
+    /**
      * @var string
      */
     private $fieldName;
@@ -48,6 +53,7 @@ final class OneToOne
         string $targetEntity,
         string $targetFieldName,
         bool $isOwningSide,
+        bool $readOnly,
         string $fieldName = null,
         string $targetPropertyName = null
     ) {
@@ -61,6 +67,7 @@ final class OneToOne
         $this->targetEntity = $targetEntity;
         $this->targetFieldName = $targetFieldName;
         $this->isOwningSide = $isOwningSide;
+        $this->readOnly = $isOwningSide ? $readOnly : true;
         $this->fieldName = $isOwningSide ? $fieldName : null;
         $this->targetPropertyName = $isOwningSide ? $targetPropertyName : null;
     }
@@ -100,5 +107,10 @@ final class OneToOne
     {
         Assertion::notNull($this->targetPropertyName);
         return $this->targetPropertyName;
+    }
+
+    public function isReadOnly() : bool
+    {
+        return $this->readOnly;
     }
 }

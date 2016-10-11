@@ -24,9 +24,9 @@ interface RepositoryInterface
 
     public function insert($entity);
 
-    public function update($entity);
+    public function update($entity, bool $force = false);
 
-    public function delete($entity);
+    public function delete($entity, bool $force = false);
 
     public function quoteString(string $string) : string;
 }

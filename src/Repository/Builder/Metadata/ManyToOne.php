@@ -35,13 +35,19 @@ final class ManyToOne
      */
     private $targetFieldName;
 
+    /**
+     * @var bool
+     */
+    private $readOnly;
+
     public function __construct(
         string $fieldName,
         string $propertyName,
         string $targetTable,
         string $targetEntity,
         string $targetPropertyName,
-        string $targetFieldName
+        string $targetFieldName,
+        bool $readOnly
     ) {
         $this->fieldName = $fieldName;
         $this->propertyName = $propertyName;
@@ -49,6 +55,7 @@ final class ManyToOne
         $this->targetEntity = $targetEntity;
         $this->targetPropertyName = $targetPropertyName;
         $this->targetFieldName = $targetFieldName;
+        $this->readOnly = $readOnly;
     }
 
     public function getFieldName() : string
@@ -79,5 +86,10 @@ final class ManyToOne
     public function getTargetFieldName() : string
     {
         return $this->targetFieldName;
+    }
+
+    public function isReadOnly() : bool
+    {
+        return $this->readOnly;
     }
 }

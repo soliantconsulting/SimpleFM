@@ -115,6 +115,37 @@ final class ConnectionTest extends TestCase
         $connection->execute((new Command('', []))->withCredentials('baz', 'bat'), '/foo');
     }
 
+    public function testGetAssetWithNonSuccessResponse()
+    {
+        $httpClient = $this->prophesize(HttpClient::class);
+        $httpClient->sendRequest(Argument::any())->willReturn(new EmptyResponse(204));
+
+        $connection = new Connection(
+            $httpClient->reveal(),
+            new Uri(),
+            'foo'
+        );
+
+        $this->expectException(InvalidResponseException::class);
+        $this->expectExceptionMessage('The FileMaker server responded with an unexpected error code: 204 No Content');
+        $connection->getAsset('/foo');
+    }
+
+    public function testGetAssetWithUriCredentials()
+    {
+        $connection = new Connection(
+            $this->createAssertiveHttpClient(function (RequestInterface $request) : ResponseInterface {
+                $this->assertSame(['Basic Zm9vJTpiYXIl'], $request->getHeader('Authorization'));
+
+                return new TextResponse('bar');
+            }),
+            new Uri('http://foo%25:bar%25@example.com'),
+            'foo'
+        );
+
+        $connection->getAsset('/foo');
+    }
+
     public function testRequestLogging()
     {
         $httpClient = $this->prophesize(HttpClient::class);

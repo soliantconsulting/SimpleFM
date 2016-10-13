@@ -10,7 +10,7 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
-use Soliant\SimpleFM\Client\ResultSet\Transformer\Exception\DateTimeException;
+use Soliant\SimpleFM\Client\ResultSet\Transformer\StreamProxy;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 
@@ -293,15 +293,6 @@ final class ResultSetClientTest extends TestCase
         ];
     }
 
-    public static function allFieldTypesProvider() : array
-    {
-        return [
-            'base-sample-data' => [
-                'ParentChildAssociations/Base-recid1-id2.xml',
-            ],
-        ];
-    }
-
     public function specialCharacterProvider() : array
     {
         return [
@@ -356,13 +347,10 @@ final class ResultSetClientTest extends TestCase
         throw FileMakerException::fromErrorCode(-100);
     }
 
-    /**
-     * @dataProvider allFieldTypesProvider
-     */
-    public function testAllFieldTransformerTypes(string $xmlPath)
+    public function testAllFieldTransformerTypes()
     {
         $command = new Command('foo', []);
-        $client = $this->createClient($command, $xmlPath);
+        $client = $this->createClient($command, 'ParentChildAssociations/Base-recid1-id2.xml');
         $firstBaseRecord = $client->execute($command)[0];
 
         $this->assertInstanceOf(Decimal::class, $firstBaseRecord['id']);
@@ -371,7 +359,8 @@ final class ResultSetClientTest extends TestCase
         $this->assertInternalType('string', $firstBaseRecord['Text Field']);
         $this->assertInstanceOf(DateTimeImmutable::class, $firstBaseRecord['Time Field']);
         $this->assertInstanceOf(DateTimeImmutable::class, $firstBaseRecord['Timestamp Field']);
-        $this->assertInternalType('string', $firstBaseRecord['Container Field']);
+        $this->assertInstanceOf(StreamProxy::class, $firstBaseRecord['Container Field']);
+        $this->assertNull($firstBaseRecord['Container Field 2']);
         $this->assertInternalType('string', $firstBaseRecord['Calculation Text Field']);
         $this->assertInstanceOf(Decimal::class, $firstBaseRecord['Summary Number Field']);
         $this->assertInternalType('array', $firstBaseRecord['Repeating Number Field']);

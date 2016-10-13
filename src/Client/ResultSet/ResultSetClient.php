@@ -3,11 +3,12 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Client\ResultSet;
 
-use Exception;
 use DateTimeZone;
+use Exception;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
+use Soliant\SimpleFM\Client\ResultSet\Transformer\ContainerTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\DateTimeTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\DateTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\NumberTransformer;
@@ -30,10 +31,15 @@ final class ResultSetClient implements ResultSetClientInterface
      */
     private $serverTimeZone;
 
+    /**
+     * @var callable[]
+     */
+    private $transformers;
+
     public function __construct(ConnectionInterface $connection, DateTimeZone $serverTimeZone)
     {
         $this->connection = $connection;
-        $this->serverTimeZone = $serverTimeZone;
+        $this->initializeTransformers($serverTimeZone);
     }
 
     public function execute(Command $command) : array
@@ -158,32 +164,31 @@ final class ResultSetClient implements ResultSetClientInterface
 
     private function getFieldTransformer(SimpleXMLElement $fieldDefinition) : callable
     {
-        switch ((string) $fieldDefinition['result']) {
-            case 'text':
-                return new TextTransformer();
+        $type = (string) $fieldDefinition['result'];
 
-            case 'number':
-                return new NumberTransformer();
-
-            case 'date':
-                return new DateTransformer();
-
-            case 'time':
-                return new TimeTransformer();
-
-            case 'timestamp':
-                return new DateTimeTransformer($this->serverTimeZone);
-
-            case 'container':
-                return new TextTransformer();
-
-            case 'unknown':
-                throw ParseException::fromDeletedField();
+        if ('unknown' === $type) {
+            throw ParseException::fromDeletedField();
         }
 
-        throw ParseException::fromInvalidFieldType(
-            (string) $fieldDefinition['name'],
-            (string) $fieldDefinition['result']
-        );
+        if (!array_key_exists($type, $this->transformers)) {
+            throw ParseException::fromInvalidFieldType(
+                (string) $fieldDefinition['name'],
+                (string) $fieldDefinition['result']
+            );
+        }
+
+        return $this->transformers[$type];
+    }
+
+    private function initializeTransformers(DateTimeZone $serverTimeZone)
+    {
+        $this->transformers = [
+            'text' => new TextTransformer(),
+            'number' => new NumberTransformer(),
+            'date' => new DateTransformer(),
+            'time' => new TimeTransformer(),
+            'timestamp' => new DateTimeTransformer($serverTimeZone),
+            'container' => new ContainerTransformer($this->connection),
+        ];
     }
 }

@@ -8,6 +8,7 @@ use Exception;
 use ReflectionClass;
 use Soliant\SimpleFM\Repository\Builder\Exception\HydrationException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilderInterface;
 use Soliant\SimpleFM\Repository\HydrationInterface;
 use Soliant\SimpleFM\Repository\LazyLoadedCollection;
 
@@ -19,13 +20,22 @@ final class MetadataHydration implements HydrationInterface
     private $repositoryBuilder;
 
     /**
+     * @var ProxyBuilderInterface
+     */
+    private $proxyBuilder;
+
+    /**
      * @var Entity
      */
     private $entityMetadata;
 
-    public function __construct(RepositoryBuilderInterface $repositoryBuilder, Entity $entityMetadata)
-    {
+    public function __construct(
+        RepositoryBuilderInterface $repositoryBuilder,
+        ProxyBuilderInterface $proxyBuilder,
+        Entity $entityMetadata
+    ) {
         $this->repositoryBuilder = $repositoryBuilder;
+        $this->proxyBuilder = $proxyBuilder;
         $this->entityMetadata = $entityMetadata;
     }
 
@@ -118,15 +128,40 @@ final class MetadataHydration implements HydrationInterface
         $toOne = $metadata->getManyToOne() + $metadata->getOneToOne();
 
         foreach ($toOne as $relationMetadata) {
+            Assertion::true(
+                $metadata->hasInterfaceName(),
+                sprintf('Entity "%s" has no interface name definied', $metadata->getClassName())
+            );
+
+            if (empty($data[$relationMetadata->getTargetTable()])) {
+                $this->setProperty(
+                    $reflectionClass,
+                    $entity,
+                    $relationMetadata->getPropertyName(),
+                    null
+                );
+                continue;
+            }
+
+            $repository = $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity());
+            $fieldName = $relationMetadata->getTargetFieldName();
+            $fieldValue = (string) $data[$relationMetadata->getTargetTable()][0][$fieldName];
+
+            $proxy = $this->proxyBuilder->createProxy($metadata->getInterfaceName(), function () use (
+                $repository,
+                $fieldName,
+                $fieldValue
+            ) {
+                return $repository->findOneBy([
+                    $fieldName => $repository->quoteString($fieldValue),
+                ]);
+            }, $fieldValue);
+
             $this->setProperty(
                 $reflectionClass,
                 $entity,
                 $relationMetadata->getPropertyName(),
-                (new LazyLoadedCollection(
-                    $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity()),
-                    $relationMetadata->getTargetFieldName(),
-                    $data[$relationMetadata->getTargetTable()]
-                ))->first()
+                $proxy
             );
         }
 

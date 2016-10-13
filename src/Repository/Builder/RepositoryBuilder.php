@@ -5,6 +5,7 @@ namespace Soliant\SimpleFM\Repository\Builder;
 
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilderInterface;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilderInterface;
 use Soliant\SimpleFM\Repository\Repository;
 use Soliant\SimpleFM\Repository\RepositoryInterface;
 
@@ -21,14 +22,23 @@ final class RepositoryBuilder implements RepositoryBuilderInterface
     private $metadataBuilder;
 
     /**
+     * @var ProxyBuilderInterface
+     */
+    private $proxyBuilder;
+
+    /**
      * @var RepositoryInterface[]
      */
     private $repositories = [];
 
-    public function __construct(ResultSetClientInterface $resultSetClient, MetadataBuilderInterface $metadataBuilder)
-    {
+    public function __construct(
+        ResultSetClientInterface $resultSetClient,
+        MetadataBuilderInterface $metadataBuilder,
+        ProxyBuilderInterface $proxyBuilder
+    ) {
         $this->resultSetClient = $resultSetClient;
         $this->metadataBuilder = $metadataBuilder;
+        $this->proxyBuilder = $proxyBuilder;
     }
 
     public function buildRepository(string $entityClassName) : RepositoryInterface
@@ -42,7 +52,7 @@ final class RepositoryBuilder implements RepositoryBuilderInterface
         return ($this->repositories[$entityClassName] = new Repository(
             $this->resultSetClient,
             $metadata->getLayout(),
-            new MetadataHydration($this, $metadata),
+            new MetadataHydration($this, $this->proxyBuilder, $metadata),
             new MetadataExtraction($metadata)
         ));
     }

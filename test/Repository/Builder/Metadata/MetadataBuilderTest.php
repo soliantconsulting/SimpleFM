@@ -67,6 +67,15 @@ final class MetadataBuilderTest extends TestCase
         $metadata = $builder->getMetadata('Empty');
         $this->assertSame('Empty', $metadata->getClassName());
         $this->assertSame('empty-layout', $metadata->getLayout());
+        $this->assertFalse($metadata->hasInterfaceName());
+    }
+
+    public function testOptionalInterfaceName()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('InterfaceName');
+        $this->assertTrue($metadata->hasInterfaceName());
+        $this->assertSame('foo', $metadata->getInterfaceName());
     }
 
     public function testMetadataCaching()

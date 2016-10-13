@@ -177,7 +177,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
             $oneToMany,
             $manyToOne,
             $oneToOne,
-            $recordId
+            $recordId,
+            isset($xml['interface-name']) ? (string) $xml['interface-name'] : null
         );
     }
 

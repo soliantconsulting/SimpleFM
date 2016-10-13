@@ -10,6 +10,7 @@ use Soliant\SimpleFM\Repository\Builder\Exception\ExtractionException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\ExtractionInterface;
 
 final class MetadataExtraction implements ExtractionInterface
@@ -99,13 +100,19 @@ final class MetadataExtraction implements ExtractionInterface
                 continue;
             }
 
-            Assertion::isInstanceOf($relation, $relationMetadata->getTargetEntity());
+            if ($relation instanceof ProxyInterface) {
+                Assertion::isInstanceOf($relation->__getRealEntity(), $relationMetadata->getTargetEntity());
+                $relationId = $relation->__getRelationId();
+            } else {
+                Assertion::isInstanceOf($relation, $relationMetadata->getTargetEntity());
+                $relationId = $this->getProperty(
+                    new ReflectionClass($relation),
+                    $relation,
+                    $relationMetadata->getTargetPropertyName()
+                );
+            }
 
-            $data[$relationMetadata->getFieldName()] = $this->getProperty(
-                new ReflectionClass($relation),
-                $relation,
-                $relationMetadata->getTargetPropertyName()
-            );
+            $data[$relationMetadata->getFieldName()] = $relationId;
         }
 
         return $data;

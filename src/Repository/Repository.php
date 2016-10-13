@@ -8,6 +8,7 @@ use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Connection\Command;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
 use Soliant\SimpleFM\Repository\Exception\InvalidResultException;
 use Soliant\SimpleFM\Repository\Query\FindQuery;
@@ -166,6 +167,10 @@ final class Repository implements RepositoryInterface
 
     public function update($entity, bool $force = false)
     {
+        if ($entity instanceof ProxyInterface) {
+            $entity = $entity->__getRealEntity();
+        }
+
         if (!isset($this->managedEntities[$entity])) {
             throw DomainException::fromUnmanagedEntity($entity);
         }
@@ -181,6 +186,10 @@ final class Repository implements RepositoryInterface
 
     public function delete($entity, bool $force = false)
     {
+        if ($entity instanceof ProxyInterface) {
+            $entity = $entity->__getRealEntity();
+        }
+
         if (!isset($this->managedEntities[$entity])) {
             throw DomainException::fromUnmanagedEntity($entity);
         }

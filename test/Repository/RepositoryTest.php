@@ -9,6 +9,7 @@ use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Connection\Command;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
 use Soliant\SimpleFM\Repository\Exception\InvalidResultException;
 use Soliant\SimpleFM\Repository\ExtractionInterface;
@@ -341,6 +342,31 @@ final class RepositoryTest extends TestCase
         $repository->update(new stdClass());
     }
 
+    public function testUpdateWithManagedProxyEntity()
+    {
+        $entity = new stdClass();
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+        $hydration->hydrateExistingEntity(
+            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
+            $entity
+        )->willReturn($entity);
+        $extraction = $this->prophesize(ExtractionInterface::class);
+        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
+
+        $index = -1;
+        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
+            $this->assertSame([
+                '-lay=foo&-recid=1&-find&-max=1',
+                '-lay=foo&foo=bar&-recid=1&-modid=1&-edit',
+            ][++$index], (string) $command);
+            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+        }, $hydration->reveal(), $extraction->reveal());
+
+        $foundEntity = $repository->find(1);
+        $repository->update($this->createMockProxy($foundEntity, 1));
+    }
+
     public function testDeleteWithManagedEntity()
     {
         $entity = new stdClass();
@@ -390,6 +416,27 @@ final class RepositoryTest extends TestCase
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('is not managed');
         $repository->delete(new stdClass());
+    }
+
+    public function testDeleteWithManagedProxyEntity()
+    {
+        $entity = new stdClass();
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+        $extraction = $this->prophesize(ExtractionInterface::class);
+        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
+
+        $index = -1;
+        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
+            $this->assertSame([
+                '-lay=foo&-recid=1&-find&-max=1',
+                '-lay=foo&-recid=1&-delete&-modid=1',
+            ][++$index], (string) $command);
+            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+        }, $hydration->reveal(), $extraction->reveal());
+
+        $foundEntity = $repository->find(1);
+        $repository->delete($this->createMockProxy($foundEntity, 1));
     }
 
     public function testFindAllWithTooManySortArgs()
@@ -460,5 +507,30 @@ final class RepositoryTest extends TestCase
             $extraction ?: $this->prophesize(ExtractionInterface::class)->reveal(),
             $identityHandler
         );
+    }
+
+    private function createMockProxy($entity, $relationId) : ProxyInterface
+    {
+        return new class($entity, $relationId) implements ProxyInterface {
+            private $entity;
+
+            private $relationId;
+
+            public function __construct($entity, $relationId)
+            {
+                $this->entity = $entity;
+                $this->relationId = $relationId;
+            }
+
+            public function __getRealEntity()
+            {
+                return $this->entity;
+            }
+
+            public function __getRelationId()
+            {
+                return $this->relationId;
+            }
+        };
     }
 }

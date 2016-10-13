@@ -9,6 +9,7 @@ use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilderInterface;
 use Soliant\SimpleFM\Repository\Builder\MetadataExtraction;
 use Soliant\SimpleFM\Repository\Builder\MetadataHydration;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilderInterface;
 use Soliant\SimpleFM\Repository\Builder\RepositoryBuilder;
 
 final class RepositoryBuilderTest extends TestCase
@@ -20,7 +21,8 @@ final class RepositoryBuilderTest extends TestCase
 
         $builder = new RepositoryBuilder(
             $this->prophesize(ResultSetClientInterface::class)->reveal(),
-            $metadataBuilder->reveal()
+            $metadataBuilder->reveal(),
+            $this->prophesize(ProxyBuilderInterface::class)->reveal()
         );
 
         $this->assertSame($builder->buildRepository('foo'), $builder->buildRepository('foo'));
@@ -35,7 +37,8 @@ final class RepositoryBuilderTest extends TestCase
 
         $builder = new RepositoryBuilder(
             $this->prophesize(ResultSetClientInterface::class)->reveal(),
-            $metadataBuilder->reveal()
+            $metadataBuilder->reveal(),
+            $this->prophesize(ProxyBuilderInterface::class)->reveal()
         );
 
         $repository = $builder->buildRepository('foo');

@@ -20,6 +20,7 @@
         </xs:sequence>
 
         <xs:attribute name="class-name" use="required" type="xs:string"/>
+        <xs:attribute name="interface-name" use="optional" type="xs:string"/>
         <xs:attribute name="layout" use="required" type="xs:string"/>
     </xs:complexType>
 

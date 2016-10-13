@@ -12,6 +12,7 @@ use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToMany;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
 use Soliant\SimpleFM\Repository\Builder\MetadataExtraction;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
 
 final class MetadataExtractionTest extends TestCase
@@ -112,6 +113,24 @@ final class MetadataExtractionTest extends TestCase
         $this->assertSame(['bat' => 5], $extraction->extract($entity));
     }
 
+    public function testManyToOneExtractionWithProxyEntity()
+    {
+        $childEntity = new class {
+            private $id = 5;
+        };
+        $entity = new class {
+            public $baz;
+        };
+        $entity->baz = $this->createMockProxy($childEntity, 5);
+
+        $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
+            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID', false),
+        ], []);
+
+        $extraction = new MetadataExtraction($entityMetadata);
+        $this->assertSame(['bat' => 5], $extraction->extract($entity));
+    }
+
     public function testManyToOneReadOnlyExtractionWithEntity()
     {
         $childEntity = new class {
@@ -155,6 +174,24 @@ final class MetadataExtractionTest extends TestCase
             public $baz;
         };
         $entity->baz = $childEntity;
+
+        $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
+            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, false, 'bat', 'id'),
+        ]);
+
+        $extraction = new MetadataExtraction($entityMetadata);
+        $this->assertSame(['bat' => 5], $extraction->extract($entity));
+    }
+
+    public function testOneToOneOwningExtractionWithProxyEntity()
+    {
+        $childEntity = new class {
+            private $id = 5;
+        };
+        $entity = new class {
+            public $baz;
+        };
+        $entity->baz = $this->createMockProxy($childEntity, 5);
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
             new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, false, 'bat', 'id'),
@@ -232,5 +269,30 @@ final class MetadataExtractionTest extends TestCase
 
         $extraction = new MetadataExtraction($entityMetadata);
         $this->assertSame([], $extraction->extract($entity));
+    }
+
+    private function createMockProxy($entity, $relationId) : ProxyInterface
+    {
+        return new class($entity, $relationId) implements ProxyInterface {
+            private $entity;
+
+            private $relationId;
+
+            public function __construct($entity, $relationId)
+            {
+                $this->entity = $entity;
+                $this->relationId = $relationId;
+            }
+
+            public function __getRealEntity()
+            {
+                return $this->entity;
+            }
+
+            public function __getRelationId()
+            {
+                return $this->relationId;
+            }
+        };
     }
 }

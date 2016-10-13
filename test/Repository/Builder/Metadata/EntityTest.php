@@ -50,6 +50,21 @@ final class EntityTest extends TestCase
         $metadata->getRecordId();
     }
 
+    public function testOptionalInterfaceName()
+    {
+        $metadata = new Entity('', '', [], [], [], [], [], null, 'foo');
+        $this->assertTrue($metadata->hasInterfaceName());
+        $this->assertSame('foo', $metadata->getInterfaceName());
+    }
+
+    public function testMissingInterfaceName()
+    {
+        $metadata = new Entity('', '', [], [], [], [], []);
+        $this->assertFalse($metadata->hasInterfaceName());
+        $this->expectException(InvalidArgumentException::class);
+        $metadata->getInterfaceName();
+    }
+
     public function testInvalidField()
     {
         $this->expectException(InvalidArgumentException::class);

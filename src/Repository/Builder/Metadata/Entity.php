@@ -47,6 +47,11 @@ final class Entity
      */
     private $recordId;
 
+    /**
+     * @var string
+     */
+    private $interfaceName;
+
     public function __construct(
         string $layout,
         string $className,
@@ -55,7 +60,8 @@ final class Entity
         array $oneToMany,
         array $manyToOne,
         array $oneToOne,
-        RecordId $recordId = null
+        RecordId $recordId = null,
+        string $interfaceName = null
     ) {
         $this->validateArray($fields, Field::class);
         $this->validateArray($embeddables, Embeddable::class);
@@ -71,6 +77,7 @@ final class Entity
         $this->manyToOne = $manyToOne;
         $this->oneToOne = $oneToOne;
         $this->recordId = $recordId;
+        $this->interfaceName = $interfaceName;
     }
 
     public function getLayout() : string
@@ -81,6 +88,17 @@ final class Entity
     public function getClassName() : string
     {
         return $this->className;
+    }
+
+    public function hasInterfaceName() : bool
+    {
+        return null !== $this->interfaceName;
+    }
+
+    public function getInterfaceName() : string
+    {
+        Assertion::notNull($this->interfaceName);
+        return $this->interfaceName;
     }
 
     /**

@@ -9,6 +9,7 @@ use Litipk\BigNumbers\Decimal;
 use PHPUnit_Framework_TestCase as TestCase;
 use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
+use Soliant\SimpleFM\Client\ResultSet\Exception\UnknownFieldException;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\StreamProxy;
 use Soliant\SimpleFM\Connection\Command;
@@ -213,7 +214,7 @@ final class ResultSetClientTest extends TestCase
                                 'Repeating Field' => [
                                     null,
                                     Decimal::fromInteger(0),
-                                    null
+                                    null,
                                 ],
                             ],
                             [
@@ -376,7 +377,8 @@ final class ResultSetClientTest extends TestCase
     public function testInvalidFieldTransformerTypeFake()
     {
         $this->expectException(ParseException::class);
-        $this->expectExceptionMessage('Invalid field type "fake" for field "id" discovered');
+        $this->expectExceptionMessage('Could not parse response from database "XmlSchemaDemo" with table "Parent" and '
+            . 'layout "Parent". Reason: Invalid field type "fake" for field "id" discovered');
 
         $command = new Command('foo', []);
         $client = $this->createClient($command, 'invalidFieldTypeFake.xml');
@@ -419,11 +421,13 @@ final class ResultSetClientTest extends TestCase
         $client->execute($command);
     }
 
-    public function testDeletedField()
+    public function testUnknownField()
     {
-        $this->expectException(ParseException::class);
+        $this->expectException(UnknownFieldException::class);
         $this->expectExceptionMessage(
-            'A field has been deleted from the table, but remained in the layout'
+            'Unknown field in database "XmlSchemaDemo" with table "Child" and layout "Child". Reason: '
+            . 'A field definition result is "unknown". This is normally due to a field on the layout having being '
+            . 'deleted from the table or the authenticating user not having permission to view it.'
         );
 
         $command = new Command('foo', []);

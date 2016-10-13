@@ -8,6 +8,7 @@ use Exception;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
+use Soliant\SimpleFM\Client\ResultSet\Exception\UnknownFieldException;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\ContainerTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\DateTimeTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\DateTransformer;
@@ -46,6 +47,7 @@ final class ResultSetClient implements ResultSetClientInterface
     {
         $xml = $this->connection->execute($command, self::GRAMMAR_PATH);
         $errorCode = (int) $xml->error['code'];
+        $dataSource = $xml->datasource;
 
         if (8 === $errorCode || 401 === $errorCode) {
             // "Empty result" or "No records match the request"
@@ -61,9 +63,14 @@ final class ResultSetClient implements ResultSetClientInterface
             foreach ($xml->resultset[0]->record as $record) {
                 $records[] = $this->parseRecord($record, $metadata);
             }
+        } catch (UnknownFieldException $e) {
+            throw UnknownFieldException::fromConcreteException(
+                (string) $dataSource['database'],
+                (string) $dataSource['table'],
+                (string) $dataSource['layout'],
+                $e
+            );
         } catch (Exception $e) {
-            $dataSource = $xml->datasource;
-
             throw ParseException::fromConcreteException(
                 (string) $dataSource['database'],
                 (string) $dataSource['table'],
@@ -167,7 +174,7 @@ final class ResultSetClient implements ResultSetClientInterface
         $type = (string) $fieldDefinition['result'];
 
         if ('unknown' === $type) {
-            throw ParseException::fromDeletedField();
+            throw UnknownFieldException::fromUnknownField();
         }
 
         if (!array_key_exists($type, $this->transformers)) {

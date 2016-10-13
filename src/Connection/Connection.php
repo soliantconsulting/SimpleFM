@@ -5,6 +5,7 @@ namespace Soliant\SimpleFM\Connection;
 
 use Http\Client\HttpClient;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -65,6 +66,26 @@ final class Connection implements ConnectionInterface
         }
 
         return $xml;
+    }
+
+    public function getAsset(string $assetPath) : StreamInterface
+    {
+        $request = (new Request($this->uri->withUserInfo('')->withPath($assetPath), 'GET'))
+            ->withAddedHeader('User-agent', 'SimpleFM');
+
+        $credentials = urldecode($this->uri->getUserInfo());
+
+        if ('' !== $credentials) {
+            $request = $request->withAddedHeader('Authorization', sprintf('Basic %s', base64_encode($credentials)));
+        }
+
+        $response = $this->httpClient->sendRequest($request);
+
+        if (200 !== (int) $response->getStatusCode()) {
+            throw InvalidResponseException::fromUnsuccessfulResponse($response);
+        }
+
+        return $response->getBody();
     }
 
     private function buildRequest(Command $command, UriInterface $uri) : RequestInterface

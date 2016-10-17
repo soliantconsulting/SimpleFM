@@ -146,6 +146,21 @@ final class ConnectionTest extends TestCase
         $connection->getAsset('/foo');
     }
 
+    public function testGetAssetWithQueryParameters()
+    {
+        $connection = new Connection(
+            $this->createAssertiveHttpClient(function (RequestInterface $request) : ResponseInterface {
+                $this->assertSame('http://example.com/foo?bar=baz', (string) $request->getUri());
+
+                return new TextResponse('bar');
+            }),
+            new Uri('http://example.com'),
+            'foo'
+        );
+
+        $connection->getAsset('/foo?bar=baz');
+    }
+
     public function testRequestLogging()
     {
         $httpClient = $this->prophesize(HttpClient::class);

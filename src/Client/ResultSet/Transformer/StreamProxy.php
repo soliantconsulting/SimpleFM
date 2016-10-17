@@ -16,17 +16,17 @@ final class StreamProxy implements StreamInterface
     /**
      * @var string
      */
-    private $assetPath;
+    private $assetUri;
 
     /**
      * @var StreamInterface
      */
     private $wrappedStream;
 
-    public function __construct(ConnectionInterface $connection, string $assetPath)
+    public function __construct(ConnectionInterface $connection, string $assetUri)
     {
         $this->connection = $connection;
-        $this->assetPath = $assetPath;
+        $this->assetUri = $assetUri;
     }
 
     public function __toString() : string
@@ -110,6 +110,6 @@ final class StreamProxy implements StreamInterface
             return $this->wrappedStream;
         }
 
-        return $this->wrappedStream = $this->connection->getAsset($this->assetPath);
+        return $this->wrappedStream = $this->connection->getAsset($this->assetUri);
     }
 }

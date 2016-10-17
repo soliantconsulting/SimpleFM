@@ -13,6 +13,7 @@ use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
 use Soliant\SimpleFM\Repository\Builder\Type\IntegerType;
+use Soliant\SimpleFM\Repository\Builder\Type\StreamType;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
 use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
@@ -70,6 +71,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
             'decimal' => new DecimalType(),
             'float' => new FloatType(),
             'integer' => new IntegerType(),
+            'stream' => new StreamType(),
             'string' => new StringType(),
         ];
     }

@@ -13,6 +13,7 @@ use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
 use Soliant\SimpleFM\Repository\Builder\Type\IntegerType;
+use Soliant\SimpleFM\Repository\Builder\Type\StreamType;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
 use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
@@ -99,6 +100,7 @@ final class MetadataBuilderTest extends TestCase
         $this->assertInstanceOf(DecimalType::class, $fieldTypes['decimal']);
         $this->assertInstanceOf(FloatType::class, $fieldTypes['float']);
         $this->assertInstanceOf(IntegerType::class, $fieldTypes['integer']);
+        $this->assertInstanceOf(StreamType::class, $fieldTypes['stream']);
         $this->assertInstanceOf(StringType::class, $fieldTypes['string']);
     }
 

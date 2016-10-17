@@ -28,11 +28,6 @@ final class ResultSetClient implements ResultSetClientInterface
     private $connection;
 
     /**
-     * @var DateTimeZone
-     */
-    private $serverTimeZone;
-
-    /**
      * @var callable[]
      */
     private $transformers;

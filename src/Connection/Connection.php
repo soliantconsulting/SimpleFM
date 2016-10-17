@@ -68,9 +68,20 @@ final class Connection implements ConnectionInterface
         return $xml;
     }
 
-    public function getAsset(string $assetPath) : StreamInterface
+    public function getAsset(string $assetUri) : StreamInterface
     {
-        $request = (new Request($this->uri->withUserInfo('')->withPath($assetPath), 'GET'))
+        $assetUriParts = parse_url($assetUri);
+        $uri = $this->uri->withUserInfo('');
+
+        if (array_key_exists('path', $assetUriParts)) {
+            $uri = $uri->withPath($assetUriParts['path']);
+        }
+
+        if (array_key_exists('query', $assetUriParts)) {
+            $uri = $uri->withQuery($assetUriParts['query']);
+        }
+
+        $request = (new Request($uri, 'GET'))
             ->withAddedHeader('User-agent', 'SimpleFM');
 
         $credentials = urldecode($this->uri->getUserInfo());

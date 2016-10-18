@@ -88,11 +88,11 @@ final class Repository implements RepositoryInterface
         return $this->findOneBy(['-recid' => $recordId]);
     }
 
-    public function findOneBy(array $search)
+    public function findOneBy(array $search, bool $autoQuoteSearch = true)
     {
         $resultSet = $this->execute(new Command(
             $this->layout,
-            $this->createSearchParameters($search) + ['-find' => null, '-max' => 1]
+            $this->createSearchParameters($search, $autoQuoteSearch) + ['-find' => null, '-max' => 1]
         ));
 
         if (empty($resultSet)) {
@@ -130,12 +130,17 @@ final class Repository implements RepositoryInterface
         return $this->createCollection($resultSet);
     }
 
-    public function findBy(array $search, array $sort = [], int $limit = null, int $offset = null) : array
-    {
+    public function findBy(
+        array $search,
+        array $sort = [],
+        int $limit = null,
+        int $offset = null,
+        bool $autoQuoteSearch = true
+    ) : array {
         $resultSet = $this->execute(new Command(
             $this->layout,
             (
-                $this->createSearchParameters($search)
+                $this->createSearchParameters($search, $autoQuoteSearch)
                 + $this->createSortParameters($sort)
                 + $this->createLimitAndOffsetParameters($limit, $offset)
                 + ['-find' => null]
@@ -256,12 +261,12 @@ final class Repository implements RepositoryInterface
         return $entity;
     }
 
-    private function createSearchParameters(array $search) : array
+    private function createSearchParameters(array $search, bool $autoQuoteSearch) : array
     {
         $searchParameters = [];
 
         foreach ($search as $field => $value) {
-            $searchParameters[$field] = $this->quoteString((string) $value);
+            $searchParameters[$field] = $autoQuoteSearch ? $this->quoteString((string) $value) : (string) $value;
         }
 
         return $searchParameters;

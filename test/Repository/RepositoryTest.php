@@ -130,6 +130,16 @@ final class RepositoryTest extends TestCase
         $this->assertSame($entity, $repository->findOneBy(['foo' => 'bar']));
     }
 
+    public function testFindOneByWithAutoQuoteDisabled()
+    {
+        $repository = $this->createAssertiveRepository(function (Command $command) {
+            $this->assertSame('-lay=foo&foo=%3E%3D5&-find&-max=1', (string) $command);
+            return [];
+        });
+
+        $repository->findOneBy(['foo' => '>=5'], false);
+    }
+
     public function testFindOneByWithoutResult()
     {
         $repository = $this->createAssertiveRepository(function () {
@@ -224,6 +234,16 @@ final class RepositoryTest extends TestCase
         }, $hydration->reveal());
 
         $this->assertSame([$entity], $repository->findBy(['foo' => 'bar'], ['foo' => 'ascend'], 1, 2));
+    }
+
+    public function testFindByWithAutoQuoteDisabled()
+    {
+        $repository = $this->createAssertiveRepository(function (Command $command) {
+            $this->assertSame('-lay=foo&foo=%3E%3D5&-find', (string) $command);
+            return [];
+        });
+
+        $repository->findBy(['foo' => '>=5'], [], null, null, false);
     }
 
     public function testFindByQueryWithoutArguments()

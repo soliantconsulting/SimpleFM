@@ -4,7 +4,10 @@ declare(strict_types = 1);
 namespace SoliantTest\SimpleFM\Connection;
 
 use Assert\InvalidArgumentException;
+use DateTimeImmutable;
+use Litipk\BigNumbers\Decimal;
 use PHPUnit_Framework_TestCase as TestCase;
+use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\Exception\DomainException;
 
@@ -37,30 +40,23 @@ final class CommandTest extends TestCase
         $this->assertSame('foo', $command->getLayout());
     }
 
-    public function testCloneWithCredentials()
+    public function testCloneWithIdentity()
     {
         $command = new Command('foo', []);
-        $newCommand = $command->withCredentials('bar', 'baz');
+        $identity = new Identity('foo', 'bar');
+        $newCommand = $command->withIdentity($identity);
 
         $this->assertNotSame($newCommand, $command);
-        $this->assertFalse($command->hasCredentials());
-        $this->assertTrue($newCommand->hasCredentials());
-        $this->assertSame('bar', $newCommand->getUsername());
-        $this->assertSame('baz', $newCommand->getPassword());
+        $this->assertFalse($command->hasIdentity());
+        $this->assertTrue($newCommand->hasIdentity());
+        $this->assertSame($identity, $newCommand->getIdentity());
     }
 
-    public function testGetUsernameWithoutCredentials()
+    public function testGetIdentityWithoutIdentity()
     {
         $this->expectException(InvalidArgumentException::class);
         $command = new Command('foo', []);
-        $command->getUsername();
-    }
-
-    public function testGetPasswordWithoutCredentials()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $command = new Command('foo', []);
-        $command->getPassword();
+        $command->getIdentity();
     }
 
     public function parameterProvider() : array
@@ -95,11 +91,11 @@ final class CommandTest extends TestCase
                 '-lay=foo&foo=1',
             ],
             'datetime-parameter' => [
-                ['foo' => new \DateTimeImmutable('2016-01-01 00:00:00 UTC')],
+                ['foo' => new DateTimeImmutable('2016-01-01 00:00:00 UTC')],
                 '-lay=foo&foo=01%2F01%2F2016+00%3A00%3A00',
             ],
             'decimal-parameter' => [
-                ['foo' => \Litipk\BigNumbers\Decimal::fromString('12.499734362638823')],
+                ['foo' => Decimal::fromString('12.499734362638823')],
                 '-lay=foo&foo=12.499734362638823',
             ],
         ];

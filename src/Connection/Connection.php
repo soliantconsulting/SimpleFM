@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Connection;
 
+use Assert\Assertion;
 use Http\Client\HttpClient;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
@@ -10,6 +11,7 @@ use Psr\Http\Message\UriInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Connection\Exception\InvalidResponseException;
 use Zend\Diactoros\Request;
 use Zend\Diactoros\Stream;
@@ -32,6 +34,11 @@ final class Connection implements ConnectionInterface
     private $database;
 
     /**
+     * @var IdentityHandlerInterface|null
+     */
+    private $identityHandler;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -40,11 +47,13 @@ final class Connection implements ConnectionInterface
         HttpClient $httpClient,
         UriInterface $uri,
         string $database,
+        IdentityHandlerInterface $identityHandler = null,
         LoggerInterface $logger = null
     ) {
         $this->httpClient = $httpClient;
         $this->uri = $uri;
         $this->database = $database;
+        $this->identityHandler = $identityHandler;
         $this->logger = $logger ?: new NullLogger();
     }
 
@@ -115,8 +124,15 @@ final class Connection implements ConnectionInterface
 
         $credentials = urldecode($uri->getUserInfo());
 
-        if ($command->hasCredentials()) {
-            $credentials = sprintf('%s:%s', $command->getUsername(), $command->getPassword());
+        if ($command->hasIdentity()) {
+            Assertion::notNull($this->identityHandler, 'An identity handler must be set to use identities on commands');
+            $identity = $command->getIdentity();
+
+            $credentials = sprintf(
+                '%s:%s',
+                $identity->getUsername(),
+                $this->identityHandler->decryptPassword($identity)
+            );
         }
 
         $this->logger->info(sprintf('%s?%s', (string) $uri->withUserInfo(''), $parameters));

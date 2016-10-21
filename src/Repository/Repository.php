@@ -3,9 +3,7 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository;
 
-use Assert\Assertion;
 use Soliant\SimpleFM\Authentication\Identity;
-use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
@@ -37,11 +35,6 @@ final class Repository implements RepositoryInterface
     private $extraction;
 
     /**
-     * @var IdentityHandlerInterface|null
-     */
-    private $identityHandler;
-
-    /**
      * @var Identity|null
      */
     private $identity;
@@ -60,27 +53,21 @@ final class Repository implements RepositoryInterface
         ResultSetClientInterface $resultSetClient,
         string $layout,
         HydrationInterface $hydration,
-        ExtractionInterface $extraction,
-        IdentityHandlerInterface $identityHandler = null
+        ExtractionInterface $extraction
     ) {
         $this->resultSetClient = $resultSetClient;
         $this->layout = $layout;
         $this->hydration = $hydration;
         $this->extraction = $extraction;
-        $this->identityHandler = $identityHandler;
         $this->managedEntities = new SplObjectStorage();
     }
 
     public function withIdentity(Identity $identity) : RepositoryInterface
     {
-        if (null === $this->identityHandler) {
-            throw DomainException::fromMissingIdentityHandler();
-        }
+        $repository = clone $this;
+        $repository->identity = $identity;
 
-        $gateway = clone $this;
-        $gateway->identity = $identity;
-
-        return $gateway;
+        return $repository;
     }
 
     public function find(int $recordId)
@@ -307,15 +294,10 @@ final class Repository implements RepositoryInterface
 
     private function execute(Command $command) : array
     {
-        if (null === $this->identity) {
-            return $this->resultSetClient->execute($command);
+        if (null !== $this->identity) {
+            $command = $command->withIdentity($this->identity);
         }
 
-        Assertion::notNull($this->identityHandler);
-
-        return $this->resultSetClient->execute($command->withCredentials(
-            $this->identity->getUsername(),
-            $this->identityHandler->decryptPassword($this->identity)
-        ));
+        return $this->resultSetClient->execute($command);
     }
 }

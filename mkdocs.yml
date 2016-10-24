@@ -14,6 +14,9 @@ pages:
             'Automatic creation' : repositories/automatic-creation.md,
             'Working with repositories' : repositories/working-with-repositories.md,
         ]
+    - 'Authentication' : authentication.md
+    - 'Debugging' : debugging.md
+    - 'Layout Information' : layout-information.md
 
 markdown_extensions:
     - admonition:

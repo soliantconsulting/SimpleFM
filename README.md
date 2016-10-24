@@ -12,7 +12,7 @@ SimpleFM is a fast, convenient and free tool designed by [Soliant Consulting, In
 
 SimpleFM is a lightweight PHP package that uses the [FileMaker Server][2] XML API. The FMS XML API is commonly referred to as Custom Web Publishing (CWP for short).
 
-SimpleFM is [Composer][3] friendly, making it a snap to use with all [PHP-FIG][4] frameworks, including [Zend Framework][5], Symphony, Laravel, Slim, and many more.
+SimpleFM is [Composer][3] friendly, making it a snap to use with all [PHP-FIG][4] frameworks, including [Zend Framework][5], Symfony, Laravel, Slim, and many more.
 
 See also, the [SimpleFM-skeleton][6] demo application which illustrates use of SimpleFM in an MVC Zend Framework application.
 

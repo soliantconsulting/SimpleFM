@@ -3,12 +3,15 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Connection;
 
+use Assert\InvalidArgumentException;
 use Http\Client\HttpClient;
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Soliant\SimpleFM\Authentication\Identity;
+use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\Connection;
 use Soliant\SimpleFM\Connection\Exception\InvalidResponseException;
@@ -87,32 +90,53 @@ final class ConnectionTest extends TestCase
 
     public function testRequestWithUriAndCommandCredentials()
     {
+        $identityHandler = $this->prophesize(IdentityHandlerInterface::class);
+        $identityHandler->decryptPassword(Argument::any())->willReturn('bat2');
+
         $connection = new Connection(
             $this->createAssertiveHttpClient(function (RequestInterface $request) : ResponseInterface {
-                $this->assertSame(['Basic YmF6OmJhdA=='], $request->getHeader('Authorization'));
+                $this->assertSame(['Basic YmF6OmJhdDI='], $request->getHeader('Authorization'));
 
                 return new TextResponse('<xml/>');
             }),
             new Uri('http://foo%25:bar%25@example.com'),
-            'foo'
+            'foo',
+            $identityHandler->reveal()
         );
 
-        $connection->execute((new Command('', []))->withCredentials('baz', 'bat'), '/foo');
+        $connection->execute((new Command('', []))->withIdentity(new Identity('baz', 'bat')), '/foo');
     }
 
-    public function testRequestWithCommandCredentials()
+    public function testRequestWithCommandIdentity()
     {
+        $identityHandler = $this->prophesize(IdentityHandlerInterface::class);
+        $identityHandler->decryptPassword(Argument::any())->willReturn('bat2');
+
         $connection = new Connection(
             $this->createAssertiveHttpClient(function (RequestInterface $request) : ResponseInterface {
-                $this->assertSame(['Basic YmF6OmJhdA=='], $request->getHeader('Authorization'));
+                $this->assertSame(['Basic YmF6OmJhdDI='], $request->getHeader('Authorization'));
 
                 return new TextResponse('<xml/>');
             }),
             new Uri('http://example.com'),
+            'foo',
+            $identityHandler->reveal()
+        );
+
+        $connection->execute((new Command('', []))->withIdentity(new Identity('baz', 'bat')), '/foo');
+    }
+
+    public function testRequestWithCommandIdentityWithoutIdentityHandler()
+    {
+        $connection = new Connection(
+            $this->prophesize(HttpClient::class)->reveal(),
+            new Uri('http://example.com'),
             'foo'
         );
 
-        $connection->execute((new Command('', []))->withCredentials('baz', 'bat'), '/foo');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('identity handler must be set');
+        $connection->execute((new Command('', []))->withIdentity(new Identity('baz', 'bat')), '/foo');
     }
 
     public function testGetAssetWithNonSuccessResponse()
@@ -173,6 +197,7 @@ final class ConnectionTest extends TestCase
             $httpClient->reveal(),
             new Uri('https://example.com'),
             'foo',
+            null,
             $logger->reveal()
         );
 

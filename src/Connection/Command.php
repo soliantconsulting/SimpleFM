@@ -6,6 +6,7 @@ namespace Soliant\SimpleFM\Connection;
 use Assert\Assertion;
 use DateTimeInterface;
 use Litipk\BigNumbers\Decimal;
+use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Connection\Exception\DomainException;
 
 final class Command
@@ -16,14 +17,9 @@ final class Command
     private $parameters;
 
     /**
-     * @var string|null
+     * @var Identity|null
      */
-    private $username;
-
-    /**
-     * @var string|null
-     */
-    private $password;
+    private $identity;
 
     public function __construct(string $layout, array $parameters)
     {
@@ -48,30 +44,23 @@ final class Command
         $this->parameters = ['-lay' => $layout] + $parameters;
     }
 
-    public function withCredentials(string $username, string $password) : self
+    public function withIdentity(Identity $identity) : self
     {
         $command = clone $this;
-        $command->username = $username;
-        $command->password = $password;
+        $command->identity = $identity;
 
         return $command;
     }
 
-    public function hasCredentials()
+    public function hasIdentity()
     {
-        return null !== $this->username && null !== $this->password;
+        return null !== $this->identity;
     }
 
-    public function getUsername() : string
+    public function getIdentity() : Identity
     {
-        Assertion::notNull($this->username);
-        return $this->username;
-    }
-
-    public function getPassword() : string
-    {
-        Assertion::notNull($this->password);
-        return $this->password;
+        Assertion::notNull($this->identity);
+        return $this->identity;
     }
 
     public function getLayout() : string

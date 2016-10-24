@@ -36,20 +36,6 @@ final class RepositoryTest extends TestCase
         $this->assertSame('bar', $repository->quoteString('foo'));
     }
 
-    public function testWithIdentityFailsWithoutIdentityHandler()
-    {
-        $repository = new Repository(
-            $this->prophesize(ResultSetClientInterface::class)->reveal(),
-            'foo',
-            $this->prophesize(HydrationInterface::class)->reveal(),
-            $this->prophesize(ExtractionInterface::class)->reveal()
-        );
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('identity handler must be present');
-        $repository->withIdentity(new Identity('foo', 'bar'));
-    }
-
     public function testWithIdentityCreatesNewRepository()
     {
         $repository = new Repository(
@@ -63,16 +49,14 @@ final class RepositoryTest extends TestCase
         $this->assertNotSame($repository, $repository->withIdentity(new Identity('foo', 'bar')));
     }
 
-    public function testWithIdentityPassesCredentialsToNewCommands()
+    public function testWithIdentityPassesIdentityToNewCommands()
     {
-        $identityHandler = $this->prophesize(IdentityHandlerInterface::class);
-        $identityHandler->decryptPassword(Argument::any())->willReturn('baz');
+        $identity = new Identity('foo', 'bar');
 
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('foo', $command->getUsername());
-            $this->assertSame('baz', $command->getPassword());
+        $repository = $this->createAssertiveRepository(function (Command $command) use ($identity) {
+            $this->assertSame($identity, $command->getIdentity());
             return [];
-        }, null, null, $identityHandler->reveal())->withIdentity(new Identity('foo', 'bar'));
+        }, null, null)->withIdentity($identity);
 
         $repository->find(1);
     }

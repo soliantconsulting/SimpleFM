@@ -1,0 +1,25 @@
+site_name: SimpleFM
+repo_url: https://github.com/soliantconsulting/SimpleFM/
+copyright: Copyright (c) 2007-2016 Soliant Consulting, Inc.
+docs_dir: doc/src
+site_dir: doc/html
+theme: readthedocs
+pages:
+    - index.md
+    - 'Getting Started' : getting-started.md
+    - 'Repositories' :
+        [
+            'Introduction' : repositories/introduction.md,
+            'Manual creation' : repositories/manual-creation.md,
+            'Automatic creation' : repositories/automatic-creation.md,
+            'Working with repositories' : repositories/working-with-repositories.md,
+        ]
+    - 'Authentication' : authentication.md
+    - 'Debugging' : debugging.md
+    - 'Layout Information' : layout-information.md
+
+markdown_extensions:
+    - admonition:
+    - def_list:
+    - footnotes:
+

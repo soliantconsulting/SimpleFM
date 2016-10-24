@@ -44,12 +44,14 @@ final class Authenticator
 
     public function authenticate(string $username, string $password) : Result
     {
+        $identity = $this->identityHandler->createIdentity($username, $password);
+
         try {
             $resultSet = $this->resultSetClient->execute(
                 (new Command($this->identityLayout, [
                     $this->usernameField => '==' . $this->resultSetClient->quoteString($username),
                     '-find' => null,
-                ]))->withCredentials($username, $password)
+                ]))->withIdentity($identity)
             );
         } catch (InvalidResponseException $e) {
             $errorCode = $e->getCode();
@@ -65,6 +67,6 @@ final class Authenticator
             throw InvalidResultException::fromEmptyResultSet();
         }
 
-        return Result::fromIdentity($this->identityHandler->createIdentity($username, $password));
+        return Result::fromIdentity($identity);
     }
 }

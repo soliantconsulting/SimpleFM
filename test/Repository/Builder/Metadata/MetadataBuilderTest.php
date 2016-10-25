@@ -5,6 +5,10 @@ namespace SoliantTest\SimpleFM\Repository\Builder\Metadata;
 
 use Assert\InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
+use Prophecy\Argument;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilder;
@@ -79,10 +83,45 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('foo', $metadata->getInterfaceName());
     }
 
-    public function testMetadataCaching()
+    public function testInternalMetadataCaching()
     {
         $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
         $this->assertSame($builder->getMetadata('Empty'), $builder->getMetadata('Empty'));
+    }
+
+    public function testExternalMetadataCachingWithHit()
+    {
+        $cachedMetadata = new Entity('', '', [], [], [], [], []);
+
+        $cacheItem = $this->prophesize(CacheItemInterface::class);
+        $cacheItem->get()->willReturn($cachedMetadata);
+
+        $cache = $this->prophesize(CacheItemPoolInterface::class);
+        $cache->hasItem('simplefm.metadata.ce2c8aed9c2fa0cfbed56cbda4d8bf07')->willReturn(true)->shouldBeCalledTimes(1);
+        $cache->getItem('simplefm.metadata.ce2c8aed9c2fa0cfbed56cbda4d8bf07')->willReturn(
+            $cacheItem->reveal()
+        )->shouldBeCalledTimes(1);
+        $cache->save(Argument::any())->shouldNotBeCalled();
+
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets', [], $cache->reveal());
+        $retrievedMetadata = $builder->getMetadata('Empty');
+        $this->assertSame($cachedMetadata, $retrievedMetadata);
+        $this->assertSame($retrievedMetadata, $builder->getMetadata('Empty'));
+    }
+
+    public function testExternalMetadataCachingWithoutHit()
+    {
+        $cache = $this->prophesize(CacheItemPoolInterface::class);
+        $cache->hasItem('simplefm.metadata.ce2c8aed9c2fa0cfbed56cbda4d8bf07')->willReturn(false);
+        $cache->save(Argument::that(function (CacheItemInterface $cacheItem) {
+            return (
+                'simplefm.metadata.ce2c8aed9c2fa0cfbed56cbda4d8bf07' === $cacheItem->getKey()
+                && $cacheItem->get() instanceof Entity
+            );
+        }))->shouldBeCalledTimes(1);
+
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets', [], $cache->reveal());
+        $builder->getMetadata('Empty');
     }
 
     public function testBuiltInTypes()

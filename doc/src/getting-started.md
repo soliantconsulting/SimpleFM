@@ -34,7 +34,6 @@ server correctly. This one should be set to the time zone your server operates o
 
 ```php
 <?php
-use DateTimeZone;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
 
 $resultSetClient = new ResultSetClient($connection, new DateTimeZone('UTC'));
@@ -49,7 +48,7 @@ cast to a `Decimal` object and file containers are cast to a `StreamInterface`.
 
 ```php
 <?php
-use Soliant\SimpleFM\Connect\Command;
+use Soliant\SimpleFM\Connection\Command;
 
 $records = $resultSetClient->execute(new Command('sample-layout', ['-findall' => null]));
 

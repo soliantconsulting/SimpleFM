@@ -1,8 +1,11 @@
 # Easier access to data
 
-While very simple applications may work fine by just using the result set client, more complex applications may require
-to organize data into actual entities. For the purpose of this, SimpleFM offers repositories which take care of all the
-internals and let the user concentrate on the actual data.
+While very simple applications can work fine just using the result set client, it is a best practice to organize data
+into entities with associations. To facilitate this, SimpleFM provides repositories which take care of the internals
+and let the application developer concentrate on the business domain.
 
-A repository instance is always responsible for a single type of entity, letting you insert, update and delete an entity
-from the database layout, as well as giving you multiple ways to query for records.
+A repository instance is responsible for a single type of entity. It is where you define the infrastructure to insert,
+update, and delete an entity, as well as giving you multiple ways to query.
+
+The FileMaker XML API exposes data via layouts. We'll come back to this in more detail later, but it's important to know
+that entities, repositories, and layouts must be created and maintained in concert with each other.

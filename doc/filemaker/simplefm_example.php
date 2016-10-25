@@ -3,7 +3,7 @@
  * This source file is subject to the MIT license that is bundled with this package in the file LICENSE.txt.
  *
  * @package   SimpleFM
- * @copyright Copyright (c) 2007-2015 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
+ * @copyright Copyright (c) 2007-2016 Soliant Consulting, Inc. (http://www.soliantconsulting.com)
  * @author    jsmall@soliantconsulting.com
  */
 
@@ -12,139 +12,50 @@ ini_set('log_errors', 1);
 ini_set('error_log', dirname(__FILE__) . '/error_log.txt');
 error_reporting(E_ALL);
 
-foreach (require(__DIR__ . '/../library/autoload_classmap.php') as $classPath) {
-    require_once($classPath);
-}
+require_once(__DIR__ . '/../../vendor/autoload.php');
 
-use Soliant\SimpleFM\Adapter;
-use Soliant\SimpleFM\HostConnection;
-use Soliant\SimpleFM\Result\FmResultSet;
+use Http\Client\Curl\Client;
+use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
+use Soliant\SimpleFM\Connection\Command;
+use Soliant\SimpleFM\Connection\Connection;
+use Zend\Diactoros\Uri;
 
 /**
- * The hostName can either be an IP address or any valid network name you have configured and hosting the
- * FileMaker XML API. FMServer_Sample.fmp12 is included with FileMaker Server 12; the default userName is
- * Admin with blank password. You should always leave off the file extension when configuring dbName.
+ * The hostName can either be an IP address or any valid network name you have configured and hosting the FileMaker XML
+ * API. FMServer_Sample.fmp12 is included with FileMaker Server 15 with guest access enabled by default. You should
+ * always leave off the file extension when configuring dbName.
  */
-$hostConnection = new HostConnection(
-    'localhost',
-    'FMServer_Sample',
-    'Admin',
-    ''
+$connection = new Connection(
+    new Client(),
+    new Uri('http://localhost'),
+    'FMServer_Sample'
 );
 
-/**
- * Initialize the adapter with the hostParams array for your environment.
- */
-$adapter = new Adapter($hostConnection);
+$resultSetClient = new ResultSetClient($connection, new DateTimeZone('UTC'));
 
 /**
- * By default SimpleFM will use \Soliant\SimpleFM\Loader\FilePostContents to communicate with FileMaker Server.
- * In most cases the default is the best option, and there is no need to specify a loader explicitly.
- * If you need to use one of the alternative loaders, you instantiate is with the Adapter, and then add it with
- * the Adapter::setLoader method.
- */
-// $loader = new \Soliant\SimpleFM\Loader\Curl();
-// $loader = new \Soliant\SimpleFM\Loader\FileGetContents();
-// $adapter->setLoader($loader);
-
-/**
- * At runtime, you can update HostConnection on an adapter that has already been instantiated via the HostConnection's
- * fluent interface
- */
-$adapter->getHostConnection()
-    ->setHostName('localhost')
-    ->setDbName('FMServer_Sample')
-    ->setUserName('someUsername')
-    ->setPassword('somePassword');
-
-/**
- * After you have initialized a SimpleFMAdapter with valid credentials, there are a number of ways to make calls with
- * it. The simplest is to setCallParams with a layoutname and a commandstring. The commandstring follows the XML RPC
- * syntax for FileMaker Server. See /documentation/fms12_cwp_xml_en.pdf, Appendix A on page 43 for details.
- */
-$adapter->setLayoutName('Tasks')
-    ->setCommandString('-max=2&-skip=1&-findall');
-
-/**
- * You may also update just the credentials at runtime via the HostConnection's fluent interface
- */
-$adapter->getHostConnection()
-    ->setUserName('Admin')
-    ->setPassword('');
-
-/**
- * Experiment with the getters and setters to modify the Adapter and set new commands for execution
- */
-$adapter->setLayoutName('Projects');
-
-/**
- * As already mentioned, for basic usage, you can define commands using the FileMaker XML url api syntax.
- * See /documentation/fms12_cwp_xml_en.pdf
- */
-$adapter->setCommandString('-findall');
-
-/**
- * For more fine-grained control, you can also interact with the adapter's commandarray.
- * This is useful because it lets you modify existing commands on the adpater, and add new commands
- * without blowing away existing command properties. For example:
-
-    $commandArray = $adapter->getCommandArray();
-    $commandArray['-max']  = 1 ;             // change -max value
-    $commandArray['-skip'] = 3 ;             // add a -skip command
-    $adapter->setCommandArray($commandArray); // set it back on the adapter
-
- *
+ * After you have initialized a SimpleFM Connection with valid credentials, you can execute it with a Command. The
+ * Command expects a layout name and a command array. The command array follows the name/values defined by the XML API
+ * syntax for FileMaker Server. See doc/filemaker/fms15_cwp_guide.pdf, Chapter 5 on page 40 for details.
  */
 
-/**
- * Experiment with dumping out the command string and command array and notice that it doesn't matter
- * which method you use for setting commands. They both affect the same properties of the adapter. For example:
-
-    $commandArray  = $adapter->getCommandArray();
-    $commandString = $adapter->getCommandString();
-    echo '<pre>';
-    var_dump($commandArray);
-    echo($commandString);
-    die();
-
- *
- */
-
-/**
- * SimpleFMAdapter also provides a Boolean rowsByRecid option which makes the returned rows of data associative
- * by FileMaker recid instead of the default behavior which is rows as an arbitrarily indexed array.
- */
-// $adapter->setRowsByRecId(true);
-
-/**
- * Once your adapter is ready, use execute to make the host request.
- * @var FmResultSet $result
- */
-$result = $adapter->execute();
+$records = $resultSetClient->execute(new Command('Task Details', ['-max' => 2, '-skip' => 1, '-findall' => null]));
 
 /**
  * These are the elements simpleFM returns in the result array.
  */
-$url          = $result->getDebugUrl();
-$errorCode    = $result->getErrorCode();
-$errorMessage = $result->getErrorMessage();
-$errorType    = $result->getErrorType();
-$count        = null;
-$fetchSize    = null;
-$rows         = [];
-if ($result instanceof FmResultSet) {
-    $count        = $result->getCount();
-    $fetchSize    = $result->getFetchSize();
-    $rows         = $result->getRows();
-}
+$url = 'http://localhost/fmi/xml/yadda'; //$records->getDebugUrl();
+$errorCode = 0; //$records->getErrorCode();
+$errorMessage = 'No Error'; //$records->getErrorMessage();
+$errorType = 'FileMaker'; //$records->getErrorType();
+$count = 12;
+$fetchSize = 2;
 
 /**
  * Handle the result:
  *
- * IMPORTANT NOTE: The formatting code below is designed to demonstrate output from the above examples.
- *
- * While there is nothing wrong with is per se, the result formatting examples below are tailored for
- * this formatting use case, and is more complicated than will be required in many normal use cases.
+ * While there is nothing wrong with is per se, the result formatting examples below are not intended to be followed as
+ * examples. In particular, the stringifyValues function is not normally a technique you should use.
  *
  * See the Best Practices section of the included README.md for more information.
  */
@@ -152,50 +63,36 @@ if ($result instanceof FmResultSet) {
 /**
  * Output some basic meta info about the request
  */
-echo <<<HEADER
-<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>
-    Command URL: $url<br/>
-    Error: $errorCode <br/>
-    Error Text: $errorMessage<br/>
-    Error Type: $errorType <br/>
-    Found Count: $count<br/>
-    Fetch Size: $fetchSize<br/>
-</div>
-HEADER;
+echo sprintf("<div style='background-color:EEF;padding:1em;margin:1em;border-style:dotted;border-width:thin;'>
+    Command URL: %s<br/>
+    Error:  %s<br/>
+    Error Text: %s<br/>
+    Error Type:  %s<br/>
+    Found Count: %s<br/>
+    Fetch Size: %s<br/>
+</div>",
+$url,
+$errorCode,
+$errorMessage,
+$errorType,
+$count,
+$fetchSize
+);
 
 if ($errorCode === 0) {
     /**
      * Format the result rows like a FileMaker Table View
      */
     echo "<h2>Table View</h2><table border=1><tr><th>array key</th>";
-        $indexed = array_values($rows);
+    $indexed = array_values($records);
     foreach ($indexed[0] as $key => $value) {
         echo "<th>$key</th>";
     }
-        echo "</tr>";
-    foreach ($rows as $key => $data) {
+    echo "</tr>";
+    foreach ($records as $key => $data) {
         echo "<tr><td>$key</td>";
         foreach ($data as $value) {
-            $value = $value === "" ? "&nbsp;" : $value;
-            if (is_array($value)) {
-                if (isset($value['parentindex'])) {
-                    // portal
-                    $tempValue = '';
-                    foreach ($value as $k => $v) {
-                        if (is_array($v)) {
-                            continue;
-                        }
-                        $tempValue .= $k . ':&nbsp;' . $v . '<br>';
-                    }
-                    $value = $tempValue;
-                } else {
-                    // repeating field
-                    $value = implode("<br>", $value);
-                }
-            } else {
-                $value = nl2br($value);
-            }
-            echo "<td>$value</td>";
+            echo sprintf("<td>%s</td>", stringifyValue($value));
         }
         echo "</tr>";
     }
@@ -205,30 +102,11 @@ if ($errorCode === 0) {
      * Format the result rows like a FileMaker Form in List View
      */
     echo "<h2>Form List View</h2>";
-    foreach ($rows as $i => $data) {
+    foreach ($records as $i => $data) {
         echo "<table border=1>";
         echo "<tr><th>array key</th><td>$i</td></tr>";
         foreach ($data as $key => $value) {
-            $value = $value === "" ? "&nbsp;" : $value;
-            if (is_array($value)) {
-                if (isset($value['parentindex'])) {
-                    // portal
-                    $tempValue = '';
-                    foreach ($value as $k => $v) {
-                        if (is_array($v)) {
-                            continue;
-                        }
-                        $tempValue .= $k . ':&nbsp;' . $v . '<br>';
-                    }
-                    $value = $tempValue;
-                } else {
-                    // repeating field
-                    $value = implode("<br>", $value);
-                }
-            } else {
-                $value = nl2br($value);
-            }
-            echo "<tr><th>$key</th><td>$value</td></tr>";
+            echo sprintf("<tr><th>%s</th><td>%s</td></tr>", $key, stringifyValue($value));
         }
         echo "</table><br/>";
     }
@@ -238,4 +116,39 @@ if ($errorCode === 0) {
  * Finally, a dump of the raw result
  */
 echo "<hr><pre>";
-var_dump($result);
+var_dump($records);
+
+
+/**
+ * IMPORTANT NOTE: The formatting code below is only designed to format html output for the above examples. This is
+ * not a suggestion for best practices.
+ */
+function stringifyValue($value) : string
+{
+    $value = $value === "" ? "&nbsp;" : $value;
+    if (is_array($value)) {
+        if (isset($value[0]) && isset($value[0]['record-id'])) {
+            $tempValue = '';
+            foreach ($value as $val) {
+                // portal
+                foreach ($val as $k => $v) {
+                    if (is_array($v)) {
+                        continue;
+                    }
+                    $tempValue .= $k . ':&nbsp;' . stringifyValue($v) . '<br>';
+                }
+                $tempValue .= '<hr>';
+            }
+            $value = $tempValue;
+        } else {
+            // repeating field
+            $value = implode("<br>", $value);
+        }
+    } elseif ($value instanceof DateTimeImmutable) {
+        $value = $value->format('m/d/Y');
+    } else {
+        $value = nl2br($value);
+    }
+    return $value;
+}
+

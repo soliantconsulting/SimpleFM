@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
 use Assert\Assertion;
+use Cache\Adapter\Common\CacheItem;
+use Cache\Adapter\Void\VoidCachePool;
 use DOMDocument;
+use Psr\Cache\CacheItemPoolInterface;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
@@ -36,7 +39,12 @@ final class MetadataBuilder implements MetadataBuilderInterface
      */
     private $metadata = [];
 
-    public function __construct(string $xmlFolder, array $additionalTypes = [])
+    /**
+     * @var CacheItemPoolInterface
+     */
+    private $cache;
+
+    public function __construct(string $xmlFolder, array $additionalTypes = [], CacheItemPoolInterface $cache = null)
     {
         if (!empty($additionalTypes)) {
             Assertion::count(array_filter($additionalTypes, function ($type) : bool {
@@ -46,6 +54,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
 
         $this->xmlFolder = $xmlFolder;
         $this->types = $additionalTypes + $this->createBuiltInTypes();
+        $this->cache = $cache ?: new VoidCachePool();
     }
 
     public function getMetadata(string $entityClassName) : Entity
@@ -54,13 +63,23 @@ final class MetadataBuilder implements MetadataBuilderInterface
             return $this->metadata[$entityClassName];
         }
 
+        $cacheKey = sprintf('simplefm.metadata.%s', md5($entityClassName));
+
+        if ($this->cache->hasItem($cacheKey)) {
+            return ($this->metadata[$entityClassName] = $this->cache->getItem($cacheKey)->get());
+        }
+
         $xmlPath = sprintf('%s/%s', $this->xmlFolder, $this->buildFilename($entityClassName));
 
         if (!file_exists($xmlPath)) {
             throw InvalidFileException::fromNonExistentFile($xmlPath, $entityClassName);
         }
 
-        return ($this->metadata[$entityClassName] = $this->buildMetadata($xmlPath));
+        $entityMetadata = $this->buildMetadata($xmlPath);
+
+        $this->cache->save(new CacheItem($cacheKey, true, $entityMetadata));
+
+        return ($this->metadata[$entityClassName] = $entityMetadata);
     }
 
     private function createBuiltInTypes() : array

@@ -19,7 +19,10 @@
         "litipk/php-bignumbers": "^0.7.3",
         "beberlei/assert": "^2.6",
         "psr/log": "^1.0",
-        "zendframework/zend-code": "^3.0"
+        "zendframework/zend-code": "^3.0",
+        "psr/cache": "^1.0",
+        "cache/void-adapter": "^0.3.1",
+        "cache/adapter-common": "^0.3.3"
     },
     "require-dev": {
         "php-http/curl-client": "^1.6",

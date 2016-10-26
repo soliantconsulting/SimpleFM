@@ -1,0 +1,22 @@
+{
+    "name": "soliantconsulting/simplefm-example",
+    "type": "project",
+    "description": "FileMaker Server XML API Adapter",
+    "keywords": [
+        "FileMaker",
+        "adapter"
+    ],
+    "homepage": "http://github.com/soliantconsulting/SimpleFM",
+    "license": "MIT",
+    "authors": [
+        {"name": "Jeremiah Small", "email": "jsmall@soliantconsulting.com"}
+    ],
+    "require": {
+        "soliantconsulting/simplefm": "dev-develop",
+        "php-http/curl-client": "^1.6",
+        "monolog/monolog": "^1.9"
+    },
+    "scripts": {
+        "serve": "echo run it manually: php -S 0.0.0.0:8080 -t ./ ./simplefm_example.php"
+    }
+}

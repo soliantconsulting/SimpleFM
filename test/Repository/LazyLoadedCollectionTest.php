@@ -5,6 +5,7 @@ namespace SoliantTest\SimpleFM\Repository;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Repository\LazyLoadedCollection;
 use Soliant\SimpleFM\Repository\RepositoryInterface;
 use stdClass;
@@ -35,11 +36,11 @@ final class LazyLoadedCollectionTest extends TestCase
                 '-q3.value' => '3',
             ], $parameters[0]->toParameters());
 
-            return [
+            return new ItemCollection([
                 $first,
                 $second,
                 $third,
-            ];
+            ], 3);
         });
 
         $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [
@@ -48,6 +49,8 @@ final class LazyLoadedCollectionTest extends TestCase
             ['foo' => 3],
         ]);
         $entities = [];
+
+        $this->assertFalse($collection->isEmpty());
 
         foreach ($collection as $entity) {
             $entities[] = $entity;
@@ -61,6 +64,7 @@ final class LazyLoadedCollectionTest extends TestCase
     public function testEmptyCollection()
     {
         $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), 'foo', []);
+        $this->assertTrue($collection->isEmpty());
         $this->assertNull($collection->first());
     }
 
@@ -75,11 +79,11 @@ final class LazyLoadedCollectionTest extends TestCase
         $first = new stdClass();
         $repository = $this->prophesize(RepositoryInterface::class);
         $repository->findByQuery(Argument::any())->will(function () use ($first) {
-            return [
+            return new ItemCollection([
                 $first,
                 new stdClass(),
                 new stdClass(),
-            ];
+            ], 3);
         });
 
         $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [
@@ -102,5 +106,15 @@ final class LazyLoadedCollectionTest extends TestCase
             ]
         );
         $this->assertSame(3, count($collection));
+    }
+
+    public function testGetTotalCount()
+    {
+        $collection = new LazyLoadedCollection(
+            $this->prophesize(RepositoryInterface::class)->reveal(),
+            'foo',
+            []
+        );
+        $this->assertSame(0, $collection->getTotalCount());
     }
 }

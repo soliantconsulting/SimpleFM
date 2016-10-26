@@ -63,7 +63,7 @@ final class Authenticator
             throw $e;
         }
 
-        if (empty($resultSet)) {
+        if ($resultSet->isEmpty()) {
             throw InvalidResultException::fromEmptyResultSet();
         }
 

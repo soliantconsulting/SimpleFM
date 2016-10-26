@@ -5,6 +5,7 @@ namespace SoliantTest\SimpleFM\Repository\Builder;
 
 use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Argument;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Repository\Builder\Exception\HydrationException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Embeddable;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
@@ -359,10 +360,10 @@ final class MetadataHydrationTest extends TestCase
 
         $repository = $this->prophesize(RepositoryInterface::class);
         $testCase = $this;
-        $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) : array {
+        $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) {
             $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
             $testCase->assertSame('6', $parameters[0]->toParameters()['-q2.value']);
-            return ['child-entity-1', 'child-entity-2'];
+            return new ItemCollection(['child-entity-1', 'child-entity-2'], 2);
         });
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);

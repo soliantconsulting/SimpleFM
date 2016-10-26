@@ -7,14 +7,13 @@ use PHPUnit_Framework_TestCase as TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
 use Soliant\SimpleFM\Authentication\Authenticator;
-use Soliant\SimpleFM\Authentication\BlockCipherIdentityHandler;
 use Soliant\SimpleFM\Authentication\Exception\InvalidResultException;
 use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\Exception\InvalidResponseException;
-use Zend\Crypt\BlockCipher;
 
 final class AuthenticationTest extends TestCase
 {
@@ -24,7 +23,7 @@ final class AuthenticationTest extends TestCase
         $resultSetClient = $this->createResultSetClientProphecy();
         $resultSetClient->execute(
             $this->createCommand('foo')->withIdentity($identity)
-        )->willReturn([[]]);
+        )->willReturn(new ItemCollection([[]], 1));
 
         $authenticator = $this->createAuthenticator($resultSetClient->reveal(), $identity);
 
@@ -69,7 +68,7 @@ final class AuthenticationTest extends TestCase
         $resultSetClient = $this->createResultSetClientProphecy();
         $resultSetClient->execute(
             $this->createCommand('foo')->withIdentity($identity)
-        )->willReturn([]);
+        )->willReturn(new ItemCollection([], 0));
 
         $authenticator = $this->createAuthenticator($resultSetClient->reveal(), $identity);
 

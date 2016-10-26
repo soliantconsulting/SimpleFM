@@ -8,6 +8,7 @@ use Prophecy\Argument;
 use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
@@ -55,7 +56,7 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) use ($identity) {
             $this->assertSame($identity, $command->getIdentity());
-            return [];
+            return new ItemCollection([], 0);
         }, null, null)->withIdentity($identity);
 
         $repository->find(1);
@@ -70,7 +71,7 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&-recid=1&-find&-max=1', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
         $this->assertSame($entity, $repository->find(1));
@@ -79,7 +80,7 @@ final class RepositoryTest extends TestCase
     public function testFindWithoutResult()
     {
         $repository = $this->createAssertiveRepository(function () {
-            return [];
+            return new ItemCollection([], 0);
         });
 
         $this->assertNull($repository->find(1));
@@ -93,7 +94,7 @@ final class RepositoryTest extends TestCase
         $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
         $this->assertSame($repository->find(1), $repository->find(1));
@@ -108,7 +109,7 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&foo=bar&-find&-max=1', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
         $this->assertSame($entity, $repository->findOneBy(['foo' => 'bar']));
@@ -118,7 +119,7 @@ final class RepositoryTest extends TestCase
     {
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&foo=%3E%3D5&-find&-max=1', (string) $command);
-            return [];
+            return new ItemCollection([], 0);
         });
 
         $repository->findOneBy(['foo' => '>=5'], false);
@@ -127,7 +128,7 @@ final class RepositoryTest extends TestCase
     public function testFindOneByWithoutResult()
     {
         $repository = $this->createAssertiveRepository(function () {
-            return [];
+            return new ItemCollection([], 0);
         });
 
         $this->assertNull($repository->findOneBy([]));
@@ -142,7 +143,7 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&-query=%28q1%29&-q1=foo&-q1.value=bar&-findquery&-max=1', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
         $query = new FindQuery();
@@ -153,7 +154,7 @@ final class RepositoryTest extends TestCase
     public function testFindOneByQueryWithoutResult()
     {
         $repository = $this->createAssertiveRepository(function () {
-            return [];
+            return new ItemCollection([], 0);
         });
 
         $query = new FindQuery();
@@ -169,10 +170,10 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&-findall', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
-        $this->assertSame([$entity], $repository->findAll());
+        $this->assertSame([$entity], iterator_to_array($repository->findAll()));
     }
 
     public function testFindAllWithParameters()
@@ -183,10 +184,10 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&-sortfield1=foo&-sortorder1=ascend&-max=1&-skip=2&-findall', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
-        $this->assertSame([$entity], $repository->findAll(['foo' => 'ascend'], 1, 2));
+        $this->assertSame([$entity], iterator_to_array($repository->findAll(['foo' => 'ascend'], 1, 2)));
     }
 
     public function testFindByWithoutArguments()
@@ -197,10 +198,10 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&foo=bar&-find', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
-        $this->assertSame([$entity], $repository->findBy(['foo' => 'bar']));
+        $this->assertSame([$entity], iterator_to_array($repository->findBy(['foo' => 'bar'])));
     }
 
     public function testFindByWithParameters()
@@ -214,17 +215,20 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&foo=bar&-sortfield1=foo&-sortorder1=ascend&-max=1&-skip=2&-find',
                 (string) $command
             );
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
-        $this->assertSame([$entity], $repository->findBy(['foo' => 'bar'], ['foo' => 'ascend'], 1, 2));
+        $this->assertSame(
+            [$entity],
+            iterator_to_array($repository->findBy(['foo' => 'bar'], ['foo' => 'ascend'], 1, 2))
+        );
     }
 
     public function testFindByWithAutoQuoteDisabled()
     {
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&foo=%3E%3D5&-find', (string) $command);
-            return [];
+            return new ItemCollection([], 0);
         });
 
         $repository->findBy(['foo' => '>=5'], [], null, null, false);
@@ -238,12 +242,12 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&-query=%28q1%29&-q1=foo&-q1.value=bar&-findquery', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
         $query = new FindQuery();
         $query->addOrQueries(new Query('foo', 'bar'));
-        $this->assertSame([$entity], $repository->findByQuery($query));
+        $this->assertSame([$entity], iterator_to_array($repository->findByQuery($query)));
     }
 
     public function testFindByQueryWithParameters()
@@ -260,12 +264,12 @@ final class RepositoryTest extends TestCase
                 ),
                 (string) $command
             );
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 
         $query = new FindQuery();
         $query->addOrQueries(new Query('foo', 'bar'));
-        $this->assertSame([$entity], $repository->findByQuery($query, ['foo' => 'ascend'], 1, 2));
+        $this->assertSame([$entity], iterator_to_array($repository->findByQuery($query, ['foo' => 'ascend'], 1, 2)));
     }
 
     public function testInsert()
@@ -281,7 +285,7 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&foo=bar&-new', (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $repository->insert($entity);
@@ -305,7 +309,7 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&-recid=1&-find&-max=1',
                 '-lay=foo&foo=bar&-recid=1&-modid=1&-edit',
             ][++$index], (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
@@ -330,7 +334,7 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&-recid=1&-find&-max=1',
                 '-lay=foo&foo=bar&-recid=1&-edit',
             ][++$index], (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
@@ -364,7 +368,7 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&-recid=1&-find&-max=1',
                 '-lay=foo&foo=bar&-recid=1&-modid=1&-edit',
             ][++$index], (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
@@ -385,7 +389,7 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&-recid=1&-find&-max=1',
                 '-lay=foo&-recid=1&-delete&-modid=1',
             ][++$index], (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
@@ -406,7 +410,7 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&-recid=1&-find&-max=1',
                 '-lay=foo&-recid=1&-delete',
             ][++$index], (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
@@ -436,7 +440,7 @@ final class RepositoryTest extends TestCase
                 '-lay=foo&-recid=1&-find&-max=1',
                 '-lay=foo&-recid=1&-delete&-modid=1',
             ][++$index], (string) $command);
-            return [['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']];
+            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal(), $extraction->reveal());
 
         $foundEntity = $repository->find(1);
@@ -478,7 +482,7 @@ final class RepositoryTest extends TestCase
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
             $this->assertSame('-lay=foo&foo=bar&-new', (string) $command);
-            return [];
+            return new ItemCollection([], 0);
         }, $hydration->reveal(), $extraction->reveal());
 
         $this->expectException(InvalidResultException::class);

@@ -12,6 +12,8 @@ use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\UnknownFieldException;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\StreamProxy;
+use Soliant\SimpleFM\Collection\CollectionInterface;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 
@@ -286,10 +288,12 @@ final class ResultSetClientTest extends TestCase
                         ],
                     ],
                 ],
+                3,
             ],
             'empty-resultset' => [
                 'sample_fmresultset_empty.xml',
                 [],
+                0,
             ],
         ];
     }
@@ -320,12 +324,14 @@ final class ResultSetClientTest extends TestCase
     /**
      * @dataProvider validXmlProvider
      */
-    public function testValidXml(string $xmlPath, array $expectedResult)
+    public function testValidXml(string $xmlPath, array $expectedResult, int $expectedTotalCount)
     {
         $command = new Command('foo', []);
         $client = $this->createClient($command, $xmlPath);
 
-        $this->assertEquals($expectedResult, $client->execute($command));
+        $result = $client->execute($command);
+        $this->assertEquals($expectedResult, iterator_to_array($result));
+        $this->assertSame($expectedTotalCount, $result->getTotalCount());
     }
 
     public function testErrorXml()
@@ -352,7 +358,7 @@ final class ResultSetClientTest extends TestCase
     {
         $command = new Command('foo', []);
         $client = $this->createClient($command, 'ParentChildAssociations/Base-recid1-id2.xml');
-        $firstBaseRecord = $client->execute($command)[0];
+        $firstBaseRecord = $client->execute($command)->first();
 
         $this->assertInstanceOf(Decimal::class, $firstBaseRecord['id']);
         $this->assertInstanceOf(Decimal::class, $firstBaseRecord['id_Parent']);

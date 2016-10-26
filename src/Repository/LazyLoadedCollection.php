@@ -4,13 +4,14 @@ declare(strict_types = 1);
 namespace Soliant\SimpleFM\Repository;
 
 use ArrayIterator;
-use Countable;
 use IteratorAggregate;
+use IteratorIterator;
+use Soliant\SimpleFM\Collection\CollectionInterface;
 use Soliant\SimpleFM\Repository\Query\FindQuery;
 use Soliant\SimpleFM\Repository\Query\Query;
 use Traversable;
 
-final class LazyLoadedCollection implements IteratorAggregate, Countable
+final class LazyLoadedCollection implements IteratorAggregate, CollectionInterface
 {
     /**
      * @var RepositoryInterface
@@ -28,7 +29,7 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
     private $sparseRecords;
 
     /**
-     * @var ArrayIterator
+     * @var IteratorIterator
      */
     private $iterator;
 
@@ -50,21 +51,36 @@ final class LazyLoadedCollection implements IteratorAggregate, Countable
         }
 
         $findQuery = new FindQuery();
-        $findQuery->addOrQueries(...array_map(function ($sparseRecord) {
+        $findQuery->addOrQueries(...array_map(function (array $sparseRecord) : Query {
             return new Query($this->idFieldName, (string) $sparseRecord[$this->idFieldName]);
         }, $this->sparseRecords));
 
-        return $this->iterator = new ArrayIterator($this->repository->findByQuery($findQuery));
-    }
-
-    public function first()
-    {
-        $iterator = $this->getIterator();
-        return reset($iterator) ?: null;
+        return $this->iterator = new IteratorIterator($this->repository->findByQuery($findQuery));
     }
 
     public function count() : int
     {
         return count($this->sparseRecords);
+    }
+
+    public function getTotalCount() : int
+    {
+        return count($this->sparseRecords);
+    }
+
+    public function isEmpty() : bool
+    {
+        return 0 === count($this->sparseRecords);
+    }
+
+    public function first()
+    {
+        if ($this->isEmpty()) {
+            return null;
+        }
+
+        $iterator = $this->getIterator();
+        $iterator->rewind();
+        return $iterator->current();
     }
 }

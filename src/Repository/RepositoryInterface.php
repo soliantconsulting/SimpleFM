@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Soliant\SimpleFM\Repository;
 
 use Soliant\SimpleFM\Authentication\Identity;
+use Soliant\SimpleFM\Collection\CollectionInterface;
 use Soliant\SimpleFM\Repository\Query\FindQuery;
 
 interface RepositoryInterface
@@ -16,7 +17,7 @@ interface RepositoryInterface
 
     public function findOneByQuery(FindQuery $query);
 
-    public function findAll(array $sort = [], int $limit = null, int $offset = null) : array;
+    public function findAll(array $sort = [], int $limit = null, int $offset = null) : CollectionInterface;
 
     public function findBy(
         array $search,
@@ -25,9 +26,14 @@ interface RepositoryInterface
         int $offset =
         null,
         bool $autoQuoteSearch = true
-    ) : array;
+    ) : CollectionInterface;
 
-    public function findByQuery(FindQuery $findQuery, array $sort = [], int $limit = null, int $offset = null) : array;
+    public function findByQuery(
+        FindQuery $findQuery,
+        array $sort = [],
+        int $limit = null,
+        int $offset = null
+    ) : CollectionInterface;
 
     public function insert($entity);
 

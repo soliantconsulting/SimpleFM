@@ -5,6 +5,8 @@ namespace Soliant\SimpleFM\Repository;
 
 use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
+use Soliant\SimpleFM\Collection\CollectionInterface;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
@@ -82,11 +84,11 @@ final class Repository implements RepositoryInterface
             $this->createSearchParameters($search, $autoQuoteSearch) + ['-find' => null, '-max' => 1]
         ));
 
-        if (empty($resultSet)) {
+        if ($resultSet->isEmpty()) {
             return null;
         }
 
-        return $this->createEntity($resultSet[0]);
+        return $this->createEntity($resultSet->first());
     }
 
     public function findOneByQuery(FindQuery $query)
@@ -96,14 +98,14 @@ final class Repository implements RepositoryInterface
             $query->toParameters() + ['-findquery' => null, '-max' => 1]
         ));
 
-        if (empty($resultSet)) {
+        if ($resultSet->isEmpty()) {
             return null;
         }
 
-        return $this->createEntity($resultSet[0]);
+        return $this->createEntity($resultSet->first());
     }
 
-    public function findAll(array $sort = [], int $limit = null, int $offset = null) : array
+    public function findAll(array $sort = [], int $limit = null, int $offset = null) : CollectionInterface
     {
         $resultSet = $this->execute(new Command(
             $this->layout,
@@ -123,7 +125,7 @@ final class Repository implements RepositoryInterface
         int $limit = null,
         int $offset = null,
         bool $autoQuoteSearch = true
-    ) : array {
+    ) : CollectionInterface {
         $resultSet = $this->execute(new Command(
             $this->layout,
             (
@@ -137,8 +139,12 @@ final class Repository implements RepositoryInterface
         return $this->createCollection($resultSet);
     }
 
-    public function findByQuery(FindQuery $findQuery, array $sort = [], int $limit = null, int $offset = null) : array
-    {
+    public function findByQuery(
+        FindQuery $findQuery,
+        array $sort = [],
+        int $limit = null,
+        int $offset = null
+    ) : CollectionInterface {
         $resultSet = $this->execute(new Command(
             $this->layout,
             (
@@ -208,12 +214,14 @@ final class Repository implements RepositoryInterface
             $this->extraction->extract($entity) + $additionalParameters + [$mode => null]
         ));
 
-        if (empty($resultSet)) {
+        if ($resultSet->isEmpty()) {
             throw InvalidResultException::fromEmptyResultSet();
         }
 
-        $this->hydration->hydrateExistingEntity($resultSet[0], $entity);
-        $this->addOrUpdateManagedEntity($resultSet[0]['record-id'], $resultSet[0]['mod-id'], $entity);
+        $record = $resultSet->first();
+
+        $this->hydration->hydrateExistingEntity($record, $entity);
+        $this->addOrUpdateManagedEntity($record['record-id'], $record['mod-id'], $entity);
     }
 
     private function addOrUpdateManagedEntity(int $recordId, int $modId, $entity)
@@ -225,15 +233,15 @@ final class Repository implements RepositoryInterface
         $this->entitiesByRecordId[$recordId] = $entity;
     }
 
-    private function createCollection(array $resultSet) : array
+    private function createCollection(CollectionInterface $resultSet) : CollectionInterface
     {
-        $collection = [];
+        $entities = [];
 
         foreach ($resultSet as $record) {
-            $collection[] = $this->createEntity($record);
+            $entities[] = $this->createEntity($record);
         }
 
-        return $collection;
+        return new ItemCollection($entities, $resultSet->getTotalCount());
     }
 
     private function createEntity(array $record)
@@ -292,7 +300,7 @@ final class Repository implements RepositoryInterface
         return $parameters;
     }
 
-    private function execute(Command $command) : array
+    private function execute(Command $command) : CollectionInterface
     {
         if (null !== $this->identity) {
             $command = $command->withIdentity($this->identity);

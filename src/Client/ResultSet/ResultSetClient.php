@@ -15,6 +15,8 @@ use Soliant\SimpleFM\Client\ResultSet\Transformer\DateTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\NumberTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\TextTransformer;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\TimeTransformer;
+use Soliant\SimpleFM\Collection\CollectionInterface;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 
@@ -38,7 +40,7 @@ final class ResultSetClient implements ResultSetClientInterface
         $this->initializeTransformers($serverTimeZone);
     }
 
-    public function execute(Command $command) : array
+    public function execute(Command $command) : CollectionInterface
     {
         $xml = $this->connection->execute($command, self::GRAMMAR_PATH);
         $errorCode = (int) $xml->error['code'];
@@ -46,7 +48,7 @@ final class ResultSetClient implements ResultSetClientInterface
 
         if (8 === $errorCode || 401 === $errorCode) {
             // "Empty result" or "No records match the request"
-            return [];
+            return new ItemCollection([], 0);
         } elseif ($errorCode > 0) {
             throw FileMakerException::fromErrorCode($errorCode);
         }
@@ -74,7 +76,7 @@ final class ResultSetClient implements ResultSetClientInterface
             );
         }
 
-        return $records;
+        return new ItemCollection($records, (int) $xml->resultset[0]['count']);
     }
 
     public function quoteString(string $string) : string

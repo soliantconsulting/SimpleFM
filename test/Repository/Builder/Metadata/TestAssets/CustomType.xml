@@ -3,7 +3,7 @@
     xmlns="uri:soliantconsulting.com:simplefm:entity-metadata"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="uri:soliantconsulting.com:simplefm:entity-metadata
-        https://soliantconsulting.github.io/SimpleFM/xsd/entity-metadata-5-0.xml"
+        https://soliantconsulting.github.io/SimpleFM/entity-metadata-5-0.xsd"
     class-name="CustomType"
     layout="custom-type-layout"
 >

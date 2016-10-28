@@ -1,0 +1,19 @@
+<?xml version ="1.0" encoding="UTF-8" standalone="no" ?><!DOCTYPE fmresultset PUBLIC "-//FMI//DTD fmresultset//EN"
+        "http://localhost/fmi/xml/fmresultset.dtd">
+<fmresultset xmlns="http://www.filemaker.com/xml/fmresultset" version="1.0">
+    <error code="0"></error>
+    <product build="04/07/2016" name="FileMaker Web Publishing Engine" version="15.0.1.137"></product>
+    <datasource database="XmlSchemaDemo" date-format="MM/dd/yyyy" layout="Parent" table="Parent" time-format="HH:mm:ss"
+                timestamp-format="MM/dd/yyyy HH:mm:ss" total-count="1"></datasource>
+    <metadata>
+        <field-definition auto-enter="yes" four-digit-year="no" global="no" max-repeat="1" name="id" not-empty="no"
+                          numeric-only="yes" result="fake" time-of-day="no" type="normal"></field-definition>
+    </metadata>
+    <resultset count="1" fetch-size="1">
+        <record mod-id="5" record-id="1">
+            <field name="Fake Field">
+                <data>94.82918507895723447869</data>
+            </field>
+        </record>
+    </resultset>
+</fmresultset>

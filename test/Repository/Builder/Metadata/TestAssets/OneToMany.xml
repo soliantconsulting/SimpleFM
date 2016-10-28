@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity
+    xmlns="uri:soliantconsulting.com:simplefm:entity-metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="uri:soliantconsulting.com:simplefm:entity-metadata
+        https://soliantconsulting.github.io/SimpleFM/entity-metadata-5-0.xsd"
+    class-name="OneToMany"
+    layout="one-to-many-layout"
+>
+    <one-to-many property="bar" target-table="baz" target-entity="bat" target-field-name="bau"/>
+</entity>

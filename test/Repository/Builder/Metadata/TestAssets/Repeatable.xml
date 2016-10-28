@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<entity
+    xmlns="uri:soliantconsulting.com:simplefm:entity-metadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="uri:soliantconsulting.com:simplefm:entity-metadata
+        https://soliantconsulting.github.io/SimpleFM/entity-metadata-5-0.xsd"
+    class-name="Repeatable"
+    layout="repeatable-layout"
+>
+    <field name="default" property="default" type="string"/>
+    <field name="true" property="true" type="string" repeatable="true"/>
+    <field name="false" property="false" type="string" repeatable="false"/>
+</entity>

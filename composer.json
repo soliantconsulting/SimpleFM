@@ -42,11 +42,6 @@
             "SoliantTest\\SimpleFM\\": "test/"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "5.0.x-dev"
-        }
-    },
     "scripts": {
         "check": [
             "@cs",

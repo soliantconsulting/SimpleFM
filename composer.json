@@ -38,10 +38,5 @@
             "Soliant\\": "library/",
             "SoliantTest\\": "tests/"
         }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "5.0.x-dev"
-        }
     }
 }

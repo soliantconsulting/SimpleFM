@@ -14,11 +14,13 @@ use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilder;
 use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
+use Soliant\SimpleFM\Repository\Builder\Type\DateType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
 use Soliant\SimpleFM\Repository\Builder\Type\IntegerType;
 use Soliant\SimpleFM\Repository\Builder\Type\StreamType;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
+use Soliant\SimpleFM\Repository\Builder\Type\TimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
 final class MetadataBuilderTest extends TestCase
@@ -136,11 +138,13 @@ final class MetadataBuilderTest extends TestCase
 
         $this->assertInstanceOf(BooleanType::class, $fieldTypes['boolean']);
         $this->assertInstanceOf(DateTimeType::class, $fieldTypes['date-time']);
+        $this->assertInstanceOf(DateType::class, $fieldTypes['date']);
         $this->assertInstanceOf(DecimalType::class, $fieldTypes['decimal']);
         $this->assertInstanceOf(FloatType::class, $fieldTypes['float']);
         $this->assertInstanceOf(IntegerType::class, $fieldTypes['integer']);
         $this->assertInstanceOf(StreamType::class, $fieldTypes['stream']);
         $this->assertInstanceOf(StringType::class, $fieldTypes['string']);
+        $this->assertInstanceOf(TimeType::class, $fieldTypes['time']);
     }
 
     public function testCustomType()

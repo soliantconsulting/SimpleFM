@@ -13,11 +13,13 @@ use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
 use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
+use Soliant\SimpleFM\Repository\Builder\Type\DateType;
 use Soliant\SimpleFM\Repository\Builder\Type\DecimalType;
 use Soliant\SimpleFM\Repository\Builder\Type\FloatType;
 use Soliant\SimpleFM\Repository\Builder\Type\IntegerType;
 use Soliant\SimpleFM\Repository\Builder\Type\StreamType;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
+use Soliant\SimpleFM\Repository\Builder\Type\TimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
 final class MetadataBuilder implements MetadataBuilderInterface
@@ -87,11 +89,13 @@ final class MetadataBuilder implements MetadataBuilderInterface
         return [
             'boolean' => new BooleanType(),
             'date-time' => new DateTimeType(),
+            'date' => new DateType(),
             'decimal' => new DecimalType(),
             'float' => new FloatType(),
             'integer' => new IntegerType(),
             'stream' => new StreamType(),
             'string' => new StringType(),
+            'time' => new TimeType(),
         ];
     }
 

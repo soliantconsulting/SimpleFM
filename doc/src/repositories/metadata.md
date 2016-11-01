@@ -44,11 +44,13 @@ type
 
     * **boolean**: will treat any value other than "0" or "" as true
     * **date-time**: will treat the value as `DateTimeImmutable`
+    * **date**: will treat the value as `DateTimeImmutable` and convert it to a pure date
     * **decimal**: will treat the numeric value as `Decimal` object
     * **float**: will treat the numeric value as float
     * **integer**: will treat the numeric value as integer
     * **stream**: will treat the value as lazy loaded `StreamInterface`
     * **string**: will treat the value as string
+    * **time**: will treat the value as `DateTimeImmutable` and convert it to a pure time
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>

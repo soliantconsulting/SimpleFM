@@ -9,9 +9,11 @@
 >
     <field name="boolean" property="boolean" type="boolean"/>
     <field name="date-time" property="date-time" type="date-time"/>
+    <field name="date" property="date" type="date"/>
     <field name="decimal" property="decimal" type="decimal"/>
     <field name="float" property="float" type="float"/>
     <field name="integer" property="integer" type="integer"/>
     <field name="stream" property="stream" type="stream"/>
     <field name="string" property="string" type="string"/>
+    <field name="time" property="time" type="time"/>
 </entity>

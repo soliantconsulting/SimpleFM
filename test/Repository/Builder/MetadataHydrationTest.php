@@ -21,6 +21,7 @@ use Soliant\SimpleFM\Repository\Builder\RepositoryBuilderInterface;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
 use Soliant\SimpleFM\Repository\RepositoryInterface;
 use SoliantTest\SimpleFM\Repository\Builder\TestAssets\EmptyEntityInterface;
+use SoliantTest\SimpleFM\Repository\Builder\TestAssets\EmptyProxyEntityInterface;
 
 final class MetadataHydrationTest extends TestCase
 {
@@ -175,7 +176,7 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', 'child', 'id', 'ID', false),
+            new ManyToOne('bat', 'baz', 'bar', 'child', 'id', 'ID', EmptyProxyEntityInterface::class, false),
         ], [], null, EmptyEntityInterface::class);
 
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -189,7 +190,7 @@ final class MetadataHydrationTest extends TestCase
 
         $proxyBuilder = $this->prophesize(ProxyBuilderInterface::class);
         $proxyBuilder->createProxy(
-            EmptyEntityInterface::class,
+            EmptyProxyEntityInterface::class,
             Argument::type('closure'),
             '5'
         )->will($this->createMockProxy());
@@ -211,7 +212,7 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', 'child', 'id', 'ID', false),
+            new ManyToOne('bat', 'baz', 'bar', 'child', 'id', 'ID', EmptyProxyEntityInterface::class, false),
         ], [], null, EmptyEntityInterface::class);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -235,7 +236,7 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'child', 'ID', true, false, 'id', 'child-id'),
+            new OneToOne('baz', 'bar', 'child', 'ID', EmptyProxyEntityInterface::class, true, false, 'id', 'child-id'),
         ], null, EmptyEntityInterface::class);
 
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -249,7 +250,7 @@ final class MetadataHydrationTest extends TestCase
 
         $proxyBuilder = $this->prophesize(ProxyBuilderInterface::class);
         $proxyBuilder->createProxy(
-            EmptyEntityInterface::class,
+            EmptyProxyEntityInterface::class,
             Argument::type('closure'),
             '5'
         )->will($this->createMockProxy());
@@ -271,7 +272,7 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'child', 'ID', true, false, 'id', 'child-id'),
+            new OneToOne('baz', 'bar', 'child', 'ID', EmptyProxyEntityInterface::class, true, false, 'id', 'child-id'),
         ], null, EmptyEntityInterface::class);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -295,7 +296,7 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'parent', 'ID', false, false),
+            new OneToOne('baz', 'bar', 'parent', 'ID', EmptyProxyEntityInterface::class, false, false),
         ], null, EmptyEntityInterface::class);
 
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -309,7 +310,7 @@ final class MetadataHydrationTest extends TestCase
 
         $proxyBuilder = $this->prophesize(ProxyBuilderInterface::class);
         $proxyBuilder->createProxy(
-            EmptyEntityInterface::class,
+            EmptyProxyEntityInterface::class,
             Argument::type('closure'),
             '5'
         )->will($this->createMockProxy());
@@ -331,7 +332,7 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'parent', 'ID', false, false),
+            new OneToOne('baz', 'bar', 'parent', 'ID', EmptyProxyEntityInterface::class, false, false),
         ], null, EmptyEntityInterface::class);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);

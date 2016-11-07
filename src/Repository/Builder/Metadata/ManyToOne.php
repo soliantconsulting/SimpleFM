@@ -36,6 +36,11 @@ final class ManyToOne
     private $targetFieldName;
 
     /**
+     * @var string
+     */
+    private $targetInterfaceName;
+
+    /**
      * @var bool
      */
     private $readOnly;
@@ -47,6 +52,7 @@ final class ManyToOne
         string $targetEntity,
         string $targetPropertyName,
         string $targetFieldName,
+        string $targetInterfaceName,
         bool $readOnly
     ) {
         $this->fieldName = $fieldName;
@@ -55,6 +61,7 @@ final class ManyToOne
         $this->targetEntity = $targetEntity;
         $this->targetPropertyName = $targetPropertyName;
         $this->targetFieldName = $targetFieldName;
+        $this->targetInterfaceName = $targetInterfaceName;
         $this->readOnly = $readOnly;
     }
 
@@ -86,6 +93,11 @@ final class ManyToOne
     public function getTargetFieldName() : string
     {
         return $this->targetFieldName;
+    }
+
+    public function getTargetInterfaceName() : string
+    {
+        return $this->targetInterfaceName;
     }
 
     public function isReadOnly() : bool

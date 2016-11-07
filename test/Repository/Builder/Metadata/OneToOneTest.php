@@ -16,6 +16,7 @@ final class OneToOneTest extends TestCase
             'targetTable',
             'targetEntity',
             'targetFieldName',
+            'targetInterfaceName',
             true,
             true,
             'fieldName',
@@ -24,6 +25,7 @@ final class OneToOneTest extends TestCase
         $this->assertSame('propertyName', $metadata->getPropertyName());
         $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
+        $this->assertSame('targetInterfaceName', $metadata->getTargetInterfaceName());
         $this->assertTrue($metadata->isOwningSide());
         $this->assertTrue($metadata->isReadOnly());
         $this->assertSame('fieldName', $metadata->getFieldName());
@@ -34,7 +36,15 @@ final class OneToOneTest extends TestCase
     public function testExceptionOnMissingProperties()
     {
         $this->expectException(InvalidArgumentException::class);
-        new OneToOne('propertyName', 'targetTable', 'targetEntity', 'targetFieldName', true, false);
+        new OneToOne(
+            'propertyName',
+            'targetTable',
+            'targetEntity',
+            'targetFieldName',
+            'targetInterfaceName',
+            true,
+            false
+        );
     }
 
     public function testOptionalPropertiesAreSetToNullOnInverseSide()
@@ -44,6 +54,7 @@ final class OneToOneTest extends TestCase
             'targetTable',
             'targetEntity',
             'targetFieldName',
+            'targetInterfaceName',
             false,
             false,
             'foo',

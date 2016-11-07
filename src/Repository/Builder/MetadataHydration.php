@@ -147,7 +147,7 @@ final class MetadataHydration implements HydrationInterface
             $fieldName = $relationMetadata->getTargetFieldName();
             $fieldValue = (string) $data[$relationMetadata->getTargetTable()][0][$fieldName];
 
-            $proxy = $this->proxyBuilder->createProxy($metadata->getInterfaceName(), function () use (
+            $proxy = $this->proxyBuilder->createProxy($relationMetadata->getTargetInterfaceName(), function () use (
                 $repository,
                 $fieldName,
                 $fieldValue

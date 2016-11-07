@@ -15,6 +15,7 @@ use Soliant\SimpleFM\Repository\Builder\MetadataExtraction;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
 use SoliantTest\SimpleFM\Repository\Builder\TestAssets\EmptyEntityInterface;
+use SoliantTest\SimpleFM\Repository\Builder\TestAssets\EmptyProxyEntityInterface;
 
 final class MetadataExtractionTest extends TestCase
 {
@@ -134,7 +135,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testManyToOneExtractionWithEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -143,7 +144,16 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID', false),
+            new ManyToOne(
+                'bat',
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'id',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false
+            ),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -152,7 +162,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testManyToOneExtractionWithProxyEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -161,7 +171,16 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $this->createMockProxy($childEntity, 5);
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID', false),
+            new ManyToOne(
+                'bat',
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'id',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false
+            ),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -170,7 +189,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testManyToOneReadOnlyExtractionWithEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -179,7 +198,16 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID', true),
+            new ManyToOne(
+                'bat',
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'id',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true
+            ),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -188,14 +216,23 @@ final class MetadataExtractionTest extends TestCase
 
     public function testManyToOneExtractionWithoutEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
         };
         $entity = new class {
             public $baz = null;
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', get_class($childEntity), 'id', 'ID', false),
+            new ManyToOne(
+                'bat',
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'id',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false
+            ),
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -204,7 +241,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testOneToOneOwningExtractionWithEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -213,7 +250,17 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, false, 'bat', 'id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true,
+                false,
+                'bat',
+                'id'
+            ),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -222,7 +269,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testOneToOneOwningExtractionWithProxyEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -231,7 +278,17 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $this->createMockProxy($childEntity, 5);
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, false, 'bat', 'id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true,
+                false,
+                'bat',
+                'id'
+            ),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -240,7 +297,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testOneToOneOwningReadOnlyExtractionWithEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -249,7 +306,17 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, true, 'bat', 'id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true,
+                true,
+                'bat',
+                'id'
+            ),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -258,14 +325,24 @@ final class MetadataExtractionTest extends TestCase
 
     public function testOneToOneOwningExtractionWithoutEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
         };
         $entity = new class {
             public $baz = null;
         };
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', true, false, 'bat', 'id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true,
+                false,
+                'bat',
+                'id'
+            ),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
@@ -274,7 +351,7 @@ final class MetadataExtractionTest extends TestCase
 
     public function testOneToOneInverseExtractionWithEntity()
     {
-        $childEntity = new class {
+        $childEntity = new class implements EmptyProxyEntityInterface {
             private $id = 5;
         };
         $entity = new class {
@@ -283,7 +360,17 @@ final class MetadataExtractionTest extends TestCase
         $entity->baz = $childEntity;
 
         $entityMetadata = new Entity('foo', get_class($entity), [], [], [], [], [
-            new OneToOne('baz', 'bar', get_class($childEntity), 'ID', false, false, 'bat', 'id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                get_class($childEntity),
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false,
+                false,
+                'bat',
+                'id'
+            ),
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);

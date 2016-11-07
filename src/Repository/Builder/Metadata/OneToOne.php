@@ -23,6 +23,11 @@ final class OneToOne
     private $targetEntity;
 
     /**
+     * @var string
+     */
+    private $targetInterfaceName;
+
+    /**
      * @var bool
      */
     private $isOwningSide;
@@ -52,6 +57,7 @@ final class OneToOne
         string $targetTable,
         string $targetEntity,
         string $targetFieldName,
+        string $targetInterfaceName,
         bool $isOwningSide,
         bool $readOnly,
         string $fieldName = null,
@@ -66,6 +72,7 @@ final class OneToOne
         $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
         $this->targetFieldName = $targetFieldName;
+        $this->targetInterfaceName = $targetInterfaceName;
         $this->isOwningSide = $isOwningSide;
         $this->readOnly = $isOwningSide ? $readOnly : true;
         $this->fieldName = $isOwningSide ? $fieldName : null;
@@ -90,6 +97,11 @@ final class OneToOne
     public function getTargetFieldName() : string
     {
         return $this->targetFieldName;
+    }
+
+    public function getTargetInterfaceName() : string
+    {
+        return $this->targetInterfaceName;
     }
 
     public function isOwningSide() : bool

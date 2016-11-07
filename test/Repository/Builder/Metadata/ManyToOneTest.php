@@ -17,6 +17,7 @@ final class ManyToOneTest extends TestCase
             'targetEntity',
             'targetPropertyName',
             'targetFieldName',
+            'targetInterfaceName',
             true
         );
         $this->assertSame('fieldName', $metadata->getFieldName());
@@ -25,6 +26,7 @@ final class ManyToOneTest extends TestCase
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
         $this->assertSame('targetPropertyName', $metadata->getTargetPropertyName());
         $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
+        $this->assertSame('targetInterfaceName', $metadata->getTargetInterfaceName());
         $this->assertTrue($metadata->isReadOnly());
     }
 }

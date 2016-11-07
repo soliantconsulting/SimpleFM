@@ -11,6 +11,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use SimpleXMLElement;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\MissingInterfaceException;
 use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateType;
@@ -157,6 +158,10 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-entity'],
                     (string) $relation['target-property-name'],
                     (string) $relation['target-field-name'],
+                    $this->getInterfaceNameForRelation(
+                        (string) $xml['class-name'],
+                        (string) $relation['target-entity']
+                    ),
                     (isset($relation['read-only']) && (string) $relation['read-only'] === 'true')
                 );
             }
@@ -169,6 +174,10 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     (string) $relation['target-field-name'],
+                    $this->getInterfaceNameForRelation(
+                        (string) $xml['class-name'],
+                        (string) $relation['target-entity']
+                    ),
                     true,
                     (isset($relation['read-only']) && (string) $relation['read-only'] === 'true'),
                     (string) $relation['name'],
@@ -184,6 +193,10 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
                     (string) $relation['target-field-name'],
+                    $this->getInterfaceNameForRelation(
+                        (string) $xml['class-name'],
+                        (string) $relation['target-entity']
+                    ),
                     false,
                     false
                 );
@@ -224,5 +237,16 @@ final class MetadataBuilder implements MetadataBuilderInterface
     private function buildFilename(string $className) : string
     {
         return str_replace('\\', '.', $className) . '.xml';
+    }
+
+    private function getInterfaceNameForRelation(string $mainEntityClassName, string $relationEntityClassName) : string
+    {
+        $entityMetadata = $this->getMetadata($relationEntityClassName);
+
+        if (!$entityMetadata->hasInterfaceName()) {
+            throw MissingInterfaceException::fromMissingInterface($mainEntityClassName, $relationEntityClassName);
+        }
+
+        return $entityMetadata->getInterfaceName();
     }
 }

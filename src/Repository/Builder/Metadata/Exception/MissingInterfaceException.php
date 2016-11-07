@@ -10,7 +10,8 @@ final class MissingInterfaceException extends DomainException implements Excepti
     public static function fromMissingInterface(string $mainEntityClassName, string $relationEntityClassName) : self
     {
         return new self(sprintf(
-            'Relation on entity "%s" to entity "%s" requires the latter to have an interface specified, bus is not',
+            'Relation on entity "%1$s" to entity "%2$s" requires the interface-name to be specified in the "%2$s"'
+            . ' entity-metadata',
             $mainEntityClassName,
             $relationEntityClassName
         ));

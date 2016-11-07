@@ -32,6 +32,10 @@ final class MetadataExtraction implements ExtractionInterface
 
     private function extractWithMetadata($entity, Entity $metadata) : array
     {
+        if ($entity instanceof ProxyInterface) {
+            $entity = $entity->__getRealEntity();
+        }
+
         Assertion::isInstanceOf($entity, $metadata->getClassName());
 
         $data = [];

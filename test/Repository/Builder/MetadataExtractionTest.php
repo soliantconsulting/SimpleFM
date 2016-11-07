@@ -14,6 +14,7 @@ use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
 use Soliant\SimpleFM\Repository\Builder\MetadataExtraction;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Builder\Type\StringType;
+use SoliantTest\SimpleFM\Repository\Builder\TestAssets\EmptyEntityInterface;
 
 final class MetadataExtractionTest extends TestCase
 {
@@ -29,6 +30,42 @@ final class MetadataExtractionTest extends TestCase
 
         $extraction = new MetadataExtraction($entityMetadata);
         $this->assertSame(['bar' => 'bat'], $extraction->extract($entity));
+    }
+
+    public function testProxyExtraction()
+    {
+        $entity = new class {
+            private $baz = 'bat';
+        };
+
+        $proxyEntity = new class($entity, 1) implements ProxyInterface, EmptyEntityInterface {
+            private $entity;
+
+            private $relationId;
+
+            public function __construct($entity, $relationId)
+            {
+                $this->entity = $entity;
+                $this->relationId = $relationId;
+            }
+
+            public function __getRealEntity()
+            {
+                return $this->entity;
+            }
+
+            public function __getRelationId()
+            {
+                return $this->relationId;
+            }
+        };
+
+        $entityMetadata = new Entity('foo', get_class($entity), [
+            new Field('bar', 'baz', new StringType(), false, false),
+        ], [], [], [], [], null, EmptyEntityInterface::class);
+
+        $extraction = new MetadataExtraction($entityMetadata);
+        $this->assertSame(['bar' => 'bat'], $extraction->extract($proxyEntity));
     }
 
     public function testRepeatableFieldExtraction()

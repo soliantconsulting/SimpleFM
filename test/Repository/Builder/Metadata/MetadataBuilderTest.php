@@ -11,6 +11,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\MissingInterfaceException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilder;
 use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
 use Soliant\SimpleFM\Repository\Builder\Type\DateTimeType;
@@ -249,6 +250,15 @@ final class MetadataBuilderTest extends TestCase
         $this->assertSame('bau', $relation->getTargetPropertyName());
         $this->assertSame('bai', $relation->getTargetFieldName());
         $this->assertSame('RelationTargetInterface', $relation->getTargetInterfaceName());
+    }
+
+    public function testManyToOneWithoutInterface()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+
+        $this->expectException(MissingInterfaceException::class);
+        $this->expectExceptionMessage('entity "ManyToOneWithoutInterface" to entity "RelationTargetWithoutInterface"');
+        $builder->getMetadata('ManyToOneWithoutInterface');
     }
 
     public function testOneToOneOwning()

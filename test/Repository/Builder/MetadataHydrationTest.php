@@ -27,7 +27,8 @@ final class MetadataHydrationTest extends TestCase
 {
     public function testSimpleFieldHydration()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -46,7 +47,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testRepeatableFieldHydration()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -65,7 +67,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testRepeatableFieldHydrationWithoutArray()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -85,7 +88,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testReadOnlyFieldHydration()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -104,7 +108,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testRecordIdHydration()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -121,10 +126,12 @@ final class MetadataHydrationTest extends TestCase
 
     public function testEmbeddableHydrationWithoutPrefix()
     {
-        $embeddablePrototype = new class {
+        $embeddablePrototype = new class
+        {
             public $foo;
         };
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -146,10 +153,12 @@ final class MetadataHydrationTest extends TestCase
 
     public function testEmbeddableHydrationWithPrefix()
     {
-        $embeddablePrototype = new class {
+        $embeddablePrototype = new class
+        {
             public $foo;
         };
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -171,7 +180,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testManyToOneHydrationWithChild()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -207,7 +217,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testManyToOneHydrationWithoutEntity()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -231,7 +242,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testOneToOneOwningHydrationWithEntity()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -267,7 +279,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testOneToOneOwningHydrationWithoutEntity()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -291,7 +304,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testOneToOneInverseHydrationWithEntity()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -327,7 +341,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testOneToOneInverseHydrationWithoutEntity()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $baz;
         };
 
@@ -351,7 +366,8 @@ final class MetadataHydrationTest extends TestCase
 
     public function testOneToManyHydrationWithEntity()
     {
-        $entityPrototype = new class {
+        $entityPrototype = new class
+        {
             public $bar;
         };
 
@@ -384,7 +400,8 @@ final class MetadataHydrationTest extends TestCase
     private function createMockProxy() : callable
     {
         return function (array $parameters) {
-            return new class($parameters[1](), $parameters[2]) implements ProxyInterface {
+            return new class($parameters[1](), $parameters[2]) implements ProxyInterface
+            {
                 private $realEntity;
 
                 private $relationId;

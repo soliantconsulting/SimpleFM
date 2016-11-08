@@ -12,8 +12,6 @@ use Soliant\SimpleFM\Client\ResultSet\Exception\ParseException;
 use Soliant\SimpleFM\Client\ResultSet\Exception\UnknownFieldException;
 use Soliant\SimpleFM\Client\ResultSet\ResultSetClient;
 use Soliant\SimpleFM\Client\ResultSet\Transformer\StreamProxy;
-use Soliant\SimpleFM\Collection\CollectionInterface;
-use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Connection\Command;
 use Soliant\SimpleFM\Connection\ConnectionInterface;
 

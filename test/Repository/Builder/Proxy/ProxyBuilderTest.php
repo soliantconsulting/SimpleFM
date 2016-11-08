@@ -66,7 +66,7 @@ final class ProxyBuilderTest extends TestCase
     public function testInvalidInitializerReturn()
     {
         $proxyBuilder = new ProxyBuilder();
-        $proxy =  $proxyBuilder->createProxy(SimpleGetterInterface::class, function () {
+        $proxy = $proxyBuilder->createProxy(SimpleGetterInterface::class, function () {
             return new stdClass();
         }, 1);
 

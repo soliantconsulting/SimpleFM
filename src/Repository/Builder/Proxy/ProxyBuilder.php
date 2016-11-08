@@ -5,6 +5,7 @@ namespace Soliant\SimpleFM\Repository\Builder\Proxy;
 
 use ReflectionClass;
 use ReflectionMethod;
+use Soliant\SimpleFM\Repository\Builder\Proxy\Exception\InvalidInterfaceException;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
 use Zend\Code\Generator\MethodGenerator;
@@ -46,7 +47,7 @@ final class ProxyBuilder implements ProxyBuilderInterface
         $reflectionClass = new ReflectionClass($entityInterfaceName);
 
         if (!$reflectionClass->isInterface()) {
-            // @todo throw exception
+            throw InvalidInterfaceException::fromInvalidInterface($entityInterfaceName);
         }
 
         $classGenerator = new ClassGenerator();
@@ -84,7 +85,7 @@ final class ProxyBuilder implements ProxyBuilderInterface
                 \Assert\Assertion::isInstanceOf($this->realEntity, \\' . $entityInterfaceName . '::class);
             };
 
-            return $this->relationId;
+            return $this->realEntity;
         ');
         $classGenerator->addMethodFromGenerator($getRealEntityGenerator);
 

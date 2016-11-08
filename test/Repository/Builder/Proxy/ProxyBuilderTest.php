@@ -5,7 +5,9 @@ namespace SoliantTest\SimpleFM\Repository\Builder;
 
 use Assert\InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
+use Soliant\SimpleFM\Repository\Builder\Proxy\Exception\InvalidInterfaceException;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilder;
+use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use SoliantTest\SimpleFM\Repository\Builder\Proxy\TestAssets\ComplexSetterInterface;
 use SoliantTest\SimpleFM\Repository\Builder\Proxy\TestAssets\SimpleGetterInterface;
 use SoliantTest\SimpleFM\Repository\Builder\Proxy\TestAssets\SimpleSetterInterface;
@@ -14,6 +16,37 @@ use stdClass;
 
 final class ProxyBuilderTest extends TestCase
 {
+    public function testInternalProxyMethods()
+    {
+        $realEntity = new class implements SimpleGetterInterface
+        {
+            public function getFoo() : string
+            {
+                return '';
+            }
+        };
+
+        $proxyBuilder = new ProxyBuilder();
+        $proxy = $proxyBuilder->createProxy(SimpleGetterInterface::class, function () use ($realEntity) {
+            return $realEntity;
+        }, 1);
+
+        $this->assertInstanceOf(ProxyInterface::class, $proxy);
+        $this->assertInstanceOf(SimpleGetterInterface::class, $proxy);
+        $this->assertSame(1, $proxy->__getRelationId());
+        $this->assertSame($realEntity, $proxy->__getRealEntity());
+    }
+
+    public function testExceptionOnInvalidInterface()
+    {
+        $proxyBuilder = new ProxyBuilder();
+
+        $this->expectException(InvalidInterfaceException::class);
+        $this->expectExceptionMessage('"stdClass" was expected to be an interface');
+        $proxyBuilder->createProxy(stdClass::class, function () {
+        }, 1);
+    }
+
     public function testSimpleGetter()
     {
         $proxyBuilder = new ProxyBuilder();

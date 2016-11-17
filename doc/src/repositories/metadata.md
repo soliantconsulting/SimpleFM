@@ -48,6 +48,7 @@ type
     * **decimal**: will treat the numeric value as `Decimal` object
     * **float**: will treat the numeric value as float
     * **integer**: will treat the numeric value as integer
+    * **nullable-string**: will treat the value as string but convert an empty string to null
     * **stream**: will treat the value as lazy loaded `StreamInterface`
     * **string**: will treat the value as string
     * **time**: will treat the value as `DateTimeImmutable` and convert it to a pure time

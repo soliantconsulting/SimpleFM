@@ -5,46 +5,45 @@ namespace SoliantTest\SimpleFM\Repository\Builder\Type;
 
 use Assert\InvalidArgumentException;
 use PHPUnit_Framework_TestCase as TestCase;
-use Soliant\SimpleFM\Repository\Builder\Type\StringType;
+use Soliant\SimpleFM\Repository\Builder\Type\NullableStringType;
 
-final class StringTypeTest extends TestCase
+final class NullableStringTypeTest extends TestCase
 {
     public function testSuccessfulConversionFromFileMaker()
     {
-        $type = new StringType();
+        $type = new NullableStringType();
         $this->assertSame('foo', $type->fromFileMakerValue('foo'));
     }
 
-    public function testEmptyStringConversionFromFileMaker()
+    public function testNullConversionFromFileMaker()
     {
-        $type = new StringType();
-        $this->assertSame('', $type->fromFileMakerValue(''));
+        $type = new NullableStringType();
+        $this->assertNull($type->fromFileMakerValue(''));
     }
 
     public function testUnsuccessfulConversionFromFileMaker()
     {
-        $type = new StringType();
+        $type = new NullableStringType();
         $this->expectException(InvalidArgumentException::class);
         $type->fromFileMakerValue(1);
     }
 
     public function testSuccessfulConversionToFileMaker()
     {
-        $type = new StringType();
+        $type = new NullableStringType();
         $this->assertSame('foo', $type->toFileMakerValue('foo'));
+    }
+
+    public function testNullConversionToFileMaker()
+    {
+        $type = new NullableStringType();
+        $this->assertSame('', $type->toFileMakerValue(null));
     }
 
     public function testUnsuccessfulConversionToFileMaker()
     {
-        $type = new StringType();
+        $type = new NullableStringType();
         $this->expectException(InvalidArgumentException::class);
         $type->toFileMakerValue(1);
-    }
-
-    public function testUnsuccessfulNullConversionToFileMaker()
-    {
-        $type = new StringType();
-        $this->expectException(InvalidArgumentException::class);
-        $type->toFileMakerValue(null);
     }
 }

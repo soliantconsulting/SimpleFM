@@ -84,7 +84,7 @@ final class MetadataExtractionTest extends TestCase
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bar' => ['bat1', 'bat2']], $extraction->extract($entity));
+        $this->assertSame(['bar(1)' => 'bat1', 'bar(2)' => 'bat2'], $extraction->extract($entity));
     }
 
     public function testReadOnlyFieldExtraction()

@@ -46,6 +46,8 @@ final class MetadataExtraction implements ExtractionInterface
                 continue;
             }
 
+            $fieldName = $fieldMetadata->getFieldName();
+
             try {
                 $type = $fieldMetadata->getType();
                 $value = $this->getProperty(
@@ -55,14 +57,16 @@ final class MetadataExtraction implements ExtractionInterface
                 );
 
                 if (!$fieldMetadata->isRepeatable()) {
-                    $data[$fieldMetadata->getFieldName()] = $type->toFileMakerValue($value);
+                    $data[$fieldName] = $type->toFileMakerValue($value);
                     continue;
                 }
 
                 Assertion::isArray($value);
-                $data[$fieldMetadata->getFieldName()] = array_map(function ($value) use ($type) {
-                    return $type->toFileMakerValue($value);
-                }, $value);
+                $index = 0;
+
+                foreach ($value as $individualValue) {
+                    $data[sprintf('%s(%d)', $fieldName, ++$index)] = $type->toFileMakerValue($individualValue);
+                }
             } catch (Exception $e) {
                 throw ExtractionException::fromInvalidField($metadata, $fieldMetadata, $e);
             }

@@ -29,8 +29,8 @@ $connection = new Connection(
 # Creating a result set client
 
 With the connection in place, you are now able to create a result set client. Beside the connection, the result set
-client also requires a `DateTimeZone` object to be able to interpret the local times it receives from the file maker
-server correctly. This one should be set to the time zone your server operates on.
+client also requires a `DateTimeZone` object to be able to interpret the local times it receives from FileMaker
+Server correctly. This one should be set to the time zone your server operates on.
 
 ```php
 <?php
@@ -41,8 +41,8 @@ $resultSetClient = new ResultSetClient($connection, new DateTimeZone('UTC'));
 
 # Running your first query
 
-To retrieve data from your file maker server, you can use the result set client to execute abitrary commands. It will
-automatically populate an array with the records it receives based on the meta data the file maker server returns with
+To retrieve data from your FileMaker Server, you can use the result set client to execute abitrary commands. It will
+automatically populate an array with the records it receives based on the meta data the FileMaker Server returns with
 every response. This means that any date or time based field is cast to a `DateTimeImmutable` object, any number is
 cast to a `Decimal` object and file containers are cast to a `StreamInterface`.
 

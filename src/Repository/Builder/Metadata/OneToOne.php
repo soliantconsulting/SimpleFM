@@ -30,7 +30,7 @@ final class OneToOne
     /**
      * @var bool
      */
-    private $isOwningSide;
+    private $owningSide;
 
     /**
      * @var bool
@@ -52,18 +52,24 @@ final class OneToOne
      */
     private $targetFieldName;
 
+    /**
+     * @var bool
+     */
+    private $eagerHydration;
+
     public function __construct(
         string $propertyName,
         string $targetTable,
         string $targetEntity,
         string $targetFieldName,
         string $targetInterfaceName,
-        bool $isOwningSide,
+        bool $owningSide,
         bool $readOnly,
         string $fieldName = null,
-        string $targetPropertyName = null
+        string $targetPropertyName = null,
+        bool $eagerHydration = false
     ) {
-        if ($isOwningSide) {
+        if ($owningSide) {
             Assertion::notNull($fieldName);
             Assertion::notNull($targetPropertyName);
         }
@@ -73,10 +79,11 @@ final class OneToOne
         $this->targetEntity = $targetEntity;
         $this->targetFieldName = $targetFieldName;
         $this->targetInterfaceName = $targetInterfaceName;
-        $this->isOwningSide = $isOwningSide;
-        $this->readOnly = $isOwningSide ? $readOnly : true;
-        $this->fieldName = $isOwningSide ? $fieldName : null;
-        $this->targetPropertyName = $isOwningSide ? $targetPropertyName : null;
+        $this->owningSide = $owningSide;
+        $this->readOnly = $owningSide ? $readOnly : true;
+        $this->fieldName = $owningSide ? $fieldName : null;
+        $this->targetPropertyName = $owningSide ? $targetPropertyName : null;
+        $this->eagerHydration = $eagerHydration;
     }
 
     public function getPropertyName() : string
@@ -106,7 +113,7 @@ final class OneToOne
 
     public function isOwningSide() : bool
     {
-        return $this->isOwningSide;
+        return $this->owningSide;
     }
 
     public function getFieldName() : string
@@ -124,5 +131,10 @@ final class OneToOne
     public function isReadOnly() : bool
     {
         return $this->readOnly;
+    }
+
+    public function hasEagerHydration() : bool
+    {
+        return $this->eagerHydration;
     }
 }

@@ -45,6 +45,11 @@ final class ManyToOne
      */
     private $readOnly;
 
+    /**
+     * @var bool
+     */
+    private $eagerHydration;
+
     public function __construct(
         string $fieldName,
         string $propertyName,
@@ -53,7 +58,8 @@ final class ManyToOne
         string $targetPropertyName,
         string $targetFieldName,
         string $targetInterfaceName,
-        bool $readOnly
+        bool $readOnly,
+        bool $eagerHydration = false
     ) {
         $this->fieldName = $fieldName;
         $this->propertyName = $propertyName;
@@ -63,6 +69,7 @@ final class ManyToOne
         $this->targetFieldName = $targetFieldName;
         $this->targetInterfaceName = $targetInterfaceName;
         $this->readOnly = $readOnly;
+        $this->eagerHydration = $eagerHydration;
     }
 
     public function getFieldName() : string
@@ -103,5 +110,10 @@ final class ManyToOne
     public function isReadOnly() : bool
     {
         return $this->readOnly;
+    }
+
+    public function hasEagerHydration() : bool
+    {
+        return $this->eagerHydration;
     }
 }

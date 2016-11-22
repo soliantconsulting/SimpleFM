@@ -9,6 +9,6 @@ final class DomainException extends PhpDomainException implements ExceptionInter
 {
     public static function fromAttemptedStreamConversionToFileMakerValue() : self
     {
-        return new self('Attempted conversion to file maker value was discovered, but is disallowed');
+        return new self('Attempted conversion to FileMaker value was discovered, but is disallowed');
     }
 }

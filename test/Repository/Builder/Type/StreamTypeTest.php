@@ -33,7 +33,7 @@ final class StreamTypeTest extends TestCase
     public function testExceptionOnConversionToFileMaker()
     {
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Attempted conversion to file maker value');
+        $this->expectExceptionMessage('Attempted conversion to FileMaker value');
         (new StreamType())->toFileMakerValue($this->prophesize(StreamInterface::class)->reveal());
     }
 }

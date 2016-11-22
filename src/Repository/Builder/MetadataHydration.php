@@ -6,6 +6,7 @@ namespace Soliant\SimpleFM\Repository\Builder;
 use Assert\Assertion;
 use Exception;
 use ReflectionClass;
+use Soliant\SimpleFM\Collection\ItemCollection;
 use Soliant\SimpleFM\Repository\Builder\Exception\HydrationException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilderInterface;
@@ -113,37 +114,52 @@ final class MetadataHydration implements HydrationInterface
         }
 
         foreach ($metadata->getOneToMany() as $relationMetadata) {
-            $this->setProperty(
-                $reflectionClass,
-                $entity,
-                $relationMetadata->getPropertyName(),
-                new LazyLoadedCollection(
-                    $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity()),
+            $repository = $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity());
+
+            if ($relationMetadata->hasEagerHydration()) {
+                $items = [];
+
+                foreach ($data[$relationMetadata->getTargetTable()] as $record) {
+                    $items[] = $repository->createEntity($record);
+                }
+
+                $collection = new ItemCollection($items, count($items));
+            } else {
+                $collection = new LazyLoadedCollection(
+                    $repository,
                     $relationMetadata->getTargetFieldName(),
                     $data[$relationMetadata->getTargetTable()]
-                )
-            );
+                );
+            }
+
+            $this->setProperty($reflectionClass, $entity, $relationMetadata->getPropertyName(), $collection);
         }
 
         $toOne = $metadata->getManyToOne() + $metadata->getOneToOne();
 
         foreach ($toOne as $relationMetadata) {
+            if (empty($data[$relationMetadata->getTargetTable()])) {
+                $this->setProperty($reflectionClass, $entity, $relationMetadata->getPropertyName(), null);
+                continue;
+            }
+
+            $repository = $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity());
+
+            if ($relationMetadata->hasEagerHydration()) {
+                $this->setProperty(
+                    $reflectionClass,
+                    $entity,
+                    $relationMetadata->getPropertyName(),
+                    $repository->createEntity($data[$relationMetadata->getTargetTable()][0])
+                );
+                continue;
+            }
+
             Assertion::true(
                 $metadata->hasInterfaceName(),
                 sprintf('Entity "%s" has no interface name definied', $metadata->getClassName())
             );
 
-            if (empty($data[$relationMetadata->getTargetTable()])) {
-                $this->setProperty(
-                    $reflectionClass,
-                    $entity,
-                    $relationMetadata->getPropertyName(),
-                    null
-                );
-                continue;
-            }
-
-            $repository = $this->repositoryBuilder->buildRepository($relationMetadata->getTargetEntity());
             $fieldName = $relationMetadata->getTargetFieldName();
             $fieldValue = (string) $data[$relationMetadata->getTargetTable()][0][$fieldName];
 
@@ -157,12 +173,7 @@ final class MetadataHydration implements HydrationInterface
                 ]);
             }, $fieldValue);
 
-            $this->setProperty(
-                $reflectionClass,
-                $entity,
-                $relationMetadata->getPropertyName(),
-                $proxy
-            );
+            $this->setProperty($reflectionClass, $entity, $relationMetadata->getPropertyName(), $proxy);
         }
 
         if ($metadata->hasRecordId()) {

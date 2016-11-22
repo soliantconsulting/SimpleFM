@@ -24,7 +24,7 @@ $repository->delete($oldSampleEntity);
 
 Please note that both `update()` and `delete()` only work with entities which you retrieved via the repository (also
 known as managed entities). If you try to pass an entity to those methods which is not known by the repository, you will
-get an exception. By default, both `update()` and `delete()` will instruct the file maker server to only execute that
+get an exception. By default, both `update()` and `delete()` will instruct the FileMaker Server to only execute that
 command when the `mod-id` is the same as the one from the local entity to avoid changing records which were modified in
 another place. You can disable that behaviour by passing `true` to the second `$force` parameter of those methods.
 
@@ -43,7 +43,7 @@ a simple field search. Both methods take an array field search values, where the
 array value is the actual search. By default, the search value is automatically quoted. If you need to perform more
 advanced searches, you can pass `false` to the `$autoQuoteSearch` parameter and do required quoting manually by passing
 the value to quote to the `quoteString()` method. For details about the different search options, please refer to the
-file maker documentation.
+FileMaker documentation.
 
 If you only want to retrieve all records from the layout without filterinig, there's also a `findAll()` method. All
 methods which return multiple records also accept a `$sort` parameter for sorting the results, as well as a `$limit` and

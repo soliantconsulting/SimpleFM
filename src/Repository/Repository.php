@@ -207,6 +207,18 @@ final class Repository implements RepositoryInterface
         return $this->resultSetClient->quoteString($string);
     }
 
+    public function createEntity(array $record)
+    {
+        if (array_key_exists($record['record-id'], $this->entitiesByRecordId)) {
+            $entity = $this->entitiesByRecordId[$record['record-id']];
+        } else {
+            $entity = $this->hydration->hydrateNewEntity($record);
+        }
+
+        $this->addOrUpdateManagedEntity($record['record-id'], $record['mod-id'], $entity);
+        return $entity;
+    }
+
     private function persist($entity, string $mode, array $additionalParameters = [])
     {
         $resultSet = $this->execute(new Command(
@@ -242,18 +254,6 @@ final class Repository implements RepositoryInterface
         }
 
         return new ItemCollection($entities, $resultSet->getTotalCount());
-    }
-
-    private function createEntity(array $record)
-    {
-        if (array_key_exists($record['record-id'], $this->entitiesByRecordId)) {
-            $entity = $this->entitiesByRecordId[$record['record-id']];
-        } else {
-            $entity = $this->hydration->hydrateNewEntity($record);
-        }
-
-        $this->addOrUpdateManagedEntity($record['record-id'], $record['mod-id'], $entity);
-        return $entity;
     }
 
     private function createSearchParameters(array $search, bool $autoQuoteSearch) : array

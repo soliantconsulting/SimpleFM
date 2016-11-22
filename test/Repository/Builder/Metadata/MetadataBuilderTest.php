@@ -199,6 +199,46 @@ final class MetadataBuilderTest extends TestCase
         $this->assertFalse($metadata->getOneToOne()[2]->isReadOnly());
     }
 
+    public function testEagerHydrationOneToMany()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('EagerHydration');
+
+        $this->assertFalse($metadata->getOneToOne()[0]->hasEagerHydration());
+        $this->assertTrue($metadata->getOneToOne()[1]->hasEagerHydration());
+        $this->assertFalse($metadata->getOneToOne()[2]->hasEagerHydration());
+    }
+
+    public function testEagerHydrationManyToOne()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('EagerHydration');
+
+        $this->assertFalse($metadata->getManyToOne()[0]->hasEagerHydration());
+        $this->assertTrue($metadata->getManyToOne()[1]->hasEagerHydration());
+        $this->assertFalse($metadata->getManyToOne()[2]->hasEagerHydration());
+    }
+
+    public function testEagerHydrationOneToOneOwning()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('EagerHydration');
+
+        $this->assertFalse($metadata->getOneToOne()[0]->hasEagerHydration());
+        $this->assertTrue($metadata->getOneToOne()[1]->hasEagerHydration());
+        $this->assertFalse($metadata->getOneToOne()[2]->hasEagerHydration());
+    }
+
+    public function testEagerHydrationOneToOneInverse()
+    {
+        $builder = new MetadataBuilder(__DIR__ . '/TestAssets');
+        $metadata = $builder->getMetadata('EagerHydration');
+
+        $this->assertFalse($metadata->getOneToOne()[3]->hasEagerHydration());
+        $this->assertTrue($metadata->getOneToOne()[4]->hasEagerHydration());
+        $this->assertFalse($metadata->getOneToOne()[5]->hasEagerHydration());
+    }
+
     public function testRecordId()
     {
         $builder = new MetadataBuilder(__DIR__ . '/TestAssets');

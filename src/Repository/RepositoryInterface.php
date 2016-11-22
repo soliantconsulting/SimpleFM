@@ -42,4 +42,6 @@ interface RepositoryInterface
     public function delete($entity, bool $force = false);
 
     public function quoteString(string $string) : string;
+
+    public function createEntity(array $record);
 }

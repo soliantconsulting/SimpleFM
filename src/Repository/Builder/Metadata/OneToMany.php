@@ -25,16 +25,23 @@ final class OneToMany
      */
     private $targetFieldName;
 
+    /**
+     * @var bool
+     */
+    private $eagerHydration;
+
     public function __construct(
         string $propertyName,
         string $targetTable,
         string $targetEntity,
-        string $targetFieldName
+        string $targetFieldName,
+        bool $eagerHydration = false
     ) {
         $this->propertyName = $propertyName;
         $this->targetTable = $targetTable;
         $this->targetEntity = $targetEntity;
         $this->targetFieldName = $targetFieldName;
+        $this->eagerHydration = $eagerHydration;
     }
 
     public function getPropertyName() : string
@@ -55,5 +62,10 @@ final class OneToMany
     public function getTargetFieldName() : string
     {
         return $this->targetFieldName;
+    }
+
+    public function hasEagerHydration() : bool
+    {
+        return $this->eagerHydration;
     }
 }

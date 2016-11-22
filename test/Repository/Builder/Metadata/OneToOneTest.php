@@ -31,6 +31,13 @@ final class OneToOneTest extends TestCase
         $this->assertSame('fieldName', $metadata->getFieldName());
         $this->assertSame('targetPropertyName', $metadata->getTargetPropertyName());
         $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
+        $this->assertFalse($metadata->hasEagerHydration());
+    }
+
+    public function testSettingEagerHydration()
+    {
+        $metadata = new OneToOne('', '', '', '', '', true, true, '', '', true);
+        $this->assertTrue($metadata->hasEagerHydration());
     }
 
     public function testExceptionOnMissingProperties()

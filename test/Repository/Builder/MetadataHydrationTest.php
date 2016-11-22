@@ -178,7 +178,18 @@ final class MetadataHydrationTest extends TestCase
         $this->assertSame('bar', $entity->baz->foo);
     }
 
-    public function testManyToOneHydrationWithChild()
+    public function eagerHydrationSwitchProvider()
+    {
+        return [
+            'eager-hydration-enabled' => [true],
+            'eager-hydration-disabled' => [false],
+        ];
+    }
+
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testManyToOneHydrationWithChild(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -186,12 +197,27 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', 'child', 'id', 'ID', EmptyProxyEntityInterface::class, false),
+            new ManyToOne(
+                'bat',
+                'baz',
+                'bar',
+                'child',
+                'id',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false,
+                $eagerHydration
+            ),
         ], [], null, EmptyEntityInterface::class);
 
         $repository = $this->prophesize(RepositoryInterface::class);
-        $repository->findOneBy(['ID' => '5'])->willReturn('child-entity');
-        $repository->quoteString('5')->willReturn('5');
+
+        if ($eagerHydration) {
+            $repository->createEntity(['ID' => '5'])->willReturn('child-entity');
+        } else {
+            $repository->findOneBy(['ID' => '5'])->willReturn('child-entity');
+            $repository->quoteString('5')->willReturn('5');
+        }
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
         $repositoryBuilder->buildRepository('child')->willReturn(
@@ -211,11 +237,19 @@ final class MetadataHydrationTest extends TestCase
             $entityMetadata
         );
         $entity = $hydration->hydrateNewEntity(['bar' => [['ID' => 5]]]);
-        $this->assertInstanceOf(ProxyInterface::class, $entity->baz);
-        $this->assertSame('child-entity', $entity->baz->__getRealEntity());
+
+        if ($eagerHydration) {
+            $this->assertSame('child-entity', $entity->baz);
+        } else {
+            $this->assertInstanceOf(ProxyInterface::class, $entity->baz);
+            $this->assertSame('child-entity', $entity->baz->__getRealEntity());
+        }
     }
 
-    public function testManyToOneHydrationWithoutEntity()
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testManyToOneHydrationWithoutEntity(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -223,7 +257,17 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [
-            new ManyToOne('bat', 'baz', 'bar', 'child', 'id', 'ID', EmptyProxyEntityInterface::class, false),
+            new ManyToOne(
+                'bat',
+                'baz',
+                'bar',
+                'child',
+                'id',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false,
+                $eagerHydration
+            ),
         ], [], null, EmptyEntityInterface::class);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -240,7 +284,10 @@ final class MetadataHydrationTest extends TestCase
         $this->assertNull($entity->baz);
     }
 
-    public function testOneToOneOwningHydrationWithEntity()
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testOneToOneOwningHydrationWithEntity(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -248,12 +295,28 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'child', 'ID', EmptyProxyEntityInterface::class, true, false, 'id', 'child-id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                'child',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true,
+                false,
+                'id',
+                'child-id',
+                $eagerHydration
+            ),
         ], null, EmptyEntityInterface::class);
 
         $repository = $this->prophesize(RepositoryInterface::class);
-        $repository->findOneBy(['ID' => '5'])->willReturn('child-entity');
-        $repository->quoteString('5')->willReturn('5');
+
+        if ($eagerHydration) {
+            $repository->createEntity(['ID' => '5'])->willReturn('child-entity');
+        } else {
+            $repository->findOneBy(['ID' => '5'])->willReturn('child-entity');
+            $repository->quoteString('5')->willReturn('5');
+        }
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
         $repositoryBuilder->buildRepository('child')->willReturn(
@@ -273,11 +336,19 @@ final class MetadataHydrationTest extends TestCase
             $entityMetadata
         );
         $entity = $hydration->hydrateNewEntity(['bar' => [['ID' => 5]]]);
-        $this->assertInstanceOf(ProxyInterface::class, $entity->baz);
-        $this->assertSame('child-entity', $entity->baz->__getRealEntity());
+
+        if ($eagerHydration) {
+            $this->assertSame('child-entity', $entity->baz);
+        } else {
+            $this->assertInstanceOf(ProxyInterface::class, $entity->baz);
+            $this->assertSame('child-entity', $entity->baz->__getRealEntity());
+        }
     }
 
-    public function testOneToOneOwningHydrationWithoutEntity()
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testOneToOneOwningHydrationWithoutEntity(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -285,7 +356,18 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'child', 'ID', EmptyProxyEntityInterface::class, true, false, 'id', 'child-id'),
+            new OneToOne(
+                'baz',
+                'bar',
+                'child',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                true,
+                false,
+                'id',
+                'child-id',
+                $eagerHydration
+            ),
         ], null, EmptyEntityInterface::class);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -302,7 +384,10 @@ final class MetadataHydrationTest extends TestCase
         $this->assertNull($entity->baz);
     }
 
-    public function testOneToOneInverseHydrationWithEntity()
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testOneToOneInverseHydrationWithEntity(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -310,12 +395,28 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'parent', 'ID', EmptyProxyEntityInterface::class, false, false),
+            new OneToOne(
+                'baz',
+                'bar',
+                'parent',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false,
+                false,
+                null,
+                null,
+                $eagerHydration
+            ),
         ], null, EmptyEntityInterface::class);
 
         $repository = $this->prophesize(RepositoryInterface::class);
-        $repository->findOneBy(['ID' => '5'])->willReturn('parent-entity');
-        $repository->quoteString('5')->willReturn('5');
+
+        if ($eagerHydration) {
+            $repository->createEntity(['ID' => '5'])->willReturn('parent-entity');
+        } else {
+            $repository->findOneBy(['ID' => '5'])->willReturn('parent-entity');
+            $repository->quoteString('5')->willReturn('5');
+        }
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
         $repositoryBuilder->buildRepository('parent')->willReturn(
@@ -335,11 +436,19 @@ final class MetadataHydrationTest extends TestCase
             $entityMetadata
         );
         $entity = $hydration->hydrateNewEntity(['bar' => [['ID' => 5]]]);
-        $this->assertInstanceOf(ProxyInterface::class, $entity->baz);
-        $this->assertSame('parent-entity', $entity->baz->__getRealEntity());
+
+        if ($eagerHydration) {
+            $this->assertSame('parent-entity', $entity->baz);
+        } else {
+            $this->assertInstanceOf(ProxyInterface::class, $entity->baz);
+            $this->assertSame('parent-entity', $entity->baz->__getRealEntity());
+        }
     }
 
-    public function testOneToOneInverseHydrationWithoutEntity()
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testOneToOneInverseHydrationWithoutEntity(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -347,7 +456,18 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [], [], [
-            new OneToOne('baz', 'bar', 'parent', 'ID', EmptyProxyEntityInterface::class, false, false),
+            new OneToOne(
+                'baz',
+                'bar',
+                'parent',
+                'ID',
+                EmptyProxyEntityInterface::class,
+                false,
+                false,
+                null,
+                null,
+                $eagerHydration
+            ),
         ], null, EmptyEntityInterface::class);
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
@@ -364,7 +484,10 @@ final class MetadataHydrationTest extends TestCase
         $this->assertNull($entity->baz);
     }
 
-    public function testOneToManyHydrationWithEntity()
+    /**
+     * @dataProvider eagerHydrationSwitchProvider
+     */
+    public function testOneToManyHydrationWithEntity(bool $eagerHydration)
     {
         $entityPrototype = new class
         {
@@ -372,16 +495,26 @@ final class MetadataHydrationTest extends TestCase
         };
 
         $entityMetadata = new Entity('foo', get_class($entityPrototype), [], [], [
-            new OneToMany('bar', 'baz', 'child', 'ID'),
+            new OneToMany('bar', 'baz', 'child', 'ID', $eagerHydration),
         ], [], []);
 
         $repository = $this->prophesize(RepositoryInterface::class);
-        $testCase = $this;
-        $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) {
-            $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
-            $testCase->assertSame('6', $parameters[0]->toParameters()['-q2.value']);
-            return new ItemCollection(['child-entity-1', 'child-entity-2'], 2);
-        });
+
+        if ($eagerHydration) {
+            $repository->createEntity(['ID' => 5])->will(function () {
+                return 'child-entity-1';
+            });
+            $repository->createEntity(['ID' => 6])->will(function () {
+                return 'child-entity-2';
+            });
+        } else {
+            $testCase = $this;
+            $repository->findByQuery(Argument::any())->will(function (array $parameters) use ($testCase) {
+                $testCase->assertSame('5', $parameters[0]->toParameters()['-q1.value']);
+                $testCase->assertSame('6', $parameters[0]->toParameters()['-q2.value']);
+                return new ItemCollection(['child-entity-1', 'child-entity-2'], 2);
+            });
+        }
 
         $repositoryBuilder = $this->prophesize(RepositoryBuilderInterface::class);
         $repositoryBuilder->buildRepository('child')->willReturn(

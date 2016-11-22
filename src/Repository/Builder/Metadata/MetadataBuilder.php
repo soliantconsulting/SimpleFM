@@ -137,7 +137,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['property'],
                     (string) $relation['target-table'],
                     (string) $relation['target-entity'],
-                    (string) $relation['target-field-name']
+                    (string) $relation['target-field-name'],
+                    (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                 );
             }
         }
@@ -155,7 +156,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                         (string) $xml['class-name'],
                         (string) $relation['target-entity']
                     ),
-                    (isset($relation['read-only']) && (string) $relation['read-only'] === 'true')
+                    (isset($relation['read-only']) && (string) $relation['read-only'] === 'true'),
+                    (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                 );
             }
         }
@@ -174,7 +176,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     true,
                     (isset($relation['read-only']) && (string) $relation['read-only'] === 'true'),
                     (string) $relation['name'],
-                    (string) $relation['target-property-name']
+                    (string) $relation['target-property-name'],
+                    (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                 );
             }
         }
@@ -191,7 +194,10 @@ final class MetadataBuilder implements MetadataBuilderInterface
                         (string) $relation['target-entity']
                     ),
                     false,
-                    false
+                    false,
+                    null,
+                    null,
+                    (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                 );
             }
         }

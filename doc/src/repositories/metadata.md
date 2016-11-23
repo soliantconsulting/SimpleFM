@@ -87,7 +87,8 @@ many-to-one and one-to-one relations it will create a lazy-loaded proxy.
 
 !!!note "Proxy interface"
     When using any to-one relation, you need to define an interface name on the target entity's metadata, so that the
-    repository can create a proxy for it.
+    repository can create a proxy for it. The only exception is when the relation has
+    [eager hydration](#eager-hydration) enabled.
 
 ## One-to-many
 
@@ -119,8 +120,8 @@ target-field-name
 
 ## Many-to-one
 
-A many-to-one relation is set up similarly as the [one-to-many](#one-to-many) relation and requires the same attributes including a few
-additional ones:
+A many-to-one relation is set up similarly as the [one-to-many](#one-to-many) relation and requires the same attributes
+including a few additional ones:
 
 name
 :   The name of the field containing the foreign ID
@@ -183,3 +184,11 @@ While the owning side mirrors the behavior of the many-to-one relation, the inve
     />
 </entity>
 ```
+
+## Eager hydration
+
+Every relation can be eagerly hydrated when the sparse record contains all information to fully hydrate the parent or
+child entity. To enable eager hydration, set the `eager-hydration` property on the relation to `true`.
+
+While this gives you additional hydration overhead for each relation, it also saves you from doing additional queries
+against FileMaker. Using eager hydration should only be considered when you are using specific relations often enough.

@@ -31,5 +31,5 @@ $connection = new Connection(
 ```
 
 !!!note
-    Since a logger will cause I/O for every single request made against the file maker server, you should **not** enable
+    Since a logger will cause I/O for every single request made against the FileMaker Server, you should **not** enable
     this in production.

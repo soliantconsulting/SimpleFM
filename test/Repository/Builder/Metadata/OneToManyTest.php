@@ -15,5 +15,12 @@ final class OneToManyTest extends TestCase
         $this->assertSame('targetTable', $metadata->getTargetTable());
         $this->assertSame('targetEntity', $metadata->getTargetEntity());
         $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
+        $this->assertFalse($metadata->hasEagerHydration());
+    }
+
+    public function testSettingEagerHydration()
+    {
+        $metadata = new OneToMany('', '', '', '', true);
+        $this->assertTrue($metadata->hasEagerHydration());
     }
 }

@@ -26,7 +26,7 @@ See also, the [SimpleFM-skeleton][6] demo application which illustrates use of S
 ### CWP Debugger
 
 - Easily see the underlying API command formatted as a URL for easy troubleshooting
-- File Maker error codes are translated to understandable error messages
+- FileMaker error codes are translated to understandable error messages
 
 ## Simplicity and Performance
 

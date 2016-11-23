@@ -28,5 +28,12 @@ final class ManyToOneTest extends TestCase
         $this->assertSame('targetFieldName', $metadata->getTargetFieldName());
         $this->assertSame('targetInterfaceName', $metadata->getTargetInterfaceName());
         $this->assertTrue($metadata->isReadOnly());
+        $this->assertFalse($metadata->hasEagerHydration());
+    }
+
+    public function testSettingEagerHydration()
+    {
+        $metadata = new ManyToOne('', '', '', '', '', '', '', false, true);
+        $this->assertTrue($metadata->hasEagerHydration());
     }
 }

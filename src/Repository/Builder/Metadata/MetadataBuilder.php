@@ -17,7 +17,7 @@ use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
 final class MetadataBuilder implements MetadataBuilderInterface
 {
-    const SCHEMA_PATH = __DIR__ . '/../../../../xsd/entity-metadata-5-0.xsd';
+    const SCHEMA_PATH = __DIR__ . '/../../../../xsd/entity-metadata-5-1.xsd';
 
     /**
      * @var string

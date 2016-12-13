@@ -13,7 +13,7 @@ included in the following example but excluded from all further ones for simplic
     xmlns="uri:soliantconsulting.com:simplefm:entity-metadata"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="uri:soliantconsulting.com:simplefm:entity-metadata
-        https://soliantconsulting.github.io/SimpleFM/entity-metadata-5-0.xsd"
+        https://soliantconsulting.github.io/SimpleFM/entity-metadata-5-1.xsd"
     class-name="My\Entity\SampleEntity"
     layout="sample-layout"
 />

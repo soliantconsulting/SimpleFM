@@ -183,7 +183,10 @@ final class RepositoryTest extends TestCase
         $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
 
         $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&-sortfield.1=foo&-sortorder.1=ascend&-max=1&-skip=2&-findall', (string) $command);
+            $this->assertSame(
+                '-lay=foo&-sortfield.1=foo&-sortorder.1=ascend&-max=1&-skip=2&-findall',
+                (string) $command
+            );
             return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
         }, $hydration->reveal());
 

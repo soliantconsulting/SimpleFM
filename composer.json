@@ -52,7 +52,8 @@
         "cs-fix": "phpcbf",
         "test": "phpunit",
         "test-coverage": "phpunit --coverage-clover clover.xml",
-        "html": "phpunit --coverage-html build/logs/coverage.html"
+        "html": "phpunit --coverage-html build/logs/coverage.html",
+        "deploy-xsd": "git subtree push --prefix xsd origin gh-pages"
     }
 
 }

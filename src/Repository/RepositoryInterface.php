@@ -23,8 +23,7 @@ interface RepositoryInterface
         array $search,
         array $sort = [],
         int $limit = null,
-        int $offset =
-        null,
+        int $offset = null,
         bool $autoQuoteSearch = true
     ) : CollectionInterface;
 

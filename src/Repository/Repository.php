@@ -277,8 +277,8 @@ final class Repository implements RepositoryInterface
         $parameters = [];
 
         foreach ($sort as $field => $order) {
-            $parameters['-sortfield' . $index] = $field;
-            $parameters['-sortorder' . $index] = $order;
+            $parameters['-sortfield.' . $index] = $field;
+            $parameters['-sortorder.' . $index] = $order;
             ++$index;
         }
 

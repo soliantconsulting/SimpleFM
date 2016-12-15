@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
+use Assert\Assertion;
+
 final class ManyToOne
 {
     /**
@@ -57,8 +59,8 @@ final class ManyToOne
         string $targetEntity,
         string $targetPropertyName,
         string $targetFieldName,
-        string $targetInterfaceName,
-        bool $readOnly,
+        string $targetInterfaceName = null,
+        bool $readOnly = false,
         bool $eagerHydration = false
     ) {
         $this->fieldName = $fieldName;
@@ -104,6 +106,10 @@ final class ManyToOne
 
     public function getTargetInterfaceName() : string
     {
+        Assertion::notNull(
+            $this->targetInterfaceName,
+            sprintf('Target entity %s has no interface name defined', $this->targetEntity)
+        );
         return $this->targetInterfaceName;
     }
 

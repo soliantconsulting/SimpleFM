@@ -62,9 +62,9 @@ final class OneToOne
         string $targetTable,
         string $targetEntity,
         string $targetFieldName,
-        string $targetInterfaceName,
-        bool $owningSide,
-        bool $readOnly,
+        string $targetInterfaceName = null,
+        bool $owningSide = false,
+        bool $readOnly = false,
         string $fieldName = null,
         string $targetPropertyName = null,
         bool $eagerHydration = false
@@ -108,6 +108,10 @@ final class OneToOne
 
     public function getTargetInterfaceName() : string
     {
+        Assertion::notNull(
+            $this->targetInterfaceName,
+            sprintf('Target entity %s has no interface name defined', $this->targetEntity)
+        );
         return $this->targetInterfaceName;
     }
 

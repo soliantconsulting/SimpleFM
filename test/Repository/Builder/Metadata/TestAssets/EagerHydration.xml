@@ -16,7 +16,7 @@
     <one-to-many
         property="otmDefault"
         target-table=""
-        target-entity="RelationTarget"
+        target-entity="RelationTargetWithoutInterface"
         target-field-name=""
         eager-hydration="true"
     />
@@ -40,7 +40,7 @@
         name="mto-true"
         property=""
         target-table=""
-        target-entity="RelationTarget"
+        target-entity="RelationTargetWithoutInterface"
         target-property-name=""
         target-field-name=""
         eager-hydration="true"
@@ -67,7 +67,7 @@
         name="otoo-true"
         property=""
         target-table=""
-        target-entity="RelationTarget"
+        target-entity="RelationTargetWithoutInterface"
         target-property-name=""
         target-field-name=""
         eager-hydration="true"
@@ -91,7 +91,7 @@
     <one-to-one-inverse
         property="otoiTrue"
         target-table=""
-        target-entity="RelationTarget"
+        target-entity="RelationTargetWithoutInterface"
         target-field-name=""
         eager-hydration="true"
     />

@@ -154,7 +154,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-field-name'],
                     $this->getInterfaceNameForRelation(
                         (string) $xml['class-name'],
-                        (string) $relation['target-entity']
+                        (string) $relation['target-entity'],
+                        (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                     ),
                     (isset($relation['read-only']) && (string) $relation['read-only'] === 'true'),
                     (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
@@ -171,7 +172,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-field-name'],
                     $this->getInterfaceNameForRelation(
                         (string) $xml['class-name'],
-                        (string) $relation['target-entity']
+                        (string) $relation['target-entity'],
+                        (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                     ),
                     true,
                     (isset($relation['read-only']) && (string) $relation['read-only'] === 'true'),
@@ -191,7 +193,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
                     (string) $relation['target-field-name'],
                     $this->getInterfaceNameForRelation(
                         (string) $xml['class-name'],
-                        (string) $relation['target-entity']
+                        (string) $relation['target-entity'],
+                        (isset($relation['eager-hydration']) && (string) $relation['eager-hydration'] === 'true')
                     ),
                     false,
                     false,
@@ -238,14 +241,24 @@ final class MetadataBuilder implements MetadataBuilderInterface
         return str_replace('\\', '.', $className) . '.xml';
     }
 
-    private function getInterfaceNameForRelation(string $mainEntityClassName, string $relationEntityClassName) : string
-    {
+    /**
+     * @return string|null
+     */
+    private function getInterfaceNameForRelation(
+        string $mainEntityClassName,
+        string $relationEntityClassName,
+        bool $eagerHydration
+    ) {
         $entityMetadata = $this->getMetadata($relationEntityClassName);
 
-        if (!$entityMetadata->hasInterfaceName()) {
-            throw MissingInterfaceException::fromMissingInterface($mainEntityClassName, $relationEntityClassName);
+        if ($entityMetadata->hasInterfaceName()) {
+            return $entityMetadata->getInterfaceName();
         }
 
-        return $entityMetadata->getInterfaceName();
+        if ($eagerHydration) {
+            return null;
+        }
+
+        throw MissingInterfaceException::fromMissingInterface($mainEntityClassName, $relationEntityClassName);
     }
 }

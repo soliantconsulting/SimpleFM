@@ -11,17 +11,15 @@ cache:
 matrix:
   fast_finish: true
   include:
-    - php: 7
+    - php: 7.2
       env:
         - EXECUTE_CS_CHECK=true
         - EXECUTE_TEST_COVERALLS=true
         - EXECUTE_TEST_CODECLIMATE=true
         - PATH="$HOME/.local/bin:$PATH"
     - php: nightly
-    - php: hhvm
   allow_failures:
     - php: nightly
-    - php: hhvm
 
 before_install:
   - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]] && [[ $EXECUTE_TEST_CODECLIMATE != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
@@ -42,4 +40,4 @@ after_script:
   - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer coveralls ; fi
   - if [[ $EXECUTE_TEST_CODECLIMATE == 'true' ]]; then CODECLIMATE_REPO_TOKEN=a1fa5b53529cf77226b6231a9c0a3d8ce5c0cb9ecc570ac014c1cc60fa07d2df ./vendor/bin/test-reporter --coverage-report=clover.xml --stdout > codeclimate.json ; fi
   - "if [[ $EXECUTE_TEST_CODECLIMATE == 'true' ]]; then curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports ; fi"
-  
+

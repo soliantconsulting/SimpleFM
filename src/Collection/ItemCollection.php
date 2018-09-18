@@ -14,25 +14,14 @@ final class ItemCollection implements IteratorAggregate, CollectionInterface
      */
     private $items;
 
-    /**
-     * @var int
-     */
-    private $totalCount;
-
-    public function __construct(array $items, int $totalCount)
+    public function __construct(array $items)
     {
         $this->items = new ArrayIterator($items);
-        $this->totalCount = $totalCount;
     }
 
     public function count() : int
     {
         return count($this->items);
-    }
-
-    public function getTotalCount() : int
-    {
-        return $this->totalCount;
     }
 
     public function isEmpty() : bool

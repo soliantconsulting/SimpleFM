@@ -22,4 +22,19 @@ final class HydrationException extends RuntimeException implements ExceptionInte
             $previousException->getMessage()
         ), 0, $previousException);
     }
+
+    public static function fromEntityMismatch(string $className) : self
+    {
+        return new self(sprintf('Entity is not an instance of "%s"', $className));
+    }
+
+    public static function fromNonArrayRepeatable(string $propertyName) : self
+    {
+        return new self(sprintf('Property value of "%s" is not an array', $propertyName));
+    }
+
+    public static function fromMissingInterface(string $className) : self
+    {
+        return new self(sprintf('Entity "%s" has no interface name defined', $className));
+    }
 }

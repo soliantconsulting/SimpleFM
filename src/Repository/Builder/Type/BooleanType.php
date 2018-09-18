@@ -3,19 +3,19 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Type;
 
-use Assert\Assertion;
-use Litipk\BigNumbers\Decimal;
+use Soliant\SimpleFM\Client\ClientInterface;
+use Soliant\SimpleFM\Repository\Builder\Type\Exception\ConversionException;
 
 final class BooleanType implements TypeInterface
 {
-    public function fromFileMakerValue($value)
+    public function fromFileMakerValue($value, ClientInterface $client)
     {
         if (null === $value) {
             return false;
         }
 
-        if ($value instanceof Decimal) {
-            return 0 !== $value->comp(Decimal::fromInteger(0));
+        if (is_int($value)) {
+            return 0 !== $value;
         }
 
         if (is_string($value)) {
@@ -25,9 +25,12 @@ final class BooleanType implements TypeInterface
         return true;
     }
 
-    public function toFileMakerValue($value)
+    public function toFileMakerValue($value, ClientInterface $client)
     {
-        Assertion::boolean($value);
-        return Decimal::fromInteger($value ? 1 : 0);
+        if (! is_bool($value)) {
+            throw ConversionException::fromInvalidType($value, 'bool');
+        }
+
+        return $value ? 1 : 0;
     }
 }

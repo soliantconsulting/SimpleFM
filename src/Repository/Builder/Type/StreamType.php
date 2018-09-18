@@ -3,24 +3,26 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Type;
 
-use Assert\Assertion;
-use Psr\Http\Message\StreamInterface;
-use Soliant\SimpleFM\Repository\Builder\Type\Exception\DomainException;
+use Soliant\SimpleFM\Client\ClientInterface;
+use Soliant\SimpleFM\Repository\Builder\Type\Exception\ConversionException;
 
 final class StreamType implements TypeInterface
 {
-    public function fromFileMakerValue($value)
+    public function fromFileMakerValue($value, ClientInterface $client)
     {
-        if (null === $value) {
+        if ('' === $value) {
             return null;
         }
 
-        Assertion::isInstanceOf($value, StreamInterface::class);
-        return $value;
+        if (! is_string($value)) {
+            throw ConversionException::fromInvalidType($value, 'string');
+        }
+
+        return new StreamProxy($client, $value);
     }
 
-    public function toFileMakerValue($value)
+    public function toFileMakerValue($value, ClientInterface $client)
     {
-        throw DomainException::fromAttemptedStreamConversionToFileMakerValue();
+        throw ConversionException::fromAttemptedStreamConversionToFileMakerValue();
     }
 }

@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder;
 
-use Assert\Assertion;
 use Exception;
 use ReflectionClass;
+use Soliant\SimpleFM\Client\ClientInterface;
 use Soliant\SimpleFM\Repository\Builder\Exception\ExtractionException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
@@ -25,18 +25,22 @@ final class MetadataExtraction implements ExtractionInterface
         $this->entityMetadata = $entityMetadata;
     }
 
-    public function extract($entity) : array
+    public function extract(object $entity, ClientInterface $client) : array
     {
-        return $this->extractWithMetadata($entity, $this->entityMetadata);
+        return $this->extractWithMetadata($entity, $this->entityMetadata, $client);
     }
 
-    private function extractWithMetadata($entity, Entity $metadata) : array
+    private function extractWithMetadata(object $entity, Entity $metadata, ClientInterface $client) : array
     {
         if ($entity instanceof ProxyInterface) {
             $entity = $entity->__getRealEntity();
         }
 
-        Assertion::isInstanceOf($entity, $metadata->getClassName());
+        $className = $metadata->getClassName();
+
+        if (! $entity instanceof $className) {
+            throw ExtractionException::fromEntityMismatch($className);
+        }
 
         $data = [];
         $reflectionClass = new ReflectionClass($entity);
@@ -56,16 +60,22 @@ final class MetadataExtraction implements ExtractionInterface
                     $fieldMetadata->getPropertyName()
                 );
 
-                if (!$fieldMetadata->isRepeatable()) {
-                    $data[$fieldName] = $type->toFileMakerValue($value);
+                if (! $fieldMetadata->isRepeatable()) {
+                    $data[$fieldName] = $type->toFileMakerValue($value, $client);
                     continue;
                 }
 
-                Assertion::isArray($value);
+                if (! is_array($value)) {
+                    throw ExtractionException::fromNonArrayRepeatable($fieldMetadata->getPropertyName());
+                }
+
                 $index = 0;
 
                 foreach ($value as $individualValue) {
-                    $data[sprintf('%s(%d)', $fieldName, ++$index)] = $type->toFileMakerValue($individualValue);
+                    $data[sprintf('%s(%d)', $fieldName, ++$index)] = $type->toFileMakerValue(
+                        $individualValue,
+                        $client
+                    );
                 }
             } catch (Exception $e) {
                 throw ExtractionException::fromInvalidField($metadata, $fieldMetadata, $e);
@@ -76,7 +86,8 @@ final class MetadataExtraction implements ExtractionInterface
             $prefix = $embeddableMetadata->getFieldNamePrefix();
             $embeddableData = $this->extractWithMetadata(
                 $this->getProperty($reflectionClass, $entity, $embeddableMetadata->getPropertyName()),
-                $embeddableMetadata->getMetadata()
+                $embeddableMetadata->getMetadata(),
+                $client
             );
 
             foreach ($embeddableData as $key => $value) {
@@ -97,6 +108,8 @@ final class MetadataExtraction implements ExtractionInterface
         );
 
         foreach ($toOne as $relationMetadata) {
+            assert($relationMetadata instanceof ManyToOne || $relationMetadata instanceof OneToOne);
+
             $relation = $this->getProperty(
                 $reflectionClass,
                 $entity,
@@ -108,11 +121,19 @@ final class MetadataExtraction implements ExtractionInterface
                 continue;
             }
 
+            $targetEntity = $relationMetadata->getTargetEntity();
+
             if ($relation instanceof ProxyInterface) {
-                Assertion::isInstanceOf($relation->__getRealEntity(), $relationMetadata->getTargetEntity());
+                if (! $relation->__getRealEntity() instanceof $targetEntity) {
+                    throw ExtractionException::fromEntityMismatch($targetEntity);
+                }
+
                 $relationId = $relation->__getRelationId();
             } else {
-                Assertion::isInstanceOf($relation, $relationMetadata->getTargetEntity());
+                if (! $relation instanceof $targetEntity) {
+                    throw ExtractionException::fromEntityMismatch($targetEntity);
+                }
+
                 $relationId = $this->getProperty(
                     new ReflectionClass($relation),
                     $relation,

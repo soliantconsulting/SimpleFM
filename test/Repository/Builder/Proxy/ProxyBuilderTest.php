@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder;
 
-use Assert\InvalidArgumentException;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Soliant\SimpleFM\Repository\Builder\Proxy\Exception\InvalidEntityException;
 use Soliant\SimpleFM\Repository\Builder\Proxy\Exception\InvalidInterfaceException;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilder;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
@@ -16,7 +16,7 @@ use stdClass;
 
 final class ProxyBuilderTest extends TestCase
 {
-    public function testInternalProxyMethods()
+    public function testInternalProxyMethods() : void
     {
         $realEntity = new class implements SimpleGetterInterface
         {
@@ -37,7 +37,7 @@ final class ProxyBuilderTest extends TestCase
         $this->assertSame($realEntity, $proxy->__getRealEntity());
     }
 
-    public function testExceptionOnInvalidInterface()
+    public function testExceptionOnInvalidInterface() : void
     {
         $proxyBuilder = new ProxyBuilder();
 
@@ -47,7 +47,7 @@ final class ProxyBuilderTest extends TestCase
         }, 1);
     }
 
-    public function testSimpleGetter()
+    public function testSimpleGetter() : void
     {
         $proxyBuilder = new ProxyBuilder();
         $proxy = $proxyBuilder->createProxy(SimpleGetterInterface::class, function () {
@@ -63,19 +63,19 @@ final class ProxyBuilderTest extends TestCase
         $this->assertSame('foo', $proxy->getFoo());
     }
 
-    public function testInvalidInitializerReturn()
+    public function testInvalidInitializerReturn() : void
     {
         $proxyBuilder = new ProxyBuilder();
         $proxy = $proxyBuilder->createProxy(SimpleGetterInterface::class, function () {
             return new stdClass();
         }, 1);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('SimpleGetterInterface" but is not');
+        $this->expectException(InvalidEntityException::class);
+        $this->expectExceptionMessage('SimpleGetterInterface" was expected');
         $proxy->getFoo();
     }
 
-    public function testSimpleSetter()
+    public function testSimpleSetter() : void
     {
         $proxyBuilder = new ProxyBuilder();
         $proxy = $proxyBuilder->createProxy(SimpleSetterInterface::class, function () {
@@ -99,7 +99,7 @@ final class ProxyBuilderTest extends TestCase
         $this->assertSame('bar', $proxy->getFoo());
     }
 
-    public function testVariadicSetter()
+    public function testVariadicSetter() : void
     {
         $proxyBuilder = new ProxyBuilder();
         $proxy = $proxyBuilder->createProxy(VariadicSetterInterface::class, function () {
@@ -123,7 +123,7 @@ final class ProxyBuilderTest extends TestCase
         $this->assertSame(['bar', 'baz'], $proxy->getFoo());
     }
 
-    public function testComplexSetter()
+    public function testComplexSetter() : void
     {
         $proxyBuilder = new ProxyBuilder();
         $proxy = $proxyBuilder->createProxy(ComplexSetterInterface::class, function () {

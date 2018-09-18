@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
-use Assert\Assertion;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\MissingInterfaceException;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\RelationException;
 
 final class OneToOne
 {
@@ -23,7 +24,7 @@ final class OneToOne
     private $targetEntity;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $targetInterfaceName;
 
@@ -43,12 +44,12 @@ final class OneToOne
     private $fieldName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $targetPropertyName;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $targetFieldName;
 
@@ -69,9 +70,8 @@ final class OneToOne
         string $targetPropertyName = null,
         bool $eagerHydration = false
     ) {
-        if ($owningSide) {
-            Assertion::notNull($fieldName);
-            Assertion::notNull($targetPropertyName);
+        if ($owningSide && (null === $fieldName || null === $targetPropertyName)) {
+            throw RelationException::fromOwningSide();
         }
 
         $this->propertyName = $propertyName;
@@ -108,10 +108,10 @@ final class OneToOne
 
     public function getTargetInterfaceName() : string
     {
-        Assertion::notNull(
-            $this->targetInterfaceName,
-            sprintf('Target entity %s has no interface name defined', $this->targetEntity)
-        );
+        if (null === $this->targetInterfaceName) {
+            throw MissingInterfaceException::fromMissingInterfaceDefinition($this->targetEntity);
+        }
+
         return $this->targetInterfaceName;
     }
 
@@ -122,13 +122,19 @@ final class OneToOne
 
     public function getFieldName() : string
     {
-        Assertion::notNull($this->fieldName);
+        if (! $this->owningSide) {
+            throw RelationException::fromInverseSide();
+        }
+
         return $this->fieldName;
     }
 
     public function getTargetPropertyName() : string
     {
-        Assertion::notNull($this->targetPropertyName);
+        if (! $this->owningSide) {
+            throw RelationException::fromInverseSide();
+        }
+
         return $this->targetPropertyName;
     }
 

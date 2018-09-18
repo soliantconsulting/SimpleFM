@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder\Metadata;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Field;
 use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
 final class FieldTest extends TestCase
 {
-    public function testGenericGetters()
+    public function testGenericGetters() : void
     {
         $type = $this->prophesize(TypeInterface::class)->reveal();
 

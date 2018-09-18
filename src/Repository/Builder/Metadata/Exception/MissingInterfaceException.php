@@ -16,4 +16,9 @@ final class MissingInterfaceException extends DomainException implements Excepti
             $relationEntityClassName
         ));
     }
+
+    public static function fromMissingInterfaceDefinition(string $targetEntity) : self
+    {
+        return new self(sprintf('Target entity %s has no interface name defined', $targetEntity));
+    }
 }

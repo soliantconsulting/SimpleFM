@@ -7,8 +7,9 @@ use ArrayIterator;
 use IteratorAggregate;
 use IteratorIterator;
 use Soliant\SimpleFM\Collection\CollectionInterface;
-use Soliant\SimpleFM\Repository\Query\FindQuery;
-use Soliant\SimpleFM\Repository\Query\Query;
+use Soliant\SimpleFM\Query\Conditions;
+use Soliant\SimpleFM\Query\Field;
+use Soliant\SimpleFM\Query\Query;
 use Traversable;
 
 final class LazyLoadedCollection implements IteratorAggregate, CollectionInterface
@@ -50,20 +51,14 @@ final class LazyLoadedCollection implements IteratorAggregate, CollectionInterfa
             return $this->iterator = new ArrayIterator();
         }
 
-        $findQuery = new FindQuery();
-        $findQuery->addOrQueries(...array_map(function (array $sparseRecord) : Query {
-            return new Query($this->idFieldName, (string) $sparseRecord[$this->idFieldName]);
+        $query = new Query(...array_map(function (array $sparseRecord) : Conditions {
+            return new Conditions(false, new Field($this->idFieldName, (string) $sparseRecord[$this->idFieldName]));
         }, $this->sparseRecords));
 
-        return $this->iterator = new IteratorIterator($this->repository->findByQuery($findQuery));
+        return $this->iterator = new IteratorIterator($this->repository->findByQuery($query));
     }
 
     public function count() : int
-    {
-        return count($this->sparseRecords);
-    }
-
-    public function getTotalCount() : int
     {
         return count($this->sparseRecords);
     }

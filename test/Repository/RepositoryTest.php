@@ -3,456 +3,154 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Soliant\SimpleFM\Authentication\Identity;
-use Soliant\SimpleFM\Authentication\IdentityHandlerInterface;
-use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
-use Soliant\SimpleFM\Collection\ItemCollection;
-use Soliant\SimpleFM\Connection\Command;
+use Prophecy\Prophecy\ObjectProphecy;
+use Soliant\SimpleFM\Client\ClientInterface;
+use Soliant\SimpleFM\Client\Exception\FileMakerException;
+use Soliant\SimpleFM\Query\Conditions;
+use Soliant\SimpleFM\Query\Field;
+use Soliant\SimpleFM\Query\Query;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
-use Soliant\SimpleFM\Repository\Exception\InvalidResultException;
 use Soliant\SimpleFM\Repository\ExtractionInterface;
 use Soliant\SimpleFM\Repository\HydrationInterface;
-use Soliant\SimpleFM\Repository\Query\FindQuery;
-use Soliant\SimpleFM\Repository\Query\Query;
 use Soliant\SimpleFM\Repository\Repository;
+use Soliant\SimpleFM\Sort\Sort;
 use stdClass;
 
 final class RepositoryTest extends TestCase
 {
-    public function testQuoteStringUsesClientMethod()
+    /**
+     * @var ObjectProphecy
+     */
+    private $client;
+
+    /**
+     * @var array
+     */
+    private $defaultRecord;
+
+    /**
+     * @var stdClass
+     */
+    private $defaultEntity;
+
+    public function setUp() : void
     {
-        $resultSetClient = $this->prophesize(ResultSetClientInterface::class);
-        $resultSetClient->quoteString('foo')->willReturn('bar');
-
-        $repository = new Repository(
-            $resultSetClient->reveal(),
-            'foo',
-            $this->prophesize(HydrationInterface::class)->reveal(),
-            $this->prophesize(ExtractionInterface::class)->reveal()
-        );
-
-        $this->assertSame('bar', $repository->quoteString('foo'));
+        $this->client = $this->prophesize(ClientInterface::class);
+        $this->defaultRecord = [
+            'recordId' => 1,
+            'modId' => 1,
+            'fieldData' => [
+                'foo' => 'bar',
+            ],
+        ];
+        $this->defaultEntity = new stdClass();
     }
 
-    public function testWithIdentityCreatesNewRepository()
+    public function testFindWithResult() : void
     {
-        $repository = new Repository(
-            $this->prophesize(ResultSetClientInterface::class)->reveal(),
-            'foo',
-            $this->prophesize(HydrationInterface::class)->reveal(),
-            $this->prophesize(ExtractionInterface::class)->reveal(),
-            $this->prophesize(IdentityHandlerInterface::class)->reveal()
-        );
+        $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
+        $repository = $this->createRepository();
 
-        $this->assertNotSame($repository, $repository->withIdentity(new Identity('foo', 'bar')));
+        $this->assertSame($this->defaultEntity, $repository->find(1));
     }
 
-    public function testWithIdentityPassesIdentityToNewCommands()
+    public function testFindWithoutResult() : void
     {
-        $identity = new Identity('foo', 'bar');
-
-        $repository = $this->createAssertiveRepository(function (Command $command) use ($identity) {
-            $this->assertSame($identity, $command->getIdentity());
-            return new ItemCollection([], 0);
-        }, null, null)->withIdentity($identity);
-
-        $repository->find(1);
-    }
-
-    public function testFindWithResult()
-    {
-        $entity = new stdClass();
-
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&-recid=1&-find&-max=1', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $this->assertSame($entity, $repository->find(1));
-    }
-
-    public function testFindWithoutResult()
-    {
-        $repository = $this->createAssertiveRepository(function () {
-            return new ItemCollection([], 0);
-        });
+        $this->client->getRecord('foo', 1)->willThrow(new FileMakerException('', 101));
+        $repository = $this->createRepository();
 
         $this->assertNull($repository->find(1));
     }
 
-    public function testEntityCaching()
+    public function testEntityCaching() : void
     {
-        $entity = new stdClass();
-
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
+        $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
+        $repository = $this->createRepository();
 
         $this->assertSame($repository->find(1), $repository->find(1));
     }
 
-    public function testFindOneByWithResult()
+    public function testFindOneByWithResult() : void
     {
-        $entity = new stdClass();
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'bar']]);
+            return true;
+        }), 0, 1)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&foo=bar&-find&-max=1', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $this->assertSame($entity, $repository->findOneBy(['foo' => 'bar']));
+        $this->assertSame($this->defaultEntity, $repository->findOneBy(['foo' => 'bar']));
     }
 
-    public function testFindOneByWithAutoQuoteDisabled()
+    public function testFindOneByWithAutoQuoteDisabled() : void
     {
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&foo=%3E%3D5&-find&-max=1', (string) $command);
-            return new ItemCollection([], 0);
-        });
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => '>=5']]);
+            return true;
+        }), 0, 1)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
         $repository->findOneBy(['foo' => '>=5'], false);
     }
 
-    public function testFindOneByWithoutResult()
+    public function testFindOneByWithoutResult() : void
     {
-        $repository = $this->createAssertiveRepository(function () {
-            return new ItemCollection([], 0);
-        });
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'baz']]);
+            return true;
+        }), 0, 1)->willReturn([]);
+        $repository = $this->createRepository();
 
-        $this->assertNull($repository->findOneBy([]));
+        $this->assertNull($repository->findOneBy(['foo' => 'baz']));
     }
 
-    public function testFindOneByQueryWithResult()
+    public function testFindOneByQueryWithResult() : void
     {
-        $entity = new stdClass();
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'bar']]);
+            return true;
+        }), 0, 1)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&-query=%28q1%29&-q1=foo&-q1.value=bar&-findquery&-max=1', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $query = new FindQuery();
-        $query->addOrQueries(new Query('foo', 'bar'));
-        $this->assertSame($entity, $repository->findOneByQuery($query));
+        $this->assertSame($this->defaultEntity, $repository->findOneByQuery(
+            new Query(new Conditions(false, new Field('foo', 'bar')))
+        ));
     }
 
-    public function testFindOneByQueryWithoutResult()
+    public function testFindOneByQueryWithoutResult() : void
     {
-        $repository = $this->createAssertiveRepository(function () {
-            return new ItemCollection([], 0);
-        });
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'baz']]);
+            return true;
+        }), 0, 1)->willReturn([]);
+        $repository = $this->createRepository();
 
-        $query = new FindQuery();
-        $query->addOrQueries(new Query('foo', 'bar'));
-        $this->assertNull($repository->findOneByQuery($query));
+        $this->assertNull($repository->findOneByQuery(
+            new Query(new Conditions(false, new Field('foo', 'baz')))
+        ));
     }
 
-    public function testFindAllWithoutArguments()
+    public function testFindAllWithoutArguments() : void
     {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+        $this->client->find('foo', null, null, null)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&-findall', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $this->assertSame([$entity], iterator_to_array($repository->findAll()));
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findAll()));
     }
 
-    public function testFindAllWithParameters()
+    public function testFindAllWithParameters() : void
     {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
+        $this->client->find('foo', null, 1, 2, new Sort('foo', true))->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame(
-                '-lay=foo&-sortfield.1=foo&-sortorder.1=ascend&-max=1&-skip=2&-findall',
-                (string) $command
-            );
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $this->assertSame([$entity], iterator_to_array($repository->findAll(['foo' => 'ascend'], 1, 2)));
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findAll(['foo' => 'ascend'], 1, 2)));
     }
 
-    public function testFindByWithoutArguments()
+    public function testFindAllWithTooManySortArgs() : void
     {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&foo=bar&-find', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $this->assertSame([$entity], iterator_to_array($repository->findBy(['foo' => 'bar'])));
-    }
-
-    public function testFindByWithParameters()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame(
-                '-lay=foo&foo=bar&-sortfield.1=foo&-sortorder.1=ascend&-max=1&-skip=2&-find',
-                (string) $command
-            );
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $this->assertSame(
-            [$entity],
-            iterator_to_array($repository->findBy(['foo' => 'bar'], ['foo' => 'ascend'], 1, 2))
-        );
-    }
-
-    public function testFindByWithAutoQuoteDisabled()
-    {
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&foo=%3E%3D5&-find', (string) $command);
-            return new ItemCollection([], 0);
-        });
-
-        $repository->findBy(['foo' => '>=5'], [], null, null, false);
-    }
-
-    public function testFindByQueryWithoutArguments()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&-query=%28q1%29&-q1=foo&-q1.value=bar&-findquery', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $query = new FindQuery();
-        $query->addOrQueries(new Query('foo', 'bar'));
-        $this->assertSame([$entity], iterator_to_array($repository->findByQuery($query)));
-    }
-
-    public function testFindByQueryWithParameters()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame(
-                (
-                    '-lay=foo&-query=%28q1%29&-q1=foo&-q1.value=bar&-sortfield.1=foo&-sortorder.1=ascend&-max=1&-skip=2'
-                    . '&-findquery'
-                ),
-                (string) $command
-            );
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal());
-
-        $query = new FindQuery();
-        $query->addOrQueries(new Query('foo', 'bar'));
-        $this->assertSame([$entity], iterator_to_array($repository->findByQuery($query, ['foo' => 'ascend'], 1, 2)));
-    }
-
-    public function testInsert()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateExistingEntity(
-            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
-            $entity
-        )->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&foo=bar&-new', (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $repository->insert($entity);
-    }
-
-    public function testUpdateWithManagedEntity()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-        $hydration->hydrateExistingEntity(
-            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
-            $entity
-        )->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $index = -1;
-        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
-            $this->assertSame([
-                '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&foo=bar&-recid=1&-modid=1&-edit',
-            ][++$index], (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $foundEntity = $repository->find(1);
-        $repository->update($foundEntity);
-    }
-
-    public function testForceUpdateWithManagedEntity()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-        $hydration->hydrateExistingEntity(
-            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
-            $entity
-        )->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $index = -1;
-        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
-            $this->assertSame([
-                '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&foo=bar&-recid=1&-edit',
-            ][++$index], (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $foundEntity = $repository->find(1);
-        $repository->update($foundEntity, true);
-    }
-
-    public function testUpdateWithUnmanagedEntity()
-    {
-        $repository = $this->createAssertiveRepository();
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('is not managed');
-        $repository->update(new stdClass());
-    }
-
-    public function testUpdateWithManagedProxyEntity()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-        $hydration->hydrateExistingEntity(
-            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
-            $entity
-        )->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $index = -1;
-        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
-            $this->assertSame([
-                '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&foo=bar&-recid=1&-modid=1&-edit',
-            ][++$index], (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $foundEntity = $repository->find(1);
-        $repository->update($this->createMockProxy($foundEntity, 1));
-    }
-
-    public function testDeleteWithManagedEntity()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $index = -1;
-        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
-            $this->assertSame([
-                '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&-recid=1&-delete&-modid=1',
-            ][++$index], (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $foundEntity = $repository->find(1);
-        $repository->delete($foundEntity);
-    }
-
-    public function testForceDeleteWithManagedEntity()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $index = -1;
-        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
-            $this->assertSame([
-                '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&-recid=1&-delete',
-            ][++$index], (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $foundEntity = $repository->find(1);
-        $repository->delete($foundEntity, true);
-    }
-
-    public function testDeleteWithUnmanagedEntity()
-    {
-        $repository = $this->createAssertiveRepository();
-
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('is not managed');
-        $repository->delete(new stdClass());
-    }
-
-    public function testDeleteWithManagedProxyEntity()
-    {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateNewEntity(['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'])->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
-
-        $index = -1;
-        $repository = $this->createAssertiveRepository(function (Command $command) use (&$index) {
-            $this->assertSame([
-                '-lay=foo&-recid=1&-find&-max=1',
-                '-lay=foo&-recid=1&-delete&-modid=1',
-            ][++$index], (string) $command);
-            return new ItemCollection([['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar']], 1);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $foundEntity = $repository->find(1);
-        $repository->delete($this->createMockProxy($foundEntity, 1));
-    }
-
-    public function testFindAllWithTooManySortArgs()
-    {
-        $repository = $this->createAssertiveRepository();
+        $repository = $this->createRepository();
 
         $this->expectException(DomainException::class);
         $this->expectExceptionMessage('There cannot be more than 9 sort parameters, 10 supplied');
@@ -472,52 +170,171 @@ final class RepositoryTest extends TestCase
         );
     }
 
-    public function testInsertWithEmptyResult()
+    public function testFindByWithoutArguments() : void
     {
-        $entity = new stdClass();
-        $hydration = $this->prophesize(HydrationInterface::class);
-        $hydration->hydrateExistingEntity(
-            ['record-id' => 1, 'mod-id' => 1, 'foo' => 'bar'],
-            $entity
-        )->willReturn($entity);
-        $extraction = $this->prophesize(ExtractionInterface::class);
-        $extraction->extract($entity)->willReturn(['foo' => 'bar']);
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'bar']]);
+            return true;
+        }), null, null)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
-        $repository = $this->createAssertiveRepository(function (Command $command) {
-            $this->assertSame('-lay=foo&foo=bar&-new', (string) $command);
-            return new ItemCollection([], 0);
-        }, $hydration->reveal(), $extraction->reveal());
-
-        $this->expectException(InvalidResultException::class);
-        $this->expectExceptionMessage('Empty result set received');
-
-        $repository->insert($entity);
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findBy(['foo' => 'bar'])));
     }
 
-    private function createAssertiveRepository(
-        callable $resultSetCallback = null,
-        HydrationInterface $hydration = null,
-        ExtractionInterface $extraction = null,
-        IdentityHandlerInterface $identityHandler = null
-    ) : Repository {
-        $resultSetClient = $this->prophesize(ResultSetClientInterface::class);
-        $resultSetClient->quoteString(Argument::any())->will(function (array $parameters) {
-            return $parameters[0];
-        });
+    public function testFindByWithParameters() : void
+    {
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'bar']]);
+            return true;
+        }), 1, 2, new Sort('foo', true))->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
 
-        if (null !== $resultSetCallback) {
-            $resultSetClient->execute(Argument::any())->will(function (array $parameters) use ($resultSetCallback) {
-                return $resultSetCallback($parameters[0]);
-            });
-        }
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findBy(
+            ['foo' => 'bar'],
+            ['foo' => 'ascend'],
+            1,
+            2
+        )));
+    }
 
-        return new Repository(
-            $resultSetClient->reveal(),
-            'foo',
-            $hydration ?: $this->prophesize(HydrationInterface::class)->reveal(),
-            $extraction ?: $this->prophesize(ExtractionInterface::class)->reveal(),
-            $identityHandler
-        );
+    public function testFindByWithAutoQuoteDisabled() : void
+    {
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => '>=5']]);
+            return true;
+        }), null, null)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
+
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findBy(
+            ['foo' => '>=5'],
+            [],
+            null,
+            null,
+            false
+        )));
+    }
+
+    public function testFindByQueryWithoutArguments() : void
+    {
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'bar']]);
+            return true;
+        }), null, null)->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
+
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findByQuery(
+            new Query(new Conditions(false, new Field('foo', 'bar')))
+        )));
+    }
+
+    public function testFindByQueryWithParameters() : void
+    {
+        $this->client->find('foo', Argument::that(function (Query $query) : bool {
+            $this->assertQuerySame($query, [['foo' => 'bar']]);
+            return true;
+        }), 1, 2, new Sort('foo', true))->willReturn([$this->defaultRecord]);
+        $repository = $this->createRepository();
+
+        $this->assertSame([$this->defaultEntity], iterator_to_array($repository->findByQuery(
+            new Query(new Conditions(false, new Field('foo', 'bar'))),
+            ['foo' => 'ascend'],
+            1,
+            2
+        )));
+    }
+
+    public function testInsert() : void
+    {
+        $this->client->createRecord('foo', ['foo' => 'bar'])->willReturn([
+            'recordId' => 1,
+            'modId' => 1,
+        ])->shouldBeCalled();
+        $repository = $this->createRepository();
+        $repository->insert($this->defaultEntity);
+    }
+
+    public function testUpdateWithManagedEntity() : void
+    {
+        $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
+        $this->client->updateRecord('foo', 1, ['foo' => 'bar'])->willReturn([
+            'modId' => 1,
+        ])->shouldBeCalled();
+        $repository = $this->createRepository();
+
+        $foundEntity = $repository->find(1);
+        $repository->update($foundEntity);
+    }
+
+    public function testUpdateWithUnmanagedEntity() : void
+    {
+        $repository = $this->createRepository();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('is not managed');
+        $repository->update(new stdClass());
+    }
+
+    public function testUpdateWithManagedProxyEntity() : void
+    {
+        $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
+        $this->client->updateRecord('foo', 1, ['foo' => 'bar'])->willReturn([
+            'modId' => 1,
+        ])->shouldBeCalled();
+        $repository = $this->createRepository();
+
+        $foundEntity = $repository->find(1);
+        $repository->update($this->createMockProxy($foundEntity, 1));
+    }
+
+    public function testDeleteWithManagedEntity() : void
+    {
+        $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
+        $this->client->deleteRecord('foo', 1)->shouldBeCalled();
+        $repository = $this->createRepository();
+
+        $foundEntity = $repository->find(1);
+        $repository->delete($foundEntity);
+    }
+
+    public function testDeleteWithUnmanagedEntity() : void
+    {
+        $repository = $this->createRepository();
+
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('is not managed');
+        $repository->delete(new stdClass());
+    }
+
+    public function testDeleteWithManagedProxyEntity() : void
+    {
+        $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
+        $this->client->deleteRecord('foo', 1)->shouldBeCalled();
+        $repository = $this->createRepository();
+
+        $foundEntity = $repository->find(1);
+        $repository->delete($this->createMockProxy($foundEntity, 1));
+    }
+
+    private function createRepository() : Repository
+    {
+        $hydration = $this->prophesize(HydrationInterface::class);
+        $hydration->hydrateNewEntity(
+            $this->defaultRecord,
+            $this->client->reveal()
+        )->willReturn($this->defaultEntity);
+        $hydration->hydrateExistingEntity(
+            $this->defaultRecord,
+            $this->defaultEntity,
+            $this->client->reveal()
+        )->willReturn($this->defaultEntity);
+
+        $extraction = $this->prophesize(ExtractionInterface::class);
+        $extraction->extract(
+            $this->defaultEntity,
+            $this->client->reveal()
+        )->willReturn($this->defaultRecord['fieldData']);
+
+        return new Repository($this->client->reveal(), 'foo', $hydration->reveal(), $extraction->reveal());
     }
 
     private function createMockProxy($entity, $relationId) : ProxyInterface
@@ -543,5 +360,24 @@ final class RepositoryTest extends TestCase
                 return $this->relationId;
             }
         };
+    }
+
+    private function assertQuerySame(Query $query, array $expected) : void
+    {
+        $actual = array_map(function (Conditions $conditions) : array {
+            $result = [];
+
+            if ($conditions->isOmit()) {
+                $result['omit'] = true;
+            }
+
+            foreach ($conditions->getFields() as $field) {
+                $result[$field->getName()] = $field->getValue();
+            }
+
+            return $result;
+        }, $query->getOrConditions());
+
+        $this->assertSame($expected, $actual);
     }
 }

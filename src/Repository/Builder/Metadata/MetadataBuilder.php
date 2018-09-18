@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
-use Assert\Assertion;
 use Cache\Adapter\Common\CacheItem;
 use Cache\Adapter\Void\VoidCachePool;
 use DOMDocument;
 use Psr\Cache\CacheItemPoolInterface;
 use SimpleXMLElement;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidCollectionException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidFileException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidTypeException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\MissingInterfaceException;
@@ -41,10 +41,12 @@ final class MetadataBuilder implements MetadataBuilderInterface
 
     public function __construct(string $xmlFolder, array $additionalTypes = [], CacheItemPoolInterface $cache = null)
     {
-        if (!empty($additionalTypes)) {
-            Assertion::count(array_filter($additionalTypes, function ($type) : bool {
-                return !$type instanceof TypeInterface;
-            }), 0, sprintf('At least one element in array is not an instance of %s', TypeInterface::class));
+        if (! empty($additionalTypes)) {
+            if (count(array_filter($additionalTypes, function ($type) : bool {
+                    return !$type instanceof TypeInterface;
+            })) > 0) {
+                throw InvalidCollectionException::fromUnexpectedValueInCollection(TypeInterface::class);
+            }
         }
 
         $this->xmlFolder = $xmlFolder;
@@ -66,7 +68,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
 
         $xmlPath = sprintf('%s/%s', $this->xmlFolder, $this->buildFilename($entityClassName));
 
-        if (!file_exists($xmlPath)) {
+        if (! file_exists($xmlPath)) {
             throw InvalidFileException::fromNonExistentFile($xmlPath, $entityClassName);
         }
 
@@ -83,9 +85,8 @@ final class MetadataBuilder implements MetadataBuilderInterface
             'boolean' => new Type\BooleanType(),
             'date-time' => new Type\DateTimeType(),
             'date' => new Type\DateType(),
-            'decimal' => new Type\DecimalType(),
-            'float' => new Type\FloatType(),
-            'integer' => new Type\IntegerType(),
+            'float' => new Type\NumberType(false),
+            'integer' => new Type\NumberType(true),
             'nullable-string' => new Type\NullableStringType(),
             'stream' => new Type\StreamType(),
             'string' => new Type\StringType(),
@@ -107,7 +108,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
             foreach ($xml->field as $field) {
                 $type = (string) $field['type'];
 
-                if (!array_key_exists($type, $this->types)) {
+                if (! array_key_exists($type, $this->types)) {
                     throw InvalidTypeException::fromNonExistentType($type);
                 }
 
@@ -228,7 +229,7 @@ final class MetadataBuilder implements MetadataBuilderInterface
         $xml = new DOMDocument();
         $loadResult = $xml->load($xmlPath);
 
-        if (!$loadResult || !$xml->schemaValidate(self::SCHEMA_PATH)) {
+        if (!$loadResult || ! $xml->schemaValidate(self::SCHEMA_PATH)) {
             throw InvalidFileException::fromInvalidFile($xmlPath);
         }
 
@@ -241,14 +242,11 @@ final class MetadataBuilder implements MetadataBuilderInterface
         return str_replace('\\', '.', $className) . '.xml';
     }
 
-    /**
-     * @return string|null
-     */
     private function getInterfaceNameForRelation(
         string $mainEntityClassName,
         string $relationEntityClassName,
         bool $eagerHydration
-    ) {
+    ) : ?string {
         $entityMetadata = $this->getMetadata($relationEntityClassName);
 
         if ($entityMetadata->hasInterfaceName()) {

@@ -5,6 +5,7 @@ namespace Soliant\SimpleFM\Repository\Builder\Proxy;
 
 use ReflectionClass;
 use ReflectionMethod;
+use Soliant\SimpleFM\Repository\Builder\Proxy\Exception\InvalidEntityException;
 use Soliant\SimpleFM\Repository\Builder\Proxy\Exception\InvalidInterfaceException;
 use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\FileGenerator;
@@ -46,7 +47,7 @@ final class ProxyBuilder implements ProxyBuilderInterface
     ) : string {
         $reflectionClass = new ReflectionClass($entityInterfaceName);
 
-        if (!$reflectionClass->isInterface()) {
+        if (! $reflectionClass->isInterface()) {
             throw InvalidInterfaceException::fromInvalidInterface($entityInterfaceName);
         }
 
@@ -82,7 +83,13 @@ final class ProxyBuilder implements ProxyBuilderInterface
         $getRealEntityGenerator->setBody('
             if (null === $this->realEntity) {
                 $this->realEntity = ($this->initializer)();
-                \Assert\Assertion::isInstanceOf($this->realEntity, \\' . $entityInterfaceName . '::class);
+                
+                if (! $this->realEntity instanceof \\' . $entityInterfaceName . ') {
+                    throw \\' . InvalidEntityException::class . '::fromInvalidEntity(
+                        $this->realEntity,
+                        \\' . $entityInterfaceName . '::class
+                    );
+                }
             };
 
             return $this->realEntity;
@@ -120,7 +127,13 @@ final class ProxyBuilder implements ProxyBuilderInterface
             $body = '
                 if (null === $this->realEntity) {
                     $this->realEntity = ($this->initializer)();
-                    \Assert\Assertion::isInstanceOf($this->realEntity, \\' . $entityInterfaceName . '::class);
+
+                    if (! $this->realEntity instanceof \\' . $entityInterfaceName . ') {
+                        throw \\' . InvalidEntityException::class . '::fromInvalidEntity(
+                            $this->realEntity,
+                            \\' . $entityInterfaceName . '::class
+                        );
+                    }
                 };
             ';
 

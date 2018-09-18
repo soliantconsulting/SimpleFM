@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder\Metadata;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 
 final class ManyToOneTest extends TestCase
 {
-    public function testGenericGetters()
+    public function testGenericGetters() : void
     {
         $metadata = new ManyToOne(
             'fieldName',
@@ -31,7 +31,7 @@ final class ManyToOneTest extends TestCase
         $this->assertFalse($metadata->hasEagerHydration());
     }
 
-    public function testSettingEagerHydration()
+    public function testSettingEagerHydration() : void
     {
         $metadata = new ManyToOne('', '', '', '', '', '', '', false, true);
         $this->assertTrue($metadata->hasEagerHydration());

@@ -3,14 +3,24 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder\Type;
 
-use Assert\InvalidArgumentException;
-use Litipk\BigNumbers\Decimal;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Soliant\SimpleFM\Client\ClientInterface;
 use Soliant\SimpleFM\Repository\Builder\Type\BooleanType;
+use Soliant\SimpleFM\Repository\Builder\Type\Exception\ConversionException;
 use stdClass;
 
 final class BooleanTypeTest extends TestCase
 {
+    /**
+     * @var ClientInterface
+     */
+    private $client;
+
+    public function setUp() : void
+    {
+        $this->client = $this->prophesize(ClientInterface::class)->reveal();
+    }
+
     public static function fileMakerBooleanProvider() : array
     {
         return [
@@ -19,39 +29,39 @@ final class BooleanTypeTest extends TestCase
             ['0', false],
             ['1', true],
             ['test', true],
-            [Decimal::fromInteger(0), false],
-            [Decimal::fromInteger(1), true],
-            [Decimal::fromInteger(2), true],
-            [Decimal::fromInteger(-1), true],
+            [0, false],
+            [2, true],
+            [2, true],
+            [-1, true],
         ];
     }
 
     /**
      * @dataProvider fileMakerBooleanProvider
      */
-    public function testSuccessfulConversionFromFileMaker($fileMakerValue, bool $expectedResult)
+    public function testSuccessfulConversionFromFileMaker($fileMakerValue, bool $expectedResult) : void
     {
         $type = new BooleanType();
-        $this->assertSame($expectedResult, $type->fromFileMakerValue($fileMakerValue));
+        $this->assertSame($expectedResult, $type->fromFileMakerValue($fileMakerValue, $this->client));
     }
 
-    public function testUnsuccessfulConversionFromFileMaker()
+    public function testUnsuccessfulConversionFromFileMaker() : void
     {
         $type = new BooleanType();
-        $this->assertTrue($type->fromFileMakerValue(new stdClass()));
+        $this->assertTrue($type->fromFileMakerValue(new stdClass(), $this->client));
     }
 
-    public function testSuccessfulConversionToFileMaker()
+    public function testSuccessfulConversionToFileMaker() : void
     {
         $type = new BooleanType();
-        $this->assertSame(0, $type->toFileMakerValue(false)->asInteger());
-        $this->assertSame(1, $type->toFileMakerValue(true)->asInteger());
+        $this->assertSame(0, $type->toFileMakerValue(false, $this->client));
+        $this->assertSame(1, $type->toFileMakerValue(true, $this->client));
     }
 
-    public function testUnsuccessfulConversionToFileMaker()
+    public function testUnsuccessfulConversionToFileMaker() : void
     {
         $type = new BooleanType();
-        $this->expectException(InvalidArgumentException::class);
-        $type->toFileMakerValue('foo');
+        $this->expectException(ConversionException::class);
+        $type->toFileMakerValue('foo', $this->client);
     }
 }

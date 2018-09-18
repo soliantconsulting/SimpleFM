@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder\Metadata;
 
-use Assert\InvalidArgumentException;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Embeddable;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidCollectionException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Field;
 use Soliant\SimpleFM\Repository\Builder\Metadata\ManyToOne;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToMany;
@@ -16,7 +16,7 @@ use Soliant\SimpleFM\Repository\Builder\Type\TypeInterface;
 
 final class EntityTest extends TestCase
 {
-    public function testGenericGetters()
+    public function testGenericGetters() : void
     {
         $fields = [new Field('', '', $this->prophesize(TypeInterface::class)->reveal(), false, false)];
         $embeddables = [new Embeddable('', '', new Entity('', '', [], [], [], [], []))];
@@ -34,7 +34,7 @@ final class EntityTest extends TestCase
         $this->assertSame($oneToOne, $metadata->getOneToOne());
     }
 
-    public function testOptionalRecordId()
+    public function testOptionalRecordId() : void
     {
         $recordId = new RecordId('foo');
         $metadata = new Entity('', '', [], [], [], [], [], $recordId);
@@ -42,60 +42,58 @@ final class EntityTest extends TestCase
         $this->assertSame($recordId, $metadata->getRecordId());
     }
 
-    public function testMissingRecordId()
+    public function testMissingRecordId() : void
     {
         $metadata = new Entity('', '', [], [], [], [], []);
         $this->assertFalse($metadata->hasRecordId());
-        $this->expectException(InvalidArgumentException::class);
-        $metadata->getRecordId();
+        $this->assertNull($metadata->getRecordId());
     }
 
-    public function testOptionalInterfaceName()
+    public function testOptionalInterfaceName() : void
     {
         $metadata = new Entity('', '', [], [], [], [], [], null, 'foo');
         $this->assertTrue($metadata->hasInterfaceName());
         $this->assertSame('foo', $metadata->getInterfaceName());
     }
 
-    public function testMissingInterfaceName()
+    public function testMissingInterfaceName() : void
     {
         $metadata = new Entity('', '', [], [], [], [], []);
         $this->assertFalse($metadata->hasInterfaceName());
-        $this->expectException(InvalidArgumentException::class);
-        $metadata->getInterfaceName();
+        $this->assertNull($metadata->getInterfaceName());
     }
 
-    public function testInvalidField()
+    public function testInvalidField() : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidCollectionException::class);
         $this->expectExceptionMessage(sprintf('not an instance of %s', Field::class));
         new Entity('layout', 'className', ['foo'], [], [], [], []);
     }
 
-    public function testInvalidEmbeddable()
+    public function testInvalidEmbeddable() : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidCollectionException::class);
         $this->expectExceptionMessage(sprintf('not an instance of %s', Embeddable::class));
         new Entity('layout', 'className', [], ['foo'], [], [], []);
     }
 
-    public function testInvalidOneToMany()
+    public function testInvalidOneToMany() : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidCollectionException::class);
         $this->expectExceptionMessage(sprintf('not an instance of %s', OneToMany::class));
         new Entity('layout', 'className', [], [], ['foo'], [], []);
     }
 
-    public function testInvalidManyToOne()
+    public function testInvalidManyToOne() : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidCollectionException::class);
         $this->expectExceptionMessage(sprintf('not an instance of %s', ManyToOne::class));
         new Entity('layout', 'className', [], [], [], ['foo'], []);
     }
 
-    public function testInvalidOneToOne()
+    public function testInvalidOneToOne() : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidCollectionException::class);
         $this->expectExceptionMessage(sprintf('not an instance of %s', OneToOne::class));
         new Entity('layout', 'className', [], [], [], [], ['foo']);
     }

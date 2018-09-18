@@ -3,19 +3,16 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository;
 
-use Soliant\SimpleFM\Authentication\Identity;
 use Soliant\SimpleFM\Collection\CollectionInterface;
-use Soliant\SimpleFM\Repository\Query\FindQuery;
+use Soliant\SimpleFM\Query\Query;
 
 interface RepositoryInterface
 {
-    public function withIdentity(Identity $identity) : self;
+    public function find(int $recordId) : ?object;
 
-    public function find(int $recordId);
+    public function findOneBy(array $search, bool $autoQuoteSearch = true) : ?object;
 
-    public function findOneBy(array $search, bool $autoQuoteSearch = true);
-
-    public function findOneByQuery(FindQuery $query);
+    public function findOneByQuery(Query $query) : ?object;
 
     public function findAll(array $sort = [], int $limit = null, int $offset = null) : CollectionInterface;
 
@@ -28,19 +25,17 @@ interface RepositoryInterface
     ) : CollectionInterface;
 
     public function findByQuery(
-        FindQuery $findQuery,
+        Query $query,
         array $sort = [],
         int $limit = null,
         int $offset = null
     ) : CollectionInterface;
 
-    public function insert($entity);
+    public function insert(object $entity);
 
-    public function update($entity, bool $force = false);
+    public function update(object $entity);
 
-    public function delete($entity, bool $force = false);
+    public function delete(object $entity);
 
-    public function quoteString(string $string) : string;
-
-    public function createEntity(array $record);
+    public function createEntity(array $record) : object;
 }

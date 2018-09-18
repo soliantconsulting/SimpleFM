@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder\Metadata;
 
-use Assert\InvalidArgumentException;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\RelationException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\OneToOne;
 
 final class OneToOneTest extends TestCase
 {
-    public function testGenericGetters()
+    public function testGenericGetters() : void
     {
         $metadata = new OneToOne(
             'propertyName',
@@ -34,15 +34,15 @@ final class OneToOneTest extends TestCase
         $this->assertFalse($metadata->hasEagerHydration());
     }
 
-    public function testSettingEagerHydration()
+    public function testSettingEagerHydration() : void
     {
         $metadata = new OneToOne('', '', '', '', '', true, true, '', '', true);
         $this->assertTrue($metadata->hasEagerHydration());
     }
 
-    public function testExceptionOnMissingProperties()
+    public function testExceptionOnMissingProperties() : void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RelationException::class);
         new OneToOne(
             'propertyName',
             'targetTable',
@@ -54,7 +54,7 @@ final class OneToOneTest extends TestCase
         );
     }
 
-    public function testOptionalPropertiesAreSetToNullOnInverseSide()
+    public function testOptionalPropertiesAreSetToNullOnInverseSide() : void
     {
         $metadata = new OneToOne(
             'propertyName',
@@ -70,10 +70,10 @@ final class OneToOneTest extends TestCase
 
         $this->assertTrue($metadata->isReadOnly());
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RelationException::class);
         $metadata->getTargetPropertyName();
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RelationException::class);
         $metadata->getPropertyName();
     }
 }

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
-use Assert\Assertion;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\MissingInterfaceException;
 
 final class ManyToOne
 {
@@ -106,10 +106,10 @@ final class ManyToOne
 
     public function getTargetInterfaceName() : string
     {
-        Assertion::notNull(
-            $this->targetInterfaceName,
-            sprintf('Target entity %s has no interface name defined', $this->targetEntity)
-        );
+        if (null === $this->targetInterfaceName) {
+            throw MissingInterfaceException::fromMissingInterfaceDefinition($this->targetEntity);
+        }
+
         return $this->targetInterfaceName;
     }
 

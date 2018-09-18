@@ -3,28 +3,41 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Type;
 
-use Assert\Assertion;
-use DateTimeInterface;
+use DateTimeImmutable;
+use Soliant\SimpleFM\Client\ClientInterface;
+use Soliant\SimpleFM\Repository\Builder\Type\Exception\ConversionException;
 
 final class DateTimeType implements TypeInterface
 {
-    public function fromFileMakerValue($value)
+    public function fromFileMakerValue($value, ClientInterface $client)
     {
-        if (null === $value) {
+        if (! is_string($value)) {
+            throw ConversionException::fromInvalidType($value, 'string');
+        }
+
+        if ('' === $value) {
             return null;
         }
 
-        Assertion::isInstanceOf($value, DateTimeInterface::class);
-        return $value;
+        $dateTime = DateTimeImmutable::createFromFormat('m/d/Y H:i:s', $value, $client->getConnection()->getTimeZone());
+
+        if (false === $dateTime) {
+            throw ConversionException::fromUnexpectedValue($value);
+        }
+
+        return $dateTime;
     }
 
-    public function toFileMakerValue($value)
+    public function toFileMakerValue($value, ClientInterface $client)
     {
         if (null === $value) {
-            return null;
+            return '';
         }
 
-        Assertion::isInstanceOf($value, DateTimeInterface::class);
-        return $value;
+        if (! $value instanceof DateTimeImmutable) {
+            throw ConversionException::fromInvalidType($value, DateTimeImmutable::class);
+        }
+
+        return $value->setTimezone($client->getConnection()->getTimeZone())->format('m/d/Y H:i:s');
     }
 }

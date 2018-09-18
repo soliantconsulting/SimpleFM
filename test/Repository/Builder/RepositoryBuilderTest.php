@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
+use PHPUnit\Framework\TestCase;
+use Soliant\SimpleFM\Client\ClientInterface;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Metadata\MetadataBuilderInterface;
 use Soliant\SimpleFM\Repository\Builder\MetadataExtraction;
@@ -14,13 +14,13 @@ use Soliant\SimpleFM\Repository\Builder\RepositoryBuilder;
 
 final class RepositoryBuilderTest extends TestCase
 {
-    public function testRepositoryCaching()
+    public function testRepositoryCaching() : void
     {
         $metadataBuilder = $this->prophesize(MetadataBuilderInterface::class);
         $metadataBuilder->getMetadata('foo')->willReturn(new Entity('bar', 'foo', [], [], [], [], []));
 
         $builder = new RepositoryBuilder(
-            $this->prophesize(ResultSetClientInterface::class)->reveal(),
+            $this->prophesize(ClientInterface::class)->reveal(),
             $metadataBuilder->reveal(),
             $this->prophesize(ProxyBuilderInterface::class)->reveal()
         );
@@ -28,7 +28,7 @@ final class RepositoryBuilderTest extends TestCase
         $this->assertSame($builder->buildRepository('foo'), $builder->buildRepository('foo'));
     }
 
-    public function testMetadataInjection()
+    public function testMetadataInjection() : void
     {
         $metadata = new Entity('bar', 'foo', [], [], [], [], []);
 
@@ -36,7 +36,7 @@ final class RepositoryBuilderTest extends TestCase
         $metadataBuilder->getMetadata('foo')->willReturn($metadata);
 
         $builder = new RepositoryBuilder(
-            $this->prophesize(ResultSetClientInterface::class)->reveal(),
+            $this->prophesize(ClientInterface::class)->reveal(),
             $metadataBuilder->reveal(),
             $this->prophesize(ProxyBuilderInterface::class)->reveal()
         );

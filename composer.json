@@ -13,24 +13,23 @@
         {"name": "Ben Scholzen", "email": "bscholzen@soliantconsulting.com"}
     ],
     "require": {
-        "php": "^7.0",
+        "php": "^7.2",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-libxml": "*",
+        "ext-simplexml": "*",
+        "cache/adapter-common": "^0.3.3",
+        "cache/void-adapter": "^0.3.1",
         "php-http/httplug": "^1.1",
-        "zendframework/zend-diactoros": "^1.3",
-        "litipk/php-bignumbers": "^0.8.4",
-        "beberlei/assert": "^2.6",
+        "psr/cache": "^1.0",
         "psr/log": "^1.0",
         "zendframework/zend-code": "^3.0",
-        "psr/cache": "^1.0",
-        "cache/void-adapter": "^0.3.1",
-        "cache/adapter-common": "^0.3.3"
+        "zendframework/zend-diactoros": "^1.3"
     },
     "require-dev": {
-        "zendframework/zend-crypt": "^3.1",
+        "php-http/mock-client": "^1.1",
         "phpunit/PHPUnit": "^5.5",
         "squizlabs/php_codesniffer": "^2.6"
-    },
-    "suggest": {
-        "zendframework/zend-crypt": "For using the block chain identity handler"
     },
     "autoload": {
         "psr-4": {
@@ -41,6 +40,9 @@
         "psr-4": {
             "SoliantTest\\SimpleFM\\": "test/"
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "scripts": {
         "check": [

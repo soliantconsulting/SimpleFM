@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Soliant\SimpleFM\Client\ClientInterface;
 use Soliant\SimpleFM\Repository\Builder\Exception\ExtractionException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Embeddable;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
@@ -19,7 +20,17 @@ use SoliantTest\SimpleFM\Repository\Builder\TestAssets\EmptyProxyEntityInterface
 
 final class MetadataExtractionTest extends TestCase
 {
-    public function testSimpleFieldExtraction()
+    /**
+     * @var ClientInterface
+     */
+    private $client;
+
+    public function setUp() : void
+    {
+        $this->client = $this->prophesize(ClientInterface::class)->reveal();
+    }
+
+    public function testSimpleFieldExtraction() : void
     {
         $entity = new class
         {
@@ -31,10 +42,10 @@ final class MetadataExtractionTest extends TestCase
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bar' => 'bat'], $extraction->extract($entity));
+        $this->assertSame(['bar' => 'bat'], $extraction->extract($entity, $this->client));
     }
 
-    public function testProxyExtraction()
+    public function testProxyExtraction() : void
     {
         $entity = new class
         {
@@ -69,10 +80,10 @@ final class MetadataExtractionTest extends TestCase
         ], [], [], [], [], null, EmptyEntityInterface::class);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bar' => 'bat'], $extraction->extract($proxyEntity));
+        $this->assertSame(['bar' => 'bat'], $extraction->extract($proxyEntity, $this->client));
     }
 
-    public function testRepeatableFieldExtraction()
+    public function testRepeatableFieldExtraction() : void
     {
         $entity = new class
         {
@@ -84,10 +95,10 @@ final class MetadataExtractionTest extends TestCase
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bar(1)' => 'bat1', 'bar(2)' => 'bat2'], $extraction->extract($entity));
+        $this->assertSame(['bar(1)' => 'bat1', 'bar(2)' => 'bat2'], $extraction->extract($entity, $this->client));
     }
 
-    public function testReadOnlyFieldExtraction()
+    public function testReadOnlyFieldExtraction() : void
     {
         $entity = new class
         {
@@ -99,10 +110,10 @@ final class MetadataExtractionTest extends TestCase
         ], [], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame([], $extraction->extract($entity));
+        $this->assertSame([], $extraction->extract($entity, $this->client));
     }
 
-    public function testRepeatableFieldExtractionWithoutArray()
+    public function testRepeatableFieldExtractionWithoutArray() : void
     {
         $entity = new class
         {
@@ -116,10 +127,10 @@ final class MetadataExtractionTest extends TestCase
         $extraction = new MetadataExtraction($entityMetadata);
         $this->expectException(ExtractionException::class);
         $this->expectExceptionMessage('is not an array');
-        $extraction->extract($entity);
+        $extraction->extract($entity, $this->client);
     }
 
-    public function testEmbeddableExtraction()
+    public function testEmbeddableExtraction() : void
     {
         $embeddable = new class
         {
@@ -138,10 +149,10 @@ final class MetadataExtractionTest extends TestCase
         ], [], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bazPrefixfooField' => 'bar'], $extraction->extract($entity));
+        $this->assertSame(['bazPrefixfooField' => 'bar'], $extraction->extract($entity, $this->client));
     }
 
-    public function testManyToOneExtractionWithEntity()
+    public function testManyToOneExtractionWithEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -167,10 +178,10 @@ final class MetadataExtractionTest extends TestCase
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bat' => 5], $extraction->extract($entity));
+        $this->assertSame(['bat' => 5], $extraction->extract($entity, $this->client));
     }
 
-    public function testManyToOneExtractionWithProxyEntity()
+    public function testManyToOneExtractionWithProxyEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -196,10 +207,10 @@ final class MetadataExtractionTest extends TestCase
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bat' => 5], $extraction->extract($entity));
+        $this->assertSame(['bat' => 5], $extraction->extract($entity, $this->client));
     }
 
-    public function testManyToOneReadOnlyExtractionWithEntity()
+    public function testManyToOneReadOnlyExtractionWithEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -225,10 +236,10 @@ final class MetadataExtractionTest extends TestCase
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame([], $extraction->extract($entity));
+        $this->assertSame([], $extraction->extract($entity, $this->client));
     }
 
-    public function testManyToOneExtractionWithoutEntity()
+    public function testManyToOneExtractionWithoutEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -252,10 +263,10 @@ final class MetadataExtractionTest extends TestCase
         ], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bat' => null], $extraction->extract($entity));
+        $this->assertSame(['bat' => null], $extraction->extract($entity, $this->client));
     }
 
-    public function testOneToOneOwningExtractionWithEntity()
+    public function testOneToOneOwningExtractionWithEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -282,10 +293,10 @@ final class MetadataExtractionTest extends TestCase
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bat' => 5], $extraction->extract($entity));
+        $this->assertSame(['bat' => 5], $extraction->extract($entity, $this->client));
     }
 
-    public function testOneToOneOwningExtractionWithProxyEntity()
+    public function testOneToOneOwningExtractionWithProxyEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -312,10 +323,10 @@ final class MetadataExtractionTest extends TestCase
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bat' => 5], $extraction->extract($entity));
+        $this->assertSame(['bat' => 5], $extraction->extract($entity, $this->client));
     }
 
-    public function testOneToOneOwningReadOnlyExtractionWithEntity()
+    public function testOneToOneOwningReadOnlyExtractionWithEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -342,10 +353,10 @@ final class MetadataExtractionTest extends TestCase
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame([], $extraction->extract($entity));
+        $this->assertSame([], $extraction->extract($entity, $this->client));
     }
 
-    public function testOneToOneOwningExtractionWithoutEntity()
+    public function testOneToOneOwningExtractionWithoutEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -370,10 +381,10 @@ final class MetadataExtractionTest extends TestCase
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame(['bat' => null], $extraction->extract($entity));
+        $this->assertSame(['bat' => null], $extraction->extract($entity, $this->client));
     }
 
-    public function testOneToOneInverseExtractionWithEntity()
+    public function testOneToOneInverseExtractionWithEntity() : void
     {
         $childEntity = new class implements EmptyProxyEntityInterface
         {
@@ -400,10 +411,10 @@ final class MetadataExtractionTest extends TestCase
         ]);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame([], $extraction->extract($entity));
+        $this->assertSame([], $extraction->extract($entity, $this->client));
     }
 
-    public function testOneToManyExtractionWithEntity()
+    public function testOneToManyExtractionWithEntity() : void
     {
         $childEntity = new class
         {
@@ -420,10 +431,10 @@ final class MetadataExtractionTest extends TestCase
         ], [], []);
 
         $extraction = new MetadataExtraction($entityMetadata);
-        $this->assertSame([], $extraction->extract($entity));
+        $this->assertSame([], $extraction->extract($entity, $this->client));
     }
 
-    private function createMockProxy($entity, $relationId) : ProxyInterface
+    private function createMockProxy(object $entity, int $relationId) : ProxyInterface
     {
         return new class($entity, $relationId) implements ProxyInterface
         {

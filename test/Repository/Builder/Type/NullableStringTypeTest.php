@@ -3,47 +3,58 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository\Builder\Type;
 
-use Assert\InvalidArgumentException;
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
+use Soliant\SimpleFM\Client\ClientInterface;
+use Soliant\SimpleFM\Repository\Builder\Type\Exception\ConversionException;
 use Soliant\SimpleFM\Repository\Builder\Type\NullableStringType;
 
 final class NullableStringTypeTest extends TestCase
 {
-    public function testSuccessfulConversionFromFileMaker()
+    /**
+     * @var ClientInterface
+     */
+    private $client;
+
+    public function setUp() : void
     {
-        $type = new NullableStringType();
-        $this->assertSame('foo', $type->fromFileMakerValue('foo'));
+        $this->client = $this->prophesize(ClientInterface::class)->reveal();
     }
 
-    public function testNullConversionFromFileMaker()
+    public function testSuccessfulConversionFromFileMaker() : void
     {
         $type = new NullableStringType();
-        $this->assertNull($type->fromFileMakerValue(''));
+        $this->assertSame('foo', $type->fromFileMakerValue('foo', $this->client));
     }
 
-    public function testUnsuccessfulConversionFromFileMaker()
+    public function testNullConversionFromFileMaker() : void
     {
         $type = new NullableStringType();
-        $this->expectException(InvalidArgumentException::class);
-        $type->fromFileMakerValue(1);
+        $this->assertNull($type->fromFileMakerValue('', $this->client));
     }
 
-    public function testSuccessfulConversionToFileMaker()
+    public function testUnsuccessfulConversionFromFileMaker() : void
     {
         $type = new NullableStringType();
-        $this->assertSame('foo', $type->toFileMakerValue('foo'));
+        $this->expectException(ConversionException::class);
+        $type->fromFileMakerValue(1, $this->client);
     }
 
-    public function testNullConversionToFileMaker()
+    public function testSuccessfulConversionToFileMaker() : void
     {
         $type = new NullableStringType();
-        $this->assertSame('', $type->toFileMakerValue(null));
+        $this->assertSame('foo', $type->toFileMakerValue('foo', $this->client));
     }
 
-    public function testUnsuccessfulConversionToFileMaker()
+    public function testNullConversionToFileMaker() : void
     {
         $type = new NullableStringType();
-        $this->expectException(InvalidArgumentException::class);
-        $type->toFileMakerValue(1);
+        $this->assertSame('', $type->toFileMakerValue(null, $this->client));
+    }
+
+    public function testUnsuccessfulConversionToFileMaker() : void
+    {
+        $type = new NullableStringType();
+        $this->expectException(ConversionException::class);
+        $type->toFileMakerValue(1, $this->client);
     }
 }

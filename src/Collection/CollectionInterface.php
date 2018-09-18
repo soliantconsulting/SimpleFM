@@ -8,8 +8,6 @@ use Traversable;
 
 interface CollectionInterface extends Countable, Traversable
 {
-    public function getTotalCount() : int;
-
     public function isEmpty() : bool;
 
     public function first();

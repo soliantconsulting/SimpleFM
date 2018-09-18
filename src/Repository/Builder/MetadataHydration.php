@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder;
 
-use Assert\Assertion;
 use Exception;
 use ReflectionClass;
+use Soliant\SimpleFM\Client\ClientInterface;
 use Soliant\SimpleFM\Collection\ItemCollection;
+use Soliant\SimpleFM\Query\Conditions;
+use Soliant\SimpleFM\Query\Field;
+use Soliant\SimpleFM\Query\Query;
 use Soliant\SimpleFM\Repository\Builder\Exception\HydrationException;
 use Soliant\SimpleFM\Repository\Builder\Metadata\Entity;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilderInterface;
@@ -40,34 +43,44 @@ final class MetadataHydration implements HydrationInterface
         $this->entityMetadata = $entityMetadata;
     }
 
-    public function hydrateNewEntity(array $data)
+    public function hydrateNewEntity(array $data, ClientInterface $client) : object
     {
         $reflectionClass = new ReflectionClass($this->entityMetadata->getClassName());
-        return $this->hydrateExistingEntity($data, $reflectionClass->newInstanceWithoutConstructor());
+        return $this->hydrateExistingEntity($data, $reflectionClass->newInstanceWithoutConstructor(), $client);
     }
 
-    public function hydrateExistingEntity(array $data, $entity)
+    public function hydrateExistingEntity(array $data, object $entity, ClientInterface $client) : object
     {
-        return $this->hydrateWithMetadata($data, $entity, $this->entityMetadata);
+        return $this->hydrateWithMetadata($data, $entity, $this->entityMetadata, $client);
     }
 
-    private function hydrateWithMetadata(array $data, $entity, Entity $metadata)
+    private function hydrateWithMetadata(array $data, $entity, Entity $metadata, ClientInterface $client)
     {
-        Assertion::isInstanceOf($entity, $metadata->getClassName());
+        $className = $metadata->getClassName();
+
+        if (! $entity instanceof $className) {
+            throw HydrationException::fromEntityMismatch($className);
+        }
+
         $reflectionClass = new ReflectionClass($entity);
+        $fieldData = $data['fieldData'] ?? [];
+        $portalData = $data['portalData'] ?? [];
 
         foreach ($metadata->getFields() as $fieldMetadata) {
             try {
                 $type = $fieldMetadata->getType();
-                $value = $data[$fieldMetadata->getFieldName()];
+                $value = $fieldData[$fieldMetadata->getFieldName()];
 
                 if ($fieldMetadata->isRepeatable()) {
-                    Assertion::isArray($value);
-                    $value = array_map(function ($value) use ($type) {
-                        return $type->fromFileMakerValue($value);
+                    if (! is_array($value)) {
+                        throw HydrationException::fromNonArrayRepeatable($fieldMetadata->getPropertyName());
+                    }
+
+                    $value = array_map(function ($value) use ($type, $client) {
+                        return $type->fromFileMakerValue($value, $client);
                     }, $value);
                 } else {
-                    $value = $type->fromFileMakerValue($value);
+                    $value = $type->fromFileMakerValue($value, $client);
                 }
 
                 $this->setProperty(
@@ -85,11 +98,12 @@ final class MetadataHydration implements HydrationInterface
             $prefix = $embeddableMetadata->getFieldNamePrefix();
 
             if ('' === $prefix) {
-                $embeddableData = $data;
+                $embeddableData = $fieldData;
             } else {
+                $embeddableData = [];
                 $prefixLength = strlen($prefix);
 
-                foreach ($data as $key => $value) {
+                foreach ($fieldData as $key => $value) {
                     if (0 !== strpos($key, $prefix)) {
                         continue;
                     }
@@ -109,7 +123,12 @@ final class MetadataHydration implements HydrationInterface
 
             $reflectionProperty->setValue(
                 $entity,
-                $this->hydrateWithMetadata($embeddableData, $embeddable, $embeddableMetadata->getMetadata())
+                $this->hydrateWithMetadata(
+                    ['fieldData' => $embeddableData],
+                    $embeddable,
+                    $embeddableMetadata->getMetadata(),
+                    $client
+                )
             );
         }
 
@@ -119,16 +138,16 @@ final class MetadataHydration implements HydrationInterface
             if ($relationMetadata->hasEagerHydration()) {
                 $items = [];
 
-                foreach ($data[$relationMetadata->getTargetTable()] as $record) {
+                foreach ($portalData[$relationMetadata->getTargetTable()] as $record) {
                     $items[] = $repository->createEntity($record);
                 }
 
-                $collection = new ItemCollection($items, count($items));
+                $collection = new ItemCollection($items);
             } else {
                 $collection = new LazyLoadedCollection(
                     $repository,
                     $relationMetadata->getTargetFieldName(),
-                    $data[$relationMetadata->getTargetTable()]
+                    $portalData[$relationMetadata->getTargetTable()]
                 );
             }
 
@@ -138,7 +157,7 @@ final class MetadataHydration implements HydrationInterface
         $toOne = $metadata->getManyToOne() + $metadata->getOneToOne();
 
         foreach ($toOne as $relationMetadata) {
-            if (empty($data[$relationMetadata->getTargetTable()])) {
+            if (empty($portalData[$relationMetadata->getTargetTable()])) {
                 $this->setProperty($reflectionClass, $entity, $relationMetadata->getPropertyName(), null);
                 continue;
             }
@@ -150,27 +169,26 @@ final class MetadataHydration implements HydrationInterface
                     $reflectionClass,
                     $entity,
                     $relationMetadata->getPropertyName(),
-                    $repository->createEntity($data[$relationMetadata->getTargetTable()][0])
+                    $repository->createEntity($portalData[$relationMetadata->getTargetTable()][0])
                 );
                 continue;
             }
 
-            Assertion::true(
-                $metadata->hasInterfaceName(),
-                sprintf('Entity "%s" has no interface name definied', $metadata->getClassName())
-            );
+            if (! $metadata->hasInterfaceName()) {
+                throw HydrationException::fromMissingInterface($metadata->getClassName());
+            }
 
             $fieldName = $relationMetadata->getTargetFieldName();
-            $fieldValue = (string) $data[$relationMetadata->getTargetTable()][0][$fieldName];
+            $fieldValue = (string) $portalData[$relationMetadata->getTargetTable()][0][$fieldName];
 
             $proxy = $this->proxyBuilder->createProxy($relationMetadata->getTargetInterfaceName(), function () use (
                 $repository,
                 $fieldName,
                 $fieldValue
             ) {
-                return $repository->findOneBy([
-                    $fieldName => $repository->quoteString($fieldValue),
-                ]);
+                return $repository->findOneByQuery(
+                    new Query(new Conditions(false, new Field($fieldName, $fieldValue)))
+                );
             }, $fieldValue);
 
             $this->setProperty($reflectionClass, $entity, $relationMetadata->getPropertyName(), $proxy);
@@ -178,7 +196,7 @@ final class MetadataHydration implements HydrationInterface
 
         if ($metadata->hasRecordId()) {
             $recordIdMetadata = $metadata->getRecordId();
-            $this->setProperty($reflectionClass, $entity, $recordIdMetadata->getPropertyName(), $data['record-id']);
+            $this->setProperty($reflectionClass, $entity, $recordIdMetadata->getPropertyName(), $data['recordId']);
         }
 
         return $entity;

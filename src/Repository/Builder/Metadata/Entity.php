@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository\Builder\Metadata;
 
-use Assert\Assertion;
+use Soliant\SimpleFM\Repository\Builder\Metadata\Exception\InvalidCollectionException;
 
 final class Entity
 {
@@ -95,9 +95,8 @@ final class Entity
         return null !== $this->interfaceName;
     }
 
-    public function getInterfaceName() : string
+    public function getInterfaceName() : ?string
     {
-        Assertion::notNull($this->interfaceName);
         return $this->interfaceName;
     }
 
@@ -146,16 +145,17 @@ final class Entity
         return null !== $this->recordId;
     }
 
-    public function getRecordId() : RecordId
+    public function getRecordId() : ?RecordId
     {
-        Assertion::notNull($this->recordId);
         return $this->recordId;
     }
 
     private function validateArray(array $array, string $expectedClassName)
     {
-        Assertion::count(array_filter($array, function ($metadata) use ($expectedClassName) : bool {
+        if (count(array_filter($array, function ($metadata) use ($expectedClassName) : bool {
             return !$metadata instanceof $expectedClassName;
-        }), 0, sprintf('At least one element in array is not an instance of %s', $expectedClassName));
+        })) > 0) {
+            throw InvalidCollectionException::fromUnexpectedValueInCollection($expectedClassName);
+        }
     }
 }

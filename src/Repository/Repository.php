@@ -3,23 +3,24 @@ declare(strict_types = 1);
 
 namespace Soliant\SimpleFM\Repository;
 
-use Soliant\SimpleFM\Authentication\Identity;
-use Soliant\SimpleFM\Client\ResultSet\ResultSetClientInterface;
+use Soliant\SimpleFM\Client\ClientInterface;
+use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Collection\CollectionInterface;
 use Soliant\SimpleFM\Collection\ItemCollection;
-use Soliant\SimpleFM\Connection\Command;
+use Soliant\SimpleFM\Query\Conditions;
+use Soliant\SimpleFM\Query\Field;
+use Soliant\SimpleFM\Query\Query;
 use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyInterface;
 use Soliant\SimpleFM\Repository\Exception\DomainException;
-use Soliant\SimpleFM\Repository\Exception\InvalidResultException;
-use Soliant\SimpleFM\Repository\Query\FindQuery;
+use Soliant\SimpleFM\Sort\Sort;
 use SplObjectStorage;
 
 final class Repository implements RepositoryInterface
 {
     /**
-     * @var ResultSetClientInterface
+     * @var ClientInterface
      */
-    private $resultSetClient;
+    private $client;
 
     /**
      * @var string
@@ -37,11 +38,6 @@ final class Repository implements RepositoryInterface
     private $extraction;
 
     /**
-     * @var Identity|null
-     */
-    private $identity;
-
-    /**
      * @var SplObjectStorage
      */
     private $managedEntities;
@@ -52,71 +48,66 @@ final class Repository implements RepositoryInterface
     private $entitiesByRecordId = [];
 
     public function __construct(
-        ResultSetClientInterface $resultSetClient,
+        ClientInterface $client,
         string $layout,
         HydrationInterface $hydration,
         ExtractionInterface $extraction
     ) {
-        $this->resultSetClient = $resultSetClient;
+        $this->client = $client;
         $this->layout = $layout;
         $this->hydration = $hydration;
         $this->extraction = $extraction;
         $this->managedEntities = new SplObjectStorage();
     }
 
-    public function withIdentity(Identity $identity) : RepositoryInterface
+    public function find(int $recordId) : ?object
     {
-        $repository = clone $this;
-        $repository->identity = $identity;
+        try {
+            $record = $this->client->getRecord($this->layout, $recordId);
+        } catch (FileMakerException $e) {
+            if (101 === $e->getCode()) {
+                return null;
+            }
 
-        return $repository;
+            throw $e;
+        }
+
+        return $this->createEntity($record);
     }
 
-    public function find(int $recordId)
+    public function findOneBy(array $search, bool $autoQuoteSearch = true) : ?object
     {
-        return $this->findOneBy(['-recid' => $recordId]);
-    }
+        $records = $this->client->find($this->layout, $this->createQuery($search, $autoQuoteSearch), 0, 1);
 
-    public function findOneBy(array $search, bool $autoQuoteSearch = true)
-    {
-        $resultSet = $this->execute(new Command(
-            $this->layout,
-            $this->createSearchParameters($search, $autoQuoteSearch) + ['-find' => null, '-max' => 1]
-        ));
-
-        if ($resultSet->isEmpty()) {
+        if (empty($records)) {
             return null;
         }
 
-        return $this->createEntity($resultSet->first());
+        return $this->createEntity($records[0]);
     }
 
-    public function findOneByQuery(FindQuery $query)
+    public function findOneByQuery(Query $query) : ?object
     {
-        $resultSet = $this->execute(new Command(
-            $this->layout,
-            $query->toParameters() + ['-findquery' => null, '-max' => 1]
-        ));
+        $records = $this->client->find($this->layout, $query, 0, 1);
 
-        if ($resultSet->isEmpty()) {
+        if (empty($records)) {
             return null;
         }
 
-        return $this->createEntity($resultSet->first());
+        return $this->createEntity($records[0]);
     }
 
     public function findAll(array $sort = [], int $limit = null, int $offset = null) : CollectionInterface
     {
-        $resultSet = $this->execute(new Command(
-            $this->layout,
-            (
-                $this->createSortParameters($sort)
-                + $this->createLimitAndOffsetParameters($limit, $offset)
-                + ['-findall' => null]
+        return $this->createCollection(
+            $this->client->find(
+                $this->layout,
+                null,
+                $limit,
+                $offset,
+                ...$this->createSortArguments($sort)
             )
-        ));
-
-        return $this->createCollection($resultSet);
+        );
     }
 
     public function findBy(
@@ -126,186 +117,130 @@ final class Repository implements RepositoryInterface
         int $offset = null,
         bool $autoQuoteSearch = true
     ) : CollectionInterface {
-        $resultSet = $this->execute(new Command(
-            $this->layout,
-            (
-                $this->createSearchParameters($search, $autoQuoteSearch)
-                + $this->createSortParameters($sort)
-                + $this->createLimitAndOffsetParameters($limit, $offset)
-                + ['-find' => null]
+        return $this->createCollection(
+            $this->client->find(
+                $this->layout,
+                $this->createQuery($search, $autoQuoteSearch),
+                $limit,
+                $offset,
+                ...$this->createSortArguments($sort)
             )
-        ));
-
-        return $this->createCollection($resultSet);
+        );
     }
 
     public function findByQuery(
-        FindQuery $findQuery,
+        Query $query,
         array $sort = [],
         int $limit = null,
         int $offset = null
     ) : CollectionInterface {
-        $resultSet = $this->execute(new Command(
-            $this->layout,
-            (
-                $findQuery->toParameters()
-                + $this->createSortParameters($sort)
-                + $this->createLimitAndOffsetParameters($limit, $offset)
-                + ['-findquery' => null]
+        return $this->createCollection(
+            $this->client->find(
+                $this->layout,
+                $query,
+                $limit,
+                $offset,
+                ...$this->createSortArguments($sort)
             )
-        ));
-
-        return $this->createCollection($resultSet);
+        );
     }
 
-    public function insert($entity)
+    public function insert(object $entity)
     {
-        $this->persist($entity, '-new');
+        $result = $this->client->createRecord($this->layout, $this->extraction->extract($entity, $this->client));
+        $this->addOrUpdateManagedEntity($result['recordId'], $result['modId'], $entity);
     }
 
-    public function update($entity, bool $force = false)
-    {
-        if ($entity instanceof ProxyInterface) {
-            $entity = $entity->__getRealEntity();
-        }
-
-        if (!isset($this->managedEntities[$entity])) {
-            throw DomainException::fromUnmanagedEntity($entity);
-        }
-
-        $parameters = ['-recid' => $this->managedEntities[$entity]['record-id']];
-
-        if (!$force) {
-            $parameters['-modid'] = $this->managedEntities[$entity]['mod-id'];
-        }
-
-        $this->persist($entity, '-edit', $parameters);
-    }
-
-    public function delete($entity, bool $force = false)
+    public function update(object $entity)
     {
         if ($entity instanceof ProxyInterface) {
             $entity = $entity->__getRealEntity();
         }
 
-        if (!isset($this->managedEntities[$entity])) {
+        if (! isset($this->managedEntities[$entity])) {
             throw DomainException::fromUnmanagedEntity($entity);
         }
 
-        $parameters = ['-recid' => $this->managedEntities[$entity]['record-id'], '-delete' => null];
+        $recordId = $this->managedEntities[$entity]['recordId'];
+        $result = $this->client->updateRecord(
+            $this->layout,
+            $recordId,
+            $this->extraction->extract($entity, $this->client)
+        );
+        $this->addOrUpdateManagedEntity($recordId, $result['modId'], $entity);
+    }
 
-        if (!$force) {
-            $parameters['-modid'] = $this->managedEntities[$entity]['mod-id'];
+    public function delete(object $entity)
+    {
+        if ($entity instanceof ProxyInterface) {
+            $entity = $entity->__getRealEntity();
         }
 
-        $this->execute(new Command($this->layout, $parameters));
+        if (! isset($this->managedEntities[$entity])) {
+            throw DomainException::fromUnmanagedEntity($entity);
+        }
+
+        $this->client->deleteRecord($this->layout, $this->managedEntities[$entity]['recordId']);
         unset($this->managedEntities[$entity]);
     }
 
-    public function quoteString(string $string) : string
+    public function createEntity(array $record) : object
     {
-        return $this->resultSetClient->quoteString($string);
-    }
-
-    public function createEntity(array $record)
-    {
-        if (array_key_exists($record['record-id'], $this->entitiesByRecordId)) {
-            $entity = $this->entitiesByRecordId[$record['record-id']];
+        if (array_key_exists($record['recordId'], $this->entitiesByRecordId)) {
+            $entity = $this->entitiesByRecordId[$record['recordId']];
         } else {
-            $entity = $this->hydration->hydrateNewEntity($record);
+            $entity = $this->hydration->hydrateNewEntity($record, $this->client);
         }
 
-        $this->addOrUpdateManagedEntity($record['record-id'], $record['mod-id'], $entity);
+        $this->addOrUpdateManagedEntity($record['recordId'], $record['modId'], $entity);
         return $entity;
     }
 
-    private function persist($entity, string $mode, array $additionalParameters = [])
-    {
-        $resultSet = $this->execute(new Command(
-            $this->layout,
-            $this->extraction->extract($entity) + $additionalParameters + [$mode => null]
-        ));
-
-        if ($resultSet->isEmpty()) {
-            throw InvalidResultException::fromEmptyResultSet();
-        }
-
-        $record = $resultSet->first();
-
-        $this->hydration->hydrateExistingEntity($record, $entity);
-        $this->addOrUpdateManagedEntity($record['record-id'], $record['mod-id'], $entity);
-    }
-
-    private function addOrUpdateManagedEntity(int $recordId, int $modId, $entity)
+    private function addOrUpdateManagedEntity(int $recordId, int $modId, $entity) : void
     {
         $this->managedEntities[$entity] = [
-            'record-id' => $recordId,
-            'mod-id' => $modId,
+            'recordId' => $recordId,
+            'modId' => $modId,
         ];
         $this->entitiesByRecordId[$recordId] = $entity;
     }
 
-    private function createCollection(CollectionInterface $resultSet) : CollectionInterface
+    private function createCollection(array $records) : CollectionInterface
     {
         $entities = [];
 
-        foreach ($resultSet as $record) {
+        foreach ($records as $record) {
             $entities[] = $this->createEntity($record);
         }
 
-        return new ItemCollection($entities, $resultSet->getTotalCount());
+        return new ItemCollection($entities);
     }
 
-    private function createSearchParameters(array $search, bool $autoQuoteSearch) : array
+    private function createQuery(array $search, bool $autoQuoteSearch) : Query
     {
-        $searchParameters = [];
+        $fields = [];
 
         foreach ($search as $field => $value) {
-            $searchParameters[$field] = $autoQuoteSearch ? $this->quoteString((string) $value) : (string) $value;
+            $fields[] = new Field($field, $value, $autoQuoteSearch);
         }
 
-        return $searchParameters;
+        return new Query(
+            new Conditions(false, ...$fields)
+        );
     }
 
-    private function createSortParameters(array $sort) : array
+    private function createSortArguments(array $sort) : array
     {
         if (count($sort) > 9) {
             throw DomainException::fromTooManySortParameters(9, $sort);
         }
 
-        $index = 1;
-        $parameters = [];
+        $arguments = [];
 
         foreach ($sort as $field => $order) {
-            $parameters['-sortfield.' . $index] = $field;
-            $parameters['-sortorder.' . $index] = $order;
-            ++$index;
+            $arguments[] = new Sort($field, 0 === stripos($order, 'a'));
         }
 
-        return $parameters;
-    }
-
-    private function createLimitAndOffsetParameters(int $limit = null, int $offset = null) : array
-    {
-        $parameters = [];
-
-        if (null !== $limit) {
-            $parameters['-max'] = $limit;
-        }
-
-        if (null !== $offset) {
-            $parameters['-skip'] = $offset;
-        }
-
-        return $parameters;
-    }
-
-    private function execute(Command $command) : CollectionInterface
-    {
-        if (null !== $this->identity) {
-            $command = $command->withIdentity($this->identity);
-        }
-
-        return $this->resultSetClient->execute($command);
+        return $arguments;
     }
 }

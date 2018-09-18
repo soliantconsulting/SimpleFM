@@ -10,7 +10,6 @@
     <field name="boolean" property="boolean" type="boolean"/>
     <field name="date-time" property="date-time" type="date-time"/>
     <field name="date" property="date" type="date"/>
-    <field name="decimal" property="decimal" type="decimal"/>
     <field name="float" property="float" type="float"/>
     <field name="integer" property="integer" type="integer"/>
     <field name="nullable-string" property="nullable-string" type="nullable-string"/>

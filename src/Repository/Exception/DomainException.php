@@ -9,7 +9,7 @@ final class DomainException extends PhpDomainException implements ExceptionInter
 {
     public static function fromUnmanagedEntity($entity) : self
     {
-        return new self(sprintf('Entity with ID %s is not managed by the gateway', spl_object_hash($entity)));
+        return new self(sprintf('Entity with ID %s is not managed by the repository', spl_object_hash($entity)));
     }
 
     public static function fromTooManySortParameters(int $allowed, array $sort)

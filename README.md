@@ -34,9 +34,9 @@ SimpleFM was written with simplicity as the guiding principle. We have informall
 
 ## System Requirements
 
-SimpleFM, the examples and this documentation are tailored for PHP 7.0 and FileMaker Sever 12
+SimpleFM, the examples and this documentation are tailored for PHP 7.2 and FileMaker Sever 12
 
-- PHP 7.0+
+- PHP 7.2+
 - FileMaker Server 12+
 
 With minimum effort, it should theoretically work with any version of FileMaker server that uses fmresultset.xml grammar, however, backward compatibility is not verified or maintained.

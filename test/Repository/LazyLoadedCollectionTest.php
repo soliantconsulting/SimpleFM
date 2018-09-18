@@ -3,45 +3,34 @@ declare(strict_types = 1);
 
 namespace SoliantTest\SimpleFM\Repository;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Soliant\SimpleFM\Collection\ItemCollection;
+use Soliant\SimpleFM\Query\Conditions;
+use Soliant\SimpleFM\Query\Field;
+use Soliant\SimpleFM\Query\Query;
 use Soliant\SimpleFM\Repository\LazyLoadedCollection;
 use Soliant\SimpleFM\Repository\RepositoryInterface;
 use stdClass;
 
 final class LazyLoadedCollectionTest extends TestCase
 {
-    public function testGetIterator()
+    public function testGetIterator() : void
     {
         $first = new stdClass();
         $second = new stdClass();
         $third = new stdClass();
 
-        $testCase = $this;
         $repository = $this->prophesize(RepositoryInterface::class);
-        $repository->findByQuery(Argument::any())->will(function (array $parameters) use (
-            $testCase,
+        $repository->findByQuery(new Query(
+            new Conditions(false, new Field('foo', '1')),
+            new Conditions(false, new Field('foo', '2')),
+            new Conditions(false, new Field('foo', '3'))
+        ))->willReturn(new ItemCollection([
             $first,
             $second,
-            $third
-        ) {
-            $testCase->assertSame([
-                '-query' => '(q1);(q2);(q3)',
-                '-q1' => 'foo',
-                '-q1.value' => '1',
-                '-q2' => 'foo',
-                '-q2.value' => '2',
-                '-q3' => 'foo',
-                '-q3.value' => '3',
-            ], $parameters[0]->toParameters());
-
-            return new ItemCollection([
-                $first,
-                $second,
-                $third,
-            ], 3);
-        });
+            $third,
+        ], 3));
 
         $collection = new LazyLoadedCollection($repository->reveal(), 'foo', [
             ['foo' => 1],
@@ -61,20 +50,20 @@ final class LazyLoadedCollectionTest extends TestCase
         $this->assertSame($third, $entities[2]);
     }
 
-    public function testEmptyCollection()
+    public function testEmptyCollection() : void
     {
         $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), 'foo', []);
         $this->assertTrue($collection->isEmpty());
         $this->assertNull($collection->first());
     }
 
-    public function testIteratorCaching()
+    public function testIteratorCaching() : void
     {
         $collection = new LazyLoadedCollection($this->prophesize(RepositoryInterface::class)->reveal(), 'foo', []);
         $this->assertSame($collection->getIterator(), $collection->getIterator());
     }
 
-    public function testFirst()
+    public function testFirst() : void
     {
         $first = new stdClass();
         $repository = $this->prophesize(RepositoryInterface::class);
@@ -94,7 +83,7 @@ final class LazyLoadedCollectionTest extends TestCase
         $this->assertSame($first, $collection->first());
     }
 
-    public function testCount()
+    public function testCount() : void
     {
         $collection = new LazyLoadedCollection(
             $this->prophesize(RepositoryInterface::class)->reveal(),
@@ -106,15 +95,5 @@ final class LazyLoadedCollectionTest extends TestCase
             ]
         );
         $this->assertSame(3, count($collection));
-    }
-
-    public function testGetTotalCount()
-    {
-        $collection = new LazyLoadedCollection(
-            $this->prophesize(RepositoryInterface::class)->reveal(),
-            'foo',
-            []
-        );
-        $this->assertSame(0, $collection->getTotalCount());
     }
 }

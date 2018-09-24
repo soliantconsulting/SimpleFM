@@ -53,22 +53,26 @@ methods which return multiple records also accept a `$sort` parameter for sortin
 
 While the `findBy()` and `findOneBy()` methods will always perform an `AND` query. something you may want to make `OR`
 queries or mixed queries. To allow this, the repository exposes two methods, namely `findByQuery()` and
-`findOneByQuery()`. Both work similar to the prior two methods, but instead of a search array they take a `FindQuery`
+`findOneByQuery()`. Both work similar to the prior two methods, but instead of a search array they take a `Query`
 object:
 
 ```php
 <?php
-use Soliant\SimpleFM\Repository\Query\FindQuery;
-use Soliant\SimpleFM\Repository\Query\Query;
+use Soliant\SimpleFM\Query;
 
-$query = new FindQuery();
-$query->addOrQueries(
-    new Query('ID', '1'),
-    new Query('ID', '2'),
-);
-$query->addAndQueries(
-    new Query('Name', 'foo'),
-    new Query('Status', 'closed', true)
+$query = new Query\Query(
+    new Query\Conditions(
+        false,
+        new Query\Field('ID', '1'),
+        new Query\Field('Name', 'foo'),
+        new Query\Field('Status', '!=closed')
+    ),
+    new Query\Conditions(
+        false,
+        new Query\Field('ID', '2'),
+        new Query\Field('Name', 'foo'),
+        new Query\Field('Status', '!=closed')
+    )
 );
 
 $sampleEntities = $respository->findByQuery($query);
@@ -76,7 +80,3 @@ $sampleEntities = $respository->findByQuery($query);
 
 This will query will look for any record which `ID` is either 1 or 2 and which `Name` equals "foo", but the `Status`
 field must not be "closed".
-
-!!!note "Query quoting"
-    Values in a find query are never quoted automatically, so you'll need to quote those values manually via the
-    `quoteString()` method of the repository.

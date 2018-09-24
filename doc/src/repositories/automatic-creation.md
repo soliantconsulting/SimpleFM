@@ -1,6 +1,6 @@
 # Getting rid of manual code
 
-While it is feasible to create all your repositories manully, it can become a daunting task to do this for a lot of
+While it is feasible to create all your repositories manually, it can become a daunting task to do this for a lot of
 entities. Thus it is recommended to only define the metadata about your entity, and let SimpleFM create the
 repositories and their hydration and extraction strategies for you automatically.
 
@@ -9,7 +9,7 @@ repositories and their hydration and extraction strategies for you automatically
 The first thing you want to do is to create your metadata file. This is a simple XML file which describes all fields
 and relations of the entity in the given layout. You should choose one folder in which you place all those XML files,
 and each XML file must have a filename which equals the class name of the entity, with the namespace delimiters replaced
-by periods. So when your entity is named `My\Entity\SampleEntity`, the acccording filename would be
+by periods. So when your entity is named `My\Entity\SampleEntity`, the according filename would be
 `My.Entity.SampleEntity.xml`:
 
 ```xml
@@ -39,7 +39,7 @@ use Soliant\SimpleFM\Repository\Builder\Proxy\ProxyBuilder;
 use Soliant\SimpleFM\Repository\Builder\RepositoryBuilder;
 
 $repositoryBuilder = new RepositoryBuilder(
-    $resultSetClient,
+    $client,
     new MetadataBuilder('/path/to/xml/folder'),
     new ProxyBuilder()
 );

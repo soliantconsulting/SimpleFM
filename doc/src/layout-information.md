@@ -1,19 +1,14 @@
 # Retrieving information about a layout
 
-Sometimes you need to programatically retrieve information about a specific layout, like the available fields, field set
-options and the like. For this purpose SimpleFM provides a layout client, which can be used similary to the result set
-client:
+Sometimes you need to programmatically retrieve information about a specific layout, like the available fields, field
+set options and the like. For this purpose SimpleFM provides a method on the client:
 
 ```php
 <?php
-use Soliant\SimpleFM\Client\Layout\LayoutClient;
-use Soliant\SimpleFM\Connection\Command;
+use Soliant\SimpleFM\Client\RestClient;
 
-$layoutClient = new LayoutClient($connection);
-$sampleLayout = $layoutClient->execute(new Command(
-    'sample-layout',
-    ['-view' => null]
-));
+$client = new RestClient($httpClient, $connection);
+$sampleLayout = $client->getLayout('sample-layout');
 ```
 
 The result will be a `Layout` object, which contains all information about the layout and its fields:

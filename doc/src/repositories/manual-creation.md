@@ -35,14 +35,14 @@ final class SampleExtraction implements ExtractionInterface
 
 # Initializing a repository
 
-With these two classes and your result set client in place, you can craft your very first repository:
+With these two classes and your REST client in place, you can craft your very first repository:
 
 ```php
 <?php
 use Soliant\SimpleFM\Repository\Repository;
 
 $repository = new Repository(
-    $resultSetClient,
+    $client,
     'sample-layout',
     new SampleHydration(),
     new SampleExtraction()

@@ -6,7 +6,12 @@ namespace Soliant\SimpleFM\Client;
 use Http\Client\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use SimpleXMLElement;
 use Soliant\SimpleFM\Client\Exception\FileMakerException;
+use Soliant\SimpleFM\Layout\Field;
+use Soliant\SimpleFM\Layout\Layout;
+use Soliant\SimpleFM\Layout\Value;
+use Soliant\SimpleFM\Layout\ValueList;
 use Soliant\SimpleFM\Query\Conditions;
 use Soliant\SimpleFM\Query\Query;
 use Soliant\SimpleFM\Sort\Sort;
@@ -144,6 +149,56 @@ final class RestClient implements ClientInterface
         return $this->request(sprintf('layouts/%s/_find', $layout), 'POST', $queryData)['data'];
     }
 
+    public function getLayout(string $layout) : Layout
+    {
+        // @todo This should use the data API as soon as layouts become available through it.
+        $url = sprintf(
+            '%s/fmi/xml/FMPXMLLAYOUT.xml?db=%s&lay=%s-view',
+            $this->connection->getBaseUri(),
+            $this->connection->getDatabase(),
+            $layout
+        );
+
+        $request = new Request($url, 'GET', 'php://temp', [
+            'Authorization' => sprintf(
+                'Basic %s',
+                base64_encode(
+                    sprintf(
+                        '%s:%s',
+                        $this->connection->getUsername(),
+                        $this->connection->getPassword()
+                    )
+                )
+            )
+        ]);
+        $response = $this->httpClient->sendRequest($request);
+
+        if (200 !== $response->getStatusCode()) {
+            throw FileMakerException::fromUnreachableXmlApi();
+        }
+
+        $previousValue = libxml_use_internal_errors(true);
+        $xml = simplexml_load_string((string) $response->getBody());
+        libxml_use_internal_errors($previousValue);
+
+        if (false === $xml) {
+            var_dump((string) $response->getBody());
+            throw FileMakerException::fromXmlError(libxml_get_last_error() ?: null);
+        }
+
+        $errorCode = (int) $xml->ERRORCODE;
+
+        if ($errorCode > 0) {
+            throw FileMakerException::fromXmlErrorCode($errorCode);
+        }
+
+        return new Layout(
+            (string) $xml->LAYOUT['DATABASE'],
+            (string) $xml->LAYOUT['NAME'],
+            ...$this->parseFields($xml, $this->parseValueLists($xml))
+        );
+    }
+
     private function findRange(string $layout, ?int $offset, ?int $limit, Sort ...$sorts) : array
     {
         $queryData = [];
@@ -251,5 +306,39 @@ final class RestClient implements ClientInterface
         }
 
         return $data['response'];
+    }
+
+    private function parseValueLists(SimpleXMLElement $xml) : array
+    {
+        $valueLists = [];
+
+        foreach ($xml->VALUELISTS->VALUELIST as $valueList) {
+            $values = [];
+
+            foreach ($valueList->VALUE as $value) {
+                $values[] = new Value((string) $value['DISPLAY'], (string) $value);
+            }
+
+            $valueLists[(string) $valueList['NAME']] = new ValueList((string) $valueList['NAME'], ...$values);
+        }
+
+        return $valueLists;
+    }
+
+    private function parseFields(SimpleXMLElement $xml, array $valueLists) : array
+    {
+        $fields = [];
+
+        foreach ($xml->LAYOUT->FIELD as $field) {
+            $valueListName = (string) $field->STYLE['VALUELIST'];
+
+            $fields[] = new Field(
+                (string) $field['NAME'],
+                (string) $field->STYLE['TYPE'],
+                ('' !== $valueListName ? $valueLists[$valueListName] : null)
+            );
+        }
+
+        return $fields;
     }
 }

@@ -7,6 +7,7 @@ use DateTimeZone;
 use Http\Mock\Client;
 use PHPUnit\Framework\TestCase;
 use Soliant\SimpleFM\Client\Connection;
+use Soliant\SimpleFM\Client\Exception\FileMakerException;
 use Soliant\SimpleFM\Client\RestClient;
 use Soliant\SimpleFM\Query\Conditions;
 use Soliant\SimpleFM\Query\Field;
@@ -155,7 +156,7 @@ final class RestClientTest extends TestCase
     public function testGetContainerData() : void
     {
         $response = new Response('php://memory', 200, [
-            'Content-Type' => 'application/text',
+            'Content-Type' => 'text/plain',
         ]);
         $response->getBody()->write('foobar');
         $this->httpClient->addResponse($response);
@@ -302,6 +303,62 @@ final class RestClientTest extends TestCase
                 ['fieldName' => 'bar', 'sortOrder' => 'descend'],
             ],
         ], json_decode((string) $lastRequest->getBody(), true));
+    }
+
+    public function testCompleteLayoutXml()
+    {
+        $response = new Response('php://temp', 200, [
+            'Content-Type' => 'text/xml',
+        ]);
+        $response->getBody()->write(file_get_contents(__DIR__ . '/TestAssets/sample_fmpxmllayout.xml'));
+        $this->httpClient->addResponse($response);
+
+        $client = new RestClient($this->httpClient, $this->connection);
+        $layout = $client->getLayout('foo');
+
+        $this->assertSame('FMServer_Sample', $layout->getDatabase());
+        $this->assertSame('Projects | Web', $layout->getName());
+        $this->assertCount(9, $layout->getFields());
+
+        $this->assertTrue($layout->hasField('Projects::Project Name'));
+        $nameField = $layout->getField('Projects::Project Name');
+        $this->assertFalse($nameField->hasValueList());
+        $this->assertSame('EDITTEXT', $nameField->getType());
+
+        $this->assertTrue($layout->hasField('Projects::Status on Screen'));
+        $statusField = $layout->getField('Projects::Status on Screen');
+        $this->assertTrue($statusField->hasValueList());
+        $this->assertSame('Status', (string) $statusField->getValueList());
+        $this->assertSame('Status', $statusField->getValueList()->getName());
+        $this->assertSame('Completed', (string) $statusField->getValueList()->getValues()[0]);
+        $this->assertSame('Completed', $statusField->getValueList()->getValues()[0]->getDisplay());
+        $this->assertSame('Completed', $statusField->getValueList()->getValues()[0]->getValue());
+
+        $this->assertNull($layout->getField('non-existent'));
+
+        $lastRequest = $this->httpClient->getLastRequest();
+        $this->assertSame('Basic YmFyOmJheg==', $lastRequest->getHeaderLine('Authorization'));
+        $this->assertSame(
+            'http://foo/fmi/xml/FMPXMLLAYOUT.xml?db=bat&lay=foo-view',
+            (string) $lastRequest->getUri()
+        );
+        $this->assertSame('GET', $lastRequest->getMethod());
+        $this->assertSame('', (string) $lastRequest->getBody());
+    }
+
+    public function testErrorLayoutXml()
+    {
+        $response = new Response('php://temp', 200, [
+            'Content-Type' => 'text/xml',
+        ]);
+        $response->getBody()->write(file_get_contents(__DIR__ . '/TestAssets/error_fmpxmllayout.xml'));
+        $this->httpClient->addResponse($response);
+
+        $client = new RestClient($this->httpClient, $this->connection);
+
+        $this->expectException(FileMakerException::class);
+        $this->expectExceptionMessage('The XML api returned with an error code of 1');
+        $client->getLayout('foo');
     }
 
     private function addAuthResponse() : void

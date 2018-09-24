@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Soliant\SimpleFM\Client;
 
 use Psr\Http\Message\StreamInterface;
+use Soliant\SimpleFM\Layout\Layout;
 use Soliant\SimpleFM\Query\Query;
 use Soliant\SimpleFM\Sort\Sort;
 
@@ -36,4 +37,6 @@ interface ClientInterface
         ?int $limit = null,
         Sort ...$sorts
     ) : array;
+
+    public function getLayout(string $layout) : Layout;
 }

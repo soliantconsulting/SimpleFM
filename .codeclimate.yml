@@ -6,9 +6,7 @@ engines:
     enabled: true
     config:
       languages:
-      - ruby
       - javascript
-      - python
       - php
   fixme:
     enabled: true
@@ -17,14 +15,10 @@ engines:
 ratings:
   paths:
   - "**.css"
-  - "**.inc"
   - "**.js"
-  - "**.jsx"
-  - "**.module"
   - "**.php"
-  - "**.py"
-  - "**.rb"
 exclude_paths:
-- documentation/*
-- tests/*
+- build/*
+- doc/*
+- test/*
 - vendor/*

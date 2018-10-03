@@ -40,8 +40,8 @@ final class RepositoryTest extends TestCase
     {
         $this->client = $this->prophesize(ClientInterface::class);
         $this->defaultRecord = [
-            'recordId' => 1,
-            'modId' => 1,
+            'recordId' => '1',
+            'modId' => '1',
             'fieldData' => [
                 'foo' => 'bar',
             ],
@@ -246,8 +246,8 @@ final class RepositoryTest extends TestCase
     public function testInsert() : void
     {
         $this->client->createRecord('foo', ['foo' => 'bar'])->willReturn([
-            'recordId' => 1,
-            'modId' => 1,
+            'recordId' => '1',
+            'modId' => '1',
         ])->shouldBeCalled();
         $repository = $this->createRepository();
         $repository->insert($this->defaultEntity);
@@ -257,7 +257,7 @@ final class RepositoryTest extends TestCase
     {
         $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
         $this->client->updateRecord('foo', 1, ['foo' => 'bar'])->willReturn([
-            'modId' => 1,
+            'modId' => '1',
         ])->shouldBeCalled();
         $repository = $this->createRepository();
 
@@ -278,7 +278,7 @@ final class RepositoryTest extends TestCase
     {
         $this->client->getRecord('foo', 1)->willReturn($this->defaultRecord);
         $this->client->updateRecord('foo', 1, ['foo' => 'bar'])->willReturn([
-            'modId' => 1,
+            'modId' => '1',
         ])->shouldBeCalled();
         $repository = $this->createRepository();
 

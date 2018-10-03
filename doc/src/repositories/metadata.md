@@ -45,7 +45,6 @@ type
     * **boolean**: will treat any value other than "0" or "" as true
     * **date-time**: will treat the value as `DateTimeImmutable`
     * **date**: will treat the value as `DateTimeImmutable` and convert it to a pure date
-    * **decimal**: will treat the numeric value as `Decimal` object
     * **float**: will treat the numeric value as float
     * **integer**: will treat the numeric value as integer
     * **nullable-string**: will treat the value as string but convert an empty string to null

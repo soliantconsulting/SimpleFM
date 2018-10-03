@@ -148,7 +148,7 @@ final class Repository implements RepositoryInterface
     public function insert(object $entity)
     {
         $result = $this->client->createRecord($this->layout, $this->extraction->extract($entity, $this->client));
-        $this->addOrUpdateManagedEntity($result['recordId'], $result['modId'], $entity);
+        $this->addOrUpdateManagedEntity((int) $result['recordId'], (int) $result['modId'], $entity);
     }
 
     public function update(object $entity)
@@ -167,7 +167,7 @@ final class Repository implements RepositoryInterface
             $recordId,
             $this->extraction->extract($entity, $this->client)
         );
-        $this->addOrUpdateManagedEntity($recordId, $result['modId'], $entity);
+        $this->addOrUpdateManagedEntity($recordId, (int) $result['modId'], $entity);
     }
 
     public function delete(object $entity)
@@ -186,13 +186,15 @@ final class Repository implements RepositoryInterface
 
     public function createEntity(array $record) : object
     {
-        if (array_key_exists($record['recordId'], $this->entitiesByRecordId)) {
-            $entity = $this->entitiesByRecordId[$record['recordId']];
+        $recordId = (int) $record['recordId'];
+
+        if (array_key_exists($recordId, $this->entitiesByRecordId)) {
+            $entity = $this->entitiesByRecordId[$recordId];
         } else {
             $entity = $this->hydration->hydrateNewEntity($record, $this->client);
         }
 
-        $this->addOrUpdateManagedEntity($record['recordId'], $record['modId'], $entity);
+        $this->addOrUpdateManagedEntity($recordId, (int) $record['modId'], $entity);
         return $entity;
     }
 

@@ -69,6 +69,11 @@ final class MetadataHydration implements HydrationInterface
         foreach ($metadata->getFields() as $fieldMetadata) {
             try {
                 $type = $fieldMetadata->getType();
+
+                if (! array_key_exists($fieldMetadata->getFieldName(), $fieldData)) {
+                    throw HydrationException::fromMissingField($fieldMetadata->getFieldName());
+                }
+
                 $value = $fieldData[$fieldMetadata->getFieldName()];
 
                 if ($fieldMetadata->isRepeatable()) {

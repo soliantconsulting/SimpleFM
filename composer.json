@@ -28,7 +28,7 @@
     },
     "require-dev": {
         "php-http/mock-client": "^1.1",
-        "phpunit/PHPUnit": "^5.5",
+        "phpunit/phpunit": "^5.5",
         "squizlabs/php_codesniffer": "^2.6"
     },
     "autoload": {

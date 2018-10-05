@@ -23,6 +23,11 @@ final class HydrationException extends RuntimeException implements ExceptionInte
         ), 0, $previousException);
     }
 
+    public static function fromMissingField(string $fieldName) : self
+    {
+        return new self(sprintf('Source data have no field named "%s"', $fieldName));
+    }
+
     public static function fromEntityMismatch(string $className) : self
     {
         return new self(sprintf('Entity is not an instance of "%s"', $className));

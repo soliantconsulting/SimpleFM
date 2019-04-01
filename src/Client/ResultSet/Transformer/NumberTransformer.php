@@ -10,7 +10,7 @@ final class NumberTransformer
     public function __invoke(string $value)
     {
         $cleanedValue = preg_replace_callback(
-            '(^[^\d-\.]*(-?)([^.]*)(.?)(.*)$)',
+            '(^[^\d\-.]*(-?)([^.]*)(.?)(.*)$)',
             function (array $match) : string {
                 return
                     $match[1]

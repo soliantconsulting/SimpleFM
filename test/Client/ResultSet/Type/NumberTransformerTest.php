@@ -16,6 +16,7 @@ final class NumberTransformerTest extends TestCase
             ['714/715', '714715'],
             ['7-14/...71.5', '714.715'],
             ['foo-7-14/...71.5', '-714.715'],
+            ['1.', '1'],
         ];
     }
 

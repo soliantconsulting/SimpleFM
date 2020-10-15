@@ -33,6 +33,6 @@ final class NumberTransformer
             $cleanedValue = '0' . $cleanedValue;
         }
 
-        return Decimal::fromString($cleanedValue);
+        return Decimal::fromString(rtrim($cleanedValue, '.'));
     }
 }
